@@ -68,3 +68,5 @@
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\pdm_filter.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\my.h
+.\MEDIA_USB_KEY\stm32f4xx_it.o: .\src\rtc.h
+.\MEDIA_USB_KEY\stm32f4xx_it.o: src\rtc.h

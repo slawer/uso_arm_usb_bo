@@ -1,4 +1,5 @@
 
+#include "rtc.h"
 
 // my add for usb write
 #define numbkor 10
@@ -18,17 +19,20 @@ extern u32 tick;
 extern zap kor[numbkor];
 
 
-extern uint16_t Buf_adc_zap [100];
-extern uint8_t Buf_zap [400];
+extern TDateTime DT_zap; 
+extern BOOL number_buff;
+extern uint16_t Buf_adc_zap1 [1000];
+extern uint16_t Buf_adc_zap2 [1000];
+extern uint8_t Buf_zap [6000];
 extern uint16_t time_label;
-extern u8 por;
+extern u16 por;
 
 
 extern 	 uint8_t counter;
 extern 	uint16_t bytesWritten;
 	
-extern 	u8 tmp1, tmp2,tmp3,tmp4, sm, kol_zap;
-extern 	u16 cnt;
+extern 	u8 tmp1, tmp2,tmp3,tmp4, sm;
+extern 	u16 cnt, kol_zap;
 
 extern u8 file_cr;
 

@@ -25,9 +25,10 @@
 #include "main.h"
 
 #include "my.h"
+#include "rtc.h"
 
-
-
+TDateTime DT1;
+		
 
 
 
@@ -222,7 +223,38 @@ void SysTick_Handler(void)
 		
 		if (fz_average[0]<max[0])
 			max[0]=fz_average[0];
+		
+		if (number_buff)
+			Buf_adc_zap2[por++]=fz_average[0];			
+		else
+			Buf_adc_zap1[por++]=fz_average[0];
+		
+		if (por==999)
+			por=999;
+	
+	del++;
+	if (del==10)
+	{
+		del=0;
+		tick++;
+		time_label=tick;
+		
+	  rtc_Get(&DT1);
+		
+		if (DT1.Seconds==0)
+		{
+			number_buff^=1;
+			DT_zap=DT1;
 			
+			buffering=1;
+			por=0;
+		}
+	if ((tick%60)==0)
+	{
+		minute++;
+	}
+	}
+				
 	}
 	else
 	{
@@ -231,23 +263,7 @@ void SysTick_Handler(void)
 	}
 	
 
-	del++;
-	if (del==100)
-	{
-		del=0;
-		tick++;
-		time_label=tick;
-			
-		Buf_adc_zap[por++]=fz_average[0];
-		
 
-	if ((tick%2)==0)
-	{
-		minute++;
-	}
-	buffering=0;
-
-	}
 	
 
 	

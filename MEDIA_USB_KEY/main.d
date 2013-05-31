@@ -68,6 +68,7 @@
 .\MEDIA_USB_KEY\main.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
 .\MEDIA_USB_KEY\main.o: .\Utilities\STM32F4-Discovery\pdm_filter.h
 .\MEDIA_USB_KEY\main.o: .\inc\my.h
+.\MEDIA_USB_KEY\main.o: .\src\rtc.h
 .\MEDIA_USB_KEY\main.o: .\inc\my_def_ext.h
+.\MEDIA_USB_KEY\main.o: .\src\rtc.h
 .\MEDIA_USB_KEY\main.o: src\rtc.h
-.\MEDIA_USB_KEY\main.o: src\gpio.h

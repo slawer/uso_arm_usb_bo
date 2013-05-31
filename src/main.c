@@ -51,9 +51,10 @@ __IO uint16_t ADC3ConvertedValue = 0;
 #include "my.h"
 #include "my_def_ext.h"
 
+
 // rcc
 #include "rtc.h"
-#include "gpio.h"
+//#include "gpio.h"
 
 void USART1_IRQHandler(void)
 { 
@@ -241,32 +242,11 @@ int main(void)
   RCC_MCO2Config(RCC_MCO2Source_SYSCLK, RCC_MCO2Div_2);
 
 
-	
-	
-    
+
     // ???????? RTC
     rtc_Reset();
     rtc_Init();
-    
-    // ????????????? GPIO
-    gpio_Init();
-    gpio_DigitalOutput(PORTD, 12);
-    
-    while(1)
-    {
-        rtc_Get(&DT);
-        
-        // ??????? ?? ???????? ???????
-        if(DT.Seconds & 0x01)
-        {
-            gpio_HighLevel(PORTD, 12);
-        }
-        else
-        {
-            gpio_LowLevel(PORTD, 12);
-        }
-    }
-		
+ 		
 	
 //	ADC_InitTypeDef  ADC_InitStructure;
 	

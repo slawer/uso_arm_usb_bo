@@ -1,0 +1,55 @@
+*** Creating Trace Output File '.\deb\uso_arm_usb_bo.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\deb\gpio.o"'
+### List of Objects: adding '".\deb\rtc.o"'
+### List of Objects: adding '".\deb\main.o"'
+### List of Objects: adding '".\deb\system_stm32f4xx.o"'
+### List of Objects: adding '".\deb\usb_bsp.o"'
+### List of Objects: adding '".\deb\usbh_usr.o"'
+### List of Objects: adding '".\deb\stm32f4xx_it.o"'
+### List of Objects: adding '".\deb\stm32f4_discovery.o"'
+### List of Objects: adding '".\deb\stm32f4_discovery_lis302dl.o"'
+### List of Objects: adding '".\deb\misc.o"'
+### List of Objects: adding '".\deb\stm32f4xx_adc.o"'
+### List of Objects: adding '".\deb\stm32f4xx_dac.o"'
+### List of Objects: adding '".\deb\stm32f4xx_dma.o"'
+### List of Objects: adding '".\deb\stm32f4xx_exti.o"'
+### List of Objects: adding '".\deb\stm32f4xx_gpio.o"'
+### List of Objects: adding '".\deb\stm32f4xx_i2c.o"'
+### List of Objects: adding '".\deb\stm32f4xx_rcc.o"'
+### List of Objects: adding '".\deb\stm32f4xx_rtc.o"'
+### List of Objects: adding '".\deb\stm32f4xx_spi.o"'
+### List of Objects: adding '".\deb\stm32f4xx_syscfg.o"'
+### List of Objects: adding '".\deb\stm32f4xx_tim.o"'
+### List of Objects: adding '".\deb\stm32f4xx_usart.o"'
+### List of Objects: adding '".\deb\startup_stm32f4xx.o"'
+### List of Objects: adding '".\deb\usb_core.o"'
+### List of Objects: adding '".\deb\usb_hcd.o"'
+### List of Objects: adding '".\deb\usb_hcd_int.o"'
+### List of Objects: adding '".\deb\usbh_core.o"'
+### List of Objects: adding '".\deb\usbh_hcs.o"'
+### List of Objects: adding '".\deb\usbh_ioreq.o"'
+### List of Objects: adding '".\deb\usbh_msc_bot.o"'
+### List of Objects: adding '".\deb\usbh_msc_core.o"'
+### List of Objects: adding '".\deb\usbh_msc_fatfs.o"'
+### List of Objects: adding '".\deb\usbh_stdreq.o"'
+### List of Objects: adding '".\deb\usbh_msc_scsi.o"'
+### List of Objects: adding '".\deb\fattime.o"'
+### List of Objects: adding '".\deb\ff.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M4 ".\deb\gpio.o" ".\deb\rtc.o" ".\deb\main.o" ".\deb\system_stm32f4xx.o" ".\deb\usb_bsp.o" ".\deb\usbh_usr.o" ".\deb\stm32f4xx_it.o" ".\deb\stm32f4_discovery.o" ".\deb\stm32f4_discovery_lis302dl.o" ".\deb\misc.o" ".\deb\stm32f4xx_adc.o" ".\deb\stm32f4xx_dac.o" ".\deb\stm32f4xx_dma.o" ".\deb\stm32f4xx_exti.o" ".\deb\stm32f4xx_gpio.o" ".\deb\stm32f4xx_i2c.o" ".\deb\stm32f4xx_rcc.o" ".\deb\stm32f4xx_rtc.o" ".\deb\stm32f4xx_spi.o" ".\deb\stm32f4xx_syscfg.o" ".\deb\stm32f4xx_tim.o" ".\deb\stm32f4xx_usart.o" ".\deb\startup_stm32f4xx.o" ".\deb\usb_core.o" ".\deb\usb_hcd.o" ".\deb\usb_hcd_int.o" ".\deb\usbh_core.o" ".\deb\usbh_hcs.o" ".\deb\usbh_ioreq.o" ".\deb\usbh_msc_bot.o" ".\deb\usbh_msc_core.o" ".\deb\usbh_msc_fatfs.o" ".\deb\usbh_stdreq.o" ".\deb\usbh_msc_scsi.o" ".\deb\fattime.o" ".\deb\ff.o" 
+--library_type=microlib --strict --scatter ".\deb\uso_arm_usb_bo.sct" 
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\uso_arm_usb_bo.map" -o .\deb\uso_arm_usb_bo.axf### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\deb\uso_arm_usb_bo.axf'
+### ADS-LD Command File: '.\deb\uso_arm_usb_bo.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\deb\uso_arm_usb_bo.lnp', Handle=0x00001D18
+### Writing '.lnp' file
+### ADS-LD Command file '.\deb\uso_arm_usb_bo.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

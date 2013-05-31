@@ -24,6 +24,19 @@
 #include "stm32f4xx_it.h"
 
 #include "my.h"
+#include "rtc.h"
+
+//char file_name[20];
+
+//char fn[30]=[0,:,2,0,1,3,_,0,5,_,3,0,_,1,5,_,0,0,_,0,0,.,t,x,t];
+//char fn[30]={0x30,0x3A,0x32,0x30,0x31,0x33,0x5F,0x30,0x35,0x5F,0x33,0x30,0x5F,0x31,0x35,0x5F,0x30,0x30,0x5F,0x30,0x30,0x2E,0x74,0x78,0x74};
+
+//char fn[10]={0x30,0x3A,0x32,0x30,0x31,0x33,0x5F,0x30,0x35,0x5F};
+
+char file_name[10]={0x20,0x65,0x72,0x72,0x6F,0x72,0x2E,0x63,0x73,0x76};
+
+BOOL new_name_file=0; 
+
 
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
   * @{
@@ -95,10 +108,49 @@ void USBH_USR_Init(void)
   */
 void USBH_USR_DeviceAttached(void)
 {
-  RepeatState = 0;
+		TDateTime DT;
+		u8 tmp;
+    
+	  rtc_Get(&DT);    
   
-	LED_Toggle = 7;
-  /* Red LED off when device attached */
+//	file_name[0]=0x32;
+//	file_name[1]=0x30;
+	
+	file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+	file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+
+//	file_name[2]=95;
+	
+	file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+	file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+
+//	file_name[5]=95;
+	
+	file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+	file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+/*
+	file_name[10]=95;
+	
+	tmp=DT.Hours/10;
+	file_name[11]=(uint8_t)(tmp)+(uint8_t)0x30;
+	tmp%=10;
+	file_name[12]=(uint8_t)(tmp)+(uint8_t)0x30;
+
+	file_name[13]=95;
+
+	tmp=DT.Minutes/10;
+	file_name[14]=(uint8_t)(tmp)+(uint8_t)0x30;
+	tmp%=10;
+	file_name[15]=(uint8_t)(tmp)+(uint8_t)0x30;
+*/
+// .txt
+	file_name[6]=0x2E;
+	file_name[7]=0x63;
+	file_name[8]=0x73;
+	file_name[9]=0x76;
+
+
+/* Red LED off when device attached */
   STM_EVAL_LEDOff(LED5);
   /* Green LED on */
   STM_EVAL_LEDOn(LED6);
@@ -125,6 +177,8 @@ void USBH_USR_DeviceDisconnected (void)
 {
   /* Red Led on if the USB Key is removed */
   STM_EVAL_LEDOff(LED6);
+	STM_EVAL_LEDOff(LED5);
+	STM_EVAL_LEDOff(LED4);
   /* Disable the Timer */
   TIM_ITConfig(TIM4, TIM_IT_CC1 , DISABLE);
 
@@ -361,37 +415,112 @@ void COMMAND_AudioExecuteApplication(void)
   }
 	*/
 //	minute=12345;
-	if (minute!=pred_minute)
+//	if (minute!=pred_minute)
+if (buffering)
 	{
-	
-			pred_minute=minute;
+		TDateTime DT;
+		u8 tmp=0;
+    
+	  rtc_Get(&DT);     	
+		pred_minute=minute;
 //		minute=12345;
 		
-			dec_to_chr(minute,(uint8_t*) &Buf_zap[0]);
+	//		dec_to_chr(minute,(uint8_t*) &Buf_zap[0]);
+		/*
+	Buf_zap[0]=0x32;
+	Buf_zap[1]=0x30;
+	
+	tmp=DT.Year/10;
+	Buf_zap[2]=(uint8_t)(tmp)+(uint8_t)0x30;
+	tmp%=10;
+	Buf_zap[3]=(uint8_t)(tmp)+(uint8_t)0x30;
+
+	Buf_zap[4]=95;
+	
+	tmp=DT.Month/10;
+	Buf_zap[5]=(uint8_t)(tmp)+(uint8_t)0x30;
+	tmp%=10;
+	Buf_zap[6]=(uint8_t)(tmp)+(uint8_t)0x30;
+
+	Buf_zap[7]=95;
+	
+	tmp=DT.Day/10;
+	Buf_zap[8]=(uint8_t)(tmp)+(uint8_t)0x30;
+	tmp%=10;
+	Buf_zap[9]=(uint8_t)(tmp)+(uint8_t)0x30;
+
+	Buf_zap[10]=95;
+	*/
+
+	Buf_zap[0]=(uint8_t)(DT_zap.Hours/10)+(uint8_t)0x30;
+	Buf_zap[1]=(uint8_t)(DT_zap.Hours%10)+(uint8_t)0x30;
+
+	Buf_zap[2]=0x3A; // :
+
+
+	Buf_zap[3]=(uint8_t)(DT_zap.Minutes/10)+(uint8_t)0x30;
+	Buf_zap[4]=(uint8_t)(DT_zap.Minutes%10)+(uint8_t)0x30;
+
+	Buf_zap[5]=0x3A;
+
+
+	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
+		Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
 		
-			Buf_zap[5]=0x20;
-		
+			Buf_zap[8]=0x3B;
+	/*	
 			dec_to_chr(time_label,(uint8_t*) &Buf_zap[6]);
 			
 		  Buf_zap[11]=0x20;
 
 			sm=12;
+			
+			dec_to_chr(time_label,(uint8_t*) &Buf_zap[20]);
+			Buf_zap[25]=0x3B;
+			
+			*/
+			
+			sm=9;
+
 			cnt=0;
 			kol_zap=0;
-					
-			while (kol_zap<60)
+		
+			
+
+		if (number_buff)	
+			while (kol_zap<600)
       {			
-				Buf_adc_zap[kol_zap]=kol_zap;
-					dec_to_chr(Buf_adc_zap[kol_zap],(uint8_t*) &Buf_zap[sm+6*kol_zap]);
-			
-					kol_zap++;			
-				Buf_zap[sm+6*kol_zap-1]=0x20;
-			  	
+	//			dec_to_chr(Buf_adc_zap[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);
+			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);		
+		
+				kol_zap++;			
+				Buf_zap[sm+8*kol_zap-3]=0x0D;
+				
+				if (kol_zap!=600)
+				{
+					Buf_zap[sm+8*kol_zap-1]=0x3B;
+			//		Buf_zap[sm+9*kol_zap-1]=0x3B;
+				}			  	
 			}
+		else
+			while (kol_zap<600)
+      {			
+	//			dec_to_chr(Buf_adc_zap[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);
+			dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);	
+		
+				kol_zap++;			
+				Buf_zap[sm+8*kol_zap-3]=0x0D;
+				
+				if (kol_zap!=600)
+				{
+					Buf_zap[sm+8*kol_zap-1]=0x3B;
+			//		Buf_zap[sm+9*kol_zap-1]=0x3B;
+				}			  	
+			}		
 			
-			Buf_zap[sm+6*kol_zap]=13;
+//			Buf_zap[sm+6*kol_zap]=13;
 			
-			por=0;
+	//		por=0;
 			
 	//		f_unlink (REC_WAVE_NAME);
 	
@@ -416,46 +545,64 @@ void COMMAND_AudioExecuteApplication(void)
 				{
 					if (!file_cr)
 					{
-						if (f_open(&file, REC_WAVE_NAME, FA_CREATE_ALWAYS)== FR_OK)
+				//		if (f_open(&file, REC_WAVE_NAME, FA_CREATE_ALWAYS)== FR_OK)
+						
+						if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
 						{
 	
-						STM_EVAL_LEDOn(LED4);
+							STM_EVAL_LEDOn(LED4);
 							f_lseek(&file, (DWORD)(file.fsize));
-				//		STM_EVAL_LEDOff(LED4);
-						f_write (&file, (uint8_t*)Buf_zap, sm+6*kol_zap+1, (void *)&bytesWritten); 				
-			//			f_close (&file);
-					
-//	f_lseek(&file, 0);
-  f_close (&file);
- // f_mount(0, NULL);
-							
-							
+							f_write (&file, (uint8_t*)Buf_zap, sm+8*kol_zap, (void *)&bytesWritten); 				
+							f_close (&file);
+
+					//		if 	(DT.Minutes==0)
+					//			if (DT.Hours==0)
+									if (file_name[5]!=(DT.Day%10+0x30))
+									{
+										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+									
+										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+
+										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+									}							
 						STM_EVAL_LEDOff(LED4);							
 						file_cr=1;
 						}
 						else
+						{
+									if (file_name[5]!=(DT.Day%10+0x30))
+									{
+										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+									
+										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+
+										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+									}	
 							STM_EVAL_LEDOn(LED5);
+						}
 					}
 					else
 					{
-						if (f_open(&file, REC_WAVE_NAME, FA_WRITE)== FR_OK)
+						if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)
 						{
 							
-						STM_EVAL_LEDOn(LED4);
-							f_lseek(&file,(DWORD) file.fsize);
-				//		STM_EVAL_LEDOff(LED4);
-						f_write (&file, (uint8_t*)Buf_zap, sm+6*kol_zap+1, (void *)&bytesWritten); 				
-	//					f_close (&file);
+							STM_EVAL_LEDOn(LED4);
+							f_lseek(&file,(DWORD) file.fsize);				
+							f_write (&file, (uint8_t*)Buf_zap, sm+8*kol_zap, (void *)&bytesWritten); 				
+							f_close (&file);
 							
-							  /* Update the data length in the header of the recorded wave */    
-//  f_lseek(&file, 0);
+									if (file_name[5]!=(DT.Day%10+0x30))
+									{
+										file_cr=0;
+									}
 							
-							  
- 
-  f_close (&file);
-//  f_mount(0, NULL);
-	
-						STM_EVAL_LEDOff(LED4);
+							STM_EVAL_LEDOff(LED4);
 						}
 						else
 							STM_EVAL_LEDOn(LED5);
@@ -463,6 +610,8 @@ void COMMAND_AudioExecuteApplication(void)
 				}
 				else
 					file_cr=0;
+				
+			buffering=0;
 		}
 }
 

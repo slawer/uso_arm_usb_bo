@@ -59,3 +59,5 @@
 .\MEDIA_USB_KEY\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
 .\MEDIA_USB_KEY\usbh_usr.o: .\inc\stm32f4xx_it.h
 .\MEDIA_USB_KEY\usbh_usr.o: .\inc\my.h
+.\MEDIA_USB_KEY\usbh_usr.o: .\src\rtc.h
+.\MEDIA_USB_KEY\usbh_usr.o: src\rtc.h
