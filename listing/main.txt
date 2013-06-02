@@ -723,7 +723,7 @@
 0000c8  4837              LDR      r0,|L5.424|
 0000ca  7007              STRB     r7,[r0,#0]
 ;;;334      
-;;;335    	
+;;;335    	// PC pin2
 ;;;336      ADC3_CH12_DMA_Config();
 0000cc  f7fffffe          BL       ADC3_CH12_DMA_Config
 ;;;337      // Start ADC3 Software Conversion 

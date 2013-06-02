@@ -332,7 +332,7 @@ int main(void)
   RepeatState = 0;
   LED_Toggle = 7;
   
-	
+	// PC pin2
   ADC3_CH12_DMA_Config();
   // Start ADC3 Software Conversion 
   ADC_SoftwareStartConv(ADC3);

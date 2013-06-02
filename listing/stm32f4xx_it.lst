@@ -37504,10 +37504,10 @@ N
 N	
 N	// раз в 10 мс
 N	// находим среднее значение
-N	//	summa[0]+=ADC3ConvertedValue;
+N		summa[0]+=ADC3ConvertedValue;
 N
 N	 
-N		summa[0]+=100;
+N//		summa[0]+=100;
 N		kol_average++;
 N	
 N	if (kol_average==10)
@@ -37571,9 +37571,19 @@ N		TxBuffer[5]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;
 N		TxBuffer[6]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
 N		TxBuffer[7]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
 N		TxBuffer[8]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+N		
+N		
+N		tmp=fz_average[0];
+N		TxBuffer[9]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N		tmp%=1000;
+N		TxBuffer[10]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N		tmp%=100;		
+N		TxBuffer[11]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N		tmp%=10;	
+N		TxBuffer[12]=(uint8_t)(tmp)+(uint8_t)0x30;		
 N	//	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
 N	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
-N		txsize=9;
+N		txsize=13;
 N		tekper=0;
 N		GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 X		GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
@@ -37722,7 +37732,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 370 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 380 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

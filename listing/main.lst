@@ -37782,7 +37782,7 @@ N  /* Initialize the repeat status */
 N  RepeatState = 0;
 N  LED_Toggle = 7;
 N  
-N	
+N	// PC pin2
 N  ADC3_CH12_DMA_Config();
 N  // Start ADC3 Software Conversion 
 N  ADC_SoftwareStartConv(ADC3);

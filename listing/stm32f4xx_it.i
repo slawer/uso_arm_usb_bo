@@ -21644,10 +21644,10 @@ void SysTick_Handler(void)
 	
 	
 	
-	
+		summa[0]+=ADC3ConvertedValue;
 
 	 
-		summa[0]+=100;
+
 		kol_average++;
 	
 	if (kol_average==10)
@@ -21710,9 +21710,19 @@ void SysTick_Handler(void)
 		TxBuffer[6]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
 		TxBuffer[7]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
 		TxBuffer[8]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+		
+		
+		tmp=fz_average[0];
+		TxBuffer[9]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+		tmp%=1000;
+		TxBuffer[10]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+		tmp%=100;		
+		TxBuffer[11]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+		tmp%=10;	
+		TxBuffer[12]=(uint8_t)(tmp)+(uint8_t)0x30;		
 	
 	
-		txsize=9;
+		txsize=13;
 		tekper=0;
 		GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
 		USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);

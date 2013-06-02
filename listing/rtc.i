@@ -14848,6 +14848,9 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 #line 9 "src\\rtc.c"
 
 
+u16 bkp=0;
+
+
 static void rtc_Unlock(void)
 {
     
@@ -15031,6 +15034,28 @@ void rtc_Init(void)
         ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~((uint32_t)0x00000080);
     }   
     rtc_Lock();
+		
+		
+
+
+
+RTC_WriteBackupRegister(((uint32_t)0x00000002),0xA5A5);
+		
+		
+
+RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
+
+
+
+
+
+
+{
+}
+
+bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+__asm volatile ("nop");
+
     
     
 		
@@ -15064,6 +15089,146 @@ void rtc_Init(void)
 
 
  
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	
 }
 
 

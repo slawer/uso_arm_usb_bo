@@ -29687,6 +29687,9 @@ N/* end of string.h */
 N
 L 9 "src\rtc.c" 2
 N
+N
+Nu16 bkp=0;
+N
 N// Выключить защиту от записи
 Nstatic void rtc_Unlock(void)
 N{
@@ -29896,6 +29899,32 @@ N        RTC->ISR &= ~RTC_ISR_INIT;
 X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~((uint32_t)0x00000080);
 N    }   
 N    rtc_Lock();
+N		
+N		// Allow access to BKP Domain 
+N//PWR_BackupAccessCmd(ENABLE);
+N
+N// Write to the first RTC Backup Data Register 
+NRTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
+XRTC_WriteBackupRegister(((uint32_t)0x00000002),0xA5A5);
+N		
+N		// Backup SRAM **************************************************************
+N//Enable BKPRAM Clock 
+NRCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+XRCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
+N
+N//Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
+N//PWR_BackupRegulatorCmd(ENABLE);
+N
+N// Wait until the Backup SRAM low power Regulator is ready 
+N//while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
+N{
+N}
+N
+Nbkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+Xbkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+N__ASM volatile ("nop");
+X__asm volatile ("nop");
+N
 N    
 N    // Всё, часы запустились и считают время.
 N		/*
@@ -29929,6 +29958,146 @@ N    return 1;
 N  }
 N  return 0;
 N	*/
+N	
+N	
+N	/*
+N	
+N	// one more init кес
+N	
+N	RTC_InitTypeDef RTC_InitStructure;
+NRTC_TimeTypeDef RTC_TimeStructure;
+NRTC_DateTypeDef RTC_DateStructure;
+N__IO uint32_t AsynchPrediv = 0, SynchPrediv = 0;
+N__IO uint32_t TimeDisplay = 0;
+N
+N
+N		// Enable the PWR APB1 Clock Interface 
+NRCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+N
+N//Allow access to BKP Domain 
+NPWR_BackupAccessCmd(ENABLE);
+N  
+Nif (RTC_ReadBackupRegister(RTC_BKP_DR2) != 0xA5A5) {
+N
+N//Enable the PWR clock 
+NRCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+N
+N// Allow access to RTC 
+NPWR_BackupAccessCmd(ENABLE);
+N
+N#if defined (RTC_CLOCK_SOURCE_LSI) // LSI used as RTC source clock
+N// The RTC Clock may varies due to LSI frequency dispersion. 
+N// Enable the LSI OSC 
+NRCC_LSICmd(ENABLE);
+N
+N// Wait till LSI is ready 
+Nwhile(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET)
+N{
+N}
+N
+N// Select the RTC Clock Source 
+NRCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+N
+NSynchPrediv = 0xFF;
+NAsynchPrediv = 0x7F;
+N
+N#elif defined (RTC_CLOCK_SOURCE_LSE) // LSE used as RTC source clock 
+N// Enable the LSE OSC 
+NRCC_LSEConfig(RCC_LSE_ON);
+N
+N// Wait till LSE is ready 
+Nwhile(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+N{
+N}
+N
+N// Select the RTC Clock Source 
+NRCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+N
+NSynchPrediv = 0xFF;
+NAsynchPrediv = 0x7F;
+N
+N#else
+N#error Please select the RTC Clock source inside the main.c file
+N#endif // RTC_CLOCK_SOURCE_LSI 
+N
+N// Enable the RTC Clock 
+NRCC_RTCCLKCmd(ENABLE);
+N
+N// Wait for RTC APB registers synchronisation 
+NRTC_WaitForSynchro();
+N
+N// Allow access to BKP Domain 
+NPWR_BackupAccessCmd(ENABLE);
+N
+N// Write to the first RTC Backup Data Register 
+NRTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
+N
+N//Set the Time 
+NRTC_TimeStructure.RTC_Hours = 22;
+NRTC_TimeStructure.RTC_Minutes = 11;
+NRTC_TimeStructure.RTC_Seconds = 00;
+N
+N// Set the Date 
+NRTC_DateStructure.RTC_Month = 4;
+NRTC_DateStructure.RTC_Date = 29;
+NRTC_DateStructure.RTC_Year = 11;
+NRTC_DateStructure.RTC_WeekDay = RTC_Weekday_Friday;
+N
+N//Calendar Configuration 
+NRTC_InitStructure.RTC_AsynchPrediv = AsynchPrediv;
+NRTC_InitStructure.RTC_SynchPrediv = SynchPrediv;
+NRTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
+NRTC_Init(&RTC_InitStructure);
+N
+N// Set Current Time and Date 
+NRTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
+NRTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
+N#if 0
+N//Configure the RTC Wakeup Clock source and Counter (Wakeup event each 1 second) 
+NRTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);
+NRTC_SetWakeUpCounter(0x7FF);
+N
+N// Enable the Wakeup Interrupt 
+NRTC_ITConfig(RTC_IT_WUT, ENABLE);
+N
+N//Enable Wakeup Counter 
+NRTC_WakeUpCmd(ENABLE);
+N#endif
+N// Backup SRAM **************************************************************
+N//Enable BKPRAM Clock 
+NRCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+N
+N//Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
+NPWR_BackupRegulatorCmd(ENABLE);
+N
+N// Wait until the Backup SRAM low power Regulator is ready 
+Nwhile(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
+N{
+N}
+N
+N}
+Nelse{
+N
+N// Enable the PWR clock 
+NRCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+N
+N// Allow access to RTC 
+NPWR_BackupAccessCmd(ENABLE);
+N
+N// Wait for RTC APB registers synchronisation 
+NRTC_WaitForSynchro();
+N// Clear the Wakeup Interrupt 
+NRTC_ClearITPendingBit(RTC_IT_WUT);
+N
+N// Backup SRAM **************************************************************
+N// Enable BKPSRAM Clock 
+NRCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+N}
+N
+N
+N	
+N	*/
+N	
 N}
 N
 N// Получить текущее время
