@@ -51,4 +51,9 @@ u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 u8 kol_average=0;
 
+u8 new_komand=0;
+
+u8 address=1;
+
+
 

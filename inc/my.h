@@ -64,3 +64,17 @@ extern u16 pred_minute;
 extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 extern u8 kol_average;
+
+
+typedef struct 
+{
+u16 kod[10];
+float fz[10];
+} st_tab_kal;
+
+extern st_tab_kal tab_kal;
+
+
+extern u8 address;
+
+extern u8 new_komand;

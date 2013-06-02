@@ -176,6 +176,9 @@ void PendSV_Handler(void)
 
 u16 fiz_vel(u16 kod, u8 numb)
 {
+	
+//	tab_kal
+	
 return kod;
 }
 
@@ -253,6 +256,7 @@ void SysTick_Handler(void)
 		
 		rtc_Get(&DT1);
 		
+		USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 		tmp=por;
 		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 		tmp%=1000;
@@ -273,6 +277,7 @@ void SysTick_Handler(void)
 	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
 		txsize=9;
 		tekper=0;
+		GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 		USART_SendData(USART2, 0x3A);
 		
 		if (DT1.Seconds==0)
@@ -295,6 +300,15 @@ void SysTick_Handler(void)
 	{
 		minute++;
 	}
+	}
+	
+	
+	if (new_komand)
+	{
+	//	RxBuffer[tekpr];
+		
+		
+		new_komand=0;
 	}
 				
 	}

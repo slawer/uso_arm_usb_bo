@@ -37259,6 +37259,21 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+N
+Ntypedef struct 
+N{
+Nu16 kod[10];
+Nfloat fz[10];
+N} st_tab_kal;
+N
+Nextern st_tab_kal tab_kal;
+N
+N
+Nextern u8 address;
+N
+W ".\inc\my.h" 80 22 last line of file ends without a newline
+Nextern u8 new_komand;
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1
@@ -37457,6 +37472,9 @@ N}
 N
 Nu16 fiz_vel(u16 kod, u8 numb)
 N{
+N	
+N//	tab_kal
+N	
 Nreturn kod;
 N}
 N
@@ -37535,6 +37553,8 @@ N
 N		
 N		rtc_Get(&DT1);
 N		
+N		USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X		USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
 N		tmp=por;
 N		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N		tmp%=1000;
@@ -37555,6 +37575,8 @@ N	//	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
 N	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
 N		txsize=9;
 N		tekper=0;
+N		GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X		GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
 N		USART_SendData(USART2, 0x3A);
 X		USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N		
@@ -37578,6 +37600,15 @@ N	if ((tick%60)==0)
 N	{
 N		minute++;
 N	}
+N	}
+N	
+N	
+N	if (new_komand)
+N	{
+N	//	RxBuffer[tekpr];
+N		
+N		
+N		new_komand=0;
 N	}
 N				
 N	}
@@ -37691,7 +37722,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 356 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 370 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

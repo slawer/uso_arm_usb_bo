@@ -35606,6 +35606,21 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+N
+Ntypedef struct 
+N{
+Nu16 kod[10];
+Nfloat fz[10];
+N} st_tab_kal;
+N
+Nextern st_tab_kal tab_kal;
+N
+N
+Nextern u8 address;
+N
+W ".\inc\my.h" 80 22 last line of file ends without a newline
+Nextern u8 new_komand;
 L 27 "src\usbh_usr.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1

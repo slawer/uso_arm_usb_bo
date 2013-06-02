@@ -74,11 +74,25 @@ void USART2_IRQHandler(void)
 						tmp=USART_ReceiveData (USART2);
 						if (tmp==0x3A)
 								tekpr=0;
+	
+						if (tekpr==1)
+								if (tmp!=address)
+								{
+									tekpr=0;
+									rxsize=0;
+								}
+						
+						if (tmp==0x0D)
+						{
+							rxsize=tekpr;
+							USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+							new_komand=1;
+						}
 						RxBuffer[tekpr]=tmp;
 						tekpr++;
 				//		GPIOD->ODR ^= tx_pin_en;
 				//		GPIOD->ODR ^= rx_pin_en;
-						rxsize=tekpr;
+						
 
 					}
 //Transmission complete interrupt								 // чтото передали
@@ -93,7 +107,13 @@ void USART2_IRQHandler(void)
 					{
 						if (txsize==tekper)
 								USART_SendData(USART2, 0x0D);
-		//					GPIOD->ODR ^= tx_pin_en;
+						else
+						{
+							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
+							USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+						}
+						//
+//						GPIOD->ODR ^= tx_pin_en;
 		//					GPIOD->ODR ^= rx_pin_en;
 					}
 					if (tekper>TxBufferSize-1)
@@ -345,8 +365,8 @@ int main(void)
 
 	UART2Init();
 	
-	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
-	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOB.2
+	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
+	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
 	GPIOD->ODR ^= tx_pin_en;
 
 	

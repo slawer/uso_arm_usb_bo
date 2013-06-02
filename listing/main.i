@@ -21463,6 +21463,20 @@ extern u16 pred_minute;
 extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 extern u8 kol_average;
+
+
+typedef struct 
+{
+u16 kod[10];
+float fz[10];
+} st_tab_kal;
+
+extern st_tab_kal tab_kal;
+
+
+extern u8 address;
+
+extern u8 new_komand;
 #line 52 "src\\main.c"
 #line 1 ".\\inc\\my_def_ext.h"
 
@@ -21526,6 +21540,11 @@ u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 u8 kol_average=0;
 
+u8 new_komand=0;
+
+u8 address=1;
+
+
 
 #line 53 "src\\main.c"
 
@@ -21560,11 +21579,25 @@ void USART2_IRQHandler(void)
 						tmp=USART_ReceiveData (((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)));
 						if (tmp==0x3A)
 								tekpr=0;
+	
+						if (tekpr==1)
+								if (tmp!=address)
+								{
+									tekpr=0;
+									rxsize=0;
+								}
+						
+						if (tmp==0x0D)
+						{
+							rxsize=tekpr;
+							USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);
+							new_komand=1;
+						}
 						RxBuffer[tekpr]=tmp;
 						tekpr++;
 				
 				
-						rxsize=tekpr;
+						
 
 					}
 
@@ -21579,7 +21612,13 @@ void USART2_IRQHandler(void)
 					{
 						if (txsize==tekper)
 								USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x0D);
-		
+						else
+						{
+							GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_RESET); 
+							USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), ENABLE);
+						}
+						
+
 		
 					}
 					if (tekper>((u8)255)-1)
@@ -21933,7 +21972,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 470 "src\\main.c"
+#line 490 "src\\main.c"
 
   
  

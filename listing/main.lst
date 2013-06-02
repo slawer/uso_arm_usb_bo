@@ -37288,6 +37288,21 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+N
+Ntypedef struct 
+N{
+Nu16 kod[10];
+Nfloat fz[10];
+N} st_tab_kal;
+N
+Nextern st_tab_kal tab_kal;
+N
+N
+Nextern u8 address;
+N
+W ".\inc\my.h" 80 22 last line of file ends without a newline
+Nextern u8 new_komand;
 L 52 "src\main.c" 2
 N#include "my_def_ext.h"
 L 1 ".\inc\my_def_ext.h" 1
@@ -37382,6 +37397,11 @@ Nu16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nu8 kol_average=0;
 N
+Nu8 new_komand=0;
+N
+Nu8 address=1;
+N
+N
 N
 L 53 "src\main.c" 2
 N
@@ -37446,11 +37466,26 @@ N						tmp=USART_ReceiveData (USART2);
 X						tmp=USART_ReceiveData (((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)));
 N						if (tmp==0x3A)
 N								tekpr=0;
+N	
+N						if (tekpr==1)
+N								if (tmp!=address)
+N								{
+N									tekpr=0;
+N									rxsize=0;
+N								}
+N						
+N						if (tmp==0x0D)
+N						{
+N							rxsize=tekpr;
+N							USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+X							USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);
+N							new_komand=1;
+N						}
 N						RxBuffer[tekpr]=tmp;
 N						tekpr++;
 N				//		GPIOD->ODR ^= tx_pin_en;
 N				//		GPIOD->ODR ^= rx_pin_en;
-N						rxsize=tekpr;
+N						
 N
 N					}
 N//Transmission complete interrupt								 // чтото передали
@@ -37469,7 +37504,15 @@ N					{
 N						if (txsize==tekper)
 N								USART_SendData(USART2, 0x0D);
 X								USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x0D);
-N		//					GPIOD->ODR ^= tx_pin_en;
+N						else
+N						{
+N							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
+X							GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_RESET); 
+N							USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+X							USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), ENABLE);
+N						}
+N						//
+N//						GPIOD->ODR ^= tx_pin_en;
 N		//					GPIOD->ODR ^= rx_pin_en;
 N					}
 N					if (tekper>TxBufferSize-1)
@@ -37777,9 +37820,9 @@ X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)),
 N
 N	UART2Init();
 N	
-N	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
+N	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
 X	GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0010), Bit_SET);      
-N	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOB.2
+N	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
 X	GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET);    
 N	GPIOD->ODR ^= tx_pin_en;
 X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00))->ODR ^= ((uint16_t)0x0010);
@@ -37823,8 +37866,8 @@ N#endif
 N	
 N
 N  
-W "src\main.c" 243 5 variable "i" was declared but never referenced
-W "src\main.c" 248 12 variable "DT" was declared but never referenced
+W "src\main.c" 263 5 variable "i" was declared but never referenced
+W "src\main.c" 268 12 variable "DT" was declared but never referenced
 N}
 N
 N/**

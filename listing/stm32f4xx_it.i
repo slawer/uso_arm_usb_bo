@@ -21439,6 +21439,20 @@ extern u16 pred_minute;
 extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 extern u8 kol_average;
+
+
+typedef struct 
+{
+u16 kod[10];
+float fz[10];
+} st_tab_kal;
+
+extern st_tab_kal tab_kal;
+
+
+extern u8 address;
+
+extern u8 new_komand;
 #line 28 "src\\stm32f4xx_it.c"
 #line 1 "src\\rtc.h"
 
@@ -21599,6 +21613,9 @@ void PendSV_Handler(void)
 
 u16 fiz_vel(u16 kod, u8 numb)
 {
+	
+
+	
 return kod;
 }
 
@@ -21676,6 +21693,7 @@ void SysTick_Handler(void)
 		
 		rtc_Get(&DT1);
 		
+		USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
 		tmp=por;
 		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 		tmp%=1000;
@@ -21696,6 +21714,7 @@ void SysTick_Handler(void)
 	
 		txsize=9;
 		tekper=0;
+		GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
 		USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 		
 		if (DT1.Seconds==0)
@@ -21718,6 +21737,15 @@ void SysTick_Handler(void)
 	{
 		minute++;
 	}
+	}
+	
+	
+	if (new_komand)
+	{
+	
+		
+		
+		new_komand=0;
 	}
 				
 	}

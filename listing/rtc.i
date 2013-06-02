@@ -15004,7 +15004,7 @@ void rtc_Init(void)
         
         
         {  
-            uint32_t Sync = 249;   
+            uint32_t Sync = 263;   
             uint32_t Async =127;  
             
             
@@ -15022,7 +15022,7 @@ void rtc_Init(void)
         rtc_SetDate(2, 6, 13, 7);
         
         
-        rtc_SetTime(15, 15, 00);
+        rtc_SetTime(0, 0, 00);
         
         
         ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR |= ((uint32_t)0x00000040);
