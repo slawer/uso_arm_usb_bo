@@ -5,6 +5,22 @@
 #define numbkor 10
 #define vrem_tm 100
 
+#define	kpl_simb_in_stroka	7
+
+
+#define tx_pin_en	GPIO_Pin_4
+#define rx_pin_en	GPIO_Pin_3
+
+	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
+	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+		
+	
+extern	u8 txsize, rxsize;
+	
+extern		u8  RxBuffer[RxBufferSize];
+extern		u8  TxBuffer[RxBufferSize];
+extern		u8 tekper,tekpr;
+
 typedef struct
 {
   uint8_t adr;      

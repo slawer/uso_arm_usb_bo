@@ -2,4 +2,4 @@
 --library_type=microlib --strict --scatter ".\MEDIA_USB_KEY\uso_arm_usb_bo.sct" 
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
- --list ".\uso_arm_usb_bo.map" -o .\MEDIA_USB_KEY\uso_arm_usb_bo.axf
+ --list ".\listing\uso_arm_usb_bo.map" -o .\MEDIA_USB_KEY\uso_arm_usb_bo.axf

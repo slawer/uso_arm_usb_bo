@@ -4,7 +4,7 @@
 .\deb\ff.o: .\inc\usb_conf.h
 .\deb\ff.o: .\src\stm32f4xx.h
 .\deb\ff.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\ff.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\ff.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\ff.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -37,7 +37,7 @@
 .\deb\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\deb\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\deb\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\deb\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\ff.o: Utilities\Third_Party\fat_fs\ffconf.h
 .\deb\ff.o: Utilities\Third_Party\fat_fs\diskio.h
 .\deb\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
@@ -56,4 +56,4 @@
 .\deb\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
 .\deb\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.h
 .\deb\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
-.\deb\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h
+.\deb\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h

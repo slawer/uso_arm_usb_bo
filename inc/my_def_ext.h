@@ -5,7 +5,17 @@
 
 
 // my add for usb write
-#define numbkor 10
+#define tx_pin_en	GPIO_Pin_4
+#define rx_pin_en	GPIO_Pin_3
+
+	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
+	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+	
+	u8 txsize, rxsize;
+	
+	u8  RxBuffer[RxBufferSize];
+	u8  TxBuffer[RxBufferSize];
+	u8 tekper,tekpr;
 
 u32 tick=0;
 #define vrem_tm 100

@@ -2,7 +2,7 @@
 .\deb\stm32f4_discovery_lis302dl.o: Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.h
 .\deb\stm32f4_discovery_lis302dl.o: .\src\stm32f4xx.h
 .\deb\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\stm32f4_discovery_lis302dl.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\stm32f4_discovery_lis302dl.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cm4_simd.h

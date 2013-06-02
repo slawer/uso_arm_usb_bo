@@ -1,7 +1,7 @@
 .\deb\system_stm32f4xx.o: src\system_stm32f4xx.c
 .\deb\system_stm32f4xx.o: src\stm32f4xx.h
 .\deb\system_stm32f4xx.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\system_stm32f4xx.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\system_stm32f4xx.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\system_stm32f4xx.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\system_stm32f4xx.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\system_stm32f4xx.o: .\Libraries\CMSIS\core_cm4_simd.h

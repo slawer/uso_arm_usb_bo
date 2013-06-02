@@ -467,7 +467,9 @@ if (buffering)
 	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
 		Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
 		
-			Buf_zap[8]=0x3B;
+		//	Buf_zap[8]=0x3B; //	;
+		//	Buf_zap[9]=0x0D; //	enter
+			
 	/*	
 			dec_to_chr(time_label,(uint8_t*) &Buf_zap[6]);
 			
@@ -480,7 +482,7 @@ if (buffering)
 			
 			*/
 			
-			sm=9;
+			sm=8;
 
 			cnt=0;
 			kol_zap=0;
@@ -490,32 +492,23 @@ if (buffering)
 		if (number_buff)	
 			while (kol_zap<600)
       {			
-	//			dec_to_chr(Buf_adc_zap[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);
-			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);		
-		
+			//	Buf_adc_zap1[kol_zap]=kol_zap;
+				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
+			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
 				kol_zap++;			
-				Buf_zap[sm+8*kol_zap-3]=0x0D;
-				
-				if (kol_zap!=600)
-				{
-					Buf_zap[sm+8*kol_zap-1]=0x3B;
-			//		Buf_zap[sm+9*kol_zap-1]=0x3B;
-				}			  	
+				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
 			}
 		else
 			while (kol_zap<600)
       {			
-	//			dec_to_chr(Buf_adc_zap[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);
-			dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+8*kol_zap]);	
-		
+			while (kol_zap<600)
+      {			
+			//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
+				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
+			 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
 				kol_zap++;			
-				Buf_zap[sm+8*kol_zap-3]=0x0D;
-				
-				if (kol_zap!=600)
-				{
-					Buf_zap[sm+8*kol_zap-1]=0x3B;
-			//		Buf_zap[sm+9*kol_zap-1]=0x3B;
-				}			  	
+				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+			}		  	
 			}		
 			
 //			Buf_zap[sm+6*kol_zap]=13;
@@ -543,16 +536,14 @@ if (buffering)
 			*/	
 				if (HCD_IsDeviceConnected(&USB_OTG_Core) == 1)
 				{
-					if (!file_cr)
+		//			if (!file_cr)
 					{
-				//		if (f_open(&file, REC_WAVE_NAME, FA_CREATE_ALWAYS)== FR_OK)
-						
-						if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
+					if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)	
+				//		if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
 						{
-	
 							STM_EVAL_LEDOn(LED4);
 							f_lseek(&file, (DWORD)(file.fsize));
-							f_write (&file, (uint8_t*)Buf_zap, sm+8*kol_zap, (void *)&bytesWritten); 				
+							f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
 							f_close (&file);
 
 					//		if 	(DT.Minutes==0)
@@ -573,8 +564,17 @@ if (buffering)
 						}
 						else
 						{
-									if (file_name[5]!=(DT.Day%10+0x30))
-									{
+							if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
+					//		if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)
+							{
+								
+								STM_EVAL_LEDOn(LED4);
+								f_lseek(&file,(DWORD) file.fsize);				
+								f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+								f_close (&file);
+								
+										if (file_name[5]!=(DT.Day%10+0x30))
+										{
 										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
 										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
 									
@@ -583,29 +583,14 @@ if (buffering)
 
 										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
 										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
-									}	
-							STM_EVAL_LEDOn(LED5);
-						}
-					}
-					else
-					{
-						if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)
-						{
-							
-							STM_EVAL_LEDOn(LED4);
-							f_lseek(&file,(DWORD) file.fsize);				
-							f_write (&file, (uint8_t*)Buf_zap, sm+8*kol_zap, (void *)&bytesWritten); 				
-							f_close (&file);
-							
-									if (file_name[5]!=(DT.Day%10+0x30))
-									{
-										file_cr=0;
-									}
-							
-							STM_EVAL_LEDOff(LED4);
-						}
-						else
-							STM_EVAL_LEDOn(LED5);
+										}
+								
+								STM_EVAL_LEDOff(LED4);
+							}
+							else
+								STM_EVAL_LEDOn(LED5);
+									
+						}							
 					}
 				}
 				else

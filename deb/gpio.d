@@ -1,7 +1,7 @@
 .\deb\gpio.o: src\gpio.c
 .\deb\gpio.o: src\gpio.h
-.\deb\gpio.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
-.\deb\gpio.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\gpio.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\gpio.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\gpio.o: .\src\stm32f4xx.h
 .\deb\gpio.o: .\Libraries\CMSIS\core_cm4.h
 .\deb\gpio.o: .\Libraries\CMSIS\core_cmInstr.h

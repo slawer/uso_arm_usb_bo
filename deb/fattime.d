@@ -3,7 +3,7 @@
 .\deb\fattime.o: .\inc\usb_conf.h
 .\deb\fattime.o: .\src\stm32f4xx.h
 .\deb\fattime.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\fattime.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\fattime.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\fattime.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\fattime.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\fattime.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -36,5 +36,5 @@
 .\deb\fattime.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\deb\fattime.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\deb\fattime.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\deb\fattime.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\fattime.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\fattime.o: Utilities\Third_Party\fat_fs\fattime.h

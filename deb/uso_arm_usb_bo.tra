@@ -46,7 +46,7 @@
 ### ADS-LD Output File: '.\deb\uso_arm_usb_bo.axf'
 ### ADS-LD Command File: '.\deb\uso_arm_usb_bo.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\deb\uso_arm_usb_bo.lnp', Handle=0x00001D18
+### Creating CmdFile '.\deb\uso_arm_usb_bo.lnp', Handle=0x000015F8
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\deb\uso_arm_usb_bo.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

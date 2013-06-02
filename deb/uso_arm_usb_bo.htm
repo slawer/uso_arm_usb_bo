@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\deb\uso_arm_usb_bo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\deb\uso_arm_usb_bo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Thu May 30 16:56:06 2013
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Sun Jun 02 00:24:22 2013
 <BR><P>
 <H3>Maximum Stack Usage =        408 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -467,7 +467,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f4xx.o(RESET)
 </UL>
-<P><STRONG><a name="[8d]"></a>COMMAND_AudioExecuteApplication</STRONG> (Thumb, 358 bytes, Stack size 48 bytes, usbh_usr.o(i.COMMAND_AudioExecuteApplication))
+<P><STRONG><a name="[8d]"></a>COMMAND_AudioExecuteApplication</STRONG> (Thumb, 578 bytes, Stack size 48 bytes, usbh_usr.o(i.COMMAND_AudioExecuteApplication))
 <BR><BR>[Stack]<UL><LI>Max Depth = 392<LI>Call Chain = COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 </UL>
 <BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_write
@@ -588,7 +588,6 @@ Global Symbols
 <P><STRONG><a name="[90]"></a>HCD_IsDeviceConnected</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, usb_hcd.o(i.HCD_IsDeviceConnected))
 <BR><BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;COMMAND_AudioExecuteApplication
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_Process
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_initialize
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_MSC_TestUnitReady
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_MSC_RequestSense
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_MSC_ReadCapacity10
@@ -601,6 +600,7 @@ Global Symbols
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_MSC_Read10
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_write
 <LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_read
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_initialize
 </UL>
 
 <P><STRONG><a name="[a0]"></a>HCD_ResetPort</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, usb_hcd.o(i.HCD_ResetPort))
@@ -803,8 +803,10 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
-<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 160 bytes, Stack size 20 bytes, stm32f4xx_it.o(i.SysTick_Handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = SysTick_Handler
+<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 222 bytes, Stack size 24 bytes, stm32f4xx_it.o(i.SysTick_Handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = SysTick_Handler &rArr; rtc_Get
+</UL>
+<BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rtc_Get
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f4xx.o(RESET)
 </UL>
@@ -1240,7 +1242,7 @@ Global Symbols
 <P><STRONG><a name="[67]"></a>USBH_USR_DeviceAddressAssigned</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_DeviceAddressAssigned))
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
-<P><STRONG><a name="[61]"></a>USBH_USR_DeviceAttached</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, usbh_usr.o(i.USBH_USR_DeviceAttached))
+<P><STRONG><a name="[61]"></a>USBH_USR_DeviceAttached</STRONG> (Thumb, 118 bytes, Stack size 16 bytes, usbh_usr.o(i.USBH_USR_DeviceAttached))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = USBH_USR_DeviceAttached &rArr; rtc_Get
 </UL>
 <BR>[Calls]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ITConfig
@@ -1559,11 +1561,11 @@ Global Symbols
 <P><STRONG><a name="[110]"></a>chk_mounted</STRONG> (Thumb, 472 bytes, Stack size 32 bytes, ff.o(i.chk_mounted))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = chk_mounted &rArr; check_fs &rArr; disk_read &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_initialize
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_fs
+<BR>[Calls]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_fs
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_status
 <LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_read
 <LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_ioctl
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_initialize
 </UL>
 <BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 </UL>
@@ -1744,6 +1746,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_USR_DeviceAttached
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;COMMAND_AudioExecuteApplication
+<LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
 </UL>
 
 <P><STRONG><a name="[12a]"></a>rtc_Init</STRONG> (Thumb, 170 bytes, Stack size 0 bytes, rtc.o(i.rtc_Init))

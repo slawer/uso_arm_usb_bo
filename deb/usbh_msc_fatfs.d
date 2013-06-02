@@ -2,7 +2,7 @@
 .\deb\usbh_msc_fatfs.o: .\inc\usb_conf.h
 .\deb\usbh_msc_fatfs.o: .\src\stm32f4xx.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\usbh_msc_fatfs.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\usbh_msc_fatfs.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -37,7 +37,7 @@
 .\deb\usbh_msc_fatfs.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
 .\deb\usbh_msc_fatfs.o: .\Utilities\Third_Party\fat_fs\diskio.h
 .\deb\usbh_msc_fatfs.o: .\Utilities\Third_Party\fat_fs\integer.h
-.\deb\usbh_msc_fatfs.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\usbh_msc_fatfs.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\STM32_USB_HOST_Library\usbh_core.h
 .\deb\usbh_msc_fatfs.o: .\Libraries\STM32_USB_OTG_Driver\usb_hcd.h

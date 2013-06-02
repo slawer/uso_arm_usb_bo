@@ -56,71 +56,52 @@ __IO uint16_t ADC3ConvertedValue = 0;
 #include "rtc.h"
 //#include "gpio.h"
 
-void USART1_IRQHandler(void)
-{ 
-	#define NumbMaxKor			 ((u8)10)	
-	#define RxBufferSize1        ((u8)0x1E)  // USART2 global Interrupt 
-	uint16_t tmp2;
-	typedef struct
-	{
-		 u8 NRxBuf[RxBufferSize1];
-	} 
-	RXBUF;
+
 	
-	RXBUF  RxBuffer[NumbMaxKor];
-	uint16_t tekper,tekpr,zad,ms,kolkor,tekkor;
+	uint16_t zad,ms,kolkor,tekkor;
 	
 	uint16_t flper,tmo,pertmo;
 
 
-    	tmp2=0;
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)		  // приняли
-    {		
-     	USART_ClearITPendingBit(USART1, USART_IT_RXNE);
-	
-			RxBuffer[tekkor].NRxBuf[tekpr]=USART_ReceiveData (USART1);
+void USART2_IRQHandler(void)
+{ 
 
-			tekpr++;
-			if (tekpr>RxBufferSize1-1)
-				tekpr=0;
-			tmo=2;
-			pertmo=0;
+    	
+				if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)		  // приняли
+					{		u8 tmp=0;
+						USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+				
+						tmp=USART_ReceiveData (USART2);
+						if (tmp==0x3A)
+								tekpr=0;
+						RxBuffer[tekpr]=tmp;
+						tekpr++;
+				//		GPIOD->ODR ^= tx_pin_en;
+				//		GPIOD->ODR ^= rx_pin_en;
+						rxsize=tekpr;
 
-    }
+					}
 //Transmission complete interrupt								 // чтото передали
-        if(USART_GetITStatus(USART1, USART_IT_TC) != RESET)
+        if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
         {
 		
-					USART_ClearITPendingBit(USART1, USART_IT_TC);//очищаем признак прерывания
+					USART_ClearITPendingBit(USART2, USART_IT_TC);//очищаем признак прерывания
 					
-					tmp2=2;
-
-
-
-					switch (tekper)
-					{			   
-									case 0:	  USART_SendData(USART1, kor[tekkor].adr);	  break;
-									case 1:	  USART_SendData(USART1, kor[tekkor].func); //GPIO_SetBits(GPIOC, GPIO_Pin_9);  
-									break;
-									case 2:	  USART_SendData(USART1, kor[tekkor].reg>>8); break;
-									case 3:   USART_SendData(USART1, kor[tekkor].reg);	  break;
-									case 4:	  USART_SendData(USART1, kor[tekkor].kol>>8); break;
-									case 5:	  USART_SendData(USART1, kor[tekkor].kol);	  break;
-									case 6:	  USART_SendData(USART1, kor[tekkor].crc>>8); break;
-									case 7:	  USART_SendData(USART1, kor[tekkor].crc);	  break;
-									
-						
-									case 8:	  
-										flper=0;	
-										tekper=0;
-										tmo=vrem_tm;	
-								 
-					//					GPIOA->BSRR=GPIO_BSRR_BR11|GPIO_BSRR_BR12; // настроиться на прием
-										
-										break;
+					if (txsize>tekper)
+						USART_SendData(USART2,TxBuffer[tekper]);
+					else
+					{
+						if (txsize==tekper)
+								USART_SendData(USART2, 0x0D);
+		//					GPIOD->ODR ^= tx_pin_en;
+		//					GPIOD->ODR ^= rx_pin_en;
 					}
+					if (tekper>TxBufferSize-1)
+						tekper=0;
 					tekper++;
-	
+					
+			 
+					//					GPIOA->BSRR=GPIO_BSRR_BR11|GPIO_BSRR_BR12; // настроиться на прием
         }
 
 
@@ -194,6 +175,63 @@ void ADC3_CH12_DMA_Config(void)
 }
 
 
+void UART2Init(void)
+{
+
+   GPIO_InitTypeDef GPIO_InitStructure;
+   USART_InitTypeDef USART_InitStructure;
+
+   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);    	// 1.
+   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE); 			// 2.
+
+   GPIO_PinAFConfig  ( GPIOD, GPIO_PinSource5 , GPIO_AF_USART2) ;
+   GPIO_PinAFConfig  ( GPIOD, GPIO_PinSource6 , GPIO_AF_USART2) ;   
+   // 
+   //     //  Tx
+     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // alternate function!
+   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP ;
+     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     GPIO_Init(GPIOD, &GPIO_InitStructure);
+   ////
+
+   //     // Rx
+     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; //GPIO_Mode_IN;
+     GPIO_Init(GPIOD, &GPIO_InitStructure);
+   //
+     USART_InitStructure.USART_BaudRate = 9600;
+     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+     USART_InitStructure.USART_StopBits = USART_StopBits_1;
+     USART_InitStructure.USART_Parity = USART_Parity_No;
+     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+
+   USART_Init(USART2, &USART_InitStructure);
+	 
+	 // enable interrupt on sended data
+	//	USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+		// enable interrupt on received data
+//	  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//?????????? ?????????? ?? ?????
+
+//RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;   //???????????? GPIO
+//RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;   //???????????? ?????????????? ??????? GPIO
+//RCC->APB2ENR |= RCC_APB2ENR_USART1EN; //???????????? ?????? USART1
+
+   USART_Cmd(USART2, ENABLE); // enable USART2
+
+}
+
+/*
+void SendStringUSART2(const char *str)
+{
+   while(*str != '\0')
+   {
+      //  while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
+        USART_SendData(USART2, *str++);
+   } 
+}
+*/
 
 /**
   * @brief  Main program.
@@ -202,6 +240,7 @@ void ADC3_CH12_DMA_Config(void)
 */
 int main(void)
 { 
+	u8 i=0;
 	GPIO_InitTypeDef GPIO_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
   RCC_ClocksTypeDef RCC_ClockFreq;
@@ -292,7 +331,51 @@ int main(void)
 	STM_EVAL_LEDOff(LED4);
 	STM_EVAL_LEDOff(LED5);
 	STM_EVAL_LEDOff(LED6);
+
+
+// nastroika gpio
+
+//	GPIO_InitTypeDef  GPIO_InitStructure;                 
+	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
+	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
+	GPIO_Init(GPIOD, &GPIO_InitStructure);              
+
+	UART2Init();
 	
+	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
+	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOB.2
+	GPIOD->ODR ^= tx_pin_en;
+
+	
+
+NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
+NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
+NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
+NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
+NVIC_Init(&NVIC_InitStructure); //??????????????
+USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+
+
+	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
+	/*
+  NVIC_EnableIRQ (ADC1_IRQn); // ????????? ?????????? ?? ???
+  NVIC_DisableIRQ (USART1_IRQn); // ????????? ???????
+  NVIC_DisableIRQ (ADC1_IRQn); // ??? ??? ????????? ?????????? ????
+*/
+//	SendStringUSART2("start ver 1.0 /0"); 
+/*
+	txsize=10;
+	tekper=0;
+	for (i = 0; i < txsize ; i++)
+  {
+		TxBuffer[i]=0x30+i;
+	}
+	USART_SendData(USART2, 0x3A);
+*/	
     while (1)
   {
     /* Host Task handler */

@@ -1,7 +1,7 @@
 .\MEDIA_USB_KEY\rtc.o: src\rtc.c
 .\MEDIA_USB_KEY\rtc.o: src\rtc.h
-.\MEDIA_USB_KEY\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
-.\MEDIA_USB_KEY\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\MEDIA_USB_KEY\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\MEDIA_USB_KEY\rtc.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\rtc.o: .\Libraries\CMSIS\core_cm4.h
 .\MEDIA_USB_KEY\rtc.o: .\Libraries\CMSIS\core_cmInstr.h
@@ -36,4 +36,4 @@
 .\MEDIA_USB_KEY\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\MEDIA_USB_KEY\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\MEDIA_USB_KEY\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\MEDIA_USB_KEY\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\string.h
+.\MEDIA_USB_KEY\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\string.h

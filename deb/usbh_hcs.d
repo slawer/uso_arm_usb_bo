@@ -6,7 +6,7 @@
 .\deb\usbh_hcs.o: .\inc\usb_conf.h
 .\deb\usbh_hcs.o: .\src\stm32f4xx.h
 .\deb\usbh_hcs.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\usbh_hcs.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\usbh_hcs.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\usbh_hcs.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\usbh_hcs.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\usbh_hcs.o: .\Libraries\CMSIS\core_cm4_simd.h

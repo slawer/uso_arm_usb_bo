@@ -163,22 +163,26 @@ void rtc_Init(void)
         
         // LSI: 
         // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-        {
+        {  //  32768Hz, а нам нужны
             uint32_t Sync = 249;   // 15 бит
-            uint32_t Async = 127;  // 7 бит
+            uint32_t Async =127;  // 7 бит
             
             // Сначала записываем величину для синхронного предделителя
             RTC->PRER = Sync;
             
             // Теперь добавим для асинхронного предделителя
-            RTC->PRER = Sync | (Async << 16);
+            RTC->PRER =Sync | (Async << 16);
+					
+			//		RTC->PRER = 0x00000000; // RESET PRER register
+			//		RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
+			//		RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
         }
         
         // Устанавливаем дату: 30.05.13, пятница
-        rtc_SetDate(30, 5, 13, 4);
+        rtc_SetDate(2, 6, 13, 7);
         
         // Устанавливаем время: 15:00:00
-        rtc_SetTime(15, 00, 00);
+        rtc_SetTime(15, 15, 00);
         
         // Переведём часы в 24-часовой формат
         RTC->CR |= RTC_CR_FMT;
@@ -189,6 +193,37 @@ void rtc_Init(void)
     rtc_Lock();
     
     // Всё, часы запустились и считают время.
+		/*
+		
+		/разрешить тактирование модулей управления питанием и управлением резервной областью
+  RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
+  //разрешить доступ к области резервных данных
+  PWR->CR |= PWR_CR_DBP;
+  //если часы выключены - инициализировать их
+  if ((RCC->BDCR & RCC_BDCR_RTCEN) != RCC_BDCR_RTCEN)
+  {
+    //выполнить сброс области резервных данных
+    RCC->BDCR |=  RCC_BDCR_BDRST;
+    RCC->BDCR &= ~RCC_BDCR_BDRST;
+ 
+    //выбрать источником тактовых импульсов внешний кварц 32768 и подать тактирование
+    RCC->BDCR |=  RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE;
+ 
+    RTC->CRL  |=  RTC_CRL_CNF;
+    RTC->PRLL  = 0x7FFF;         //регистр деления на 32768
+    RTC->CRL  &=  ~RTC_CRL_CNF;
+ 
+    //установить бит разрешения работы и дождаться установки бита готовности
+    RCC->BDCR |= RCC_BDCR_LSEON;
+    while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON){}
+ 
+    RTC->CRL &= (uint16_t)~RTC_CRL_RSF;
+    while((RTC->CRL & RTC_CRL_RSF) != RTC_CRL_RSF){}
+ 
+    return 1;
+  }
+  return 0;
+	*/
 }
 
 // Получить текущее время

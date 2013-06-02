@@ -42,11 +42,11 @@
 --library_type=microlib --strict --scatter ".\MEDIA_USB_KEY\uso_arm_usb_bo.sct" 
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
- --list ".\uso_arm_usb_bo.map" -o .\MEDIA_USB_KEY\uso_arm_usb_bo.axf### Preparing Environment (PrepEnvAds)
+ --list ".\listing\uso_arm_usb_bo.map" -o .\MEDIA_USB_KEY\uso_arm_usb_bo.axf### Preparing Environment (PrepEnvAds)
 ### ADS-LD Output File: '.\MEDIA_USB_KEY\uso_arm_usb_bo.axf'
 ### ADS-LD Command File: '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp', Handle=0x00001280
+### Creating CmdFile '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp', Handle=0x00000D14
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

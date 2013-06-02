@@ -2,7 +2,7 @@
 .\deb\stm32f4xx_exti.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_exti.h
 .\deb\stm32f4xx_exti.o: .\src\stm32f4xx.h
 .\deb\stm32f4xx_exti.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\stm32f4xx_exti.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\stm32f4xx_exti.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\stm32f4xx_exti.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\stm32f4xx_exti.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\stm32f4xx_exti.o: .\Libraries\CMSIS\core_cm4_simd.h

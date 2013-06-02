@@ -204,11 +204,21 @@ void SysTick_Handler(void)
 	
 	// раз в 10 мс
 	// находим среднее значение
+	//	summa[0]+=ADC3ConvertedValue;
+
+	 
+		summa[0]+=100;
+		kol_average++;
 	
 	if (kol_average==10)
 	{
+	
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
+		summa[0]=0;
+		
+		
+
 		
 		// раз в 100 мс
 		// вычисляем физическую виличину 
@@ -225,9 +235,9 @@ void SysTick_Handler(void)
 			max[0]=fz_average[0];
 		
 		if (number_buff)
-			Buf_adc_zap2[por++]=fz_average[0];			
+			Buf_adc_zap2[por++]=por; //fz_average[0];			
 		else
-			Buf_adc_zap1[por++]=fz_average[0];
+			Buf_adc_zap1[por++]=por; //fz_average[0];
 		
 		if (por==999)
 			por=999;
@@ -235,11 +245,35 @@ void SysTick_Handler(void)
 	del++;
 	if (del==10)
 	{
+		u16 tmp=0;
 		del=0;
 		tick++;
 		time_label=tick;
+
 		
-	  rtc_Get(&DT1);
+		rtc_Get(&DT1);
+		
+		tmp=por;
+		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+		tmp%=1000;
+		TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+		tmp%=100;		
+		TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+		tmp%=10;	
+		TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
+			
+		TxBuffer[4]=0x20;	
+		
+	
+		TxBuffer[5]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+		TxBuffer[6]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+		TxBuffer[7]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+		TxBuffer[8]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+	//	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
+	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
+		txsize=9;
+		tekper=0;
+		USART_SendData(USART2, 0x3A);
 		
 		if (DT1.Seconds==0)
 		{
@@ -249,6 +283,14 @@ void SysTick_Handler(void)
 			buffering=1;
 			por=0;
 		}
+			
+	 if (tick%2==0)
+	 {
+		 STM_EVAL_LEDOn(LED3);
+	 }
+	 else
+		 STM_EVAL_LEDOff(LED3);		
+		
 	if ((tick%60)==0)
 	{
 		minute++;
@@ -256,11 +298,7 @@ void SysTick_Handler(void)
 	}
 				
 	}
-	else
-	{
-		summa[0]+=ADC3ConvertedValue;
-		kol_average++;
-	}
+
 	
 
 

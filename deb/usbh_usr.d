@@ -5,7 +5,7 @@
 .\deb\usbh_usr.o: .\inc\usb_conf.h
 .\deb\usbh_usr.o: .\src\stm32f4xx.h
 .\deb\usbh_usr.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\usbh_usr.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\usbh_usr.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\usbh_usr.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\usbh_usr.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\usbh_usr.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -38,7 +38,7 @@
 .\deb\usbh_usr.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\deb\usbh_usr.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\deb\usbh_usr.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\deb\usbh_usr.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\usbh_usr.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\usbh_usr.o: .\Utilities\Third_Party\fat_fs\ffconf.h
 .\deb\usbh_usr.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery.h
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_core.h
@@ -48,7 +48,7 @@
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_OTG_Driver\usb_defines.h
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_def.h
 .\deb\usbh_usr.o: .\inc\usbh_conf.h
-.\deb\usbh_usr.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
+.\deb\usbh_usr.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_stdreq.h
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_OTG_Driver\usb_bsp.h
@@ -59,4 +59,5 @@
 .\deb\usbh_usr.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
 .\deb\usbh_usr.o: .\inc\stm32f4xx_it.h
 .\deb\usbh_usr.o: .\inc\my.h
+.\deb\usbh_usr.o: .\src\rtc.h
 .\deb\usbh_usr.o: src\rtc.h

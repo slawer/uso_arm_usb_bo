@@ -3,7 +3,7 @@
 .\deb\usb_core.o: .\inc\usb_conf.h
 .\deb\usb_core.o: .\src\stm32f4xx.h
 .\deb\usb_core.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\usb_core.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\usb_core.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\usb_core.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\usb_core.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\usb_core.o: .\Libraries\CMSIS\core_cm4_simd.h

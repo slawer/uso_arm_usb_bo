@@ -2,7 +2,7 @@
 .\deb\misc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
 .\deb\misc.o: .\src\stm32f4xx.h
 .\deb\misc.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\misc.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\misc.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\misc.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\misc.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\misc.o: .\Libraries\CMSIS\core_cm4_simd.h

@@ -1,7 +1,7 @@
 .\deb\rtc.o: src\rtc.c
 .\deb\rtc.o: src\rtc.h
-.\deb\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
-.\deb\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\rtc.o: .\src\stm32f4xx.h
 .\deb\rtc.o: .\Libraries\CMSIS\core_cm4.h
 .\deb\rtc.o: .\Libraries\CMSIS\core_cmInstr.h
@@ -36,4 +36,4 @@
 .\deb\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\deb\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\deb\rtc.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\deb\rtc.o: d:\Keil4\ARM\ARMCC\bin\..\include\string.h
+.\deb\rtc.o: C:\Keil4\ARM\ARMCC\bin\..\include\string.h

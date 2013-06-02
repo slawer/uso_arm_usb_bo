@@ -2,7 +2,7 @@
 .\deb\stm32f4xx_it.o: .\inc\main.h
 .\deb\stm32f4xx_it.o: .\src\stm32f4xx.h
 .\deb\stm32f4xx_it.o: .\Libraries\CMSIS\core_cm4.h
-.\deb\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\deb\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\deb\stm32f4xx_it.o: .\Libraries\CMSIS\core_cmInstr.h
 .\deb\stm32f4xx_it.o: .\Libraries\CMSIS\core_cmFunc.h
 .\deb\stm32f4xx_it.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -38,7 +38,7 @@
 .\deb\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery.h
 .\deb\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery_audio_codec.h
 .\deb\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.h
-.\deb\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
+.\deb\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
 .\deb\stm32f4xx_it.o: .\inc\stm32f4xx_it.h
 .\deb\stm32f4xx_it.o: .\inc\waveplayer.h
 .\deb\stm32f4xx_it.o: .\inc\main.h
@@ -53,7 +53,7 @@
 .\deb\stm32f4xx_it.o: .\inc\usbh_usr.h
 .\deb\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\ff.h
 .\deb\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\integer.h
-.\deb\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\deb\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\deb\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\ffconf.h
 .\deb\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_core.h
 .\deb\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_def.h
@@ -68,3 +68,5 @@
 .\deb\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
 .\deb\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\pdm_filter.h
 .\deb\stm32f4xx_it.o: .\inc\my.h
+.\deb\stm32f4xx_it.o: .\src\rtc.h
+.\deb\stm32f4xx_it.o: src\rtc.h
