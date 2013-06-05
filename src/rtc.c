@@ -130,7 +130,23 @@ void rtc_Init(void)
     
     // Разрешим доступ к управляющим регистрам энергонезависимого домена
     PWR->CR |= PWR_CR_DBP;
-    
+   
+/*
+	 //  start LSE
+		RCC->BDCR |= RCC_BDCR_LSEON;
+		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
+		
+		RCC->BDCR |=  RCC_BDCR_BDRST;
+    RCC->BDCR &= ~RCC_BDCR_BDRST;
+		
+	// Выберем его как источник тактирования RTC:
+    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
+		
+		   // Включим тактирование RTC
+    RCC->BDCR |= RCC_BDCR_RTCEN;
+*/
+
     // Запускаем LSI:
     RCC->CSR |= RCC_CSR_LSION;
     
@@ -146,10 +162,24 @@ void rtc_Init(void)
     // Выберем его как источник тактирования RTC:
     RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
     RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
-        
+      
     // Включим тактирование RTC
     RCC->BDCR |= RCC_BDCR_RTCEN;
-    
+ 
+
+/*
+● Access to the backup SRAM
+1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
+peripheral clock enable register (RCC_APB1ENR)
+2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
+backup domain
+3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
+peripheral clock register (RCC_AHB1ENR)
+
+uint8_t *BKPRam = (uint8_t *)0x40024000;
+
+
+*/			
     // Снимем защиту от записи с регистров RTC
     rtc_Unlock();
     {
@@ -159,7 +189,10 @@ void rtc_Init(void)
         RTC->ISR |= RTC_ISR_INIT;
         
         // Ждём, когда это произойдёт
-        while(!(RTC->ISR & RTC_ISR_INITF)) {}
+
+
+
+			while(!(RTC->ISR & RTC_ISR_INITF)) {}
         
         // Часы остановлены. Режим инициализации
         // Настроим предделитель для получения частоты 1 Гц.
@@ -213,7 +246,32 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 {
 }
 
-bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+ {
+	 u16 i=0, errorindex=0;
+  bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+
+
+/*  Backup SRAM ***************************************************************/
+  /* Enable BKPRAM Clock */
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+
+
+  /* Write to Backup SRAM with 32-Bit Data */
+  for (i = 0; i < 0x1000; i += 4)
+  {
+    *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
+  }
+
+  /* Check the written Data */
+  for (i = 0; i < 0x1000; i += 4)
+  {
+   if ((*(__IO uint32_t *) (BKPSRAM_BASE + i)) != i)
+    {
+      errorindex++;
+    }
+	}	
+}
+	
 __ASM volatile ("nop");
 
     

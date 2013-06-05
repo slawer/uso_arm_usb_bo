@@ -253,6 +253,498 @@ void SendStringUSART2(const char *str)
 }
 */
 
+
+void settime(void)
+{
+
+		RTC->ISR |= RTC_ISR_INIT;
+    while(!(RTC->ISR & RTC_ISR_INITF)) {}
+			
+	//	rtc_SetDate(2, 6, 13, 7);
+		{
+    uint32_t Tens, Units;
+    uint32_t TempReg = 0;
+		uint8_t	Day=2,  Month=6,  Year=13,  DayOfWeek=7;
+    
+
+    TempReg = 0;
+    {
+        Tens  = (Year / 10) & 0x0f;          // ??????? ???
+        Units = (Year - (Tens * 10)) & 0x0f; // ??????? ???
+        
+        TempReg |= (Tens  << 20); // YT, 20
+        TempReg |= (Units << 16); // YU, 16
+    }
+
+    {
+        Tens  = (Month / 10) & 0x01;          // ??????? ???????
+        Units = (Month - (Tens * 10)) & 0x0f; // ??????? ???????
+        
+        TempReg |= (Tens  << 12); // MT, 12
+        TempReg |= (Units << 8);  // MU, 8
+    }
+
+    {
+        Tens  = (Day / 10) & 0x03;          // ??????? ????
+        Units = (Day - (Tens * 10)) & 0x0f; // ??????? ????
+        
+        TempReg |= (Tens  << 4); // DT, 4
+        TempReg |= (Units << 0);  // DU, 0
+    }
+
+    {
+        TempReg |= ((DayOfWeek & 0x07) << 13); // WDU, 13
+    }
+    RTC->DR = TempReg;
+		}
+			
+			
+//    rtc_SetTime(0, 0, 00);
+		
+		{
+			uint32_t Tens, Units;
+			uint32_t TempReg = 0;
+			uint8_t Hours=0,  Minutes=0,  Seconds=0;
+    
+    // ??????? ???? ????
+    TempReg = 0;
+    
+    // ??????? ????
+    {
+        Tens  = (Hours / 10) & 0x03;          // ??????? ?????
+        Units = (Hours - (Tens * 10)) & 0x0f; // ??????? ?????
+        
+        TempReg |= (Tens  << 20); // HT, 20
+        TempReg |= (Units << 16); // HU, 16
+    }
+    // ??????? ??????
+    {
+        Tens  = (Minutes / 10) & 0x07;          // ??????? ?????
+        Units = (Minutes - (Tens * 10)) & 0x0f; // ??????? ?????
+        
+        TempReg |= (Tens  << 12); // MNT, 12
+        TempReg |= (Units << 8);  // MNU, 8
+    }
+    // ??????? ???????
+    {
+        Tens  = (Seconds / 10) & 0x07;          // ??????? ??????
+        Units = (Seconds - (Tens * 10)) & 0x0f; // ??????? ??????
+        
+        TempReg |= (Tens  << 4); // ST, 4
+        TempReg |= (Units << 0);  // SU, 0
+    }
+    
+    // ?????????? ???? ??? ?????
+    RTC->TR = TempReg;
+		
+		}
+        
+    RTC->CR |= RTC_CR_FMT;
+    RTC->ISR &= ~RTC_ISR_INIT;
+		RTC->WPR = 0xFF;
+	
+}
+
+void sohr_backup(u16 kol_byte,uint8_t* buf)
+{
+
+}
+
+void spi_init(){
+
+		GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitTypeDef gpio;
+	  SPI_InitTypeDef spi1;
+	
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);  // ???????????? ?????
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1
+
+    GPIO_StructInit(&gpio);
+
+     gpio.GPIO_Pin   = GPIO_Pin_4;   // NSS
+     gpio.GPIO_Mode  = GPIO_Mode_OUT;
+     gpio.GPIO_Speed = GPIO_Speed_50MHz;
+     gpio.GPIO_OType = GPIO_OType_PP;
+     gpio.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+     GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+    gpio.GPIO_Mode = GPIO_Mode_AF;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio.GPIO_OType = GPIO_OType_PP;
+    gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_Init(GPIOA,&gpio);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource5,GPIO_AF_SPI1);   
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource6,GPIO_AF_SPI1);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource7,GPIO_AF_SPI1);
+    SPI_I2S_DeInit(SPI1);
+
+    SPI_StructInit(&spi1);
+    spi1.SPI_Mode = SPI_Mode_Master;
+    spi1.SPI_DataSize = SPI_DataSize_16b;
+    spi1.SPI_NSS = SPI_NSS_Soft;
+    SPI_Init(SPI1,&spi1);
+    SPI_Cmd(SPI1,ENABLE);
+}
+
+void spi1_init() {
+	SPI_InitTypeDef spi1;
+	 GPIO_InitTypeDef gpio;
+	
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);  // ???????????? ?????
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1 
+   
+    GPIO_StructInit(&gpio);
+    gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+    gpio.GPIO_Mode = GPIO_Mode_AF;
+    gpio.GPIO_Speed = GPIO_Speed_2MHz;
+    gpio.GPIO_OType = GPIO_OType_PP;
+    gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_Init(GPIOA,&gpio);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource5,GPIO_AF_SPI1);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource6,GPIO_AF_SPI1);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource7,GPIO_AF_SPI1);
+    SPI_I2S_DeInit(SPI1);
+    
+    SPI_StructInit(&spi1);
+    spi1.SPI_Mode = SPI_Mode_Master;
+    spi1.SPI_DataSize = SPI_DataSize_8b; //SPI_DataSize_16b;		
+    spi1.SPI_NSS = SPI_NSS_Soft;
+
+  spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
+  spi1.SPI_FirstBit = SPI_FirstBit_MSB;
+	
+    SPI_Init(SPI1,&spi1);
+    SPI_Cmd(SPI1,ENABLE);
+}
+
+
+void spi2_init() {
+	SPI_InitTypeDef spi2;
+	 GPIO_InitTypeDef gpio;
+	
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE);
+   
+    GPIO_StructInit(&gpio);
+    gpio.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    gpio.GPIO_Mode = GPIO_Mode_AF;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio.GPIO_OType = GPIO_OType_PP;
+    gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_Init(GPIOB,&gpio);
+    GPIO_PinAFConfig(GPIOB,GPIO_PinSource13,GPIO_AF_SPI2);
+    GPIO_PinAFConfig(GPIOB,GPIO_PinSource14,GPIO_AF_SPI2);
+    GPIO_PinAFConfig(GPIOB,GPIO_PinSource15,GPIO_AF_SPI2);
+    SPI_I2S_DeInit(SPI2);
+    
+    SPI_StructInit(&spi2);
+    spi2.SPI_Mode = SPI_Mode_Slave;
+    spi2.SPI_DataSize = SPI_DataSize_16b;
+    spi2.SPI_NSS = SPI_NSS_Soft;
+    SPI_Init(SPI2,&spi2);
+    SPI_Cmd(SPI2,ENABLE);
+}
+
+
+void spi_send(uint16_t data) {
+	SPI_I2S_SendData(SPI1,data);
+    while(SPI_I2S_GetFlagStatus(SPI1,SPI_I2S_FLAG_TXE) == RESET);  // ???? ???? ?????? ?????
+}
+uint16_t spi_receve() {
+		uint16_t received;
+    while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET);  // ???? ???? ?????? ???????
+    received = SPI_I2S_ReceiveData(SPI2);
+    return received;
+}
+
+
+void delay_spi(u32 kol)
+{
+	u32 i=0;
+	for (i=0;i<kol;i++)
+				__ASM volatile ("nop");
+}
+
+
+void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
+{
+			uint16_t  pin=0;
+
+		  switch (numb_ind)
+			{
+				case 0x00:  // CS0
+					pin=GPIO_Pin_0;
+					break;
+
+				case 0x01:  // CS1
+					pin=GPIO_Pin_1;
+					break;
+
+				case 0x02:  // CS2
+					pin=GPIO_Pin_2;
+					break;
+
+				case 0x03:  // CS3
+					pin=GPIO_Pin_3;
+					break;
+
+				case 0x04:  // CS4
+					pin=GPIO_Pin_4;
+					break;								
+			}
+		
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   CS  GPIOA.0
+			delay_spi(100);
+			spi_send(0x0C);
+			delay_spi(100);
+			spi_send(0x01);
+			delay_spi(100);			
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOA.0
+			
+			delay_spi(1000);
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOA.0			
+			delay_spi(100);
+			spi_send(0x0B);
+			delay_spi(100);
+			spi_send(kol_ind);
+			delay_spi(100);			
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOA.0
+			
+			delay_spi(1000);
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOA.0			
+			delay_spi(100);
+			spi_send(0x0A);
+			delay_spi(100);
+			spi_send(0x0F);
+			delay_spi(100);			
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOA.0
+}
+
+
+void test_ind(u8 numb_ind)
+{
+	uint16_t  pin=0;
+	
+			switch (numb_ind)
+			{
+				case 0x00:  // CS0
+					pin=GPIO_Pin_0;
+					break;
+
+				case 0x01:  // CS1
+					pin=GPIO_Pin_1;
+					break;
+
+				case 0x02:  // CS2
+					pin=GPIO_Pin_2;
+					break;
+
+				case 0x03:  // CS3
+					pin=GPIO_Pin_3;
+					break;
+
+				case 0x04:  // CS4
+					pin=GPIO_Pin_4;
+					break;								
+			}
+			
+
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
+				delay_spi(100);
+				spi_send(0x0f);delay_spi(100);
+				spi_send(0x00); delay_spi(100);
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
+				delay_spi(1000);
+}
+
+
+void indicate(u8 numb_ind)
+{
+		 	uint16_t  pin=0;
+			u16 chislo=indicators[numb_ind].chislo;
+			u8 i=0, zn[6], null=1, simb=0;
+			u32   maximum=0;
+
+			switch (numb_ind)
+			{
+				case 0x00:  // CS0
+					pin=GPIO_Pin_0;
+					break;
+
+				case 0x01:  // CS1
+					pin=GPIO_Pin_1;
+					break;
+
+				case 0x02:  // CS2
+					pin=GPIO_Pin_2;
+					break;
+
+				case 0x03:  // CS3
+					pin=GPIO_Pin_3;
+					break;
+
+				case 0x04:  // CS4
+					pin=GPIO_Pin_4;
+					break;								
+			}
+			
+			switch (indicators[numb_ind].kol_cifr)
+			{
+				case 0x00:  // CS0
+					maximum=1;
+					break;
+				case 0x01:  // CS0
+					maximum=10;
+					break;			
+				case 0x02:  // CS0
+					maximum=100;
+					break;
+				case 0x03:  // CS0
+					maximum=1000;
+					break;
+				case 0x04:  // CS0
+					maximum=10000;
+					break;
+				case 0x05:  // CS0
+					maximum=100000;
+					break;				
+			}
+
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
+				delay_spi(100);
+				spi_send(0x0f);delay_spi(100);
+				spi_send(0x00); delay_spi(100);
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
+				delay_spi(1000);
+			
+			if (chislo>=maximum)   // reflow
+			{			
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
+				delay_spi(100);
+				spi_send(1);delay_spi(100);
+				spi_send(0x4F); delay_spi(100);		
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
+			  delay_spi(1000);	
+				
+				for (i=2;i<indicators[numb_ind].kol_cifr+1;i++)  {
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
+				delay_spi(100);
+				spi_send((u8) i);delay_spi(100);
+				spi_send(0); delay_spi(100);		
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
+			  delay_spi(1000);			}					
+				return ;
+			}	
+
+			for (i=indicators[numb_ind].kol_cifr;i>0;i--)
+			{	
+					zn[i]=(u8) (chislo%10);
+					chislo=chislo/10;
+			}
+
+			for (i=1;i<indicators[numb_ind].kol_cifr+1;i++)
+			{	
+						simb=symb_code[zn[i]];
+				
+						if ((indicators[numb_ind].kol_cifr-i)==indicators[numb_ind].pol_zap)
+							simb+=0x80;
+				
+						if ((simb==0x7E)&(null))
+							simb=0;
+						else
+							null=0;
+						
+						if (i==indicators[numb_ind].kol_cifr)
+							simb&=0x7F;
+	
+						GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+						delay_spi(100);
+
+						spi_send((u8) i);delay_spi(100);
+						spi_send(simb); delay_spi(100);	
+			
+						GPIO_WriteBit(GPIOA, pin, Bit_SET);     
+						delay_spi(1000);				
+			}
+}
+
+
+void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
+{
+		 	uint16_t  pin=0;
+
+
+			switch (numb_ind)
+			{
+				case 0x00:  // CS0
+					pin=GPIO_Pin_0;
+					break;
+
+				case 0x01:  // CS1
+					pin=GPIO_Pin_1;
+					break;
+
+				case 0x02:  // CS2
+					pin=GPIO_Pin_2;
+					break;
+
+				case 0x03:  // CS3
+					pin=GPIO_Pin_3;
+					break;
+
+				case 0x04:  // CS4
+					pin=GPIO_Pin_4;
+					break;								
+			}
+		
+
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
+				delay_spi(100);
+				spi_send(0x0f);delay_spi(100);
+				spi_send(0x00); delay_spi(100);
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
+				delay_spi(1000);
+			
+	
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			delay_spi(100);
+			spi_send(1);delay_spi(100);
+			if (hh/10==0)
+				spi_send(0); 
+			else
+				spi_send(symb_code[hh/10]); 
+			delay_spi(100);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
+			delay_spi(1000);	
+	
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			delay_spi(100);
+			spi_send(2);delay_spi(100);
+			spi_send(0x80*en+symb_code[hh%10]); delay_spi(100);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
+			delay_spi(1000);				
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			delay_spi(100);
+			spi_send(3);delay_spi(100);
+			spi_send(1*en+symb_code_min[mm/10]); delay_spi(100);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
+			delay_spi(1000);	
+
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			delay_spi(100);
+			spi_send(4);delay_spi(100);
+			spi_send(symb_code_min[mm%10]); delay_spi(100);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
+			delay_spi(1000);	
+
+		
+}
+
+
 /**
   * @brief  Main program.
   * @param  None
@@ -265,8 +757,22 @@ int main(void)
   NVIC_InitTypeDef NVIC_InitStructure;
   RCC_ClocksTypeDef RCC_ClockFreq;
 	
+	uint16_t data[32];
+	
 	TDateTime DT;
-    
+
+
+  /* Initialize LEDS */
+  STM_EVAL_LEDInit(LED3);
+  STM_EVAL_LEDInit(LED4);
+  STM_EVAL_LEDInit(LED5);
+  STM_EVAL_LEDInit(LED6);
+ 
+  /* Green Led On: start of application */
+	STM_EVAL_LEDOn(LED3);
+	STM_EVAL_LEDOn(LED4);
+	STM_EVAL_LEDOn(LED5);
+	STM_EVAL_LEDOn(LED6);	
 	 
   /* This function fills the RCC_ClockFreq structure with the current
   frequencies of different on chip clocks (for debug purpose) **************/
@@ -309,21 +815,7 @@ int main(void)
 	
 //	ADC_InitTypeDef  ADC_InitStructure;
 	
-  /* Initialize LEDS */
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
-  STM_EVAL_LEDInit(LED5);
-  STM_EVAL_LEDInit(LED6);
- 
-  /* Green Led On: start of application */
-	STM_EVAL_LEDOn(LED3);
-	STM_EVAL_LEDOn(LED4);
-	STM_EVAL_LEDOn(LED5);
-	STM_EVAL_LEDOn(LED6);
        
-  /* SysTick end of count event each 10ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
   
   /* Configure TIM4 Peripheral to manage LEDs lighting */
   TIM_LED_Config();
@@ -346,11 +838,58 @@ int main(void)
    
   /* Init Host Library */
   USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
-  
-	STM_EVAL_LEDOff(LED3);
-	STM_EVAL_LEDOff(LED4);
-	STM_EVAL_LEDOff(LED5);
-	STM_EVAL_LEDOff(LED6);
+ 
+
+
+/*
+SPI 1:
+
+ nss - pa4
+ sck - pa5
+ mosi - pa7
+ miso - pa6
+SPI 2:
+
+ miso - pb14
+ mosi - pb15
+ sck - pb13
+ nss - pb12
+ 
+*/
+		spi1_init();
+    spi2_init();
+ 
+		
+	
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1|GPIO_Pin_0;  //  vivod for CS
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+
+
+	indicators[0].numb=0;
+	indicators[0].kol_cifr=4;
+	indicators[0].type_ind=0;
+	indicators[0].yark=0x0f;
+	indicators[0].rez_viv=0;   //   
+	indicators[0].chislo=0;
+	indicators[0].pol_zap=0;
+	indicators[0].porog=0xffff;	
+
+	indicators[1].numb=1;
+	indicators[1].kol_cifr=4;
+	indicators[1].type_ind=0;
+	indicators[1].yark=0x0f;
+	indicators[1].rez_viv=0;   //   
+	indicators[1].chislo=0;
+	indicators[1].pol_zap=2;
+	indicators[1].porog=0xffff;	
+
+	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
+	init_ind(indicators[1].numb, indicators[1].kol_cifr, indicators[1].type_ind);
 
 
 // nastroika gpio
@@ -396,6 +935,16 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
 	}
 	USART_SendData(USART2, 0x3A);
 */	
+
+	STM_EVAL_LEDOff(LED3);
+	STM_EVAL_LEDOff(LED4);
+	STM_EVAL_LEDOff(LED5);
+	STM_EVAL_LEDOff(LED6);
+	
+  /* SysTick end of count event each 10ms */
+  RCC_GetClocksFreq(&RCC_Clocks);
+  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+	
     while (1)
   {
     /* Host Task handler */

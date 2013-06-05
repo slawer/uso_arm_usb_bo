@@ -14960,6 +14960,37 @@ void rtc_Reset(void)
 }
 
 
+
+void rtc_Init2(void)
+{
+
+ 
+((PWR_TypeDef *) (((uint32_t)0x40000000) + 0x7000))->CR |= (1<<8); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR &= (1<<0); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR = 0x00000000; 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (1<<15); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (1<<0); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~(1<<2); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~(1<<16); 
+((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (0x1<<8); 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0x000000CA; 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0x00000053; 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= (1<<7); 
+for(;((((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & 0x40) == 0x00);) 
+{
+}
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = 0x00000000; 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0xFF<<0); 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0x7F<<16); 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR &= ~(1<<6); 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->TR = 0x00170000; 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->DR = 0x00132204; 
+((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~(1<<7); 
+for(;((((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & 0x40) == 0x40);) 
+{
+}
+}
+
 void rtc_Init(void)
 {
     
@@ -14976,7 +15007,15 @@ void rtc_Init(void)
     
     
     while(!(((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR & ((uint32_t)0x00000002))) {}
-    
+   
+	
+
+
+
+
+
+ 
+ 	
     
     
     
@@ -14986,10 +15025,41 @@ void rtc_Init(void)
     
     ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~((uint32_t)0x00000300); 
     ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (((uint32_t)0x00000200)); 
-        
+			
+   
+       
     
     ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00008000);
-    
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
     
     rtc_Unlock();
     {
@@ -15007,8 +15077,8 @@ void rtc_Init(void)
         
         
         {  
-            uint32_t Sync = 263;   
-            uint32_t Async =127;  
+            uint32_t Sync = 255; 
+            uint32_t Async =127; 
             
             
             ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = Sync;

@@ -302,9 +302,13 @@ void SysTick_Handler(void)
 	 if (tick%2==0)
 	 {
 		 STM_EVAL_LEDOn(LED3);
+		indicate_time(0,DT1.Minutes,DT1.Seconds,1);
 	 }
 	 else
-		 STM_EVAL_LEDOff(LED3);		
+	 {
+		 STM_EVAL_LEDOff(LED3);	
+	indicate_time(0,DT1.Minutes,DT1.Seconds,0);
+	 }		 
 		
 	if ((tick%60)==0)
 	{
@@ -320,6 +324,13 @@ void SysTick_Handler(void)
 		
 		new_komand=0;
 	}
+	
+
+	
+				//	indicators[0].chislo=1234;
+		//		indicators[1].chislo=1234;
+		//		indicate (0);
+		//		indicate (1);
 				
 	}
 

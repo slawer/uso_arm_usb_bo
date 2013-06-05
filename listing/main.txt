@@ -165,121 +165,121 @@
                           AREA ||i.TIM_LED_Config||, CODE, READONLY, ALIGN=2
 
                   TIM_LED_Config PROC
-;;;415      */
-;;;416    static void TIM_LED_Config(void)
+;;;416      */
+;;;417    static void TIM_LED_Config(void)
 000000  b570              PUSH     {r4-r6,lr}
-;;;417    {
+;;;418    {
 000002  b08a              SUB      sp,sp,#0x28
-;;;418      TIM_OCInitTypeDef  TIM_OCInitStructure;
-;;;419      TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-;;;420      NVIC_InitTypeDef NVIC_InitStructure;
-;;;421      uint16_t prescalervalue = 0;
-;;;422      
-;;;423      /* TIM4 clock enable */
-;;;424      RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+;;;419      TIM_OCInitTypeDef  TIM_OCInitStructure;
+;;;420      TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+;;;421      NVIC_InitTypeDef NVIC_InitStructure;
+;;;422      uint16_t prescalervalue = 0;
+;;;423      
+;;;424      /* TIM4 clock enable */
+;;;425      RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 000004  2101              MOVS     r1,#1
 000006  2004              MOVS     r0,#4
 000008  f7fffffe          BL       RCC_APB1PeriphClockCmd
-;;;425      
-;;;426      NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+;;;426      
+;;;427      NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 00000c  f44f60a0          MOV      r0,#0x500
 000010  f7fffffe          BL       NVIC_PriorityGroupConfig
-;;;427      
-;;;428      /* Enable the TIM3 gloabal Interrupt */
-;;;429      NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+;;;428      
+;;;429      /* Enable the TIM3 gloabal Interrupt */
+;;;430      NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
 000014  201e              MOVS     r0,#0x1e
 000016  f88d0020          STRB     r0,[sp,#0x20]
-;;;430      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+;;;431      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 00001a  2400              MOVS     r4,#0
 00001c  f88d4021          STRB     r4,[sp,#0x21]
-;;;431      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+;;;432      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 000020  f88d4022          STRB     r4,[sp,#0x22]
-;;;432      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+;;;433      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 000024  2501              MOVS     r5,#1
 000026  f88d5023          STRB     r5,[sp,#0x23]
-;;;433      NVIC_Init(&NVIC_InitStructure);
+;;;434      NVIC_Init(&NVIC_InitStructure);
 00002a  a808              ADD      r0,sp,#0x20
 00002c  f7fffffe          BL       NVIC_Init
-;;;434    
-;;;435      /* Initialize Leds mounted on STM324F4-EVAL board */
-;;;436      STM_EVAL_LEDInit(LED3);
+;;;435    
+;;;436      /* Initialize Leds mounted on STM324F4-EVAL board */
+;;;437      STM_EVAL_LEDInit(LED3);
 000030  2001              MOVS     r0,#1
 000032  f7fffffe          BL       STM_EVAL_LEDInit
-;;;437      STM_EVAL_LEDInit(LED4);
+;;;438      STM_EVAL_LEDInit(LED4);
 000036  2000              MOVS     r0,#0
 000038  f7fffffe          BL       STM_EVAL_LEDInit
-;;;438      STM_EVAL_LEDInit(LED6);
+;;;439      STM_EVAL_LEDInit(LED6);
 00003c  2003              MOVS     r0,#3
 00003e  f7fffffe          BL       STM_EVAL_LEDInit
-;;;439      
-;;;440      /* Compute the prescaler value */
-;;;441      prescalervalue = (uint16_t) ((SystemCoreClock ) / 550000) - 1;
+;;;440      
+;;;441      /* Compute the prescaler value */
+;;;442      prescalervalue = (uint16_t) ((SystemCoreClock ) / 550000) - 1;
 000042  481a              LDR      r0,|L2.172|
 000044  491a              LDR      r1,|L2.176|
-;;;442      
-;;;443      /* Time base configuration */
-;;;444      TIM_TimeBaseStructure.TIM_Period = 65535;
-;;;445      TIM_TimeBaseStructure.TIM_Prescaler = prescalervalue;
-;;;446      TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-;;;447      TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-;;;448      TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+;;;443      
+;;;444      /* Time base configuration */
+;;;445      TIM_TimeBaseStructure.TIM_Period = 65535;
+;;;446      TIM_TimeBaseStructure.TIM_Prescaler = prescalervalue;
+;;;447      TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+;;;448      TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+;;;449      TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 000046  4e1b              LDR      r6,|L2.180|
-000048  6800              LDR      r0,[r0,#0]            ;441  ; SystemCoreClock
-00004a  f8ad401c          STRH     r4,[sp,#0x1c]         ;446
-00004e  fbb0f0f1          UDIV     r0,r0,r1              ;441
-000052  1e40              SUBS     r0,r0,#1              ;441
-000054  f64f71ff          MOV      r1,#0xffff            ;444
-000058  f8ad0014          STRH     r0,[sp,#0x14]         ;445
-00005c  9106              STR      r1,[sp,#0x18]         ;445
-00005e  f8ad4016          STRH     r4,[sp,#0x16]         ;447
+000048  6800              LDR      r0,[r0,#0]            ;442  ; SystemCoreClock
+00004a  f8ad401c          STRH     r4,[sp,#0x1c]         ;447
+00004e  fbb0f0f1          UDIV     r0,r0,r1              ;442
+000052  1e40              SUBS     r0,r0,#1              ;442
+000054  f64f71ff          MOV      r1,#0xffff            ;445
+000058  f8ad0014          STRH     r0,[sp,#0x14]         ;446
+00005c  9106              STR      r1,[sp,#0x18]         ;446
+00005e  f8ad4016          STRH     r4,[sp,#0x16]         ;448
 000062  a905              ADD      r1,sp,#0x14
 000064  4630              MOV      r0,r6
 000066  f7fffffe          BL       TIM_TimeBaseInit
-;;;449      
-;;;450      /* Enable TIM4 Preload register on ARR */
-;;;451      TIM_ARRPreloadConfig(TIM4, ENABLE);
+;;;450      
+;;;451      /* Enable TIM4 Preload register on ARR */
+;;;452      TIM_ARRPreloadConfig(TIM4, ENABLE);
 00006a  2101              MOVS     r1,#1
 00006c  4630              MOV      r0,r6
 00006e  f7fffffe          BL       TIM_ARRPreloadConfig
-;;;452      
-;;;453      /* TIM PWM1 Mode configuration: Channel */
-;;;454      TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
-;;;455      TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-;;;456      TIM_OCInitStructure.TIM_Pulse = CCR_Val;
+;;;453      
+;;;454      /* TIM PWM1 Mode configuration: Channel */
+;;;455      TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
+;;;456      TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+;;;457      TIM_OCInitStructure.TIM_Pulse = CCR_Val;
 000072  4811              LDR      r0,|L2.184|
-000074  f8ad4000          STRH     r4,[sp,#0]            ;454
-000078  f8ad5002          STRH     r5,[sp,#2]            ;455
+000074  f8ad4000          STRH     r4,[sp,#0]            ;455
+000078  f8ad5002          STRH     r5,[sp,#2]            ;456
 00007c  8900              LDRH     r0,[r0,#8]  ; CCR_Val
-;;;457      TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+;;;458      TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
 00007e  9002              STR      r0,[sp,#8]
 000080  f8ad400c          STRH     r4,[sp,#0xc]
-;;;458      
-;;;459      /* Output Compare PWM1 Mode configuration: Channel2 */
-;;;460      TIM_OC1Init(TIM4, &TIM_OCInitStructure);
+;;;459      
+;;;460      /* Output Compare PWM1 Mode configuration: Channel2 */
+;;;461      TIM_OC1Init(TIM4, &TIM_OCInitStructure);
 000084  4669              MOV      r1,sp
 000086  4630              MOV      r0,r6
 000088  f7fffffe          BL       TIM_OC1Init
-;;;461      TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Disable);
+;;;462      TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Disable);
 00008c  2100              MOVS     r1,#0
 00008e  4630              MOV      r0,r6
 000090  f7fffffe          BL       TIM_OC1PreloadConfig
-;;;462        
-;;;463      /* TIM Interrupts enable */
-;;;464      TIM_ITConfig(TIM4, TIM_IT_CC1 , ENABLE);
+;;;463        
+;;;464      /* TIM Interrupts enable */
+;;;465      TIM_ITConfig(TIM4, TIM_IT_CC1 , ENABLE);
 000094  2201              MOVS     r2,#1
 000096  2102              MOVS     r1,#2
 000098  4630              MOV      r0,r6
 00009a  f7fffffe          BL       TIM_ITConfig
-;;;465      
-;;;466      /* TIM4 enable counter */
-;;;467      TIM_Cmd(TIM4, ENABLE);
+;;;466      
+;;;467      /* TIM4 enable counter */
+;;;468      TIM_Cmd(TIM4, ENABLE);
 00009e  2101              MOVS     r1,#1
 0000a0  4630              MOV      r0,r6
 0000a2  f7fffffe          BL       TIM_Cmd
-;;;468    }
+;;;469    }
 0000a6  b00a              ADD      sp,sp,#0x28
 0000a8  bd70              POP      {r4-r6,pc}
-;;;469    
+;;;470    
                           ENDP
 
 0000aa  0000              DCW      0x0000
@@ -654,45 +654,46 @@
 ;;;305        // ???????? RTC
 ;;;306        rtc_Reset();
 00005a  f7fffffe          BL       rtc_Reset
-;;;307        rtc_Init();
+;;;307       rtc_Init();
 00005e  f7fffffe          BL       rtc_Init
-;;;308     		
-;;;309    	
-;;;310    //	ADC_InitTypeDef  ADC_InitStructure;
-;;;311    	
-;;;312      /* Initialize LEDS */
-;;;313      STM_EVAL_LEDInit(LED3);
+;;;308      //rtc_Init2();
+;;;309     		
+;;;310    	
+;;;311    //	ADC_InitTypeDef  ADC_InitStructure;
+;;;312    	
+;;;313      /* Initialize LEDS */
+;;;314      STM_EVAL_LEDInit(LED3);
 000062  2001              MOVS     r0,#1
 000064  f7fffffe          BL       STM_EVAL_LEDInit
-;;;314      STM_EVAL_LEDInit(LED4);
+;;;315      STM_EVAL_LEDInit(LED4);
 000068  2000              MOVS     r0,#0
 00006a  f7fffffe          BL       STM_EVAL_LEDInit
-;;;315      STM_EVAL_LEDInit(LED5);
+;;;316      STM_EVAL_LEDInit(LED5);
 00006e  2002              MOVS     r0,#2
 000070  f7fffffe          BL       STM_EVAL_LEDInit
-;;;316      STM_EVAL_LEDInit(LED6);
+;;;317      STM_EVAL_LEDInit(LED6);
 000074  2003              MOVS     r0,#3
 000076  f7fffffe          BL       STM_EVAL_LEDInit
-;;;317     
-;;;318      /* Green Led On: start of application */
-;;;319    	STM_EVAL_LEDOn(LED3);
+;;;318     
+;;;319      /* Green Led On: start of application */
+;;;320    	STM_EVAL_LEDOn(LED3);
 00007a  2001              MOVS     r0,#1
 00007c  f7fffffe          BL       STM_EVAL_LEDOn
-;;;320    	STM_EVAL_LEDOn(LED4);
+;;;321    	STM_EVAL_LEDOn(LED4);
 000080  2000              MOVS     r0,#0
 000082  f7fffffe          BL       STM_EVAL_LEDOn
-;;;321    	STM_EVAL_LEDOn(LED5);
+;;;322    	STM_EVAL_LEDOn(LED5);
 000086  2002              MOVS     r0,#2
 000088  f7fffffe          BL       STM_EVAL_LEDOn
-;;;322    	STM_EVAL_LEDOn(LED6);
+;;;323    	STM_EVAL_LEDOn(LED6);
 00008c  2003              MOVS     r0,#3
 00008e  f7fffffe          BL       STM_EVAL_LEDOn
-;;;323           
-;;;324      /* SysTick end of count event each 10ms */
-;;;325      RCC_GetClocksFreq(&RCC_Clocks);
+;;;324           
+;;;325      /* SysTick end of count event each 10ms */
+;;;326      RCC_GetClocksFreq(&RCC_Clocks);
 000092  4842              LDR      r0,|L5.412|
 000094  f7fffffe          BL       RCC_GetClocksFreq
-;;;326      SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+;;;327      SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 000098  4840              LDR      r0,|L5.412|
 00009a  2164              MOVS     r1,#0x64
 00009c  2707              MOVS     r7,#7
@@ -710,39 +711,39 @@
 0000bc  618c              STR      r4,[r1,#0x18]
 0000be  610f              STR      r7,[r1,#0x10]
                   |L5.192|
-;;;327      
-;;;328      /* Configure TIM4 Peripheral to manage LEDs lighting */
-;;;329      TIM_LED_Config();
+;;;328      
+;;;329      /* Configure TIM4 Peripheral to manage LEDs lighting */
+;;;330      TIM_LED_Config();
 0000c0  f7fffffe          BL       TIM_LED_Config
-;;;330      
-;;;331      /* Initialize the repeat status */
-;;;332      RepeatState = 0;
+;;;331      
+;;;332      /* Initialize the repeat status */
+;;;333      RepeatState = 0;
 0000c4  4837              LDR      r0,|L5.420|
 0000c6  7004              STRB     r4,[r0,#0]
-;;;333      LED_Toggle = 7;
+;;;334      LED_Toggle = 7;
 0000c8  4837              LDR      r0,|L5.424|
 0000ca  7007              STRB     r7,[r0,#0]
-;;;334      
-;;;335    	// PC pin2
-;;;336      ADC3_CH12_DMA_Config();
+;;;335      
+;;;336    	// PC pin2
+;;;337      ADC3_CH12_DMA_Config();
 0000cc  f7fffffe          BL       ADC3_CH12_DMA_Config
-;;;337      // Start ADC3 Software Conversion 
-;;;338      ADC_SoftwareStartConv(ADC3);
+;;;338      // Start ADC3 Software Conversion 
+;;;339      ADC_SoftwareStartConv(ADC3);
 0000d0  4836              LDR      r0,|L5.428|
 0000d2  f7fffffe          BL       ADC_SoftwareStartConv
-;;;339    	
 ;;;340    	
-;;;341      
-;;;342    #if defined MEDIA_USB_KEY
-;;;343      
-;;;344      /* Initialize User Button */
-;;;345      STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
+;;;341    	
+;;;342      
+;;;343    #if defined MEDIA_USB_KEY
+;;;344      
+;;;345      /* Initialize User Button */
+;;;346      STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
 0000d6  2101              MOVS     r1,#1
 0000d8  2000              MOVS     r0,#0
 0000da  f7fffffe          BL       STM_EVAL_PBInit
-;;;346       
-;;;347      /* Init Host Library */
-;;;348      USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
+;;;347       
+;;;348      /* Init Host Library */
+;;;349      USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
 0000de  4a2f              LDR      r2,|L5.412|
 0000e0  4833              LDR      r0,|L5.432|
 0000e2  3a84              SUBS     r2,r2,#0x84
@@ -751,84 +752,84 @@
 0000e8  2101              MOVS     r1,#1
 0000ea  f5a26096          SUB      r0,r2,#0x4b0
 0000ee  f7fffffe          BL       USBH_Init
-;;;349      
-;;;350    	STM_EVAL_LEDOff(LED3);
+;;;350      
+;;;351    	STM_EVAL_LEDOff(LED3);
 0000f2  2001              MOVS     r0,#1
 0000f4  f7fffffe          BL       STM_EVAL_LEDOff
-;;;351    	STM_EVAL_LEDOff(LED4);
+;;;352    	STM_EVAL_LEDOff(LED4);
 0000f8  2000              MOVS     r0,#0
 0000fa  f7fffffe          BL       STM_EVAL_LEDOff
-;;;352    	STM_EVAL_LEDOff(LED5);
+;;;353    	STM_EVAL_LEDOff(LED5);
 0000fe  2002              MOVS     r0,#2
 000100  f7fffffe          BL       STM_EVAL_LEDOff
-;;;353    	STM_EVAL_LEDOff(LED6);
+;;;354    	STM_EVAL_LEDOff(LED6);
 000104  2003              MOVS     r0,#3
 000106  f7fffffe          BL       STM_EVAL_LEDOff
-;;;354    
 ;;;355    
-;;;356    // nastroika gpio
-;;;357    
-;;;358    //	GPIO_InitTypeDef  GPIO_InitStructure;                 
-;;;359    	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
+;;;356    
+;;;357    // nastroika gpio
+;;;358    
+;;;359    //	GPIO_InitTypeDef  GPIO_InitStructure;                 
+;;;360    	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
 00010a  2101              MOVS     r1,#1
 00010c  2008              MOVS     r0,#8
 00010e  f7fffffe          BL       RCC_APB2PeriphClockCmd
-;;;360    	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
-;;;361    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
+;;;361    	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
+;;;362    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
 000112  f88d5008          STRB     r5,[sp,#8]
-;;;362    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+;;;363    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 000116  f88d500a          STRB     r5,[sp,#0xa]
-;;;363    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
+;;;364    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
 00011a  f88d6009          STRB     r6,[sp,#9]
-00011e  2018              MOVS     r0,#0x18              ;360
-;;;364    	GPIO_Init(GPIOD, &GPIO_InitStructure);              
+00011e  2018              MOVS     r0,#0x18              ;361
+;;;365    	GPIO_Init(GPIOD, &GPIO_InitStructure);              
 000120  4e25              LDR      r6,|L5.440|
-000122  9001              STR      r0,[sp,#4]            ;361
+000122  9001              STR      r0,[sp,#4]            ;362
 000124  a901              ADD      r1,sp,#4
 000126  4630              MOV      r0,r6
 000128  f7fffffe          BL       GPIO_Init
-;;;365    
-;;;366    	UART2Init();
+;;;366    
+;;;367    	UART2Init();
 00012c  f7fffffe          BL       UART2Init
-;;;367    	
-;;;368    	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
+;;;368    	
+;;;369    	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
 000130  2201              MOVS     r2,#1
 000132  2110              MOVS     r1,#0x10
 000134  4630              MOV      r0,r6
 000136  f7fffffe          BL       GPIO_WriteBit
-;;;369    	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
+;;;370    	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
 00013a  2201              MOVS     r2,#1
 00013c  2108              MOVS     r1,#8
 00013e  4630              MOV      r0,r6
 000140  f7fffffe          BL       GPIO_WriteBit
-;;;370    	GPIOD->ODR ^= tx_pin_en;
+;;;371    	GPIOD->ODR ^= tx_pin_en;
 000144  481c              LDR      r0,|L5.440|
 000146  3014              ADDS     r0,r0,#0x14
 000148  6801              LDR      r1,[r0,#0]
 00014a  f0810110          EOR      r1,r1,#0x10
 00014e  6001              STR      r1,[r0,#0]
-;;;371    
-;;;372    	
-;;;373    
-;;;374    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
+;;;372    
+;;;373    	
+;;;374    
+;;;375    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
 000150  2026              MOVS     r0,#0x26
 000152  f88d000c          STRB     r0,[sp,#0xc]
-;;;375    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
+;;;376    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
 000156  f88d400d          STRB     r4,[sp,#0xd]
-;;;376    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
+;;;377    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
 00015a  f88d400e          STRB     r4,[sp,#0xe]
-;;;377    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
+;;;378    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
 00015e  f88d500f          STRB     r5,[sp,#0xf]
-;;;378    NVIC_Init(&NVIC_InitStructure); //??????????????
+;;;379    NVIC_Init(&NVIC_InitStructure); //??????????????
 000162  a803              ADD      r0,sp,#0xc
 000164  f7fffffe          BL       NVIC_Init
-;;;379    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+;;;380    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 000168  4c14              LDR      r4,|L5.444|
 00016a  2201              MOVS     r2,#1
 00016c  f2405125          MOV      r1,#0x525
 000170  4620              MOV      r0,r4
 000172  f7fffffe          BL       USART_ITConfig
-;;;380    USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+;;;381    USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 000176  2201              MOVS     r2,#1
 000178  f2406126          MOV      r1,#0x626
 00017c  4620              MOV      r0,r4
@@ -837,41 +838,41 @@
 000184  2040              MOVS     r0,#0x40
 000186  6008              STR      r0,[r1,#0]
                   |L5.392|
-;;;381    
 ;;;382    
-;;;383    	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
-;;;384    	/*
-;;;385      NVIC_EnableIRQ (ADC1_IRQn); // ????????? ?????????? ?? ???
-;;;386      NVIC_DisableIRQ (USART1_IRQn); // ????????? ???????
-;;;387      NVIC_DisableIRQ (ADC1_IRQn); // ??? ??? ????????? ?????????? ????
-;;;388    */
-;;;389    //	SendStringUSART2("start ver 1.0 /0"); 
-;;;390    /*
-;;;391    	txsize=10;
-;;;392    	tekper=0;
-;;;393    	for (i = 0; i < txsize ; i++)
-;;;394      {
-;;;395    		TxBuffer[i]=0x30+i;
-;;;396    	}
-;;;397    	USART_SendData(USART2, 0x3A);
-;;;398    */	
-;;;399        while (1)
-;;;400      {
-;;;401        /* Host Task handler */
-;;;402        USBH_Process(&USB_OTG_Core, &USB_Host);
+;;;383    
+;;;384    	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
+;;;385    	/*
+;;;386      NVIC_EnableIRQ (ADC1_IRQn); // ????????? ?????????? ?? ???
+;;;387      NVIC_DisableIRQ (USART1_IRQn); // ????????? ???????
+;;;388      NVIC_DisableIRQ (ADC1_IRQn); // ??? ??? ????????? ?????????? ????
+;;;389    */
+;;;390    //	SendStringUSART2("start ver 1.0 /0"); 
+;;;391    /*
+;;;392    	txsize=10;
+;;;393    	tekper=0;
+;;;394    	for (i = 0; i < txsize ; i++)
+;;;395      {
+;;;396    		TxBuffer[i]=0x30+i;
+;;;397    	}
+;;;398    	USART_SendData(USART2, 0x3A);
+;;;399    */	
+;;;400        while (1)
+;;;401      {
+;;;402        /* Host Task handler */
+;;;403        USBH_Process(&USB_OTG_Core, &USB_Host);
 000188  4904              LDR      r1,|L5.412|
 00018a  3984              SUBS     r1,r1,#0x84
 00018c  f5a16096          SUB      r0,r1,#0x4b0
 000190  f7fffffe          BL       USBH_Process
 000194  e7f8              B        |L5.392|
-;;;403      }
-;;;404      
-;;;405    #endif
-;;;406    	
-;;;407    
-;;;408      
-;;;409    }
-;;;410    
+;;;404      }
+;;;405      
+;;;406    #endif
+;;;407    	
+;;;408    
+;;;409      
+;;;410    }
+;;;411    
                           ENDP
 
 000196  0000              DCW      0x0000

@@ -37754,7 +37754,8 @@ N
 N
 N    // ???????? RTC
 N    rtc_Reset();
-N    rtc_Init();
+N   rtc_Init();
+N  //rtc_Init2();
 N 		
 N	
 N//	ADC_InitTypeDef  ADC_InitStructure;

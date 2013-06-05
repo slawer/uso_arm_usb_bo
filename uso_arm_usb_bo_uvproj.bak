@@ -436,6 +436,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\stm32f4xx_it.c</FilePath>
             </File>
+            <File>
+              <FileName>readme.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\readme.txt</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1084,6 +1089,11 @@
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\stm32f4xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>readme.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\readme.txt</FilePath>
             </File>
           </Files>
         </Group>

@@ -21809,7 +21809,8 @@ int main(void)
 
     
     rtc_Reset();
-    rtc_Init();
+   rtc_Init();
+  
  		
 	
 
@@ -21972,7 +21973,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 490 "src\\main.c"
+#line 491 "src\\main.c"
 
   
  
