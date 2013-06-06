@@ -302,12 +302,40 @@ void SysTick_Handler(void)
 	 if (tick%2==0)
 	 {
 		 STM_EVAL_LEDOn(LED3);
-		indicate_time(0,DT1.Minutes,DT1.Seconds,1);
+		 
+	//   indicate_time(0,DT1.Minutes,DT1.Seconds,1);
+	//	 indicate_time(1,DT1.Minutes,DT1.Seconds,1);
+		
+		 test_ind(0);
+		 test_ind(1);
+//		 indicate_test(0,1);
+//		 indicate_test(1,1);
+		 
+	//	 indicate(0,123);
+	//	 indicate(1,456);		 
+		 
 	 }
 	 else
 	 {
 		 STM_EVAL_LEDOff(LED3);	
-	indicate_time(0,DT1.Minutes,DT1.Seconds,0);
+		 
+//	   indicate_time(0,DT1.Minutes,DT1.Seconds,0);
+	//	 indicate_time(1,DT1.Minutes,DT1.Seconds,0);
+	//	 test_ind(0);
+	//	 test_ind(1);	
+
+//	 indicate_test(0,9);
+//	 indicate_test(1,9);
+//			norm_ind(0);
+//			norm_ind(1);	
+//		 indicate_test(0,1);
+//		 indicate_test(1,1);	
+		 indicate(0,0);
+		 indicate(1,0);			 
+	 }
+	 
+
+		 
 	 }		 
 		
 	if ((tick%60)==0)
@@ -332,22 +360,9 @@ void SysTick_Handler(void)
 		//		indicate (0);
 		//		indicate (1);
 				
-	}
-
-	
-
-
-	
-
-	
- // TimingDelay_Decrement();
-#if defined MEDIA_USB_KEY
-  if ( Command_index == 1)
-  {
-    Time_Rec_Base ++;
-  }
-#endif
 }
+
+	
 
 
 /******************************************************************************/

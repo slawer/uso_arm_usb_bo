@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37602,9 +37602,43 @@ N
 N	 if (tick%2==0)
 N	 {
 N		 STM_EVAL_LEDOn(LED3);
+N		 
+N	//   indicate_time(0,DT1.Minutes,DT1.Seconds,1);
+N	//	 indicate_time(1,DT1.Minutes,DT1.Seconds,1);
+N		
+W "src\stm32f4xx_it.c" 309 4 function "test_ind" declared implicitly
+N		 test_ind(0);
+N		 test_ind(1);
+N//		 indicate_test(0,1);
+N//		 indicate_test(1,1);
+N		 
+N	//	 indicate(0,123);
+N	//	 indicate(1,456);		 
+N		 
 N	 }
 N	 else
-N		 STM_EVAL_LEDOff(LED3);		
+N	 {
+N		 STM_EVAL_LEDOff(LED3);	
+N		 
+N//	   indicate_time(0,DT1.Minutes,DT1.Seconds,0);
+N	//	 indicate_time(1,DT1.Minutes,DT1.Seconds,0);
+N	//	 test_ind(0);
+N	//	 test_ind(1);	
+N
+N//	 indicate_test(0,9);
+N//	 indicate_test(1,9);
+N//			norm_ind(0);
+N//			norm_ind(1);	
+N//		 indicate_test(0,1);
+N//		 indicate_test(1,1);	
+W "src\stm32f4xx_it.c" 333 4 function "indicate" declared implicitly
+N		 indicate(0,0);
+N		 indicate(1,0);			 
+N	 }
+N	 
+N
+N		 
+N	 }		 
 N		
 N	if ((tick%60)==0)
 N	{
@@ -37620,24 +37654,17 @@ N
 N		
 N		new_komand=0;
 N	}
+N	
+N
+N	
+N				//	indicators[0].chislo=1234;
+N		//		indicators[1].chislo=1234;
+N		//		indicate (0);
+N		//		indicate (1);
 N				
-N	}
-N
-N	
-N
-N
-N	
-N
-N	
-N // TimingDelay_Decrement();
-N#if defined MEDIA_USB_KEY
-X#if 1L
-N  if ( Command_index == 1)
-N  {
-N    Time_Rec_Base ++;
-N  }
-N#endif
 N}
+N
+N	
 N
 N
 N/******************************************************************************/
@@ -37732,7 +37759,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 380 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 406 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

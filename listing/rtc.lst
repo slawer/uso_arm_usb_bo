@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29145,7 +29145,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29808,57 +29808,6 @@ N    RCC->BDCR &= ~RCC_BDCR_BDRST;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~((uint32_t)0x00010000);
 N}
 N
-N
-N
-Nvoid rtc_Init2(void)
-N{
-N
-N/* RTC configuration set */
-NPWR->CR |= (1<<8); // Access to RTC and RTC backup registers and backup SRAM enabled
-X((PWR_TypeDef *) (((uint32_t)0x40000000) + 0x7000))->CR |= (1<<8); 
-NRCC->CSR &= (1<<0); // LSI Off
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR &= (1<<0); 
-NRCC->BDCR = 0x00000000; // Reset BDCR register
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR = 0x00000000; 
-NRCC->BDCR |= (1<<15); // RTC clock enable
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (1<<15); 
-NRCC->BDCR |= (1<<0); // LSE On
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (1<<0); 
-NRCC->BDCR &= ~(1<<2); // LSE not bypassed quartz On
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~(1<<2); 
-NRCC->BDCR &= ~(1<<16); // Backup domain software reset not activated
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~(1<<16); 
-NRCC->BDCR |= (0x1<<8); // LSE used as the RTC clock
-X((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (0x1<<8); 
-NRTC->WPR = 0x000000CA; // Key protect 1
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0x000000CA; 
-NRTC->WPR = 0x00000053; // Key protect 2
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0x00000053; 
-NRTC->ISR |= (1<<7); // Initialization mode On
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= (1<<7); 
-Nfor(;((RTC->ISR & 0x40) == 0x00);) // delay while initialization flag will be set
-Xfor(;((((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & 0x40) == 0x00);) 
-N{
-N}
-NRTC->PRER = 0x00000000; // RESET PRER register
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = 0x00000000; 
-NRTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0xFF<<0); 
-NRTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0x7F<<16); 
-NRTC->CR &= ~(1<<6); // Hour format 24 hour day format
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR &= ~(1<<6); 
-NRTC->TR = 0x00170000; // Time 17 hours 0 minutes 0 seconds
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->TR = 0x00170000; 
-NRTC->DR = 0x00132204; // Data 4 month 2 year 13 week day 1
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->DR = 0x00132204; 
-NRTC->ISR &= ~(1<<7); // Initialization mode Off
-X((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~(1<<7); 
-Nfor(;((RTC->ISR & 0x40) == 0x40);) // delay while initialization flag will be set
-Xfor(;((((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & 0x40) == 0x40);) 
-N{
-N}
-N}
 N// Инициализация модуля
 Nvoid rtc_Init(void)
 N{
@@ -29873,7 +29822,23 @@ N
 N    // Разрешим доступ к управляющим регистрам энергонезависимого домена
 N    PWR->CR |= PWR_CR_DBP;
 X    ((PWR_TypeDef *) (((uint32_t)0x40000000) + 0x7000))->CR |= ((uint16_t)0x0100);
-N    
+N   
+N/*
+N	 //  start LSE
+N		RCC->BDCR |= RCC_BDCR_LSEON;
+N		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
+N		
+N		RCC->BDCR |=  RCC_BDCR_BDRST;
+N    RCC->BDCR &= ~RCC_BDCR_BDRST;
+N		
+N	// Выберем его как источник тактирования RTC:
+N    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+N    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
+N		
+N		   // Включим тактирование RTC
+N    RCC->BDCR |= RCC_BDCR_RTCEN;
+N*/
+N
 N    // Запускаем LSI:
 N    RCC->CSR |= RCC_CSR_LSION;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR |= ((uint32_t)0x00000001);
@@ -29881,15 +29846,7 @@ N
 N    // Ждём, когда он заведётся
 N    while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
 X    while(!(((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR & ((uint32_t)0x00000002))) {}
-N   
-N	/*
-N	// lse external
-N	    RCC->CSR |= RCC_BDCR_LSEON;
 N    
-N    // Ждём, когда он заведётся
-N    while(!(RCC->CSR & RCC_BDCR_LSERDY)) {}
-N*/
-N 	
 N    // Ок, генератор на 32 кГц завёлся.
 N    
 N    // Сбросим состояние энергонезависимого домена
@@ -29903,42 +29860,25 @@ N    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR &= ~((uint32_t)0x00000300); 
 N    RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= (((uint32_t)0x00000200)); 
-N			
-N   //  RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b0
-N       
+N      
 N    // Включим тактирование RTC
 N    RCC->BDCR |= RCC_BDCR_RTCEN;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00008000);
-N	/*		
-N	//		  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-N			
-N			// Enable the PWR clock
-N  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+N 
 N
-N  // Allow access to RTC
-N  PWR_BackupAccessCmd(ENABLE);
+N/*
+N● Access to the backup SRAM
+N1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
+Nperipheral clock enable register (RCC_APB1ENR)
+N2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
+Nbackup domain
+N3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
+Nperipheral clock register (RCC_AHB1ENR)
 N
-N  // Reset RTC Domain
-N  RCC_BackupResetCmd(ENABLE);
-N  RCC_BackupResetCmd(DISABLE);
+Nuint8_t *BKPRam = (uint8_t *)0x40024000;
 N
-N  // Enable the LSE OSC
-N  RCC_LSEConfig(RCC_LSE_ON);
 N
-N  // Wait till LSE is ready
-N  while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
-N  {
-N  }
-N
-N  // Select the RTC Clock Source
-N  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-N
-N  // Configure the RTC data register and RTC prescaler
-N  RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
-N  RTC_InitStructure.RTC_SynchPrediv  = 0xFF;
-N  RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;
-N  errRtc = RTC_Init ( &RTC_InitStructure );
-N   */  
+N*/			
 N    // Снимем защиту от записи с регистров RTC
 N    rtc_Unlock();
 N    {
@@ -29949,8 +29889,11 @@ N        RTC->ISR |= RTC_ISR_INIT;
 X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= ((uint32_t)0x00000080);
 N        
 N        // Ждём, когда это произойдёт
-N        while(!(RTC->ISR & RTC_ISR_INITF)) {}
-X        while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
+N
+N
+N
+N			while(!(RTC->ISR & RTC_ISR_INITF)) {}
+X			while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
 N        
 N        // Часы остановлены. Режим инициализации
 N        // Настроим предделитель для получения частоты 1 Гц.
@@ -29958,8 +29901,8 @@ N
 N        // LSI: 
 N        // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
 N        {  //  32768Hz, а нам нужны
-N            uint32_t Sync = 255; //263;   // 15 бит
-N            uint32_t Async =127; //127;  // 7 бит
+N            uint32_t Sync = 263;   // 15 бит
+N            uint32_t Async =127;  // 7 бит
 N            
 N            // Сначала записываем величину для синхронного предделителя
 N            RTC->PRER = Sync;
@@ -30010,8 +29953,36 @@ N//while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
 N{
 N}
 N
-Nbkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
-Xbkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+N {
+N	 u16 i=0, errorindex=0;
+N  bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+X  bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+N
+N
+N/*  Backup SRAM ***************************************************************/
+N  /* Enable BKPRAM Clock */
+N  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+X  RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
+N
+N
+N  /* Write to Backup SRAM with 32-Bit Data */
+N  for (i = 0; i < 0x1000; i += 4)
+N  {
+N    *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
+X    *(volatile uint32_t *) (((uint32_t)0x40024000) + i) = i;
+N  }
+N
+N  /* Check the written Data */
+N  for (i = 0; i < 0x1000; i += 4)
+N  {
+N   if ((*(__IO uint32_t *) (BKPSRAM_BASE + i)) != i)
+X   if ((*(volatile uint32_t *) (((uint32_t)0x40024000) + i)) != i)
+N    {
+N      errorindex++;
+N    }
+N	}	
+N}
+N	
 N__ASM volatile ("nop");
 X__asm volatile ("nop");
 N
