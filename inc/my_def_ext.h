@@ -19,10 +19,10 @@
 
 u32 tick=0;
 #define vrem_tm 100
-zap kor[numbkor];
+//zap kor[numbkor];
 
 TDateTime DT_zap; 
-BOOL number_buff=0;
+bool number_buff=0;
 
 uint16_t Buf_adc_zap1 [1000];
 uint16_t Buf_adc_zap2 [1000];
@@ -69,24 +69,18 @@ uint16_t SPI1_Buffer_Tx[32] = {0x0102, 0x0304, 0x0506, 0x0708, 0x090A, 0x0B0C,
 u8 symb_code[13]={0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x4F, 0x79,0x80};
 //  . 0x80					0 1 2 3 4 5 6 7 8 9 E ~E .
 
-
 u8 symb_code_min[13]={0x7E,0x30,0xEC,0xf8,0xB2,0xDA,0xDE,0x70,0xFE,0xFA,0xCE, 0xf8,0x01};
 
 
-typedef struct 
-{
-		u8 numb;
-		u8	kol_cifr;
-		u8	type_ind;
-		u8	yark;
-		u8	rez_viv;   // 0 -blank   1 - norm  2 - migaet
-		u16	chislo;
-		u8	pol_zap;
-		u16	porog;
-	
-} st_indikators;
+st_conf conf;
 
-st_indikators indicators[10];
+
+
+
+
+
+
+
 
 
 

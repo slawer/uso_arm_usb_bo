@@ -1382,7 +1382,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 					break;								
 			}
 			
-			switch (indicators[numb_ind].kol_cifr)
+			switch (conf.indicators[numb_ind].kol_cifr)
 			{
 				case 0x00:  // CS0
 					maximum=1;
@@ -1404,28 +1404,10 @@ void indicate(u8 numb_ind,u16 chislo_new)
 					break;	
 				
 				default:  // CS0
-					maximum=10^(indicators[numb_ind].kol_cifr);
+					maximum=10^(conf.indicators[numb_ind].kol_cifr);
 					break;					
 			}
-			
-/*
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
-				delay_spi(100);
-				spi_send(0x0f);delay_spi(100);
-				spi_send(0x00); delay_spi(100);
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
-				delay_spi(1000);
-			*/
-/*
-			// registr intensivnost
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOA.0			
-			delay_spi(100);
-			spi_send(0x0A);	
-			delay_spi(100);
-			spi_send(0xFF);																	
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOA.0
-	*/		
+	
 			if (chislo>=maximum)   // reflow
 			{			
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
@@ -1435,7 +1417,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
 			  delay_spi(zad_spi2);	
 				
-				for (i=2;i<indicators[numb_ind].kol_cifr+1;i++)  {
+				for (i=2;i<conf.indicators[numb_ind].kol_cifr+1;i++)  {
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
 				delay_spi(zad_spi);
 				spi_send((u8) i);delay_spi(zad_spi);
@@ -1445,17 +1427,17 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				return ;
 			}	
 
-			for (i=indicators[numb_ind].kol_cifr;i>0;i--)
+			for (i=conf.indicators[numb_ind].kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
 
-			for (i=1;i<indicators[numb_ind].kol_cifr+1;i++)
+			for (i=1;i<conf.indicators[numb_ind].kol_cifr+1;i++)
 			{	
 						simb=symb_code[zn[i]];
 				
-						if ((indicators[numb_ind].kol_cifr-i)==indicators[numb_ind].pol_zap)
+						if ((conf.indicators[numb_ind].kol_cifr-i)==conf.indicators[numb_ind].pol_zap)
 							simb+=0x80;
 				
 						if ((simb==0x7E)&(null))
@@ -1463,7 +1445,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 						else
 							null=0;
 						
-						if (i==indicators[numb_ind].kol_cifr)
+						if (i==conf.indicators[numb_ind].kol_cifr)
 							simb&=0x7F;
 	
 						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -1683,31 +1665,31 @@ SPI 2:
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 
 
-	indicators[0].numb=0;
-	indicators[0].kol_cifr=8;
-	indicators[0].type_ind=0;
-	indicators[0].yark=0x0f;
-	indicators[0].rez_viv=0;   //   
-	indicators[0].chislo=0;
-	indicators[0].pol_zap=0;
-	indicators[0].porog=0xffff;	
+	conf.indicators[0].numb=0;
+	conf.indicators[0].kol_cifr=8;
+	conf.indicators[0].type_ind=0;
+	conf.indicators[0].yark=0x0f;
+	conf.indicators[0].rez_viv=0;   //   
+	conf.indicators[0].chislo=0;
+	conf.indicators[0].pol_zap=0;
+	conf.indicators[0].porog=0xffff;	
 
-	indicators[1].numb=1;
-	indicators[1].kol_cifr=3;
-	indicators[1].type_ind=0;
-	indicators[1].yark=0x0f;
-	indicators[1].rez_viv=0;   //   
-	indicators[1].chislo=0;
-	indicators[1].pol_zap=0;
-	indicators[1].porog=0xffff;	
+	conf.indicators[1].numb=1;
+	conf.indicators[1].kol_cifr=3;
+	conf.indicators[1].type_ind=0;
+	conf.indicators[1].yark=0x0f;
+	conf.indicators[1].rez_viv=0;   //   
+	conf.indicators[1].chislo=0;
+	conf.indicators[1].pol_zap=0;
+	conf.indicators[1].porog=0xffff;	
 
 //test_lin2();
  
 //	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
 //  init_ind(indicators[1].numb, indicators[1].kol_cifr, indicators[1].type_ind);
 
-	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
-  init_ind(indicators[1].numb, indicators[1].kol_cifr, indicators[1].type_ind);
+	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators[0].type_ind);
+  init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
 
 
 // nastroika gpio

@@ -221,8 +221,6 @@ void SysTick_Handler(void)
 		summa[0]=0;
 		
 		
-
-		
 		// раз в 100 мс
 		// вычисляем физическую виличину 
 	
@@ -308,9 +306,9 @@ void SysTick_Handler(void)
 		 STM_EVAL_LEDOff(LED3);	 
 	 }
 	 
- indicate_lin(0,(u16)tick, 1680, 28);
+ indicate_lin(0,(u16)fz_average[0], 4096);
 	  // indicate(0,0);
- indicate(1,(u16)tick);		
+ indicate(1,(u16)(fz_average[0]/10));
 		 
 	 }		 
 		

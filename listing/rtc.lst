@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29145,7 +29145,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29687,8 +29687,186 @@ N/* end of string.h */
 N
 L 9 "src\rtc.c" 2
 N
+N#include "my.h"
+L 1 ".\inc\my.h" 1
+N
+N#include "rtc.h"
+L 1 ".\src\rtc.h" 1
+N//
+N// rtc.h
+N//
+N
+N#include <stdint.h>
+N#include <stdbool.h>
+N
+N#ifndef _RTC_H
+S#define _RTC_H
+S
+S    typedef struct
+S    {
+S        uint8_t Year;      // Год
+S        uint8_t Month;     // Месяц
+S        uint8_t Day;       // День месяца
+S        
+S        uint8_t DayOfWeek; // День недели
+S        
+S        uint8_t Hours;     // Часы
+S        uint8_t Minutes;   // Минуты
+S        uint8_t Seconds;   // Секунды
+S    } TDateTime;
+S
+S    // Инициализация модуля
+S    void rtc_Init(void);
+S
+S    // Сброс состояния часов
+S    void rtc_Reset(void);
+S    
+S    // Получить текущее время
+S    void rtc_Get(TDateTime * DateTime);
+S
+N#endif
+L 3 ".\inc\my.h" 2
+N
+N// my add for usb write
+N#define numbkor 10
+N#define vrem_tm 100
+N
+N#define	kpl_simb_in_stroka	7
+N
+N
+N#define tx_pin_en	GPIO_Pin_4
+N#define rx_pin_en	GPIO_Pin_3
+N
+N	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
+N	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+N		
+N	
+Nextern	u8 txsize, rxsize;
+N	
+Nextern		u8  RxBuffer[RxBufferSize];
+Xextern		u8  RxBuffer[((u8)255)];
+Nextern		u8  TxBuffer[RxBufferSize];
+Xextern		u8  TxBuffer[((u8)255)];
+Nextern		u8 tekper,tekpr;
+N
+Ntypedef struct
+N{
+N  uint8_t adr;      
+N  uint8_t func; 
+N  uint16_t reg;       
+N  uint16_t kol;  
+N  uint16_t crc;             
+N} zap;
+N
+Nextern u32 tick;
+N
+Nextern zap kor[numbkor];
+Xextern zap kor[10];
+N
+N
+Nextern TDateTime DT_zap; 
+Nextern bool number_buff;
+Xextern _Bool number_buff;
+Nextern uint16_t Buf_adc_zap1 [1000];
+Nextern uint16_t Buf_adc_zap2 [1000];
+Nextern uint8_t Buf_zap [6000];
+Nextern uint16_t time_label;
+Nextern u16 por;
+N
+N
+Nextern 	 uint8_t counter;
+Nextern 	uint16_t bytesWritten;
+N	
+Nextern 	u8 tmp1, tmp2,tmp3,tmp4, sm;
+Nextern 	u16 cnt, kol_zap;
+N
+Nextern u8 file_cr;
+N
+Nextern u8 buffering;
+Nextern u16 del;
+Nextern u16 minute;
+Nextern u16 pred_minute;
+N
+Nextern u16 minute;
+N
+Nextern u16 pred_minute;
+N
+Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
+N
+Nextern u8 kol_average;
+N
+N
+Ntypedef struct 
+N{
+N  u16 kod[10];
+N//float fz[10];
+N	u16 fz[10];
+N} st_tab_kal;
+N
+Nextern st_tab_kal tab_kal;
+N
+N
+Nextern u8 address;
+N
+Nextern u8 new_komand;
+N
+N
+N
+N
+Ntypedef struct 
+N{
+N		u8 numb;
+N		u8	kol_cifr;
+N		u8	type_ind;
+N		u8	yark;
+N		u8	rez_viv;   // 0 -blank   1 - norm  2 - migaet
+N		u8	pol_zap;
+N		u8 r1;
+N	  u8 r2;
+N		u16	chislo;
+N		u16	porog;
+N	
+N} st_indikators;
+N
+N//st_indikators indicators[10];
+N
+Ntypedef struct 
+N{
+N		st_tab_kal tabl1;
+N		st_tab_kal tabl2;	
+N}  gr_kal;
+N
+N
+Ntypedef struct 
+N{
+N		u8 address;
+N		u8 ver_po_st;
+N		u8 ver_po_ml;
+N	  u8 tek_gr_kal; 
+N	  u8 tm_antidreb;
+N		u8 revers_group_select;
+N		u8 revers_peredacha_select;
+N		u8 rez8;
+N	
+N		u16	per_usr;
+N		u16	time_max;
+N		u16 por_rele;
+N		u16 tm_rele_on;
+N		u16 tm_rele_off;
+N		u16 rez16;
+N	
+N	  st_indikators indicators[4];	
+N	
+N		gr_kal gr_kal1;
+N		gr_kal gr_kal2;
+N
+W ".\inc\my.h" 133 11 last line of file ends without a newline
+N} st_conf;
+L 11 "src\rtc.c" 2
+N
 N
 Nu16 bkp=0;
+Nu16 size=0;
 N
 N// Выключить защиту от записи
 Nstatic void rtc_Unlock(void)
@@ -29954,33 +30132,121 @@ N{
 N}
 N
 N {
-N	 u16 i=0, errorindex=0;
-N  bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
-X  bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+N	 
+N	 extern st_conf conf;
+N	 u32 i=0,i1=0, errorindex=0;
+N	 
+N   bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+X   bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
 N
 N
-N/*  Backup SRAM ***************************************************************/
-N  /* Enable BKPRAM Clock */
+N//  Backup SRAM ************************************************************
+N  // Enable BKPRAM Clock 
 N  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 X  RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 N
-N
-N  /* Write to Backup SRAM with 32-Bit Data */
+N/*
+N  // Write to Backup SRAM with 32-Bit Data 
 N  for (i = 0; i < 0x1000; i += 4)
 N  {
 N    *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
-X    *(volatile uint32_t *) (((uint32_t)0x40024000) + i) = i;
+N  }
+N*/
+N//	sizeof
+N  // read config rrom backup SRAM
+N	 
+N	 
+N	size=sizeof(st_conf);
+N	/*
+N  for (i = 0; i < size; i += 2)
+N  {
+N		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
+N	}	
+N*/
+N
+N	conf.address=1;
+N	conf.ver_po_st=2;
+N	conf.ver_po_ml=3;
+N	conf.tek_gr_kal=4;
+N	conf.tm_antidreb=5;
+N	conf.revers_group_select=6;
+N	conf.revers_peredacha_select=7;
+N	conf.rez8=8;
+N	
+N	conf.per_usr=9;
+N	conf.time_max=10;
+N	conf.por_rele=11;
+N	conf.tm_rele_on=12;
+N	conf.tm_rele_off=13;
+N	conf.rez16=14;
+N	
+N	conf.indicators[0].numb=15;
+N	conf.indicators[0].kol_cifr=16;
+N	conf.indicators[1].numb=17;
+N	conf.indicators[1].kol_cifr=18;
+N	conf.indicators[2].numb=19;
+N	conf.indicators[2].kol_cifr=20;
+N	conf.indicators[3].numb=21;
+N	conf.indicators[3].kol_cifr=2;
+N	conf.gr_kal1.tabl1.kod[0]=23;
+N	conf.gr_kal1.tabl1.fz[0]=24;
+N	conf.gr_kal1.tabl2.kod[0]=25;
+N	conf.gr_kal1.tabl2.fz[0]=26;
+N	conf.gr_kal2.tabl1.kod[0]=27;
+N	conf.gr_kal2.tabl1.fz[0]=28;
+N	conf.gr_kal2.tabl2.kod[0]=29;
+N	conf.gr_kal2.tabl2.fz[0]=30;
+N	conf.gr_kal2.tabl2.kod[9]=31;
+N	conf.gr_kal2.tabl2.fz[9]=32;
+N
+N
+N	for (i = 0; i < size; i += 1)
+N  {
+N    *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+X    *(volatile uint8_t *) (((uint32_t)0x40024000) + i) = *(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i);
 N  }
 N
-N  /* Check the written Data */
-N  for (i = 0; i < 0x1000; i += 4)
+N	conf.address=255;
+N	conf.ver_po_st=255;
+N	conf.ver_po_ml=255;
+N	conf.per_usr=255;
+N	conf.time_max=255;
+N	conf.tek_gr_kal=255;
+N	conf.gr_kal1.tabl1.fz[0]=255;
+N	conf.gr_kal1.tabl1.kod[0]=255;
+N	conf.gr_kal1.tabl2.fz[0]=255;
+N	conf.gr_kal1.tabl2.kod[0]=255;
+N	
+N	conf.gr_kal2.tabl1.fz[0]=255;
+N	conf.gr_kal2.tabl1.kod[0]=255;
+N	conf.gr_kal2.tabl2.fz[0]=255;
+N	conf.gr_kal2.tabl2.kod[0]=255;
+N	conf.revers_group_select=255;
+N	conf.revers_peredacha_select=255;
+N	conf.tm_antidreb=255;
+N	conf.por_rele=255;
+N	conf.tm_rele_on=255;
+N	conf.tm_rele_off=255;
+N	conf.indicators[0].numb=255;
+N	conf.indicators[0].kol_cifr=255;
+N	conf.indicators[1].numb=255;
+N	conf.indicators[1].kol_cifr=255;
+N	conf.indicators[2].numb=255;
+N	conf.indicators[2].kol_cifr=255;
+N	conf.indicators[3].numb=255;
+N	conf.indicators[3].kol_cifr=255;
+N	
+N	
+N	for (i = 0; i < size; i += 1)
 N  {
-N   if ((*(__IO uint32_t *) (BKPSRAM_BASE + i)) != i)
-X   if ((*(volatile uint32_t *) (((uint32_t)0x40024000) + i)) != i)
-N    {
-N      errorindex++;
-N    }
+N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 N	}	
+N	
+N
+N	
+W "src\rtc.c" 255 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 255 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");

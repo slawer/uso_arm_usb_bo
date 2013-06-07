@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37231,7 +37231,8 @@ Xextern zap kor[10];
 N
 N
 Nextern TDateTime DT_zap; 
-Nextern BOOL number_buff;
+Nextern bool number_buff;
+Xextern _Bool number_buff;
 Nextern uint16_t Buf_adc_zap1 [1000];
 Nextern uint16_t Buf_adc_zap2 [1000];
 Nextern uint8_t Buf_zap [6000];
@@ -37263,8 +37264,9 @@ N
 N
 Ntypedef struct 
 N{
-Nu16 kod[10];
-Nfloat fz[10];
+N  u16 kod[10];
+N//float fz[10];
+N	u16 fz[10];
 N} st_tab_kal;
 N
 Nextern st_tab_kal tab_kal;
@@ -37272,8 +37274,60 @@ N
 N
 Nextern u8 address;
 N
-W ".\inc\my.h" 80 22 last line of file ends without a newline
 Nextern u8 new_komand;
+N
+N
+N
+N
+Ntypedef struct 
+N{
+N		u8 numb;
+N		u8	kol_cifr;
+N		u8	type_ind;
+N		u8	yark;
+N		u8	rez_viv;   // 0 -blank   1 - norm  2 - migaet
+N		u8	pol_zap;
+N		u8 r1;
+N	  u8 r2;
+N		u16	chislo;
+N		u16	porog;
+N	
+N} st_indikators;
+N
+N//st_indikators indicators[10];
+N
+Ntypedef struct 
+N{
+N		st_tab_kal tabl1;
+N		st_tab_kal tabl2;	
+N}  gr_kal;
+N
+N
+Ntypedef struct 
+N{
+N		u8 address;
+N		u8 ver_po_st;
+N		u8 ver_po_ml;
+N	  u8 tek_gr_kal; 
+N	  u8 tm_antidreb;
+N		u8 revers_group_select;
+N		u8 revers_peredacha_select;
+N		u8 rez8;
+N	
+N		u16	per_usr;
+N		u16	time_max;
+N		u16 por_rele;
+N		u16 tm_rele_on;
+N		u16 tm_rele_off;
+N		u16 rez16;
+N	
+N	  st_indikators indicators[4];	
+N	
+N		gr_kal gr_kal1;
+N		gr_kal gr_kal2;
+N
+W ".\inc\my.h" 133 11 last line of file ends without a newline
+N} st_conf;
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1
@@ -37518,8 +37572,6 @@ N		kol_average=0;
 N		summa[0]=0;
 N		
 N		
-N
-N		
 N		// раз в 100 мс
 N		// вычисляем физическую виличину 
 N	
@@ -37608,11 +37660,11 @@ N	 {
 N		 STM_EVAL_LEDOff(LED3);	 
 N	 }
 N	 
-W "src\stm32f4xx_it.c" 311 2 function "indicate_lin" declared implicitly
-N indicate_lin(0,(u16)tick, 1680, 28);
+W "src\stm32f4xx_it.c" 309 2 function "indicate_lin" declared implicitly
+N indicate_lin(0,(u16)fz_average[0], 4096);
 N	  // indicate(0,0);
-W "src\stm32f4xx_it.c" 313 2 function "indicate" declared implicitly
-N indicate(1,(u16)tick);		
+W "src\stm32f4xx_it.c" 311 2 function "indicate" declared implicitly
+N indicate(1,(u16)(fz_average[0]/10));
 N		 
 N	 }		 
 N		
@@ -37735,7 +37787,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 382 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 380 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

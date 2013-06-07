@@ -7,8 +7,11 @@
 
 #include <string.h>
 
+#include "my.h"
+
 
 u16 bkp=0;
+u16 size=0;
 
 // Выключить защиту от записи
 static void rtc_Unlock(void)
@@ -247,29 +250,115 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 }
 
  {
-	 u16 i=0, errorindex=0;
-  bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+	 
+	 extern st_conf conf;
+	 u32 i=0,i1=0, errorindex=0;
+	 
+   bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
 
 
-/*  Backup SRAM ***************************************************************/
-  /* Enable BKPRAM Clock */
+//  Backup SRAM ************************************************************
+  // Enable BKPRAM Clock 
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 
-
-  /* Write to Backup SRAM with 32-Bit Data */
+/*
+  // Write to Backup SRAM with 32-Bit Data 
   for (i = 0; i < 0x1000; i += 4)
   {
     *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
   }
-
-  /* Check the written Data */
-  for (i = 0; i < 0x1000; i += 4)
+*/
+//	sizeof
+  // read config rrom backup SRAM
+	 
+	 
+	size=sizeof(st_conf);
+	/*
+  for (i = 0; i < size; i += 2)
   {
-   if ((*(__IO uint32_t *) (BKPSRAM_BASE + i)) != i)
-    {
-      errorindex++;
-    }
+		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
 	}	
+*/
+
+	conf.address=1;
+	conf.ver_po_st=2;
+	conf.ver_po_ml=3;
+	conf.tek_gr_kal=4;
+	conf.tm_antidreb=5;
+	conf.revers_group_select=6;
+	conf.revers_peredacha_select=7;
+	conf.rez8=8;
+	
+	conf.per_usr=9;
+	conf.time_max=10;
+	conf.por_rele=11;
+	conf.tm_rele_on=12;
+	conf.tm_rele_off=13;
+	conf.rez16=14;
+	
+	conf.indicators[0].numb=15;
+	conf.indicators[0].kol_cifr=16;
+	conf.indicators[1].numb=17;
+	conf.indicators[1].kol_cifr=18;
+	conf.indicators[2].numb=19;
+	conf.indicators[2].kol_cifr=20;
+	conf.indicators[3].numb=21;
+	conf.indicators[3].kol_cifr=2;
+	conf.gr_kal1.tabl1.kod[0]=23;
+	conf.gr_kal1.tabl1.fz[0]=24;
+	conf.gr_kal1.tabl2.kod[0]=25;
+	conf.gr_kal1.tabl2.fz[0]=26;
+	conf.gr_kal2.tabl1.kod[0]=27;
+	conf.gr_kal2.tabl1.fz[0]=28;
+	conf.gr_kal2.tabl2.kod[0]=29;
+	conf.gr_kal2.tabl2.fz[0]=30;
+	conf.gr_kal2.tabl2.kod[9]=31;
+	conf.gr_kal2.tabl2.fz[9]=32;
+
+
+	for (i = 0; i < size; i += 1)
+  {
+    *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+  }
+
+	conf.address=255;
+	conf.ver_po_st=255;
+	conf.ver_po_ml=255;
+	conf.per_usr=255;
+	conf.time_max=255;
+	conf.tek_gr_kal=255;
+	conf.gr_kal1.tabl1.fz[0]=255;
+	conf.gr_kal1.tabl1.kod[0]=255;
+	conf.gr_kal1.tabl2.fz[0]=255;
+	conf.gr_kal1.tabl2.kod[0]=255;
+	
+	conf.gr_kal2.tabl1.fz[0]=255;
+	conf.gr_kal2.tabl1.kod[0]=255;
+	conf.gr_kal2.tabl2.fz[0]=255;
+	conf.gr_kal2.tabl2.kod[0]=255;
+	conf.revers_group_select=255;
+	conf.revers_peredacha_select=255;
+	conf.tm_antidreb=255;
+	conf.por_rele=255;
+	conf.tm_rele_on=255;
+	conf.tm_rele_off=255;
+	conf.indicators[0].numb=255;
+	conf.indicators[0].kol_cifr=255;
+	conf.indicators[1].numb=255;
+	conf.indicators[1].kol_cifr=255;
+	conf.indicators[2].numb=255;
+	conf.indicators[2].kol_cifr=255;
+	conf.indicators[3].numb=255;
+	conf.indicators[3].kol_cifr=255;
+	
+	
+	for (i = 0; i < size; i += 1)
+  {
+		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+	}	
+	
+
+	
 }
 	
 __ASM volatile ("nop");

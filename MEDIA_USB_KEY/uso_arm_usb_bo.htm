@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\MEDIA_USB_KEY\uso_arm_usb_bo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\MEDIA_USB_KEY\uso_arm_usb_bo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Fri Jun 07 01:44:41 2013
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Fri Jun 07 17:09:37 2013
 <BR><P>
 <H3>Maximum Stack Usage =        408 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -893,7 +893,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
-<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 486 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
+<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 490 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = SysTick_Handler &rArr; indicate &rArr; spi_send
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_SendData
@@ -1878,7 +1878,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 512 bytes, Stack size 32 bytes, main.o(i.main))
+<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 514 bytes, Stack size 32 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = main &rArr; USBH_Process &rArr; USBH_HandleEnum &rArr; HCD_ResetPort &rArr; USB_OTG_ResetPort &rArr; USB_OTG_BSP_mDelay &rArr; BSP_Delay &rArr; BSP_SetTime &rArr; TIM_TimeBaseInit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_Process
@@ -1925,8 +1925,8 @@ Global Symbols
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;COMMAND_AudioExecuteApplication
 </UL>
 
-<P><STRONG><a name="[137]"></a>rtc_Init</STRONG> (Thumb, 238 bytes, Stack size 16 bytes, rtc.o(i.rtc_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = rtc_Init &rArr; RTC_WriteBackupRegister
+<P><STRONG><a name="[137]"></a>rtc_Init</STRONG> (Thumb, 504 bytes, Stack size 32 bytes, rtc.o(i.rtc_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = rtc_Init &rArr; RTC_WriteBackupRegister
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_WriteBackupRegister
 <LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_ReadBackupRegister

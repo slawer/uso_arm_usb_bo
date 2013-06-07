@@ -8,7 +8,7 @@
 
 
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -27,7 +27,7 @@
 
 
 
-#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -192,7 +192,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -225,7 +225,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -234,7 +234,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 #line 6 "src\\rtc.h"
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -248,7 +248,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -14423,7 +14423,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
  
 #line 7 "src\\rtc.c"
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
  
  
  
@@ -14454,7 +14454,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
 
 
 
-#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
   
@@ -14596,7 +14596,7 @@ extern __declspec(__nothrow) size_t strxfrm(char * __restrict  , const char * __
  
 
 
-#line 185 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 185 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __attribute__((__nonnull__(1)));
 
    
@@ -14607,7 +14607,7 @@ extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __att
 
  
 
-#line 201 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 201 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14625,7 +14625,7 @@ extern __declspec(__nothrow) size_t strcspn(const char *  , const char *  ) __at
 
  
 
-#line 224 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 224 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14635,7 +14635,7 @@ extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __att
 
  
 
-#line 239 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 239 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strrchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14653,7 +14653,7 @@ extern __declspec(__nothrow) size_t strspn(const char *  , const char *  ) __att
 
  
 
-#line 262 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 262 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strstr(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14839,7 +14839,7 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
 
 
-#line 494 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 494 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
 
@@ -14847,8 +14847,153 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
 #line 9 "src\\rtc.c"
 
+#line 1 ".\\inc\\my.h"
+
+#line 1 ".\\src\\rtc.h"
+
+
+
+
+#line 6 ".\\src\\rtc.h"
+#line 7 ".\\src\\rtc.h"
+
+#line 3 ".\\inc\\my.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+	
+extern	u8 txsize, rxsize;
+	
+extern		u8  RxBuffer[((u8)255)];
+extern		u8  TxBuffer[((u8)255)];
+extern		u8 tekper,tekpr;
+
+typedef struct
+{
+  uint8_t adr;      
+  uint8_t func; 
+  uint16_t reg;       
+  uint16_t kol;  
+  uint16_t crc;             
+} zap;
+
+extern u32 tick;
+
+extern zap kor[10];
+
+
+extern TDateTime DT_zap; 
+extern _Bool number_buff;
+extern uint16_t Buf_adc_zap1 [1000];
+extern uint16_t Buf_adc_zap2 [1000];
+extern uint8_t Buf_zap [6000];
+extern uint16_t time_label;
+extern u16 por;
+
+
+extern 	 uint8_t counter;
+extern 	uint16_t bytesWritten;
+	
+extern 	u8 tmp1, tmp2,tmp3,tmp4, sm;
+extern 	u16 cnt, kol_zap;
+
+extern u8 file_cr;
+
+extern u8 buffering;
+extern u16 del;
+extern u16 minute;
+extern u16 pred_minute;
+
+extern u16 minute;
+
+extern u16 pred_minute;
+
+extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
+
+extern u8 kol_average;
+
+
+typedef struct 
+{
+  u16 kod[10];
+
+	u16 fz[10];
+} st_tab_kal;
+
+extern st_tab_kal tab_kal;
+
+
+extern u8 address;
+
+extern u8 new_komand;
+
+
+
+
+typedef struct 
+{
+		u8 numb;
+		u8	kol_cifr;
+		u8	type_ind;
+		u8	yark;
+		u8	rez_viv;   
+		u8	pol_zap;
+		u8 r1;
+	  u8 r2;
+		u16	chislo;
+		u16	porog;
+	
+} st_indikators;
+
+
+
+typedef struct 
+{
+		st_tab_kal tabl1;
+		st_tab_kal tabl2;	
+}  gr_kal;
+
+
+typedef struct 
+{
+		u8 address;
+		u8 ver_po_st;
+		u8 ver_po_ml;
+	  u8 tek_gr_kal; 
+	  u8 tm_antidreb;
+		u8 revers_group_select;
+		u8 revers_peredacha_select;
+		u8 rez8;
+	
+		u16	per_usr;
+		u16	time_max;
+		u16 por_rele;
+		u16 tm_rele_on;
+		u16 tm_rele_off;
+		u16 rez16;
+	
+	  st_indikators indicators[4];	
+	
+		gr_kal gr_kal1;
+		gr_kal gr_kal2;
+
+} st_conf;
+#line 11 "src\\rtc.c"
+
 
 u16 bkp=0;
+u16 size=0;
 
 
 static void rtc_Unlock(void)
@@ -15087,29 +15232,115 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 }
 
  {
-	 u16 i=0, errorindex=0;
-  bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
+	 
+	 extern st_conf conf;
+	 u32 i=0,i1=0, errorindex=0;
+	 
+   bkp=RTC_ReadBackupRegister(((uint32_t)0x00000002));
 
 
- 
-   
+
+  
   RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 
 
-   
-  for (i = 0; i < 0x1000; i += 4)
+
+
+
+
+
+ 
+
+  
+	 
+	 
+	size=sizeof(st_conf);
+	
+
+
+
+
+ 
+
+	conf.address=1;
+	conf.ver_po_st=2;
+	conf.ver_po_ml=3;
+	conf.tek_gr_kal=4;
+	conf.tm_antidreb=5;
+	conf.revers_group_select=6;
+	conf.revers_peredacha_select=7;
+	conf.rez8=8;
+	
+	conf.per_usr=9;
+	conf.time_max=10;
+	conf.por_rele=11;
+	conf.tm_rele_on=12;
+	conf.tm_rele_off=13;
+	conf.rez16=14;
+	
+	conf.indicators[0].numb=15;
+	conf.indicators[0].kol_cifr=16;
+	conf.indicators[1].numb=17;
+	conf.indicators[1].kol_cifr=18;
+	conf.indicators[2].numb=19;
+	conf.indicators[2].kol_cifr=20;
+	conf.indicators[3].numb=21;
+	conf.indicators[3].kol_cifr=2;
+	conf.gr_kal1.tabl1.kod[0]=23;
+	conf.gr_kal1.tabl1.fz[0]=24;
+	conf.gr_kal1.tabl2.kod[0]=25;
+	conf.gr_kal1.tabl2.fz[0]=26;
+	conf.gr_kal2.tabl1.kod[0]=27;
+	conf.gr_kal2.tabl1.fz[0]=28;
+	conf.gr_kal2.tabl2.kod[0]=29;
+	conf.gr_kal2.tabl2.fz[0]=30;
+	conf.gr_kal2.tabl2.kod[9]=31;
+	conf.gr_kal2.tabl2.fz[9]=32;
+
+
+	for (i = 0; i < size; i += 1)
   {
-    *(volatile uint32_t *) (((uint32_t)0x40024000) + i) = i;
+    *(volatile uint8_t *) (((uint32_t)0x40024000) + i) = *(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i);
   }
 
-   
-  for (i = 0; i < 0x1000; i += 4)
+	conf.address=255;
+	conf.ver_po_st=255;
+	conf.ver_po_ml=255;
+	conf.per_usr=255;
+	conf.time_max=255;
+	conf.tek_gr_kal=255;
+	conf.gr_kal1.tabl1.fz[0]=255;
+	conf.gr_kal1.tabl1.kod[0]=255;
+	conf.gr_kal1.tabl2.fz[0]=255;
+	conf.gr_kal1.tabl2.kod[0]=255;
+	
+	conf.gr_kal2.tabl1.fz[0]=255;
+	conf.gr_kal2.tabl1.kod[0]=255;
+	conf.gr_kal2.tabl2.fz[0]=255;
+	conf.gr_kal2.tabl2.kod[0]=255;
+	conf.revers_group_select=255;
+	conf.revers_peredacha_select=255;
+	conf.tm_antidreb=255;
+	conf.por_rele=255;
+	conf.tm_rele_on=255;
+	conf.tm_rele_off=255;
+	conf.indicators[0].numb=255;
+	conf.indicators[0].kol_cifr=255;
+	conf.indicators[1].numb=255;
+	conf.indicators[1].kol_cifr=255;
+	conf.indicators[2].numb=255;
+	conf.indicators[2].kol_cifr=255;
+	conf.indicators[3].numb=255;
+	conf.indicators[3].kol_cifr=255;
+	
+	
+	for (i = 0; i < size; i += 1)
   {
-   if ((*(volatile uint32_t *) (((uint32_t)0x40024000) + i)) != i)
-    {
-      errorindex++;
-    }
+		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 	}	
+	
+
+	
 }
 	
 __asm volatile ("nop");

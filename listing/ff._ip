@@ -1,0 +1,5 @@
+"Utilities\Third_Party\fat_fs\ff.c" -E -c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs 
+-I d:\Keil4\ARM\RV31\INC 
+-I d:\Keil4\ARM\CMSIS\Include 
+-I d:\Keil4\ARM\Inc\ST\STM32F4xx 
+-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o ".\listing\ff.i" --list_dir ".\\listing\\" --list

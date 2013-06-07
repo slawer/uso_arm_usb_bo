@@ -36,7 +36,7 @@ extern zap kor[numbkor];
 
 
 extern TDateTime DT_zap; 
-extern BOOL number_buff;
+extern bool number_buff;
 extern uint16_t Buf_adc_zap1 [1000];
 extern uint16_t Buf_adc_zap2 [1000];
 extern uint8_t Buf_zap [6000];
@@ -68,8 +68,9 @@ extern u8 kol_average;
 
 typedef struct 
 {
-u16 kod[10];
-float fz[10];
+  u16 kod[10];
+//float fz[10];
+	u16 fz[10];
 } st_tab_kal;
 
 extern st_tab_kal tab_kal;
@@ -78,3 +79,55 @@ extern st_tab_kal tab_kal;
 extern u8 address;
 
 extern u8 new_komand;
+
+
+
+
+typedef struct 
+{
+		u8 numb;
+		u8	kol_cifr;
+		u8	type_ind;
+		u8	yark;
+		u8	rez_viv;   // 0 -blank   1 - norm  2 - migaet
+		u8	pol_zap;
+		u8 r1;
+	  u8 r2;
+		u16	chislo;
+		u16	porog;
+	
+} st_indikators;
+
+//st_indikators indicators[10];
+
+typedef struct 
+{
+		st_tab_kal tabl1;
+		st_tab_kal tabl2;	
+}  gr_kal;
+
+
+typedef struct 
+{
+		u8 address;
+		u8 ver_po_st;
+		u8 ver_po_ml;
+	  u8 tek_gr_kal; 
+	  u8 tm_antidreb;
+		u8 revers_group_select;
+		u8 revers_peredacha_select;
+		u8 rez8;
+	
+		u16	per_usr;
+		u16	time_max;
+		u16 por_rele;
+		u16 tm_rele_on;
+		u16 tm_rele_off;
+		u16 rez16;
+	
+	  st_indikators indicators[4];	
+	
+		gr_kal gr_kal1;
+		gr_kal gr_kal2;
+
+} st_conf;
