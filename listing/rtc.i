@@ -8,7 +8,7 @@
 
 
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -27,7 +27,7 @@
 
 
 
-#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -192,7 +192,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -225,7 +225,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -234,7 +234,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 #line 6 "src\\rtc.h"
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -248,7 +248,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -278,6 +278,10 @@ typedef unsigned       __int64 uintmax_t;
     
     
     void rtc_Get(TDateTime * DateTime);
+		
+		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+		
+		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 
 #line 6 "src\\rtc.c"
 #line 1 ".\\src\\stm32f4xx.h"
@@ -14423,7 +14427,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
  
 #line 7 "src\\rtc.c"
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
  
  
  
@@ -14454,7 +14458,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
 
 
 
-#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
   
@@ -14596,7 +14600,7 @@ extern __declspec(__nothrow) size_t strxfrm(char * __restrict  , const char * __
  
 
 
-#line 185 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 185 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __attribute__((__nonnull__(1)));
 
    
@@ -14607,7 +14611,7 @@ extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __att
 
  
 
-#line 201 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 201 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14625,7 +14629,7 @@ extern __declspec(__nothrow) size_t strcspn(const char *  , const char *  ) __at
 
  
 
-#line 224 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 224 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14635,7 +14639,7 @@ extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __att
 
  
 
-#line 239 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 239 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strrchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14653,7 +14657,7 @@ extern __declspec(__nothrow) size_t strspn(const char *  , const char *  ) __att
 
  
 
-#line 262 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 262 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strstr(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14839,7 +14843,7 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
 
 
-#line 494 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 494 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
 
@@ -14873,11 +14877,11 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
 		
 	
-extern	u8 txsize, rxsize;
+extern	u16 txsize, rxsize;
 	
-extern		u8  RxBuffer[((u8)255)];
-extern		u8  TxBuffer[((u8)255)];
-extern		u8 tekper,tekpr;
+extern		u8  RxBuffer[((u16)500)];
+extern		u8  TxBuffer[((u16)500)];
+extern		u16 tekper,tekpr;
 
 typedef struct
 {
@@ -14922,6 +14926,8 @@ extern u16 pred_minute;
 extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 extern u8 kol_average;
+
+extern u8 sost_pribl;
 
 
 typedef struct 
@@ -15011,7 +15017,7 @@ static void rtc_Lock(void)
 }
 
 
-static void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
+void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
 {
     uint32_t Tens, Units;
     uint32_t TempReg = 0;
@@ -15053,7 +15059,8 @@ static void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfW
 }
 
 
-static void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
+
+void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
 {
     uint32_t Tens, Units;
     uint32_t TempReg = 0;
@@ -15254,7 +15261,7 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
   
 	 
 	 
-	size=sizeof(st_conf);
+
 	
 
 
@@ -15262,77 +15269,42 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 
  
 
-	conf.address=1;
-	conf.ver_po_st=2;
-	conf.ver_po_ml=3;
-	conf.tek_gr_kal=4;
-	conf.tm_antidreb=5;
-	conf.revers_group_select=6;
-	conf.revers_peredacha_select=7;
-	conf.rez8=8;
-	
-	conf.per_usr=9;
-	conf.time_max=10;
-	conf.por_rele=11;
-	conf.tm_rele_on=12;
-	conf.tm_rele_off=13;
-	conf.rez16=14;
-	
-	conf.indicators[0].numb=15;
-	conf.indicators[0].kol_cifr=16;
-	conf.indicators[1].numb=17;
-	conf.indicators[1].kol_cifr=18;
-	conf.indicators[2].numb=19;
-	conf.indicators[2].kol_cifr=20;
-	conf.indicators[3].numb=21;
-	conf.indicators[3].kol_cifr=2;
-	conf.gr_kal1.tabl1.kod[0]=23;
-	conf.gr_kal1.tabl1.fz[0]=24;
-	conf.gr_kal1.tabl2.kod[0]=25;
-	conf.gr_kal1.tabl2.fz[0]=26;
-	conf.gr_kal2.tabl1.kod[0]=27;
-	conf.gr_kal2.tabl1.fz[0]=28;
-	conf.gr_kal2.tabl2.kod[0]=29;
-	conf.gr_kal2.tabl2.fz[0]=30;
-	conf.gr_kal2.tabl2.kod[9]=31;
-	conf.gr_kal2.tabl2.fz[9]=32;
 
 
-	for (i = 0; i < size; i += 1)
-  {
-    *(volatile uint8_t *) (((uint32_t)0x40024000) + i) = *(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i);
-  }
 
-	conf.address=255;
-	conf.ver_po_st=255;
-	conf.ver_po_ml=255;
-	conf.per_usr=255;
-	conf.time_max=255;
-	conf.tek_gr_kal=255;
-	conf.gr_kal1.tabl1.fz[0]=255;
-	conf.gr_kal1.tabl1.kod[0]=255;
-	conf.gr_kal1.tabl2.fz[0]=255;
-	conf.gr_kal1.tabl2.kod[0]=255;
-	
-	conf.gr_kal2.tabl1.fz[0]=255;
-	conf.gr_kal2.tabl1.kod[0]=255;
-	conf.gr_kal2.tabl2.fz[0]=255;
-	conf.gr_kal2.tabl2.kod[0]=255;
-	conf.revers_group_select=255;
-	conf.revers_peredacha_select=255;
-	conf.tm_antidreb=255;
-	conf.por_rele=255;
-	conf.tm_rele_on=255;
-	conf.tm_rele_off=255;
-	conf.indicators[0].numb=255;
-	conf.indicators[0].kol_cifr=255;
-	conf.indicators[1].numb=255;
-	conf.indicators[1].kol_cifr=255;
-	conf.indicators[2].numb=255;
-	conf.indicators[2].kol_cifr=255;
-	conf.indicators[3].numb=255;
-	conf.indicators[3].kol_cifr=255;
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	size=sizeof(st_conf);
 	
 	for (i = 0; i < size; i += 1)
   {
@@ -15340,6 +15312,88 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 	}	
 	
 
+
+
+
+ 
+	
+	
+
+
+
+
+ 
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 	
 }
 	

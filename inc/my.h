@@ -11,15 +11,15 @@
 #define tx_pin_en	GPIO_Pin_4
 #define rx_pin_en	GPIO_Pin_3
 
-	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
-	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
+	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 		
 	
-extern	u8 txsize, rxsize;
+extern	u16 txsize, rxsize;
 	
 extern		u8  RxBuffer[RxBufferSize];
 extern		u8  TxBuffer[RxBufferSize];
-extern		u8 tekper,tekpr;
+extern		u16 tekper,tekpr;
 
 typedef struct
 {
@@ -64,6 +64,8 @@ extern u16 pred_minute;
 extern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 
 extern u8 kol_average;
+
+extern u8 sost_pribl;
 
 
 typedef struct 

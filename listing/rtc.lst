@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -337,6 +337,10 @@ N    void rtc_Reset(void);
 N    
 N    // Получить текущее время
 N    void rtc_Get(TDateTime * DateTime);
+N		
+N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+N		
+N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 N
 N#endif
 L 6 "src\rtc.c" 2
@@ -29145,7 +29149,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29723,6 +29727,10 @@ S    void rtc_Reset(void);
 S    
 S    // Получить текущее время
 S    void rtc_Get(TDateTime * DateTime);
+S		
+S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+S		
+S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 S
 N#endif
 L 3 ".\inc\my.h" 2
@@ -29737,17 +29745,17 @@ N
 N#define tx_pin_en	GPIO_Pin_4
 N#define rx_pin_en	GPIO_Pin_3
 N
-N	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
-N	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+N	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
+N	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 N		
 N	
-Nextern	u8 txsize, rxsize;
+Nextern	u16 txsize, rxsize;
 N	
 Nextern		u8  RxBuffer[RxBufferSize];
-Xextern		u8  RxBuffer[((u8)255)];
+Xextern		u8  RxBuffer[((u16)500)];
 Nextern		u8  TxBuffer[RxBufferSize];
-Xextern		u8  TxBuffer[((u8)255)];
-Nextern		u8 tekper,tekpr;
+Xextern		u8  TxBuffer[((u16)500)];
+Nextern		u16 tekper,tekpr;
 N
 Ntypedef struct
 N{
@@ -29794,6 +29802,8 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+Nextern u8 sost_pribl;
 N
 N
 Ntypedef struct 
@@ -29860,7 +29870,7 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 133 11 last line of file ends without a newline
+W ".\inc\my.h" 135 11 last line of file ends without a newline
 N} st_conf;
 L 11 "src\rtc.c" 2
 N
@@ -29887,7 +29897,7 @@ X    ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0xFF;
 N}
 N
 N// Установить дату
-Nstatic void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
+Nvoid rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
 N{
 N    uint32_t Tens, Units;
 N    uint32_t TempReg = 0;
@@ -29930,7 +29940,8 @@ X    ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->DR = TempReg;
 N}
 N
 N// Установить время
-Nstatic void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
+N//static void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
+Nvoid rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
 N{
 N    uint32_t Tens, Units;
 N    uint32_t TempReg = 0;
@@ -30156,14 +30167,14 @@ N//	sizeof
 N  // read config rrom backup SRAM
 N	 
 N	 
-N	size=sizeof(st_conf);
+N
 N	/*
 N  for (i = 0; i < size; i += 2)
 N  {
 N		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
 N	}	
 N*/
-N
+N/*
 N	conf.address=1;
 N	conf.ver_po_st=2;
 N	conf.ver_po_ml=3;
@@ -30198,14 +30209,30 @@ N	conf.gr_kal2.tabl2.kod[0]=29;
 N	conf.gr_kal2.tabl2.fz[0]=30;
 N	conf.gr_kal2.tabl2.kod[9]=31;
 N	conf.gr_kal2.tabl2.fz[9]=32;
-N
-N
+N*/
+N	size=sizeof(st_conf);
+N	
+N	for (i = 0; i < size; i += 1)
+N  {
+N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
+N	}	
+N	/*
+N	for (i = 0; i < size; i += 1)
+N  {
+N    *(__IO uint8_t *) (BKPSRAM_BASE + i) = 0;
+N  }
+N	*/
+N	
+N	/*
 N	for (i = 0; i < size; i += 1)
 N  {
 N    *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
-X    *(volatile uint8_t *) (((uint32_t)0x40024000) + i) = *(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i);
 N  }
-N
+N	*/
+N	
+N	
+N/*
 N	conf.address=255;
 N	conf.ver_po_st=255;
 N	conf.ver_po_ml=255;
@@ -30235,18 +30262,48 @@ N	conf.indicators[2].numb=255;
 N	conf.indicators[2].kol_cifr=255;
 N	conf.indicators[3].numb=255;
 N	conf.indicators[3].kol_cifr=255;
+N	*/
+N	/*
+N	// test read config to comp
+N	conf.address=1;
+N	conf.ver_po_st=2;
+N	conf.ver_po_ml=3;
+N	conf.tek_gr_kal=4;
+N	conf.tm_antidreb=5;
+N	conf.revers_group_select=6;
+N	conf.revers_peredacha_select=7;
+N	conf.rez8=8;
 N	
+N	conf.per_usr=9;
+N	conf.time_max=10;
+N	conf.por_rele=11;
+N	conf.tm_rele_on=12;
+N	conf.tm_rele_off=13;
+N	conf.rez16=14;
 N	
-N	for (i = 0; i < size; i += 1)
-N  {
-N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
-X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
-N	}	
+N	conf.indicators[0].numb=15;
+N	conf.indicators[0].kol_cifr=16;
+N	conf.indicators[1].numb=17;
+N	conf.indicators[1].kol_cifr=18;
+N	conf.indicators[2].numb=19;
+N	conf.indicators[2].kol_cifr=20;
+N	conf.indicators[3].numb=21;
+N	conf.indicators[3].kol_cifr=2;
+N	conf.gr_kal1.tabl1.kod[0]=23;
+N	conf.gr_kal1.tabl1.fz[0]=24;
+N	conf.gr_kal1.tabl2.kod[0]=25;
+N	conf.gr_kal1.tabl2.fz[0]=26;
+N	conf.gr_kal2.tabl1.kod[0]=27;
+N	conf.gr_kal2.tabl1.fz[0]=28;
+N	conf.gr_kal2.tabl2.kod[0]=29;
+N	conf.gr_kal2.tabl2.fz[0]=30;
+N	conf.gr_kal2.tabl2.kod[9]=31;
+N	conf.gr_kal2.tabl2.fz[9]=32;
 N	
-N
+N*/
 N	
-W "src\rtc.c" 255 11 variable "i1" was declared but never referenced
-W "src\rtc.c" 255 17 variable "errorindex" was declared but never referenced
+W "src\rtc.c" 256 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 256 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");

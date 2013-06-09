@@ -29,5 +29,9 @@
     
     // Получить текущее время
     void rtc_Get(TDateTime * DateTime);
+		
+		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+		
+		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 
 #endif

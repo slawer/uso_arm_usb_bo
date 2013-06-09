@@ -8,14 +8,14 @@
 #define tx_pin_en	GPIO_Pin_4
 #define rx_pin_en	GPIO_Pin_3
 
-	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
-	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
+	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 	
-	u8 txsize, rxsize;
+	u16 txsize, rxsize;
 	
 	u8  RxBuffer[RxBufferSize];
-	u8  TxBuffer[RxBufferSize];
-	u8 tekper,tekpr;
+	u8  TxBuffer[TxBufferSize];
+	u16 tekper,tekpr;
 
 u32 tick=0;
 #define vrem_tm 100
@@ -48,6 +48,7 @@ u16 minute=0;
 u16 pred_minute=0;
 
 u16 average[10],summa[10], fz[10], fz_average[10], max[10];
+u8 sost_pribl=0;
 
 u8 kol_average=0;
 

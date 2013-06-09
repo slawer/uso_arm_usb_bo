@@ -80,18 +80,18 @@ void USART2_IRQHandler(void)
 						tmp=USART_ReceiveData (USART2);
 						if (tmp==0x3A)
 								tekpr=0;
-	
+	/*
 						if (tekpr==1)
 								if (tmp!=address)
 								{
 									tekpr=0;
 									rxsize=0;
 								}
-						
+		*/				
 						if (tmp==0x0D)
 						{
 							rxsize=tekpr;
-							USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+				//			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
 							new_komand=1;
 						}
 						RxBuffer[tekpr]=tmp;
@@ -494,7 +494,39 @@ void test_ind_all(void)
 				delay_spi(1000);
 }
 
+uint16_t pin_ind(u8 numb_ind)
+{
+	uint16_t  pin=0;
 
+			switch (numb_ind-1)
+			{
+				case 0x00:  // CS0
+					pin=GPIO_Pin_0;
+					break;
+
+				case 0x01:  // CS1
+					pin=GPIO_Pin_1;
+					break;
+
+				case 0x02:  // CS2
+					pin=GPIO_Pin_2;
+					break;
+
+				case 0x03:  // CS3
+					pin=GPIO_Pin_3;
+					break;
+
+				case 0x04:  // CS4
+					pin=GPIO_Pin_4;
+					break;	
+				default:
+					pin=0;
+					break;
+			}
+			
+			return pin;
+
+}
 void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 {
 		uint16_t  pin=0;
@@ -506,7 +538,7 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 	 kol=(u8) (tmp/maks);
 
 	
-
+/*
 		  switch (numb_ind)
 			{
 				case 0x00:  // CS0
@@ -529,7 +561,10 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 					pin=GPIO_Pin_4;
 					break;								
 			}
-	
+	*/
+	  pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;
 		if (kol>max_kol_st)
 		{
 			if (max_kol_st=28)
@@ -617,7 +652,7 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 
 	
 }
-
+/*
 void test_lin2(void)
 {
 		u8 i=0, z=0;	
@@ -662,53 +697,10 @@ void test_lin2(void)
 		spi_send((u8)0x01);delay_spi(100);
 		spi_send((u8)0); delay_spi(100);	
 		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);
-	/*		
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send((u8)0x02);delay_spi(100);
-		spi_send((u8)0xFF); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);
-			
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send((u8)0x07);delay_spi(100);
-		spi_send((u8)0xff); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);
-			
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send((u8)0x04);delay_spi(100);
-		spi_send((u8)0xFF); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);
-			*/
-/*			
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send(0x0f);delay_spi(100);
-		spi_send(0); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);	
-			*/
-			/*
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send((u8)2);delay_spi(100);
-		spi_send((u8)2); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);
-			*/
-/*
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send(poz);delay_spi(100);
-		spi_send(0x10); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);	
+	
 		
-			poz++;
-			if (poz>4)
-				poz=0;
-*/			
 		for (i=1;i<200;i++)
 			delay_spi(100000);
-			
-/*			
-		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
-		spi_send(0x0f);delay_spi(100);
-		spi_send(1); delay_spi(100);	
-		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(1000);	
-*/
 		
 		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(100);
 		spi_send((u8)in);delay_spi(100);
@@ -729,9 +721,9 @@ void test_lin2(void)
 		}
 }
 
+*/
 
-
-
+/*
 void test_lin(void)
 {
 		u8 i=0, z=0;
@@ -859,71 +851,10 @@ void test_lin(void)
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);  
 			delay_spi(1000);
 
-/*
-
-
-				GPIO_WriteBit(GPIOA, pin_c, Bit_RESET);      //   CS  GPIOA.0
-			delay_spi(100);
-			spi_send(0x0C);
-			delay_spi(100);
-			spi_send(0x01);
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);      //   GPIOA.0
-
-	
-			delay_spi(1000);
-			
-			// scan limit
-
-			GPIO_WriteBit(GPIOA, pin_c, Bit_RESET);      //   GPIOA.0			
-			delay_spi(100);
-			spi_send(0x0B);
-			delay_spi(100);
-			spi_send(7);
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);  
-
-			
-			delay_spi(1000);
-		
-			// registr intensivnost
-
-			GPIO_WriteBit(GPIOA, pin_c, Bit_RESET);      //   GPIOA.0			
-			delay_spi(100);
-			spi_send(0x0A);	
-			delay_spi(100);
-			spi_send(0x01);																	
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);  
-
-
-			// code B
-
-			GPIO_WriteBit(GPIOA, pin_c, Bit_RESET);      //   GPIOA.0			
-			delay_spi(100);
-			spi_send(0x09);	
-			delay_spi(100);
-			spi_send(0x00);																	
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);  
-			
-		*/
 	
 	while (1)
 	{
-		/*
-		for (i=1;i<8;i++)
-		{
-GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send((u8)i);delay_spi(100);
-				spi_send((u8)0xAA); delay_spi(100);					
-GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-			delay_spi(1000);
-		}
-		*/
-		
-		
+	
 		 GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
 		GPIO_WriteBit(GPIOA, pin_c, Bit_RESET); 
 				delay_spi(100);
@@ -982,97 +913,19 @@ GPIO_WriteBit(GPIOA, pin, Bit_SET);
 						z=0;
 					break;
 			}
-				
-				
-
-
-
-		GPIO_WriteBit(GPIOA, pin_c, Bit_SET);
+			
+		 GPIO_WriteBit(GPIOA, pin_c, Bit_SET);
 		 GPIO_WriteBit(GPIOA, pin, Bit_RESET); 		
-		
-		/*
-			GPIO_WriteBit(GPIOA, pin_c, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x0f);delay_spi(100);
-				spi_send(0); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);
-	*/
-		
-		/*
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x01);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x02);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);			
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x03);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);			
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x04);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);			
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x05);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);			
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x06);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-delay_spi(1000);
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x07);delay_spi(100);
-				spi_send(0x00); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-	*/		
+
 		for (i=1;i<200;i++)
 			delay_spi(100000);
-/*		
-	GPIO_WriteBit(GPIOA, pin_c, Bit_RESET);
-		 GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x0f);delay_spi(100);
-				spi_send(1); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);
-			*/
-/*			
-			delay_spi(1000);			
-			GPIO_WriteBit(GPIOA, pin_c, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x01);delay_spi(100);
-				spi_send(1); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin_c, Bit_SET);
-*/
-	/*	
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 
-				delay_spi(100);
-				spi_send(0x01);delay_spi(100);
-				spi_send(0x0f); delay_spi(100);					
-			GPIO_WriteBit(GPIOA, pin, Bit_SET); 
-*/			
+		
 		for (i=1;i<200;i++)
 			delay_spi(9000);	
-	
-		
+
 	}
 }
+*/
 
 void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 {
@@ -1080,7 +933,7 @@ void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 			u8 i=0;
 //			u16  zad_spi=1000,zad_spi2=10000;
 
-
+			/*
 		  switch (numb_ind)
 			{
 				case 0x00:  // CS0
@@ -1103,6 +956,11 @@ void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 					pin=GPIO_Pin_4;
 					break;								
 			}
+			*/
+			pin=pin_ind(numb_ind);
+			if (pin==0)
+				return;
+			
 			// shutdown off
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);  delay_spi(zad_spi);		
 			spi_send(0x0C);			delay_spi(zad_spi);
@@ -1150,7 +1008,7 @@ void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 void test_ind(u8 numb_ind)
 {
 	uint16_t  pin=0;
-	
+	 /*
 			switch (numb_ind)
 			{
 				case 0x00:  // CS0
@@ -1173,7 +1031,11 @@ void test_ind(u8 numb_ind)
 					pin=GPIO_Pin_4;
 					break;								
 			}
+			*/
 			
+			pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;			
 
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
 				delay_spi(100);
@@ -1183,6 +1045,7 @@ void test_ind(u8 numb_ind)
 				delay_spi(1000);
 }
 
+/*
 void norm_ind(u8 numb_ind)
 {
 	uint16_t  pin=0;
@@ -1218,34 +1081,15 @@ void norm_ind(u8 numb_ind)
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
 				delay_spi(1000);
 }
+*/
 
+/*
 void indicate_test(u8 numb_ind, u8 test_numb)
 {
 	uint16_t  pin=0;
 	u8 i=0;
-	
-			switch (numb_ind)
-			{
-				case 0x00:  // CS0
-					pin=GPIO_Pin_0;
-					break;
 
-				case 0x01:  // CS1
-					pin=GPIO_Pin_1;
-					break;
-
-				case 0x02:  // CS2
-					pin=GPIO_Pin_2;
-					break;
-
-				case 0x03:  // CS3
-					pin=GPIO_Pin_3;
-					break;
-
-				case 0x04:  // CS4
-					pin=GPIO_Pin_4;
-					break;								
-			}
+				pin=pin_ind(numb_ind);
 			
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
 				delay_spi(1000);
@@ -1346,9 +1190,8 @@ void indicate_test(u8 numb_ind, u8 test_numb)
 						delay_spi(10000);		
 				}
 			}
-
 }
-
+*/
 
 void indicate(u8 numb_ind,u16 chislo_new)
 {
@@ -1358,7 +1201,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 			u32   maximum=0;
 			
 
-
+			/*
 			switch (numb_ind)
 			{
 				case 0x00:  // CS0
@@ -1381,11 +1224,15 @@ void indicate(u8 numb_ind,u16 chislo_new)
 					pin=GPIO_Pin_4;
 					break;								
 			}
-			
+			*/
+			pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;
+		
 			switch (conf.indicators[numb_ind].kol_cifr)
 			{
 				case 0x00:  // CS0
-					maximum=1;
+					return;
 					break;
 				case 0x01:  // CS0
 					maximum=10;
@@ -1402,9 +1249,17 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				case 0x05:  // CS0
 					maximum=100000;
 					break;	
-				
+				case 0x06:  // CS0
+					maximum=1000000;
+					break;	
+				case 0x07:  // CS0
+					maximum=10000000;
+					break;	
+				case 0x08:  // CS0
+					maximum=100000000;
+					break;					
 				default:  // CS0
-					maximum=10^(conf.indicators[numb_ind].kol_cifr);
+					maximum=100000000;
 					break;					
 			}
 	
@@ -1460,7 +1315,7 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 {
 		 	uint16_t  pin=0;
 
-
+/*
 			switch (numb_ind)
 			{
 				case 0x00:  // CS0
@@ -1481,28 +1336,20 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 
 				case 0x04:  // CS4
 					pin=GPIO_Pin_4;
-					break;
-								
+					break;						
 			}
-		
-
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
+	*/
+			  pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
 				delay_spi(100);
 				spi_send(0x0f);delay_spi(100);
 				spi_send(0x00); delay_spi(100);
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //  
 				delay_spi(1000);
-/*
-			// registr intensivnost
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOA.0			
-			delay_spi(100);
-			spi_send(0x0A);	
-			delay_spi(100);
-			spi_send(0xFF);																	
-			delay_spi(100);			
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOA.0			
-	*/
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
 			delay_spi(100);
 			spi_send(1);delay_spi(100);
 			if (hh/10==0)
@@ -1513,28 +1360,27 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
 			delay_spi(1000);	
 	
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
 			delay_spi(100);
 			spi_send(2);delay_spi(100);
 			spi_send(0x80*en+symb_code[hh%10]); delay_spi(100);	
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
 			delay_spi(1000);				
 			
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
 			delay_spi(100);
 			spi_send(3);delay_spi(100);
 			spi_send(1*en+symb_code_min[mm/10]); delay_spi(100);	
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
 			delay_spi(1000);	
 
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2 
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
 			delay_spi(100);
 			spi_send(4);delay_spi(100);
 			spi_send(symb_code_min[mm%10]); delay_spi(100);	
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
 			delay_spi(1000);	
-
-		
+	
 }
 
 
@@ -1665,7 +1511,7 @@ SPI 2:
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 
 
-	conf.indicators[0].numb=0;
+	conf.indicators[0].numb=1;
 	conf.indicators[0].kol_cifr=8;
 	conf.indicators[0].type_ind=0;
 	conf.indicators[0].yark=0x0f;
@@ -1674,7 +1520,7 @@ SPI 2:
 	conf.indicators[0].pol_zap=0;
 	conf.indicators[0].porog=0xffff;	
 
-	conf.indicators[1].numb=1;
+	conf.indicators[1].numb=2;
 	conf.indicators[1].kol_cifr=3;
 	conf.indicators[1].type_ind=0;
 	conf.indicators[1].yark=0x0f;
@@ -1704,17 +1550,26 @@ SPI 2:
 
 	UART2Init();
 	
+	/*
+	// nastroika na pereda4y
 	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
 	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
 	GPIOD->ODR ^= tx_pin_en;
+*/
+	// nastroika na priem
+	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
+	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
+	GPIOD->ODR ^= rx_pin_en;
 
-	
+							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
+			//				USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 
 NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
 NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
 NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
 NVIC_Init(&NVIC_InitStructure); //??????????????
+
 USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 

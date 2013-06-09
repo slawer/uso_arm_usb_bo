@@ -516,7 +516,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -29430,7 +29430,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -33160,7 +33160,7 @@ N
 N
 L 34 ".\inc\usbh_usr.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -35536,6 +35536,10 @@ N    void rtc_Reset(void);
 N    
 N    // Получить текущее время
 N    void rtc_Get(TDateTime * DateTime);
+N		
+N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+N		
+N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 N
 N#endif
 L 3 ".\inc\my.h" 2
@@ -35550,17 +35554,17 @@ N
 N#define tx_pin_en	GPIO_Pin_4
 N#define rx_pin_en	GPIO_Pin_3
 N
-N	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
-N	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+N	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
+N	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 N		
 N	
-Nextern	u8 txsize, rxsize;
+Nextern	u16 txsize, rxsize;
 N	
 Nextern		u8  RxBuffer[RxBufferSize];
-Xextern		u8  RxBuffer[((u8)255)];
+Xextern		u8  RxBuffer[((u16)500)];
 Nextern		u8  TxBuffer[RxBufferSize];
-Xextern		u8  TxBuffer[((u8)255)];
-Nextern		u8 tekper,tekpr;
+Xextern		u8  TxBuffer[((u16)500)];
+Nextern		u16 tekper,tekpr;
 N
 Ntypedef struct
 N{
@@ -35607,6 +35611,8 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+Nextern u8 sost_pribl;
 N
 N
 Ntypedef struct 
@@ -35673,7 +35679,7 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 133 11 last line of file ends without a newline
+W ".\inc\my.h" 135 11 last line of file ends without a newline
 N} st_conf;
 L 27 "src\usbh_usr.c" 2
 N#include "rtc.h"
@@ -35709,6 +35715,10 @@ S    void rtc_Reset(void);
 S    
 S    // Получить текущее время
 S    void rtc_Get(TDateTime * DateTime);
+S		
+S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+S		
+S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 S
 N#endif
 L 28 "src\usbh_usr.c" 2

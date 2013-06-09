@@ -29,7 +29,7 @@ static void rtc_Lock(void)
 }
 
 // Установить дату
-static void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
+void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek)
 {
     uint32_t Tens, Units;
     uint32_t TempReg = 0;
@@ -71,7 +71,8 @@ static void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfW
 }
 
 // Установить время
-static void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
+//static void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
+void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds)
 {
     uint32_t Tens, Units;
     uint32_t TempReg = 0;
@@ -272,14 +273,14 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
   // read config rrom backup SRAM
 	 
 	 
-	size=sizeof(st_conf);
+
 	/*
   for (i = 0; i < size; i += 2)
   {
 		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
 	}	
 */
-
+/*
 	conf.address=1;
 	conf.ver_po_st=2;
 	conf.ver_po_ml=3;
@@ -314,13 +315,29 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 	conf.gr_kal2.tabl2.fz[0]=30;
 	conf.gr_kal2.tabl2.kod[9]=31;
 	conf.gr_kal2.tabl2.fz[9]=32;
-
-
+*/
+	size=sizeof(st_conf);
+	
+	for (i = 0; i < size; i += 1)
+  {
+		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+	}	
+	/*
+	for (i = 0; i < size; i += 1)
+  {
+    *(__IO uint8_t *) (BKPSRAM_BASE + i) = 0;
+  }
+	*/
+	
+	/*
 	for (i = 0; i < size; i += 1)
   {
     *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
   }
-
+	*/
+	
+	
+/*
 	conf.address=255;
 	conf.ver_po_st=255;
 	conf.ver_po_ml=255;
@@ -350,14 +367,45 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 	conf.indicators[2].kol_cifr=255;
 	conf.indicators[3].numb=255;
 	conf.indicators[3].kol_cifr=255;
+	*/
+	/*
+	// test read config to comp
+	conf.address=1;
+	conf.ver_po_st=2;
+	conf.ver_po_ml=3;
+	conf.tek_gr_kal=4;
+	conf.tm_antidreb=5;
+	conf.revers_group_select=6;
+	conf.revers_peredacha_select=7;
+	conf.rez8=8;
 	
+	conf.per_usr=9;
+	conf.time_max=10;
+	conf.por_rele=11;
+	conf.tm_rele_on=12;
+	conf.tm_rele_off=13;
+	conf.rez16=14;
 	
-	for (i = 0; i < size; i += 1)
-  {
-		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
-	}	
+	conf.indicators[0].numb=15;
+	conf.indicators[0].kol_cifr=16;
+	conf.indicators[1].numb=17;
+	conf.indicators[1].kol_cifr=18;
+	conf.indicators[2].numb=19;
+	conf.indicators[2].kol_cifr=20;
+	conf.indicators[3].numb=21;
+	conf.indicators[3].kol_cifr=2;
+	conf.gr_kal1.tabl1.kod[0]=23;
+	conf.gr_kal1.tabl1.fz[0]=24;
+	conf.gr_kal1.tabl2.kod[0]=25;
+	conf.gr_kal1.tabl2.fz[0]=26;
+	conf.gr_kal2.tabl1.kod[0]=27;
+	conf.gr_kal2.tabl1.fz[0]=28;
+	conf.gr_kal2.tabl2.kod[0]=29;
+	conf.gr_kal2.tabl2.fz[0]=30;
+	conf.gr_kal2.tabl2.kod[9]=31;
+	conf.gr_kal2.tabl2.fz[9]=32;
 	
-
+*/
 	
 }
 	

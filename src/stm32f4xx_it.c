@@ -30,6 +30,9 @@
 TDateTime DT1;
 		
 
+		//		u8 tmp1=0;
+		//		u8 tmp2=0;
+		//		u8 tmp3=0;
 
 
 
@@ -246,47 +249,14 @@ void SysTick_Handler(void)
 	del++;
 	if (del==10)
 	{
-		u16 tmp=0;
+		
 		del=0;
 		tick++;
 		time_label=tick;
 
 		
 		rtc_Get(&DT1);
-		
-		USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-		tmp=por;
-		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-		tmp%=1000;
-		TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-		tmp%=100;		
-		TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-		tmp%=10;	
-		TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
-			
-		TxBuffer[4]=0x20;	
-		
-	
-		TxBuffer[5]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
-		TxBuffer[6]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
-		TxBuffer[7]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
-		TxBuffer[8]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
-		
-		
-		tmp=fz_average[0];
-		TxBuffer[9]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-		tmp%=1000;
-		TxBuffer[10]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-		tmp%=100;		
-		TxBuffer[11]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-		tmp%=10;	
-		TxBuffer[12]=(uint8_t)(tmp)+(uint8_t)0x30;		
-	//	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
-	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
-		txsize=13;
-		tekper=0;
-		GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-		USART_SendData(USART2, 0x3A);
+
 		
 		if (DT1.Seconds==0)
 		{
@@ -321,8 +291,256 @@ void SysTick_Handler(void)
 	
 	if (new_komand)
 	{
-	//	RxBuffer[tekpr];
+		u16 tmp=0;
+	
 		
+		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
+		{
+			u16 i=0;
+			u8 errors=0;
+			
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+	
+    // ??????? ????????? ?????????????????? ??????
+  //  RCC->BDCR |=  RCC_BDCR_BDRST;
+ //   RCC->BDCR &= ~RCC_BDCR_BDRST;
+			
+			for (i = 0; i < rxsize-10; i += 2)
+			{
+			  tmp1=RxBuffer[i+10];
+				tmp2=RxBuffer[i+11];
+				tmp3=0;
+				if (tmp1>'9')	
+						tmp3=(tmp1-0x37)<<4;
+				else
+						tmp3=(tmp1-0x30)<<4;
+	
+				if (tmp2>'9')	
+						tmp3+=(tmp2-0x37);
+				else
+						tmp3+=(tmp2-0x30);				
+				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
+						errors=1;
+			}
+
+			if (errors==0)
+			{
+			TxBuffer[0]='w';
+			TxBuffer[1]='r';	
+			TxBuffer[2]='t';
+			TxBuffer[3]='_';					
+			TxBuffer[4]='c';		
+			TxBuffer[5]='o';	
+			TxBuffer[6]='n';	
+			TxBuffer[7]='f';	
+			TxBuffer[8]='_';	
+			TxBuffer[9]='o';
+			TxBuffer[10]='k';	
+			}
+			else
+			{
+				TxBuffer[0]='w';
+				TxBuffer[1]='r';	
+				TxBuffer[2]='t';
+				TxBuffer[3]='_';					
+				TxBuffer[4]='c';		
+				TxBuffer[5]='o';	
+				TxBuffer[6]='n';	
+				TxBuffer[7]='f';	
+				TxBuffer[8]='_';	
+				TxBuffer[9]='e';
+				TxBuffer[10]='r';	
+			}
+	
+			txsize=11;
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+		}
+
+		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
+		{
+			
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+			
+			TxBuffer[0]='u';
+			TxBuffer[1]='s';	
+			TxBuffer[2]='o';
+			TxBuffer[3]='_';					
+			TxBuffer[4]='a';		
+			TxBuffer[5]='r';	
+			TxBuffer[6]='m';	
+			TxBuffer[7]='_';	
+			TxBuffer[8]='k';	
+			TxBuffer[9]='e';
+			TxBuffer[10]='y';	
+	
+			txsize=11;
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+		}
+	
+		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
+		{
+			
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+			
+			TxBuffer[0]='r';
+			TxBuffer[1]='e';	
+			TxBuffer[2]='s';
+			TxBuffer[3]='t';					
+			TxBuffer[4]='a';		
+			TxBuffer[5]='r';	
+			TxBuffer[6]='t';	
+			TxBuffer[7]='_';	
+			TxBuffer[8]='o';	
+			TxBuffer[9]='k';
+	
+			txsize=10;
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+			
+			// need restart
+		}
+	
+		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
+		{		
+			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+			
+			TxBuffer[0]='s';
+			TxBuffer[1]='e';	
+			TxBuffer[2]='t';
+			TxBuffer[3]='_';					
+			TxBuffer[4]='t';		
+			TxBuffer[5]='i';	
+			TxBuffer[6]='m';	
+			TxBuffer[7]='e';	
+			TxBuffer[8]='_';	
+			TxBuffer[9]='o';
+			TxBuffer[10]='k';
+			
+			// set time
+		// set date
+     rtc_SetDate((RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), 1);
+        
+    // set time
+    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+		
+			
+			txsize=11;
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+			
+			// need restart
+		}
+		
+		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
+		{
+			
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+			
+			// test zapis for controlling time on fleshka
+			tmp=por;
+			TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
+				
+			TxBuffer[4]=0x20;	
+
+			// date
+			TxBuffer[5]=(uint8_t)(DT1.Year/10)+(uint8_t)0x30;	
+			TxBuffer[6]=(uint8_t)(DT1.Year%10)+(uint8_t)0x30;	
+			TxBuffer[7]=(uint8_t)(DT1.Month/10)+(uint8_t)0x30;	
+			TxBuffer[8]=(uint8_t)(DT1.Month%10)+(uint8_t)0x30;	
+			TxBuffer[9]=(uint8_t)(DT1.Day/10)+(uint8_t)0x30;	
+			TxBuffer[10]=(uint8_t)(DT1.Day%10)+(uint8_t)0x30;	
+			TxBuffer[11]=0x20;				
+			
+			// time
+		
+			TxBuffer[12]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+			TxBuffer[13]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+			TxBuffer[14]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+			TxBuffer[15]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+			TxBuffer[16]=0x20;
+			
+			TxBuffer[17]=sost_pribl+0x30;
+			TxBuffer[18]=0x20;
+			// zn from adc with calibr and averaging
+
+			tmp=ADC3ConvertedValue;
+			TxBuffer[19]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[20]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[21]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[22]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[23]=0x20;		
+			
+			tmp=fz_average[0];
+			TxBuffer[24]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[25]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[26]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[27]=(uint8_t)(tmp)+(uint8_t)0x30;		
+
+			txsize=28;
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+		}		
+		
+		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
+		{
+			u16 i=0;
+			extern st_conf conf;		
+			
+			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+
+			
+			
+			/*
+			txsize=sizeof(st_conf)<<1;
+	
+			for (i = 0; i < (txsize); i += 1)
+			{
+				u16 tmp=0;
+	//			TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+				tmp=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+				TxBuffer[i<<1]=(tmp>>8)+0x30;
+				TxBuffer[(i<<1)+1]=tmp+0x30;
+			}	
+*/
+
+			txsize=sizeof(st_conf);
+	
+			for (i = 0; i < (txsize); i += 1)
+			{
+				TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+			}	
+			tekper=0;
+			USART_SendData(USART2, 0x3A);
+		}		
 		
 		new_komand=0;
 	}

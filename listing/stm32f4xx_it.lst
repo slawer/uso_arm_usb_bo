@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37189,6 +37189,10 @@ N    void rtc_Reset(void);
 N    
 N    // Получить текущее время
 N    void rtc_Get(TDateTime * DateTime);
+N		
+N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+N		
+N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 N
 N#endif
 L 3 ".\inc\my.h" 2
@@ -37203,17 +37207,17 @@ N
 N#define tx_pin_en	GPIO_Pin_4
 N#define rx_pin_en	GPIO_Pin_3
 N
-N	#define RxBufferSize        ((u8)255)  // USART2 global Interrupt 
-N	#define TxBufferSize        ((u8)255)  // USART2 global Interrupt 
+N	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
+N	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 N		
 N	
-Nextern	u8 txsize, rxsize;
+Nextern	u16 txsize, rxsize;
 N	
 Nextern		u8  RxBuffer[RxBufferSize];
-Xextern		u8  RxBuffer[((u8)255)];
+Xextern		u8  RxBuffer[((u16)500)];
 Nextern		u8  TxBuffer[RxBufferSize];
-Xextern		u8  TxBuffer[((u8)255)];
-Nextern		u8 tekper,tekpr;
+Xextern		u8  TxBuffer[((u16)500)];
+Nextern		u16 tekper,tekpr;
 N
 Ntypedef struct
 N{
@@ -37260,6 +37264,8 @@ N
 Nextern u16 average[10],summa[10], fz[10], fz_average[10], max[10];
 N
 Nextern u8 kol_average;
+N
+Nextern u8 sost_pribl;
 N
 N
 Ntypedef struct 
@@ -37326,7 +37332,7 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 133 11 last line of file ends without a newline
+W ".\inc\my.h" 135 11 last line of file ends without a newline
 N} st_conf;
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
@@ -37362,6 +37368,10 @@ S    void rtc_Reset(void);
 S    
 S    // Получить текущее время
 S    void rtc_Get(TDateTime * DateTime);
+S		
+S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+S		
+S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 S
 N#endif
 L 29 "src\stm32f4xx_it.c" 2
@@ -37369,6 +37379,9 @@ N
 NTDateTime DT1;
 N		
 N
+N		//		u8 tmp1=0;
+N		//		u8 tmp2=0;
+N		//		u8 tmp3=0;
 N
 N
 N
@@ -37597,50 +37610,14 @@ N
 N	del++;
 N	if (del==10)
 N	{
-N		u16 tmp=0;
+N		
 N		del=0;
 N		tick++;
 N		time_label=tick;
 N
 N		
 N		rtc_Get(&DT1);
-N		
-N		USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-X		USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
-N		tmp=por;
-N		TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-N		tmp%=1000;
-N		TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-N		tmp%=100;		
-N		TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-N		tmp%=10;	
-N		TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
-N			
-N		TxBuffer[4]=0x20;	
-N		
-N	
-N		TxBuffer[5]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
-N		TxBuffer[6]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
-N		TxBuffer[7]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
-N		TxBuffer[8]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
-N		
-N		
-N		tmp=fz_average[0];
-N		TxBuffer[9]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-N		tmp%=1000;
-N		TxBuffer[10]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-N		tmp%=100;		
-N		TxBuffer[11]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-N		tmp%=10;	
-N		TxBuffer[12]=(uint8_t)(tmp)+(uint8_t)0x30;		
-N	//	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      //   GPIOB.2
-N	//	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET);    //   GPIOB.2
-N		txsize=13;
-N		tekper=0;
-N		GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-X		GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
-N		USART_SendData(USART2, 0x3A);
-X		USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N
 N		
 N		if (DT1.Seconds==0)
 N		{
@@ -37660,10 +37637,10 @@ N	 {
 N		 STM_EVAL_LEDOff(LED3);	 
 N	 }
 N	 
-W "src\stm32f4xx_it.c" 309 2 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 279 2 function "indicate_lin" declared implicitly
 N indicate_lin(0,(u16)fz_average[0], 4096);
 N	  // indicate(0,0);
-W "src\stm32f4xx_it.c" 311 2 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 281 2 function "indicate" declared implicitly
 N indicate(1,(u16)(fz_average[0]/10));
 N		 
 N	 }		 
@@ -37677,8 +37654,283 @@ N
 N	
 N	if (new_komand)
 N	{
-N	//	RxBuffer[tekpr];
+N		u16 tmp=0;
+N	
 N		
+N		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
+N		{
+N			u16 i=0;
+N			u8 errors=0;
+N			
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N	
+N    // ??????? ????????? ?????????????????? ??????
+N  //  RCC->BDCR |=  RCC_BDCR_BDRST;
+N //   RCC->BDCR &= ~RCC_BDCR_BDRST;
+N			
+N			for (i = 0; i < rxsize-10; i += 2)
+N			{
+N			  tmp1=RxBuffer[i+10];
+N				tmp2=RxBuffer[i+11];
+N				tmp3=0;
+N				if (tmp1>'9')	
+N						tmp3=(tmp1-0x37)<<4;
+N				else
+N						tmp3=(tmp1-0x30)<<4;
+N	
+N				if (tmp2>'9')	
+N						tmp3+=(tmp2-0x37);
+N				else
+N						tmp3+=(tmp2-0x30);				
+N				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+X				*(volatile uint8_t *) (((uint32_t)0x40024000) + (i>>1)) = tmp3;
+N				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
+X				if (*(volatile uint8_t *) (((uint32_t)0x40024000) + (i>>1)) != tmp3)
+N						errors=1;
+N			}
+N
+N			if (errors==0)
+N			{
+N			TxBuffer[0]='w';
+N			TxBuffer[1]='r';	
+N			TxBuffer[2]='t';
+N			TxBuffer[3]='_';					
+N			TxBuffer[4]='c';		
+N			TxBuffer[5]='o';	
+N			TxBuffer[6]='n';	
+N			TxBuffer[7]='f';	
+N			TxBuffer[8]='_';	
+N			TxBuffer[9]='o';
+N			TxBuffer[10]='k';	
+N			}
+N			else
+N			{
+N				TxBuffer[0]='w';
+N				TxBuffer[1]='r';	
+N				TxBuffer[2]='t';
+N				TxBuffer[3]='_';					
+N				TxBuffer[4]='c';		
+N				TxBuffer[5]='o';	
+N				TxBuffer[6]='n';	
+N				TxBuffer[7]='f';	
+N				TxBuffer[8]='_';	
+N				TxBuffer[9]='e';
+N				TxBuffer[10]='r';	
+N			}
+N	
+N			txsize=11;
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N		}
+N
+N		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
+N		{
+N			
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N			
+N			TxBuffer[0]='u';
+N			TxBuffer[1]='s';	
+N			TxBuffer[2]='o';
+N			TxBuffer[3]='_';					
+N			TxBuffer[4]='a';		
+N			TxBuffer[5]='r';	
+N			TxBuffer[6]='m';	
+N			TxBuffer[7]='_';	
+N			TxBuffer[8]='k';	
+N			TxBuffer[9]='e';
+N			TxBuffer[10]='y';	
+N	
+N			txsize=11;
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N		}
+N	
+N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
+N		{
+N			
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N			
+N			TxBuffer[0]='r';
+N			TxBuffer[1]='e';	
+N			TxBuffer[2]='s';
+N			TxBuffer[3]='t';					
+N			TxBuffer[4]='a';		
+N			TxBuffer[5]='r';	
+N			TxBuffer[6]='t';	
+N			TxBuffer[7]='_';	
+N			TxBuffer[8]='o';	
+N			TxBuffer[9]='k';
+N	
+N			txsize=10;
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N			
+N			// need restart
+N		}
+N	
+N		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
+N		{		
+N			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+N			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N			
+N			TxBuffer[0]='s';
+N			TxBuffer[1]='e';	
+N			TxBuffer[2]='t';
+N			TxBuffer[3]='_';					
+N			TxBuffer[4]='t';		
+N			TxBuffer[5]='i';	
+N			TxBuffer[6]='m';	
+N			TxBuffer[7]='e';	
+N			TxBuffer[8]='_';	
+N			TxBuffer[9]='o';
+N			TxBuffer[10]='k';
+N			
+N			// set time
+N		// set date
+N     rtc_SetDate((RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), 1);
+N        
+N    // set time
+N    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+N		
+N			
+N			txsize=11;
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N			
+N			// need restart
+N		}
+N		
+N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
+N		{
+N			
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N			
+N			// test zapis for controlling time on fleshka
+N			tmp=por;
+N			TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			tmp%=1000;
+N			TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			tmp%=100;		
+N			TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			tmp%=10;	
+N			TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
+N				
+N			TxBuffer[4]=0x20;	
+N
+N			// date
+N			TxBuffer[5]=(uint8_t)(DT1.Year/10)+(uint8_t)0x30;	
+N			TxBuffer[6]=(uint8_t)(DT1.Year%10)+(uint8_t)0x30;	
+N			TxBuffer[7]=(uint8_t)(DT1.Month/10)+(uint8_t)0x30;	
+N			TxBuffer[8]=(uint8_t)(DT1.Month%10)+(uint8_t)0x30;	
+N			TxBuffer[9]=(uint8_t)(DT1.Day/10)+(uint8_t)0x30;	
+N			TxBuffer[10]=(uint8_t)(DT1.Day%10)+(uint8_t)0x30;	
+N			TxBuffer[11]=0x20;				
+N			
+N			// time
+N		
+N			TxBuffer[12]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+N			TxBuffer[13]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+N			TxBuffer[14]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+N			TxBuffer[15]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+N			TxBuffer[16]=0x20;
+N			
+N			TxBuffer[17]=sost_pribl+0x30;
+N			TxBuffer[18]=0x20;
+N			// zn from adc with calibr and averaging
+N
+N			tmp=ADC3ConvertedValue;
+N			TxBuffer[19]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			tmp%=1000;
+N			TxBuffer[20]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			tmp%=100;		
+N			TxBuffer[21]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			tmp%=10;	
+N			TxBuffer[22]=(uint8_t)(tmp)+(uint8_t)0x30;
+N			TxBuffer[23]=0x20;		
+N			
+N			tmp=fz_average[0];
+N			TxBuffer[24]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			tmp%=1000;
+N			TxBuffer[25]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			tmp%=100;		
+N			TxBuffer[26]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			tmp%=10;	
+N			TxBuffer[27]=(uint8_t)(tmp)+(uint8_t)0x30;		
+N
+N			txsize=28;
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N		}		
+N		
+N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
+N		{
+N			u16 i=0;
+N			extern st_conf conf;		
+N			
+N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
+N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
+N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N
+N			
+N			
+N			/*
+N			txsize=sizeof(st_conf)<<1;
+N	
+N			for (i = 0; i < (txsize); i += 1)
+N			{
+N				u16 tmp=0;
+N	//			TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+N				tmp=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+N				TxBuffer[i<<1]=(tmp>>8)+0x30;
+N				TxBuffer[(i<<1)+1]=tmp+0x30;
+N			}	
+N*/
+N
+N			txsize=sizeof(st_conf);
+N	
+N			for (i = 0; i < (txsize); i += 1)
+N			{
+N				TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+X				TxBuffer[i]=(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i));
+N			}	
+N			tekper=0;
+N			USART_SendData(USART2, 0x3A);
+X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
+N		}		
 N		
 N		new_komand=0;
 N	}
@@ -37787,7 +38039,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 380 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 598 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

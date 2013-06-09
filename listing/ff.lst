@@ -540,7 +540,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -29454,7 +29454,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37853,7 +37853,7 @@ N
 N#if !_FS_READONLY
 X#if !0
 N#include <stdarg.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h" 1
 N/* stdarg.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.8 */
 N/* Copyright (C) Codemist Ltd., 1988                            */
 N/* Copyright (C) ARM Ltd., 1991-1999. All rights reserved */
