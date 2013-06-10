@@ -37596,7 +37596,7 @@ N
 N	// находим среднее значение по скользящей средней
 N		fz_average[0]=moving_average(fz[0],0);
 N		
-N		if (fz_average[0]<max[0])
+N		if (fz_average[0]>max[0])
 N			max[0]=fz_average[0];
 N		
 N		if (number_buff)
@@ -37637,11 +37637,16 @@ N	 {
 N		 STM_EVAL_LEDOff(LED3);	 
 N	 }
 N	 
-W "src\stm32f4xx_it.c" 279 2 function "indicate_lin" declared implicitly
-N indicate_lin(0,(u16)fz_average[0], 4096);
-N	  // indicate(0,0);
-W "src\stm32f4xx_it.c" 281 2 function "indicate" declared implicitly
-N indicate(1,(u16)(fz_average[0]/10));
+N// indicate_lin(0,(u16)fz_average[0], 4096);
+N// indicate(1,(u16)(fz_average[0]/10));
+N	 
+W "src\stm32f4xx_it.c" 282 3 function "indicate" declared implicitly
+N	 indicate(1,(u16)(max[0]/10));
+W "src\stm32f4xx_it.c" 283 3 function "indicate_lin" declared implicitly
+N	 indicate_lin(2,(u16) fz_average[0], (u16) 4096, (u16) 28);	 
+N	 indicate(3,(u16)(fz_average[0]/10));
+W "src\stm32f4xx_it.c" 285 3 function "indicate_time" declared implicitly
+N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);
 N		 
 N	 }		 
 N		
@@ -37857,37 +37862,48 @@ N			TxBuffer[10]=(uint8_t)(DT1.Day%10)+(uint8_t)0x30;
 N			TxBuffer[11]=0x20;				
 N			
 N			// time
-N		
-N			TxBuffer[12]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
-N			TxBuffer[13]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
-N			TxBuffer[14]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
-N			TxBuffer[15]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
-N			TxBuffer[16]=0x20;
-N			
-N			TxBuffer[17]=sost_pribl+0x30;
+N			TxBuffer[12]=(uint8_t)(DT1.Hours/10)+(uint8_t)0x30;	
+N			TxBuffer[13]=(uint8_t)(DT1.Hours%10)+(uint8_t)0x30;			
+N			TxBuffer[14]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+N			TxBuffer[15]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+N			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+N			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 N			TxBuffer[18]=0x20;
+N			
+N			TxBuffer[19]=sost_pribl+0x30;
+N			TxBuffer[20]=0x20;
 N			// zn from adc with calibr and averaging
 N
 N			tmp=ADC3ConvertedValue;
-N			TxBuffer[19]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
-N			TxBuffer[20]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
 N			tmp%=100;		
-N			TxBuffer[21]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			TxBuffer[23]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 N			tmp%=10;	
-N			TxBuffer[22]=(uint8_t)(tmp)+(uint8_t)0x30;
-N			TxBuffer[23]=0x20;		
+N			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
+N			TxBuffer[25]=0x20;		
 N			
 N			tmp=fz_average[0];
-N			TxBuffer[24]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
-N			TxBuffer[25]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
 N			tmp%=100;		
-N			TxBuffer[26]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			TxBuffer[28]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 N			tmp%=10;	
-N			TxBuffer[27]=(uint8_t)(tmp)+(uint8_t)0x30;		
-N
-N			txsize=28;
+N			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
+N			TxBuffer[30]=0x20;
+N			
+N			tmp=max[0];
+N			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+N			tmp%=1000;
+N			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+N			tmp%=100;		
+N			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+N			tmp%=10;	
+N			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
+N			
+N			txsize=35;
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
@@ -38039,7 +38055,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 598 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 613 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

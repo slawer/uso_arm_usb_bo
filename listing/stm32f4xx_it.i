@@ -21731,7 +21731,7 @@ void SysTick_Handler(void)
 	
 		fz_average[0]=moving_average(fz[0],0);
 		
-		if (fz_average[0]<max[0])
+		if (fz_average[0]>max[0])
 			max[0]=fz_average[0];
 		
 		if (number_buff)
@@ -21772,9 +21772,13 @@ void SysTick_Handler(void)
 		 STM_EVAL_LEDOff(LED3);	 
 	 }
 	 
- indicate_lin(0,(u16)fz_average[0], 4096);
-	  
- indicate(1,(u16)(fz_average[0]/10));
+
+
+	 
+	 indicate(1,(u16)(max[0]/10));
+	 indicate_lin(2,(u16) fz_average[0], (u16) 4096, (u16) 28);	 
+	 indicate(3,(u16)(fz_average[0]/10));
+	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);
 		 
 	 }		 
 		
@@ -21969,37 +21973,48 @@ void SysTick_Handler(void)
 			TxBuffer[11]=0x20;				
 			
 			
-		
-			TxBuffer[12]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
-			TxBuffer[13]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
-			TxBuffer[14]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
-			TxBuffer[15]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
-			TxBuffer[16]=0x20;
-			
-			TxBuffer[17]=sost_pribl+0x30;
+			TxBuffer[12]=(uint8_t)(DT1.Hours/10)+(uint8_t)0x30;	
+			TxBuffer[13]=(uint8_t)(DT1.Hours%10)+(uint8_t)0x30;			
+			TxBuffer[14]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+			TxBuffer[15]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
+			
+			TxBuffer[19]=sost_pribl+0x30;
+			TxBuffer[20]=0x20;
 			
 
 			tmp=ADC3ConvertedValue;
-			TxBuffer[19]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
-			TxBuffer[20]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
 			tmp%=100;		
-			TxBuffer[21]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			TxBuffer[23]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
-			TxBuffer[22]=(uint8_t)(tmp)+(uint8_t)0x30;
-			TxBuffer[23]=0x20;		
+			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[25]=0x20;		
 			
 			tmp=fz_average[0];
-			TxBuffer[24]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
-			TxBuffer[25]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
 			tmp%=100;		
-			TxBuffer[26]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			TxBuffer[28]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
-			TxBuffer[27]=(uint8_t)(tmp)+(uint8_t)0x30;		
-
-			txsize=28;
+			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
+			TxBuffer[30]=0x20;
+			
+			tmp=max[0];
+			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
+			
+			txsize=35;
 			tekper=0;
 			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 		}		

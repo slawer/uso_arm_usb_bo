@@ -1229,7 +1229,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 		if (pin==0)
 				return ;
 		
-			switch (conf.indicators[numb_ind].kol_cifr)
+			switch (conf.indicators[numb_ind-1].kol_cifr)
 			{
 				case 0x00:  // CS0
 					return;
@@ -1272,7 +1272,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
 			  delay_spi(zad_spi2);	
 				
-				for (i=2;i<conf.indicators[numb_ind].kol_cifr+1;i++)  {
+				for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
 				delay_spi(zad_spi);
 				spi_send((u8) i);delay_spi(zad_spi);
@@ -1282,17 +1282,17 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				return ;
 			}	
 
-			for (i=conf.indicators[numb_ind].kol_cifr;i>0;i--)
+			for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
 
-			for (i=1;i<conf.indicators[numb_ind].kol_cifr+1;i++)
+			for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
 			{	
 						simb=symb_code[zn[i]];
 				
-						if ((conf.indicators[numb_ind].kol_cifr-i)==conf.indicators[numb_ind].pol_zap)
+						if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
 							simb+=0x80;
 				
 						if ((simb==0x7E)&(null))
@@ -1300,7 +1300,7 @@ void indicate(u8 numb_ind,u16 chislo_new)
 						else
 							null=0;
 						
-						if (i==conf.indicators[numb_ind].kol_cifr)
+						if (i==conf.indicators[numb_ind-1].kol_cifr)
 							simb&=0x7F;
 	
 						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -1520,8 +1520,9 @@ SPI 2:
 	conf.indicators[0].pol_zap=0;
 	conf.indicators[0].porog=0xffff;	
 
+// lineika
 	conf.indicators[1].numb=2;
-	conf.indicators[1].kol_cifr=3;
+	conf.indicators[1].kol_cifr=4;
 	conf.indicators[1].type_ind=0;
 	conf.indicators[1].yark=0x0f;
 	conf.indicators[1].rez_viv=0;   //   
@@ -1529,6 +1530,24 @@ SPI 2:
 	conf.indicators[1].pol_zap=0;
 	conf.indicators[1].porog=0xffff;	
 
+	conf.indicators[2].numb=3;
+	conf.indicators[2].kol_cifr=8;
+	conf.indicators[2].type_ind=0;
+	conf.indicators[2].yark=0x0f;
+	conf.indicators[2].rez_viv=0;   //   
+	conf.indicators[2].chislo=0;
+	conf.indicators[2].pol_zap=0;
+	conf.indicators[2].porog=0xffff;	
+
+// time
+	conf.indicators[3].numb=4;
+	conf.indicators[3].kol_cifr=4;
+	conf.indicators[3].type_ind=0;
+	conf.indicators[3].yark=0x0f;
+	conf.indicators[3].rez_viv=0;   //   
+	conf.indicators[3].chislo=0;
+	conf.indicators[3].pol_zap=0;
+	conf.indicators[3].porog=0xffff;	
 //test_lin2();
  
 //	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
@@ -1536,7 +1555,8 @@ SPI 2:
 
 	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators[0].type_ind);
   init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
-
+	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
+  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 
 // nastroika gpio
 

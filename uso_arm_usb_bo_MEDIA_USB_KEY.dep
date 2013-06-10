@@ -78,7 +78,7 @@ I (.\inc\my.h)(0x51B4F09B)
 I (.\src\rtc.h)(0x51B4F2D5)
 F (.\src\gpio.h)(0x51502A26)()
 F (.\src\rtc.h)(0x51B4F2D5)()
-F (.\src\main.c)(0x51B25332)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\listing\\" -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs -I C:\Keil4\ARM\RV31\INC -I C:\Keil4\ARM\CMSIS\Include -I C:\Keil4\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o ".\MEDIA_USB_KEY\main.o" --list_dir ".\\listing\\" --list --omf_browse ".\MEDIA_USB_KEY\main.crf" --depend ".\MEDIA_USB_KEY\main.d")
+F (.\src\main.c)(0x51B61164)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\listing\\" -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs -I C:\Keil4\ARM\RV31\INC -I C:\Keil4\ARM\CMSIS\Include -I C:\Keil4\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o ".\MEDIA_USB_KEY\main.o" --list_dir ".\\listing\\" --list --omf_browse ".\MEDIA_USB_KEY\main.crf" --depend ".\MEDIA_USB_KEY\main.d")
 I (.\inc\main.h)(0x51A5A21C)
 I (.\src\stm32f4xx.h)(0x4EAA4C36)
 I (.\Libraries\CMSIS\core_cm4.h)(0x4EAA4C36)
@@ -285,7 +285,7 @@ I (.\inc\stm32f4xx_it.h)(0x4EAA4C46)
 I (.\inc\my.h)(0x51B4F09B)
 I (.\src\rtc.h)(0x51B4F2D5)
 I (src\rtc.h)(0x51B4F2D5)
-F (.\src\stm32f4xx_it.c)(0x51B4F3F2)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\listing\\" -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs -I C:\Keil4\ARM\RV31\INC -I C:\Keil4\ARM\CMSIS\Include -I C:\Keil4\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o ".\MEDIA_USB_KEY\stm32f4xx_it.o" --list_dir ".\\listing\\" --list --omf_browse ".\MEDIA_USB_KEY\stm32f4xx_it.crf" --depend ".\MEDIA_USB_KEY\stm32f4xx_it.d")
+F (.\src\stm32f4xx_it.c)(0x51B61293)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\listing\\" -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs -I C:\Keil4\ARM\RV31\INC -I C:\Keil4\ARM\CMSIS\Include -I C:\Keil4\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o ".\MEDIA_USB_KEY\stm32f4xx_it.o" --list_dir ".\\listing\\" --list --omf_browse ".\MEDIA_USB_KEY\stm32f4xx_it.crf" --depend ".\MEDIA_USB_KEY\stm32f4xx_it.d")
 I (.\inc\main.h)(0x51A5A21C)
 I (.\src\stm32f4xx.h)(0x4EAA4C36)
 I (.\Libraries\CMSIS\core_cm4.h)(0x4EAA4C36)

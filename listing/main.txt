@@ -165,121 +165,121 @@
                           AREA ||i.TIM_LED_Config||, CODE, READONLY, ALIGN=2
 
                   TIM_LED_Config PROC
-;;;1619     */
-;;;1620   static void TIM_LED_Config(void)
+;;;1639     */
+;;;1640   static void TIM_LED_Config(void)
 000000  b570              PUSH     {r4-r6,lr}
-;;;1621   {
+;;;1641   {
 000002  b08a              SUB      sp,sp,#0x28
-;;;1622     TIM_OCInitTypeDef  TIM_OCInitStructure;
-;;;1623     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-;;;1624     NVIC_InitTypeDef NVIC_InitStructure;
-;;;1625     uint16_t prescalervalue = 0;
-;;;1626     
-;;;1627     /* TIM4 clock enable */
-;;;1628     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+;;;1642     TIM_OCInitTypeDef  TIM_OCInitStructure;
+;;;1643     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+;;;1644     NVIC_InitTypeDef NVIC_InitStructure;
+;;;1645     uint16_t prescalervalue = 0;
+;;;1646     
+;;;1647     /* TIM4 clock enable */
+;;;1648     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 000004  2101              MOVS     r1,#1
 000006  2004              MOVS     r0,#4
 000008  f7fffffe          BL       RCC_APB1PeriphClockCmd
-;;;1629     
-;;;1630     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+;;;1649     
+;;;1650     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 00000c  f44f60a0          MOV      r0,#0x500
 000010  f7fffffe          BL       NVIC_PriorityGroupConfig
-;;;1631     
-;;;1632     /* Enable the TIM3 gloabal Interrupt */
-;;;1633     NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+;;;1651     
+;;;1652     /* Enable the TIM3 gloabal Interrupt */
+;;;1653     NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
 000014  201e              MOVS     r0,#0x1e
 000016  f88d0020          STRB     r0,[sp,#0x20]
-;;;1634     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+;;;1654     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 00001a  2400              MOVS     r4,#0
 00001c  f88d4021          STRB     r4,[sp,#0x21]
-;;;1635     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+;;;1655     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 000020  f88d4022          STRB     r4,[sp,#0x22]
-;;;1636     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+;;;1656     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 000024  2501              MOVS     r5,#1
 000026  f88d5023          STRB     r5,[sp,#0x23]
-;;;1637     NVIC_Init(&NVIC_InitStructure);
+;;;1657     NVIC_Init(&NVIC_InitStructure);
 00002a  a808              ADD      r0,sp,#0x20
 00002c  f7fffffe          BL       NVIC_Init
-;;;1638   
-;;;1639     /* Initialize Leds mounted on STM324F4-EVAL board */
-;;;1640     STM_EVAL_LEDInit(LED3);
+;;;1658   
+;;;1659     /* Initialize Leds mounted on STM324F4-EVAL board */
+;;;1660     STM_EVAL_LEDInit(LED3);
 000030  2001              MOVS     r0,#1
 000032  f7fffffe          BL       STM_EVAL_LEDInit
-;;;1641     STM_EVAL_LEDInit(LED4);
+;;;1661     STM_EVAL_LEDInit(LED4);
 000036  2000              MOVS     r0,#0
 000038  f7fffffe          BL       STM_EVAL_LEDInit
-;;;1642     STM_EVAL_LEDInit(LED6);
+;;;1662     STM_EVAL_LEDInit(LED6);
 00003c  2003              MOVS     r0,#3
 00003e  f7fffffe          BL       STM_EVAL_LEDInit
-;;;1643     
-;;;1644     /* Compute the prescaler value */
-;;;1645     prescalervalue = (uint16_t) ((SystemCoreClock ) / 550000) - 1;
+;;;1663     
+;;;1664     /* Compute the prescaler value */
+;;;1665     prescalervalue = (uint16_t) ((SystemCoreClock ) / 550000) - 1;
 000042  481a              LDR      r0,|L2.172|
 000044  491a              LDR      r1,|L2.176|
-;;;1646     
-;;;1647     /* Time base configuration */
-;;;1648     TIM_TimeBaseStructure.TIM_Period = 65535;
-;;;1649     TIM_TimeBaseStructure.TIM_Prescaler = prescalervalue;
-;;;1650     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-;;;1651     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-;;;1652     TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+;;;1666     
+;;;1667     /* Time base configuration */
+;;;1668     TIM_TimeBaseStructure.TIM_Period = 65535;
+;;;1669     TIM_TimeBaseStructure.TIM_Prescaler = prescalervalue;
+;;;1670     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+;;;1671     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+;;;1672     TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 000046  4e1b              LDR      r6,|L2.180|
-000048  6800              LDR      r0,[r0,#0]            ;1645  ; SystemCoreClock
-00004a  f8ad401c          STRH     r4,[sp,#0x1c]         ;1650
-00004e  fbb0f0f1          UDIV     r0,r0,r1              ;1645
-000052  1e40              SUBS     r0,r0,#1              ;1645
-000054  f64f71ff          MOV      r1,#0xffff            ;1648
-000058  f8ad0014          STRH     r0,[sp,#0x14]         ;1649
-00005c  9106              STR      r1,[sp,#0x18]         ;1649
-00005e  f8ad4016          STRH     r4,[sp,#0x16]         ;1651
+000048  6800              LDR      r0,[r0,#0]            ;1665  ; SystemCoreClock
+00004a  f8ad401c          STRH     r4,[sp,#0x1c]         ;1670
+00004e  fbb0f0f1          UDIV     r0,r0,r1              ;1665
+000052  1e40              SUBS     r0,r0,#1              ;1665
+000054  f64f71ff          MOV      r1,#0xffff            ;1668
+000058  f8ad0014          STRH     r0,[sp,#0x14]         ;1669
+00005c  9106              STR      r1,[sp,#0x18]         ;1669
+00005e  f8ad4016          STRH     r4,[sp,#0x16]         ;1671
 000062  a905              ADD      r1,sp,#0x14
 000064  4630              MOV      r0,r6
 000066  f7fffffe          BL       TIM_TimeBaseInit
-;;;1653     
-;;;1654     /* Enable TIM4 Preload register on ARR */
-;;;1655     TIM_ARRPreloadConfig(TIM4, ENABLE);
+;;;1673     
+;;;1674     /* Enable TIM4 Preload register on ARR */
+;;;1675     TIM_ARRPreloadConfig(TIM4, ENABLE);
 00006a  2101              MOVS     r1,#1
 00006c  4630              MOV      r0,r6
 00006e  f7fffffe          BL       TIM_ARRPreloadConfig
-;;;1656     
-;;;1657     /* TIM PWM1 Mode configuration: Channel */
-;;;1658     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
-;;;1659     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-;;;1660     TIM_OCInitStructure.TIM_Pulse = CCR_Val;
+;;;1676     
+;;;1677     /* TIM PWM1 Mode configuration: Channel */
+;;;1678     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
+;;;1679     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+;;;1680     TIM_OCInitStructure.TIM_Pulse = CCR_Val;
 000072  4811              LDR      r0,|L2.184|
-000074  f8ad4000          STRH     r4,[sp,#0]            ;1658
-000078  f8ad5002          STRH     r5,[sp,#2]            ;1659
+000074  f8ad4000          STRH     r4,[sp,#0]            ;1678
+000078  f8ad5002          STRH     r5,[sp,#2]            ;1679
 00007c  8880              LDRH     r0,[r0,#4]  ; CCR_Val
-;;;1661     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+;;;1681     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
 00007e  9002              STR      r0,[sp,#8]
 000080  f8ad400c          STRH     r4,[sp,#0xc]
-;;;1662     
-;;;1663     /* Output Compare PWM1 Mode configuration: Channel2 */
-;;;1664     TIM_OC1Init(TIM4, &TIM_OCInitStructure);
+;;;1682     
+;;;1683     /* Output Compare PWM1 Mode configuration: Channel2 */
+;;;1684     TIM_OC1Init(TIM4, &TIM_OCInitStructure);
 000084  4669              MOV      r1,sp
 000086  4630              MOV      r0,r6
 000088  f7fffffe          BL       TIM_OC1Init
-;;;1665     TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Disable);
+;;;1685     TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Disable);
 00008c  2100              MOVS     r1,#0
 00008e  4630              MOV      r0,r6
 000090  f7fffffe          BL       TIM_OC1PreloadConfig
-;;;1666       
-;;;1667     /* TIM Interrupts enable */
-;;;1668     TIM_ITConfig(TIM4, TIM_IT_CC1 , ENABLE);
+;;;1686       
+;;;1687     /* TIM Interrupts enable */
+;;;1688     TIM_ITConfig(TIM4, TIM_IT_CC1 , ENABLE);
 000094  2201              MOVS     r2,#1
 000096  2102              MOVS     r1,#2
 000098  4630              MOV      r0,r6
 00009a  f7fffffe          BL       TIM_ITConfig
-;;;1669     
-;;;1670     /* TIM4 enable counter */
-;;;1671     TIM_Cmd(TIM4, ENABLE);
+;;;1689     
+;;;1690     /* TIM4 enable counter */
+;;;1691     TIM_Cmd(TIM4, ENABLE);
 00009e  2101              MOVS     r1,#1
 0000a0  4630              MOV      r0,r6
 0000a2  f7fffffe          BL       TIM_Cmd
-;;;1672   }
+;;;1692   }
 0000a6  b00a              ADD      sp,sp,#0x28
 0000a8  bd70              POP      {r4-r6,pc}
-;;;1673   
+;;;1693   
                           ENDP
 
 0000aa  0000              DCW      0x0000
@@ -632,7 +632,7 @@
 000014  d063              BEQ      |L6.222|
 ;;;1230   				return ;
 ;;;1231   		
-;;;1232   			switch (conf.indicators[numb_ind].kol_cifr)
+;;;1232   			switch (conf.indicators[numb_ind-1].kol_cifr)
 000016  485a              LDR      r0,|L6.384|
 000018  eb040144          ADD      r1,r4,r4,LSL #1
 00001c  eb000581          ADD      r5,r0,r1,LSL #2
@@ -664,7 +664,7 @@
 ;;;1258   				case 0x08:  // CS0
 ;;;1259   					maximum=100000000;
 000020  4858              LDR      r0,|L6.388|
-000022  7d69              LDRB     r1,[r5,#0x15]         ;1232
+000022  7a69              LDRB     r1,[r5,#9]            ;1232
 000024  2908              CMP      r1,#8                 ;1232
 000026  d214              BCS      |L6.82|
 000028  e8dff001          TBB      [pc,r1]               ;1232
@@ -724,7 +724,7 @@
 000090  69b0              LDR      r0,[r6,#0x18]  ; zad_spi2
 000092  f7fffffe          BL       delay_spi
 ;;;1274   				
-;;;1275   				for (i=2;i<conf.indicators[numb_ind].kol_cifr+1;i++)  {
+;;;1275   				for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
 000096  2402              MOVS     r4,#2
 000098  e01d              B        |L6.214|
                   |L6.154|
@@ -757,7 +757,7 @@
 0000d2  1c64              ADDS     r4,r4,#1              ;1275
 0000d4  b2e4              UXTB     r4,r4                 ;1275
                   |L6.214|
-0000d6  7d68              LDRB     r0,[r5,#0x15]         ;1275
+0000d6  7a68              LDRB     r0,[r5,#9]            ;1275
 0000d8  1c40              ADDS     r0,r0,#1              ;1275
 0000da  42a0              CMP      r0,r4                 ;1275
 0000dc  d8dd              BHI      |L6.154|
@@ -765,17 +765,17 @@
 ;;;1282   				return ;
 ;;;1283   			}	
 ;;;1284   
-;;;1285   			for (i=conf.indicators[numb_ind].kol_cifr;i>0;i--)
+;;;1285   			for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
 ;;;1286   			{	
 ;;;1287   					zn[i]=(u8) (chislo%10);
 ;;;1288   					chislo=chislo/10;
 ;;;1289   			}
 ;;;1290   
-;;;1291   			for (i=1;i<conf.indicators[numb_ind].kol_cifr+1;i++)
+;;;1291   			for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
 ;;;1292   			{	
 ;;;1293   						simb=symb_code[zn[i]];
 ;;;1294   				
-;;;1295   						if ((conf.indicators[numb_ind].kol_cifr-i)==conf.indicators[numb_ind].pol_zap)
+;;;1295   						if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
 ;;;1296   							simb+=0x80;
 ;;;1297   				
 ;;;1298   						if ((simb==0x7E)&(null))
@@ -783,7 +783,7 @@
 ;;;1300   						else
 ;;;1301   							null=0;
 ;;;1302   						
-;;;1303   						if (i==conf.indicators[numb_ind].kol_cifr)
+;;;1303   						if (i==conf.indicators[numb_ind-1].kol_cifr)
 ;;;1304   							simb&=0x7F;
 ;;;1305   	
 ;;;1306   						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -814,7 +814,7 @@
 000104  f81a1007          LDRB     r1,[r10,r7]           ;1293
 000108  321c              ADDS     r2,r2,#0x1c           ;1293
 00010a  5c54              LDRB     r4,[r2,r1]            ;1293
-00010c  7e6a              LDRB     r2,[r5,#0x19]         ;1295
+00010c  7b6a              LDRB     r2,[r5,#0xd]          ;1295
 00010e  1bc1              SUBS     r1,r0,r7              ;1295
 000110  4291              CMP      r1,r2                 ;1295
 000112  d101              BNE      |L6.280|
@@ -862,7 +862,7 @@
 000170  1c7f              ADDS     r7,r7,#1              ;1291
 000172  b2ff              UXTB     r7,r7                 ;1291
                   |L6.372|
-000174  7d68              LDRB     r0,[r5,#0x15]         ;1291
+000174  7a68              LDRB     r0,[r5,#9]            ;1291
 000176  1c41              ADDS     r1,r0,#1              ;1291
 000178  42b9              CMP      r1,r7                 ;1291
 00017a  d8c2              BHI      |L6.258|
@@ -1791,56 +1791,57 @@
 00003e  2005              MOVS     r0,#5
 000040  f88d000c          STRB     r0,[sp,#0xc]
 ;;;1428     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-000044  2500              MOVS     r5,#0
-000046  f88d500d          STRB     r5,[sp,#0xd]
+000044  f04f0900          MOV      r9,#0
+000048  f88d900d          STRB     r9,[sp,#0xd]
 ;;;1429     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  
-00004a  f88d500e          STRB     r5,[sp,#0xe]
+00004c  f88d900e          STRB     r9,[sp,#0xe]
 ;;;1430     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-00004e  2601              MOVS     r6,#1
-000050  f88d600f          STRB     r6,[sp,#0xf]
+000050  2501              MOVS     r5,#1
+000052  f88d500f          STRB     r5,[sp,#0xf]
 ;;;1431     NVIC_Init(&NVIC_InitStructure);
-000054  a803              ADD      r0,sp,#0xc
-000056  f7fffffe          BL       NVIC_Init
+000056  a803              ADD      r0,sp,#0xc
+000058  f7fffffe          BL       NVIC_Init
 ;;;1432   
 ;;;1433     /* Output clock on MCO2 pin(PC9) ****************************************/ 
 ;;;1434     /* Enable the GPIOC peripheral */ 
 ;;;1435     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-00005a  2101              MOVS     r1,#1
-00005c  2004              MOVS     r0,#4
-00005e  f7fffffe          BL       RCC_AHB1PeriphClockCmd
+00005c  2101              MOVS     r1,#1
+00005e  2004              MOVS     r0,#4
+000060  f7fffffe          BL       RCC_AHB1PeriphClockCmd
 ;;;1436     
 ;;;1437     /* Configure MCO2 pin(PC9) in alternate function */
 ;;;1438     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+000064  0268              LSLS     r0,r5,#9
 ;;;1439     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-000062  2703              MOVS     r7,#3
-000064  f88d7009          STRB     r7,[sp,#9]
+000066  2603              MOVS     r6,#3
+000068  9001              STR      r0,[sp,#4]
+00006a  f88d6009          STRB     r6,[sp,#9]
 ;;;1440     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-000068  f04f0802          MOV      r8,#2
-00006c  0270              LSLS     r0,r6,#9              ;1438
-00006e  f88d8008          STRB     r8,[sp,#8]
-000072  9001              STR      r0,[sp,#4]            ;1439
+00006e  2702              MOVS     r7,#2
+000070  f88d7008          STRB     r7,[sp,#8]
 ;;;1441     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-000074  f88d500a          STRB     r5,[sp,#0xa]
+000074  2000              MOVS     r0,#0
+000076  f88d000a          STRB     r0,[sp,#0xa]
 ;;;1442     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;  
-000078  f88d600b          STRB     r6,[sp,#0xb]
+00007a  f88d500b          STRB     r5,[sp,#0xb]
 ;;;1443     GPIO_Init(GPIOC, &GPIO_InitStructure);
-00007c  a901              ADD      r1,sp,#4
-00007e  4864              LDR      r0,|L10.528|
-000080  f7fffffe          BL       GPIO_Init
+00007e  a901              ADD      r1,sp,#4
+000080  4879              LDR      r0,|L10.616|
+000082  f7fffffe          BL       GPIO_Init
 ;;;1444       
 ;;;1445     /* System clock selected to output on MCO2 pin(PC9)*/
 ;;;1446     RCC_MCO2Config(RCC_MCO2Source_SYSCLK, RCC_MCO2Div_2);
-000084  0771              LSLS     r1,r6,#29
-000086  2000              MOVS     r0,#0
-000088  f7fffffe          BL       RCC_MCO2Config
+000086  0769              LSLS     r1,r5,#29
+000088  2000              MOVS     r0,#0
+00008a  f7fffffe          BL       RCC_MCO2Config
 ;;;1447   
 ;;;1448   
 ;;;1449   
 ;;;1450       // ???????? RTC
 ;;;1451       rtc_Reset();
-00008c  f7fffffe          BL       rtc_Reset
+00008e  f7fffffe          BL       rtc_Reset
 ;;;1452       rtc_Init();
-000090  f7fffffe          BL       rtc_Init
+000092  f7fffffe          BL       rtc_Init
 ;;;1453    		
 ;;;1454   	
 ;;;1455   //	ADC_InitTypeDef  ADC_InitStructure;
@@ -1849,24 +1850,25 @@
 ;;;1458     
 ;;;1459     /* Configure TIM4 Peripheral to manage LEDs lighting */
 ;;;1460     TIM_LED_Config();
-000094  f7fffffe          BL       TIM_LED_Config
+000096  f7fffffe          BL       TIM_LED_Config
 ;;;1461     
 ;;;1462     /* Initialize the repeat status */
 ;;;1463     RepeatState = 0;
-000098  485e              LDR      r0,|L10.532|
-00009a  7045              STRB     r5,[r0,#1]
+00009a  4974              LDR      r1,|L10.620|
+00009c  2000              MOVS     r0,#0
+00009e  7048              STRB     r0,[r1,#1]
 ;;;1464     LED_Toggle = 7;
-00009c  495e              LDR      r1,|L10.536|
-00009e  f04f0907          MOV      r9,#7
-0000a2  f8819000          STRB     r9,[r1,#0]
+0000a0  4973              LDR      r1,|L10.624|
+0000a2  f04f0807          MOV      r8,#7
+0000a6  f8818000          STRB     r8,[r1,#0]
 ;;;1465     
 ;;;1466   	// PC pin2
 ;;;1467     ADC3_CH12_DMA_Config();
-0000a6  f7fffffe          BL       ADC3_CH12_DMA_Config
+0000aa  f7fffffe          BL       ADC3_CH12_DMA_Config
 ;;;1468     // Start ADC3 Software Conversion 
 ;;;1469     ADC_SoftwareStartConv(ADC3);
-0000aa  485c              LDR      r0,|L10.540|
-0000ac  f7fffffe          BL       ADC_SoftwareStartConv
+0000ae  4871              LDR      r0,|L10.628|
+0000b0  f7fffffe          BL       ADC_SoftwareStartConv
 ;;;1470   	
 ;;;1471   	
 ;;;1472     
@@ -1874,19 +1876,19 @@
 ;;;1474     
 ;;;1475     /* Initialize User Button */
 ;;;1476     STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
-0000b0  2101              MOVS     r1,#1
-0000b2  2000              MOVS     r0,#0
-0000b4  f7fffffe          BL       STM_EVAL_PBInit
+0000b4  2101              MOVS     r1,#1
+0000b6  2000              MOVS     r0,#0
+0000b8  f7fffffe          BL       STM_EVAL_PBInit
 ;;;1477      
 ;;;1478     /* Init Host Library */
 ;;;1479     USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
-0000b8  4859              LDR      r0,|L10.544|
-0000ba  4a5b              LDR      r2,|L10.552|
-0000bc  9000              STR      r0,[sp,#0]
-0000be  4b59              LDR      r3,|L10.548|
-0000c0  2101              MOVS     r1,#1
-0000c2  f5a26096          SUB      r0,r2,#0x4b0
-0000c6  f7fffffe          BL       USBH_Init
+0000bc  486e              LDR      r0,|L10.632|
+0000be  4a70              LDR      r2,|L10.640|
+0000c0  9000              STR      r0,[sp,#0]
+0000c2  4b6e              LDR      r3,|L10.636|
+0000c4  2101              MOVS     r1,#1
+0000c6  f5a26096          SUB      r0,r2,#0x4b0
+0000ca  f7fffffe          BL       USBH_Init
 ;;;1480    
 ;;;1481   
 ;;;1482   
@@ -1908,266 +1910,319 @@
 ;;;1498    
 ;;;1499   */
 ;;;1500   		spi1_init();
-0000ca  f7fffffe          BL       spi1_init
+0000ce  f7fffffe          BL       spi1_init
 ;;;1501       spi2_init();
-0000ce  f7fffffe          BL       spi2_init
+0000d2  f7fffffe          BL       spi2_init
 ;;;1502    
 ;;;1503   		
 ;;;1504   	
 ;;;1505   		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
-0000d2  2101              MOVS     r1,#1
-0000d4  4608              MOV      r0,r1
-0000d6  f7fffffe          BL       RCC_APB2PeriphClockCmd
+0000d6  2101              MOVS     r1,#1
+0000d8  4608              MOV      r0,r1
+0000da  f7fffffe          BL       RCC_APB2PeriphClockCmd
 ;;;1506   		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1|GPIO_Pin_0;  //  vivod for CS
 ;;;1507   		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
-0000da  f88d6008          STRB     r6,[sp,#8]
+0000de  f88d5008          STRB     r5,[sp,#8]
 ;;;1508   		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
-0000de  f88d600a          STRB     r6,[sp,#0xa]
-0000e2  9701              STR      r7,[sp,#4]            ;1507
+0000e2  f88d500a          STRB     r5,[sp,#0xa]
 ;;;1509   		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 ;;;1510   		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
-0000e4  f88d5009          STRB     r5,[sp,#9]
+0000e6  2000              MOVS     r0,#0
+0000e8  f88d0009          STRB     r0,[sp,#9]
+0000ec  9601              STR      r6,[sp,#4]            ;1507
 ;;;1511   		GPIO_Init(GPIOA, &GPIO_InitStructure); 
-0000e8  a901              ADD      r1,sp,#4
-0000ea  4850              LDR      r0,|L10.556|
-0000ec  f7fffffe          BL       GPIO_Init
+0000ee  a901              ADD      r1,sp,#4
+0000f0  4864              LDR      r0,|L10.644|
+0000f2  f7fffffe          BL       GPIO_Init
 ;;;1512   
 ;;;1513   
 ;;;1514   	conf.indicators[0].numb=1;
-0000f0  4c4f              LDR      r4,|L10.560|
+0000f6  4c64              LDR      r4,|L10.648|
 ;;;1515   	conf.indicators[0].kol_cifr=8;
-0000f2  2108              MOVS     r1,#8
+0000f8  2108              MOVS     r1,#8
 ;;;1516   	conf.indicators[0].type_ind=0;
+0000fa  2000              MOVS     r0,#0
+0000fc  7525              STRB     r5,[r4,#0x14]         ;1514
+0000fe  7561              STRB     r1,[r4,#0x15]         ;1515
+000100  75a0              STRB     r0,[r4,#0x16]
 ;;;1517   	conf.indicators[0].yark=0x0f;
-0000f4  230f              MOVS     r3,#0xf
-0000f6  7026              STRB     r6,[r4,#0]            ;1514
-0000f8  7061              STRB     r1,[r4,#1]            ;1515
-0000fa  70a5              STRB     r5,[r4,#2]            ;1516
-0000fc  70e3              STRB     r3,[r4,#3]
+000102  200f              MOVS     r0,#0xf
+000104  75e0              STRB     r0,[r4,#0x17]
 ;;;1518   	conf.indicators[0].rez_viv=0;   //   
-0000fe  7125              STRB     r5,[r4,#4]
+000106  2200              MOVS     r2,#0
+000108  7622              STRB     r2,[r4,#0x18]
 ;;;1519   	conf.indicators[0].chislo=0;
-000100  8125              STRH     r5,[r4,#8]
+00010a  83a2              STRH     r2,[r4,#0x1c]
 ;;;1520   	conf.indicators[0].pol_zap=0;
-000102  7165              STRB     r5,[r4,#5]
+00010c  7662              STRB     r2,[r4,#0x19]
 ;;;1521   	conf.indicators[0].porog=0xffff;	
-000104  f64f72ff          MOV      r2,#0xffff
-000108  8162              STRH     r2,[r4,#0xa]
+00010e  f64f72ff          MOV      r2,#0xffff
+000112  f8242f1e          STRH     r2,[r4,#0x1e]!
 ;;;1522   
-;;;1523   	conf.indicators[1].numb=2;
-00010a  f884800c          STRB     r8,[r4,#0xc]
-;;;1524   	conf.indicators[1].kol_cifr=3;
-00010e  7367              STRB     r7,[r4,#0xd]
-;;;1525   	conf.indicators[1].type_ind=0;
-000110  73a5              STRB     r5,[r4,#0xe]
-;;;1526   	conf.indicators[1].yark=0x0f;
-000112  73e3              STRB     r3,[r4,#0xf]
-;;;1527   	conf.indicators[1].rez_viv=0;   //   
-000114  7425              STRB     r5,[r4,#0x10]
-;;;1528   	conf.indicators[1].chislo=0;
-000116  82a5              STRH     r5,[r4,#0x14]
-;;;1529   	conf.indicators[1].pol_zap=0;
-000118  7465              STRB     r5,[r4,#0x11]
-;;;1530   	conf.indicators[1].porog=0xffff;	
-00011a  82e2              STRH     r2,[r4,#0x16]
-;;;1531   
-;;;1532   //test_lin2();
-;;;1533    
-;;;1534   //	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
-;;;1535   //  init_ind(indicators[1].numb, indicators[1].kol_cifr, indicators[1].type_ind);
-;;;1536   
-;;;1537   	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators[0].type_ind);
-00011c  462a              MOV      r2,r5
-00011e  4630              MOV      r0,r6
-000120  f7fffffe          BL       init_ind
-;;;1538     init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
-000124  7ba2              LDRB     r2,[r4,#0xe]  ; conf
-000126  7b61              LDRB     r1,[r4,#0xd]  ; conf
-000128  7b20              LDRB     r0,[r4,#0xc]  ; conf
-00012a  f7fffffe          BL       init_ind
-;;;1539   
-;;;1540   
-;;;1541   // nastroika gpio
-;;;1542   
-;;;1543   //	GPIO_InitTypeDef  GPIO_InitStructure;                 
-;;;1544   	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
-00012e  2101              MOVS     r1,#1
-000130  2008              MOVS     r0,#8
-000132  f7fffffe          BL       RCC_APB2PeriphClockCmd
-;;;1545   	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
-000136  2018              MOVS     r0,#0x18
-;;;1546   	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
-000138  f88d6008          STRB     r6,[sp,#8]
-;;;1547   	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-;;;1548   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
-;;;1549   	GPIO_Init(GPIOD, &GPIO_InitStructure);              
-00013c  4c3d              LDR      r4,|L10.564|
-00013e  9001              STR      r0,[sp,#4]            ;1546
-000140  f88d600a          STRB     r6,[sp,#0xa]          ;1547
-000144  f88d8009          STRB     r8,[sp,#9]            ;1548
-000148  a901              ADD      r1,sp,#4
-00014a  4620              MOV      r0,r4
-00014c  f7fffffe          BL       GPIO_Init
-;;;1550   
-;;;1551   	UART2Init();
-000150  f7fffffe          BL       UART2Init
-;;;1552   	
-;;;1553   	/*
-;;;1554   	// nastroika na pereda4y
-;;;1555   	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
-;;;1556   	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
-;;;1557   	GPIOD->ODR ^= tx_pin_en;
-;;;1558   */
-;;;1559   	// nastroika na priem
-;;;1560   	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
-000154  2201              MOVS     r2,#1
-000156  2110              MOVS     r1,#0x10
-000158  4620              MOV      r0,r4
-00015a  f7fffffe          BL       GPIO_WriteBit
-;;;1561   	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
-00015e  2201              MOVS     r2,#1
-000160  2108              MOVS     r1,#8
-000162  4620              MOV      r0,r4
-000164  f7fffffe          BL       GPIO_WriteBit
-;;;1562   	GPIOD->ODR ^= rx_pin_en;
-000168  4832              LDR      r0,|L10.564|
-00016a  3014              ADDS     r0,r0,#0x14
-00016c  6801              LDR      r1,[r0,#0]
-00016e  f0810108          EOR      r1,r1,#8
-000172  6001              STR      r1,[r0,#0]
-;;;1563   
-;;;1564   							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
-000174  2200              MOVS     r2,#0
-000176  2108              MOVS     r1,#8
-000178  4620              MOV      r0,r4
-00017a  f7fffffe          BL       GPIO_WriteBit
-;;;1565   			//				USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-;;;1566   
-;;;1567   NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
-00017e  2026              MOVS     r0,#0x26
-000180  f88d000c          STRB     r0,[sp,#0xc]
-;;;1568   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
-000184  f88d500d          STRB     r5,[sp,#0xd]
-;;;1569   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
-000188  f88d500e          STRB     r5,[sp,#0xe]
-;;;1570   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
-00018c  f88d600f          STRB     r6,[sp,#0xf]
-;;;1571   NVIC_Init(&NVIC_InitStructure); //??????????????
-000190  a803              ADD      r0,sp,#0xc
-000192  f7fffffe          BL       NVIC_Init
-;;;1572   
-;;;1573   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
-000196  4c28              LDR      r4,|L10.568|
-000198  2201              MOVS     r2,#1
-00019a  f2405125          MOV      r1,#0x525
-00019e  4620              MOV      r0,r4
-0001a0  f7fffffe          BL       USART_ITConfig
-;;;1574   USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
-0001a4  2201              MOVS     r2,#1
-0001a6  f2406126          MOV      r1,#0x626
-0001aa  4620              MOV      r0,r4
-0001ac  f7fffffe          BL       USART_ITConfig
-0001b0  2140              MOVS     r1,#0x40
-0001b2  f04f24e0          MOV      r4,#0xe000e000
-0001b6  1d20              ADDS     r0,r4,#4
-0001b8  f8c01100          STR      r1,[r0,#0x100]
-;;;1575   
-;;;1576   
-;;;1577   	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
-;;;1578   	/*
-;;;1579     NVIC_EnableIRQ (ADC1_IRQn); // ????????? ?????????? ?? ???
-;;;1580     NVIC_DisableIRQ (USART1_IRQn); // ????????? ???????
-;;;1581     NVIC_DisableIRQ (ADC1_IRQn); // ??? ??? ????????? ?????????? ????
-;;;1582   */
-;;;1583   //	SendStringUSART2("start ver 1.0 /0"); 
-;;;1584   /*
-;;;1585   	txsize=10;
-;;;1586   	tekper=0;
-;;;1587   	for (i = 0; i < txsize ; i++)
-;;;1588     {
-;;;1589   		TxBuffer[i]=0x30+i;
-;;;1590   	}
-;;;1591   	USART_SendData(USART2, 0x3A);
-;;;1592   */	
-;;;1593   
-;;;1594   	STM_EVAL_LEDOff(LED3);
-0001bc  2001              MOVS     r0,#1
-0001be  f7fffffe          BL       STM_EVAL_LEDOff
-;;;1595   	STM_EVAL_LEDOff(LED4);
-0001c2  2000              MOVS     r0,#0
-0001c4  f7fffffe          BL       STM_EVAL_LEDOff
-;;;1596   	STM_EVAL_LEDOff(LED5);
-0001c8  2002              MOVS     r0,#2
-0001ca  f7fffffe          BL       STM_EVAL_LEDOff
-;;;1597   	STM_EVAL_LEDOff(LED6);
-0001ce  2003              MOVS     r0,#3
-0001d0  f7fffffe          BL       STM_EVAL_LEDOff
-;;;1598   	
-;;;1599     /* SysTick end of count event each 10ms */
-;;;1600     RCC_GetClocksFreq(&RCC_Clocks);
-0001d4  4814              LDR      r0,|L10.552|
-0001d6  3084              ADDS     r0,r0,#0x84
-0001d8  f7fffffe          BL       RCC_GetClocksFreq
-;;;1601     SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-0001dc  4812              LDR      r0,|L10.552|
-0001de  2164              MOVS     r1,#0x64
-0001e0  3084              ADDS     r0,r0,#0x84
-0001e2  6840              LDR      r0,[r0,#4]  ; RCC_Clocks
-0001e4  fbb0f0f1          UDIV     r0,r0,r1
-0001e8  f1b07f80          CMP      r0,#0x1000000
-0001ec  d209              BCS      |L10.514|
-0001ee  f020407f          BIC      r0,r0,#0xff000000
-0001f2  1e40              SUBS     r0,r0,#1
-0001f4  6160              STR      r0,[r4,#0x14]
-0001f6  4911              LDR      r1,|L10.572|
-0001f8  20f0              MOVS     r0,#0xf0
-0001fa  7008              STRB     r0,[r1,#0]
-0001fc  61a5              STR      r5,[r4,#0x18]
-0001fe  f8c49010          STR      r9,[r4,#0x10]
-                  |L10.514|
-;;;1602   	
-;;;1603       while (1)
-;;;1604     {
-;;;1605       /* Host Task handler */
-;;;1606       USBH_Process(&USB_OTG_Core, &USB_Host);
-000202  4909              LDR      r1,|L10.552|
-000204  f5a16096          SUB      r0,r1,#0x4b0
-000208  f7fffffe          BL       USBH_Process
-00020c  e7f9              B        |L10.514|
-;;;1607     }
-;;;1608     
-;;;1609   #endif
-;;;1610   	
-;;;1611   
-;;;1612     
-;;;1613   }
-;;;1614   
+;;;1523   // lineika
+;;;1524   	conf.indicators[1].numb=2;
+;;;1525   	conf.indicators[1].kol_cifr=4;
+000116  2304              MOVS     r3,#4
+000118  70a7              STRB     r7,[r4,#2]            ;1524
+00011a  70e3              STRB     r3,[r4,#3]
+;;;1526   	conf.indicators[1].type_ind=0;
+00011c  f04f0c00          MOV      r12,#0
+000120  f884c004          STRB     r12,[r4,#4]
+;;;1527   	conf.indicators[1].yark=0x0f;
+000124  7160              STRB     r0,[r4,#5]
+;;;1528   	conf.indicators[1].rez_viv=0;   //   
+000126  f884c006          STRB     r12,[r4,#6]
+;;;1529   	conf.indicators[1].chislo=0;
+00012a  f8a4c00a          STRH     r12,[r4,#0xa]
+;;;1530   	conf.indicators[1].pol_zap=0;
+00012e  f884c007          STRB     r12,[r4,#7]
+;;;1531   	conf.indicators[1].porog=0xffff;	
+000132  81a2              STRH     r2,[r4,#0xc]
+;;;1532   
+;;;1533   	conf.indicators[2].numb=3;
+000134  73a6              STRB     r6,[r4,#0xe]
+;;;1534   	conf.indicators[2].kol_cifr=8;
+000136  73e1              STRB     r1,[r4,#0xf]
+;;;1535   	conf.indicators[2].type_ind=0;
+000138  f884c010          STRB     r12,[r4,#0x10]
+;;;1536   	conf.indicators[2].yark=0x0f;
+00013c  7460              STRB     r0,[r4,#0x11]
+;;;1537   	conf.indicators[2].rez_viv=0;   //   
+00013e  f884c012          STRB     r12,[r4,#0x12]
+;;;1538   	conf.indicators[2].chislo=0;
+000142  f8a4c016          STRH     r12,[r4,#0x16]
+;;;1539   	conf.indicators[2].pol_zap=0;
+000146  f884c013          STRB     r12,[r4,#0x13]
+;;;1540   	conf.indicators[2].porog=0xffff;	
+00014a  8322              STRH     r2,[r4,#0x18]
+;;;1541   
+;;;1542   // time
+;;;1543   	conf.indicators[3].numb=4;
+00014c  76a3              STRB     r3,[r4,#0x1a]
+;;;1544   	conf.indicators[3].kol_cifr=4;
+00014e  76e3              STRB     r3,[r4,#0x1b]
+;;;1545   	conf.indicators[3].type_ind=0;
+000150  2300              MOVS     r3,#0
+000152  7723              STRB     r3,[r4,#0x1c]
+;;;1546   	conf.indicators[3].yark=0x0f;
+000154  7760              STRB     r0,[r4,#0x1d]
+;;;1547   	conf.indicators[3].rez_viv=0;   //   
+000156  77a3              STRB     r3,[r4,#0x1e]
+;;;1548   	conf.indicators[3].chislo=0;
+000158  8463              STRH     r3,[r4,#0x22]
+;;;1549   	conf.indicators[3].pol_zap=0;
+00015a  77e3              STRB     r3,[r4,#0x1f]
+;;;1550   	conf.indicators[3].porog=0xffff;	
+00015c  84a2              STRH     r2,[r4,#0x24]
+;;;1551   //test_lin2();
+;;;1552    
+;;;1553   //	init_ind(indicators[0].numb, indicators[0].kol_cifr, indicators[0].type_ind);
+;;;1554   //  init_ind(indicators[1].numb, indicators[1].kol_cifr, indicators[1].type_ind);
+;;;1555   
+;;;1556   	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators[0].type_ind);
+00015e  461a              MOV      r2,r3
+000160  4628              MOV      r0,r5
+000162  f7fffffe          BL       init_ind
+;;;1557     init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
+000166  7922              LDRB     r2,[r4,#4]  ; conf
+000168  78e1              LDRB     r1,[r4,#3]  ; conf
+00016a  78a0              LDRB     r0,[r4,#2]  ; conf
+00016c  f7fffffe          BL       init_ind
+;;;1558   	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
+000170  7c22              LDRB     r2,[r4,#0x10]  ; conf
+000172  7be1              LDRB     r1,[r4,#0xf]  ; conf
+000174  7ba0              LDRB     r0,[r4,#0xe]  ; conf
+000176  f7fffffe          BL       init_ind
+;;;1559     init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
+00017a  7f22              LDRB     r2,[r4,#0x1c]  ; conf
+00017c  7ee1              LDRB     r1,[r4,#0x1b]  ; conf
+00017e  7ea0              LDRB     r0,[r4,#0x1a]  ; conf
+000180  f7fffffe          BL       init_ind
+;;;1560   
+;;;1561   // nastroika gpio
+;;;1562   
+;;;1563   //	GPIO_InitTypeDef  GPIO_InitStructure;                 
+;;;1564   	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
+000184  2101              MOVS     r1,#1
+000186  2008              MOVS     r0,#8
+000188  f7fffffe          BL       RCC_APB2PeriphClockCmd
+;;;1565   	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
+00018c  2018              MOVS     r0,#0x18
+;;;1566   	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
+00018e  f88d5008          STRB     r5,[sp,#8]
+;;;1567   	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+;;;1568   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
+;;;1569   	GPIO_Init(GPIOD, &GPIO_InitStructure);              
+000192  4c3e              LDR      r4,|L10.652|
+000194  9001              STR      r0,[sp,#4]            ;1566
+000196  f88d500a          STRB     r5,[sp,#0xa]          ;1567
+00019a  f88d7009          STRB     r7,[sp,#9]            ;1568
+00019e  a901              ADD      r1,sp,#4
+0001a0  4620              MOV      r0,r4
+0001a2  f7fffffe          BL       GPIO_Init
+;;;1570   
+;;;1571   	UART2Init();
+0001a6  f7fffffe          BL       UART2Init
+;;;1572   	
+;;;1573   	/*
+;;;1574   	// nastroika na pereda4y
+;;;1575   	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
+;;;1576   	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
+;;;1577   	GPIOD->ODR ^= tx_pin_en;
+;;;1578   */
+;;;1579   	// nastroika na priem
+;;;1580   	GPIO_WriteBit(GPIOD, tx_pin_en, Bit_SET);      // GPIOD 4
+0001aa  2201              MOVS     r2,#1
+0001ac  2110              MOVS     r1,#0x10
+0001ae  4620              MOV      r0,r4
+0001b0  f7fffffe          BL       GPIO_WriteBit
+;;;1581   	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
+0001b4  2201              MOVS     r2,#1
+0001b6  2108              MOVS     r1,#8
+0001b8  4620              MOV      r0,r4
+0001ba  f7fffffe          BL       GPIO_WriteBit
+;;;1582   	GPIOD->ODR ^= rx_pin_en;
+0001be  4833              LDR      r0,|L10.652|
+0001c0  3014              ADDS     r0,r0,#0x14
+0001c2  6801              LDR      r1,[r0,#0]
+0001c4  f0810108          EOR      r1,r1,#8
+0001c8  6001              STR      r1,[r0,#0]
+;;;1583   
+;;;1584   							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
+0001ca  2200              MOVS     r2,#0
+0001cc  2108              MOVS     r1,#8
+0001ce  4620              MOV      r0,r4
+0001d0  f7fffffe          BL       GPIO_WriteBit
+;;;1585   			//				USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+;;;1586   
+;;;1587   NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
+0001d4  2026              MOVS     r0,#0x26
+0001d6  f88d000c          STRB     r0,[sp,#0xc]
+;;;1588   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
+0001da  2000              MOVS     r0,#0
+0001dc  f88d000d          STRB     r0,[sp,#0xd]
+;;;1589   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
+0001e0  f88d000e          STRB     r0,[sp,#0xe]
+;;;1590   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
+0001e4  f88d500f          STRB     r5,[sp,#0xf]
+;;;1591   NVIC_Init(&NVIC_InitStructure); //??????????????
+0001e8  a803              ADD      r0,sp,#0xc
+0001ea  f7fffffe          BL       NVIC_Init
+;;;1592   
+;;;1593   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+0001ee  4c28              LDR      r4,|L10.656|
+0001f0  2201              MOVS     r2,#1
+0001f2  f2405125          MOV      r1,#0x525
+0001f6  4620              MOV      r0,r4
+0001f8  f7fffffe          BL       USART_ITConfig
+;;;1594   USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+0001fc  2201              MOVS     r2,#1
+0001fe  f2406126          MOV      r1,#0x626
+000202  4620              MOV      r0,r4
+000204  f7fffffe          BL       USART_ITConfig
+000208  4922              LDR      r1,|L10.660|
+00020a  2040              MOVS     r0,#0x40
+00020c  f04f24e0          MOV      r4,#0xe000e000
+000210  6008              STR      r0,[r1,#0]
+;;;1595   
+;;;1596   
+;;;1597   	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
+;;;1598   	/*
+;;;1599     NVIC_EnableIRQ (ADC1_IRQn); // ????????? ?????????? ?? ???
+;;;1600     NVIC_DisableIRQ (USART1_IRQn); // ????????? ???????
+;;;1601     NVIC_DisableIRQ (ADC1_IRQn); // ??? ??? ????????? ?????????? ????
+;;;1602   */
+;;;1603   //	SendStringUSART2("start ver 1.0 /0"); 
+;;;1604   /*
+;;;1605   	txsize=10;
+;;;1606   	tekper=0;
+;;;1607   	for (i = 0; i < txsize ; i++)
+;;;1608     {
+;;;1609   		TxBuffer[i]=0x30+i;
+;;;1610   	}
+;;;1611   	USART_SendData(USART2, 0x3A);
+;;;1612   */	
+;;;1613   
+;;;1614   	STM_EVAL_LEDOff(LED3);
+000212  2001              MOVS     r0,#1
+000214  f7fffffe          BL       STM_EVAL_LEDOff
+;;;1615   	STM_EVAL_LEDOff(LED4);
+000218  2000              MOVS     r0,#0
+00021a  f7fffffe          BL       STM_EVAL_LEDOff
+;;;1616   	STM_EVAL_LEDOff(LED5);
+00021e  2002              MOVS     r0,#2
+000220  f7fffffe          BL       STM_EVAL_LEDOff
+;;;1617   	STM_EVAL_LEDOff(LED6);
+000224  2003              MOVS     r0,#3
+000226  f7fffffe          BL       STM_EVAL_LEDOff
+;;;1618   	
+;;;1619     /* SysTick end of count event each 10ms */
+;;;1620     RCC_GetClocksFreq(&RCC_Clocks);
+00022a  4815              LDR      r0,|L10.640|
+00022c  3084              ADDS     r0,r0,#0x84
+00022e  f7fffffe          BL       RCC_GetClocksFreq
+;;;1621     SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+000232  4813              LDR      r0,|L10.640|
+000234  2164              MOVS     r1,#0x64
+000236  3084              ADDS     r0,r0,#0x84
+000238  6840              LDR      r0,[r0,#4]  ; RCC_Clocks
+00023a  fbb0f0f1          UDIV     r0,r0,r1
+00023e  f1b07f80          CMP      r0,#0x1000000
+000242  d20a              BCS      |L10.602|
+000244  f020407f          BIC      r0,r0,#0xff000000
+000248  1e40              SUBS     r0,r0,#1
+00024a  6160              STR      r0,[r4,#0x14]
+00024c  4912              LDR      r1,|L10.664|
+00024e  20f0              MOVS     r0,#0xf0
+000250  7008              STRB     r0,[r1,#0]
+000252  f8c49018          STR      r9,[r4,#0x18]
+000256  f8c48010          STR      r8,[r4,#0x10]
+                  |L10.602|
+;;;1622   	
+;;;1623       while (1)
+;;;1624     {
+;;;1625       /* Host Task handler */
+;;;1626       USBH_Process(&USB_OTG_Core, &USB_Host);
+00025a  4909              LDR      r1,|L10.640|
+00025c  f5a16096          SUB      r0,r1,#0x4b0
+000260  f7fffffe          BL       USBH_Process
+000264  e7f9              B        |L10.602|
+;;;1627     }
+;;;1628     
+;;;1629   #endif
+;;;1630   	
+;;;1631   
+;;;1632     
+;;;1633   }
+;;;1634   
                           ENDP
 
-00020e  0000              DCW      0x0000
-                  |L10.528|
+000266  0000              DCW      0x0000
+                  |L10.616|
                           DCD      0x40020800
-                  |L10.532|
+                  |L10.620|
                           DCD      ||area_number.34||
-                  |L10.536|
+                  |L10.624|
                           DCD      LED_Toggle
-                  |L10.540|
+                  |L10.628|
                           DCD      0x40012200
-                  |L10.544|
+                  |L10.632|
                           DCD      USR_Callbacks
-                  |L10.548|
+                  |L10.636|
                           DCD      USBH_MSC_cb
-                  |L10.552|
+                  |L10.640|
                           DCD      ||.bss||+0x4b0
-                  |L10.556|
+                  |L10.644|
                           DCD      0x40020000
-                  |L10.560|
-                          DCD      ||.bss||+0x940
-                  |L10.564|
+                  |L10.648|
+                          DCD      ||.bss||+0x92c
+                  |L10.652|
                           DCD      0x40020c00
-                  |L10.568|
+                  |L10.656|
                           DCD      0x40004400
-                  |L10.572|
+                  |L10.660|
+                          DCD      0xe000e104
+                  |L10.664|
                           DCD      0xe000ed23
 
                           AREA ||i.pin_ind||, CODE, READONLY, ALIGN=1
