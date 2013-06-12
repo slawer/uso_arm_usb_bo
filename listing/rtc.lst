@@ -341,6 +341,9 @@ N
 N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 N		
 N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+N		
+N		 void rtc_Unlock(void);
+N		 void rtc_Lock(void);
 N
 N#endif
 L 6 "src\rtc.c" 2
@@ -29731,6 +29734,9 @@ S
 S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 S		
 S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+S		
+S		 void rtc_Unlock(void);
+S		 void rtc_Lock(void);
 S
 N#endif
 L 3 ".\inc\my.h" 2
@@ -29879,7 +29885,7 @@ Nu16 bkp=0;
 Nu16 size=0;
 N
 N// Выключить защиту от записи
-Nstatic void rtc_Unlock(void)
+Nvoid rtc_Unlock(void)
 N{
 N    // Запишем эти значения по очереди
 N    RTC->WPR = 0xCA;
@@ -29889,7 +29895,7 @@ X    ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0x53;
 N}
 N
 N// Включить защиту от записи
-Nstatic void rtc_Lock(void)
+N void rtc_Lock(void)
 N{
 N    // Запишем какую-нибудь фигню, главное, чтоб не правильную
 N    RTC->WPR = 0xFF;
@@ -30107,10 +30113,10 @@ N			//		RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
 N        }
 N        
 N        // Устанавливаем дату: 30.05.13, пятница
-N        rtc_SetDate(2, 6, 13, 7);
+N //       rtc_SetDate(2, 6, 13, 7);
 N        
 N        // Устанавливаем время: 15:00:00
-N        rtc_SetTime(0, 0, 00);
+N  //      rtc_SetTime(0, 0, 00);
 N        
 N        // Переведём часы в 24-часовой формат
 N        RTC->CR |= RTC_CR_FMT;

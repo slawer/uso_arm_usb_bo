@@ -37228,6 +37228,9 @@ N
 N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 N		
 N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+N		
+N		 void rtc_Unlock(void);
+N		 void rtc_Lock(void);
 N
 N#endif
 L 3 ".\inc\my.h" 2
@@ -37412,6 +37415,9 @@ S
 S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 S		
 S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+S		
+S		 void rtc_Unlock(void);
+S		 void rtc_Lock(void);
 S
 N#endif
 L 5 ".\inc\my_def_ext.h" 2
@@ -37544,6 +37550,9 @@ S
 S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 S		
 S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+S		
+S		 void rtc_Unlock(void);
+S		 void rtc_Lock(void);
 S
 N#endif
 L 63 "src\main.c" 2
@@ -39267,6 +39276,10 @@ NNVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
 NNVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
 NNVIC_Init(&NVIC_InitStructure); //??????????????
 N
+N
+N// pd5 rxd  in wleif 3 contakt
+N// pd6 txd           4
+N// pd3 enabl         10
 NUSART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 XUSART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), ENABLE);  
 NUSART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????

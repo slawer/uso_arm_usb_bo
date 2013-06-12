@@ -35540,6 +35540,9 @@ N
 N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 N		
 N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+N		
+N		 void rtc_Unlock(void);
+N		 void rtc_Lock(void);
 N
 N#endif
 L 3 ".\inc\my.h" 2
@@ -35719,6 +35722,9 @@ S
 S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 S		
 S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+S		
+S		 void rtc_Unlock(void);
+S		 void rtc_Lock(void);
 S
 N#endif
 L 28 "src\usbh_usr.c" 2

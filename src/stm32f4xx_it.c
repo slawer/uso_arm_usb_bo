@@ -417,9 +417,27 @@ void SysTick_Handler(void)
 		{		
 			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+			extern  void rtc_Unlock(void);
+			extern void rtc_Lock(void);
+			
+			uint32_t Tens, Units;
+      uint32_t TempReg = 0;
+			u8 i=0;
+			
+			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+
+
+			// set time
+		rtc_Unlock();
+		RTC->ISR |= RTC_ISR_INIT;
+		while(!(RTC->ISR & RTC_ISR_INITF)) {}
+
+		RTC->PRER = 263; //Sync;         
+    RTC->PRER =263 | (127<<16); //Sync | (Async << 16);
+			
 			
 			TxBuffer[0]='s';
 			TxBuffer[1]='e';	
@@ -433,14 +451,54 @@ void SysTick_Handler(void)
 			TxBuffer[9]='o';
 			TxBuffer[10]='k';
 			
-			// set time
-		// set date
-     rtc_SetDate((RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), 1);
-        
+
     // set time
-    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
-		
-			
+rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+
+rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
+/*
+if (1)
+{
+
+    TempReg = 0;
+    {
+        Tens  = ((RxBuffer[10]-0x30) / 10) & 0x0f;          // ??????? ???
+        Units = (RxBuffer[11]-0x30) & 0x0f; // ??????? ???
+        
+        TempReg |= (Tens  << 20); // YT, 20
+        TempReg |= (Units << 16); // YU, 16
+    }
+    {
+        Tens  = (RxBuffer[12]-0x30) & 0x01;          // ??????? ???????
+        Units = (RxBuffer[13]-0x30) & 0x0f; // ??????? ???????
+        
+        TempReg |= (Tens  << 12); // MT, 12
+        TempReg |= (Units << 8);  // MU, 8
+    }
+    {
+        Tens  = (RxBuffer[14]-0x30) & 0x03;          // ??????? ????
+        Units = (RxBuffer[15]-0x30) & 0x0f; // ??????? ????
+        
+        TempReg |= (Tens  << 4); // DT, 4
+        TempReg |= (Units << 0);  // DU, 0
+    }
+    {
+        TempReg |= ((1 & 0x07) << 13); // WDU, 13
+    }
+    RTC->DR = TempReg;	
+	}	
+*/
+		RTC->CR |= RTC_CR_FMT;
+    RTC->ISR &= ~RTC_ISR_INIT;
+		rtc_Lock();
+
+	
+		rtc_Get(&DT1);
+//			while (TempReg!=RTC->DR)
+		while (((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30))!=DT1.Day)
+				rtc_Get(&DT1);
+
+				
 			txsize=11;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);

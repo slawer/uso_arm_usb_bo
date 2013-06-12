@@ -37193,6 +37193,9 @@ N
 N		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 N		
 N		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+N		
+N		 void rtc_Unlock(void);
+N		 void rtc_Lock(void);
 N
 N#endif
 L 3 ".\inc\my.h" 2
@@ -37372,6 +37375,9 @@ S
 S		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 S		
 S		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+S		
+S		 void rtc_Unlock(void);
+S		 void rtc_Lock(void);
 S
 N#endif
 L 29 "src\stm32f4xx_it.c" 2
@@ -37795,12 +37801,34 @@ N		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_
 N		{		
 N			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
 N			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+N			extern  void rtc_Unlock(void);
+N			extern void rtc_Lock(void);
+N			
+N			uint32_t Tens, Units;
+N      uint32_t TempReg = 0;
+N			u8 i=0;
+N			
+N			
 N			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), DISABLE);		
 N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
 N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
+N
+N
+N			// set time
+N		rtc_Unlock();
+N		RTC->ISR |= RTC_ISR_INIT;
+X		((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= ((uint32_t)0x00000080);
+N		while(!(RTC->ISR & RTC_ISR_INITF)) {}
+X		while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
+N
+N		RTC->PRER = 263; //Sync;         
+X		((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = 263; 
+N    RTC->PRER =263 | (127<<16); //Sync | (Async << 16);
+X    ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER =263 | (127<<16); 
+N			
 N			
 N			TxBuffer[0]='s';
 N			TxBuffer[1]='e';	
@@ -37814,20 +37842,66 @@ N			TxBuffer[8]='_';
 N			TxBuffer[9]='o';
 N			TxBuffer[10]='k';
 N			
-N			// set time
-N		// set date
-N     rtc_SetDate((RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), 1);
-N        
+N
 N    // set time
-N    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
-N		
-N			
+Nrtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+N
+Nrtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
+N/*
+Nif (1)
+N{
+N
+N    TempReg = 0;
+N    {
+N        Tens  = ((RxBuffer[10]-0x30) / 10) & 0x0f;          // ??????? ???
+N        Units = (RxBuffer[11]-0x30) & 0x0f; // ??????? ???
+N        
+N        TempReg |= (Tens  << 20); // YT, 20
+N        TempReg |= (Units << 16); // YU, 16
+N    }
+N    {
+N        Tens  = (RxBuffer[12]-0x30) & 0x01;          // ??????? ???????
+N        Units = (RxBuffer[13]-0x30) & 0x0f; // ??????? ???????
+N        
+N        TempReg |= (Tens  << 12); // MT, 12
+N        TempReg |= (Units << 8);  // MU, 8
+N    }
+N    {
+N        Tens  = (RxBuffer[14]-0x30) & 0x03;          // ??????? ????
+N        Units = (RxBuffer[15]-0x30) & 0x0f; // ??????? ????
+N        
+N        TempReg |= (Tens  << 4); // DT, 4
+N        TempReg |= (Units << 0);  // DU, 0
+N    }
+N    {
+N        TempReg |= ((1 & 0x07) << 13); // WDU, 13
+N    }
+N    RTC->DR = TempReg;	
+N	}	
+N*/
+N		RTC->CR |= RTC_CR_FMT;
+X		((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR |= ((uint32_t)0x00000040);
+N    RTC->ISR &= ~RTC_ISR_INIT;
+X    ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~((uint32_t)0x00000080);
+N		rtc_Lock();
+N
+N	
+N		rtc_Get(&DT1);
+N//			while (TempReg!=RTC->DR)
+N		while (((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30))!=DT1.Day)
+N				rtc_Get(&DT1);
+N
+N				
 N			txsize=11;
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
+W "src\stm32f4xx_it.c" 423 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 423 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 424 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 425 7 variable "i" was declared but never referenced
 N		}
 N		
 N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
@@ -38055,7 +38129,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 613 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 671 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

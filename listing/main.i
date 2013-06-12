@@ -21407,6 +21407,9 @@ volatile uint16_t ADC3ConvertedValue = 0;
 		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 		
 		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+		
+		 void rtc_Unlock(void);
+		 void rtc_Lock(void);
 
 #line 3 ".\\inc\\my.h"
 
@@ -23184,6 +23187,10 @@ NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 
 NVIC_Init(&NVIC_InitStructure); 
 
+
+
+
+
 USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0525), ENABLE);  
 USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);  
 
@@ -23285,7 +23292,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1714 "src\\main.c"
+#line 1718 "src\\main.c"
 
   
  

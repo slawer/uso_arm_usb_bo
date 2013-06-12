@@ -282,6 +282,9 @@ typedef unsigned       __int64 uintmax_t;
 		 void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
 		
 		 void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+		
+		 void rtc_Unlock(void);
+		 void rtc_Lock(void);
 
 #line 6 "src\\rtc.c"
 #line 1 ".\\src\\stm32f4xx.h"
@@ -15002,7 +15005,7 @@ u16 bkp=0;
 u16 size=0;
 
 
-static void rtc_Unlock(void)
+void rtc_Unlock(void)
 {
     
     ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0xCA;
@@ -15010,7 +15013,7 @@ static void rtc_Unlock(void)
 }
 
 
-static void rtc_Lock(void)
+ void rtc_Lock(void)
 {
     
     ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->WPR = 0xFF;
@@ -15207,10 +15210,10 @@ void rtc_Init(void)
         }
         
         
-        rtc_SetDate(2, 6, 13, 7);
+ 
         
         
-        rtc_SetTime(0, 0, 00);
+  
         
         
         ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR |= ((uint32_t)0x00000040);

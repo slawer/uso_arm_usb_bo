@@ -14,7 +14,7 @@ u16 bkp=0;
 u16 size=0;
 
 // Выключить защиту от записи
-static void rtc_Unlock(void)
+void rtc_Unlock(void)
 {
     // Запишем эти значения по очереди
     RTC->WPR = 0xCA;
@@ -22,7 +22,7 @@ static void rtc_Unlock(void)
 }
 
 // Включить защиту от записи
-static void rtc_Lock(void)
+ void rtc_Lock(void)
 {
     // Запишем какую-нибудь фигню, главное, чтоб не правильную
     RTC->WPR = 0xFF;
@@ -219,10 +219,10 @@ uint8_t *BKPRam = (uint8_t *)0x40024000;
         }
         
         // Устанавливаем дату: 30.05.13, пятница
-        rtc_SetDate(2, 6, 13, 7);
+ //       rtc_SetDate(2, 6, 13, 7);
         
         // Устанавливаем время: 15:00:00
-        rtc_SetTime(0, 0, 00);
+  //      rtc_SetTime(0, 0, 00);
         
         // Переведём часы в 24-часовой формат
         RTC->CR |= RTC_CR_FMT;
