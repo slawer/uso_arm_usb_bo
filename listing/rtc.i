@@ -8,7 +8,7 @@
 
 
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -27,7 +27,7 @@
 
 
 
-#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -192,7 +192,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -225,7 +225,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -234,7 +234,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 #line 6 "src\\rtc.h"
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -248,7 +248,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -14430,7 +14430,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
  
 #line 7 "src\\rtc.c"
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
  
  
  
@@ -14461,7 +14461,7 @@ void SysTick_CLKSourceConfig(uint32_t SysTick_CLKSource);
 
 
 
-#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
   
@@ -14603,7 +14603,7 @@ extern __declspec(__nothrow) size_t strxfrm(char * __restrict  , const char * __
  
 
 
-#line 185 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 185 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __attribute__((__nonnull__(1)));
 
    
@@ -14614,7 +14614,7 @@ extern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __att
 
  
 
-#line 201 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 201 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14632,7 +14632,7 @@ extern __declspec(__nothrow) size_t strcspn(const char *  , const char *  ) __at
 
  
 
-#line 224 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 224 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14642,7 +14642,7 @@ extern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __att
 
  
 
-#line 239 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 239 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strrchr(const char *  , int  ) __attribute__((__nonnull__(1)));
 
    
@@ -14660,7 +14660,7 @@ extern __declspec(__nothrow) size_t strspn(const char *  , const char *  ) __att
 
  
 
-#line 262 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 262 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 extern __declspec(__nothrow) char *strstr(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
 
    
@@ -14846,7 +14846,7 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
 
 
-#line 494 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
+#line 494 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\string.h"
 
 
 
@@ -14973,6 +14973,15 @@ typedef struct
 		st_tab_kal tabl2;	
 }  gr_kal;
 
+typedef struct 
+{
+		u8 kol_st;
+		u8 rez;
+		u16 max1;	
+		u16 max2;
+		u16 max3;
+		u16 max4;
+}  st_lin;
 
 typedef struct 
 {
@@ -14992,7 +15001,8 @@ typedef struct
 		u16 tm_rele_off;
 		u16 rez16;
 	
-	  st_indikators indicators[4];	
+
+		st_lin lin;
 	
 		gr_kal gr_kal1;
 		gr_kal gr_kal2;

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\MEDIA_USB_KEY\uso_arm_usb_bo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\MEDIA_USB_KEY\uso_arm_usb_bo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Wed Jun 12 22:33:26 2013
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Thu Jun 13 17:03:20 2013
 <BR><P>
 <H3>Maximum Stack Usage =        408 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -894,7 +894,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
-<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 2344 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
+<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 2374 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = SysTick_Handler &rArr; indicate &rArr; spi_send
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_SendData
@@ -1855,7 +1855,7 @@ Global Symbols
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_sync
 </UL>
 
-<P><STRONG><a name="[b4]"></a>indicate</STRONG> (Thumb, 382 bytes, Stack size 48 bytes, main.o(i.indicate))
+<P><STRONG><a name="[b4]"></a>indicate</STRONG> (Thumb, 368 bytes, Stack size 48 bytes, main.o(i.indicate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = indicate &rArr; spi_send
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_WriteBit
@@ -1899,7 +1899,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 614 bytes, Stack size 32 bytes, main.o(i.main))
+<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 500 bytes, Stack size 32 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = main &rArr; USBH_Process &rArr; USBH_HandleEnum &rArr; HCD_ResetPort &rArr; USB_OTG_ResetPort &rArr; USB_OTG_BSP_mDelay &rArr; BSP_Delay &rArr; BSP_SetTime &rArr; TIM_TimeBaseInit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_Process

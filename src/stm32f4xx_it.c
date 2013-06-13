@@ -249,6 +249,7 @@ void SysTick_Handler(void)
 	del++;
 	if (del==10)
 	{
+		extern st_conf conf;
 		
 		del=0;
 		tick++;
@@ -279,10 +280,10 @@ void SysTick_Handler(void)
 // indicate_lin(0,(u16)fz_average[0], 4096);
 // indicate(1,(u16)(fz_average[0]/10));
 	 
-	 indicate(1,(u16)(max[0]/10));
-	 indicate_lin(2,(u16) fz_average[0], (u16) 4096, (u16) 28);	 
-	 indicate(3,(u16)(fz_average[0]/10));
-	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);
+	 indicate(1,(u16)(max[0]/10),3);   																// maximum
+	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
+	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time
 		 
 	 }		 
 		
@@ -297,7 +298,7 @@ void SysTick_Handler(void)
 	{
 		u16 tmp=0;
 	
-		
+		// wrt_conf
 		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
 		{
 			u16 i=0;
@@ -307,10 +308,7 @@ void SysTick_Handler(void)
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 	
-    // ??????? ????????? ?????????????????? ??????
-  //  RCC->BDCR |=  RCC_BDCR_BDRST;
- //   RCC->BDCR &= ~RCC_BDCR_BDRST;
-			
+		
 			for (i = 0; i < rxsize-10; i += 2)
 			{
 			  tmp1=RxBuffer[i+10];
@@ -364,6 +362,7 @@ void SysTick_Handler(void)
 			USART_SendData(USART2, 0x3A);
 		}
 
+		// who?
 		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
 		{
 			
@@ -388,6 +387,7 @@ void SysTick_Handler(void)
 			USART_SendData(USART2, 0x3A);
 		}
 	
+		// restart
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
 		{
 			
@@ -410,9 +410,14 @@ void SysTick_Handler(void)
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 			
+			SCB->AIRCR = 0x05FA0004;
+			
+			
+			
 			// need restart
 		}
 	
+		// set_time
 		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
 		{		
 			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
@@ -506,6 +511,7 @@ if (1)
 			// need restart
 		}
 		
+		// read
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
 		{
 			
@@ -581,6 +587,7 @@ if (1)
 			USART_SendData(USART2, 0x3A);
 		}		
 		
+		// read_conf
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
 		{
 			u16 i=0;
@@ -589,10 +596,185 @@ if (1)
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-
+/*
+		u8 address;
+		u8 ver_po_st;
+		u8 ver_po_ml;
+	  u8 tek_gr_kal; 
+	  u8 tm_antidreb;
+		u8 revers_group_select;
+		u8 revers_peredacha_select;
+		u8 rez8;
+	
+		u16	per_usr;
+		u16	time_max;
+		u16 por_rele;
+		u16 tm_rele_on;
+		u16 tm_rele_off;
+		u16 rez16;
+	*/	
+/*
+			conf.address=1;
+			conf.ver_po_st=2;
+			conf.ver_po_ml=3;
+			conf.tek_gr_kal=4;
+			conf.tm_antidreb=5;
+			conf.revers_group_select=6;
+			conf.revers_peredacha_select=7;
+			conf.rez8=8;
+			conf.per_usr=9;
+			conf.time_max=10;
+			conf.por_rele=11;
+			conf.tm_rele_on=12;
+			conf.tm_rele_off=13;
+			conf.rez16=14;
 			
-			
+		conf.lin.kol_st=15;
+		conf.lin.max1=16;	
+		conf.lin.max2=17;
+		conf.lin.max3=18;
+		conf.lin.max4=19;
+		*/
 			/*
+			conf.indicators[0].numb=15;
+			conf.indicators[0].kol_cifr=16;
+			conf.indicators[0].type_ind=17;
+			conf.indicators[0].yark=18;
+			conf.indicators[0].rez_viv=19;
+			conf.indicators[0].pol_zap=20;
+			conf.indicators[0].r1=21;
+			conf.indicators[0].r2=22;
+			conf.indicators[0].chislo=23;
+			conf.indicators[0].porog=24;
+
+			conf.indicators[1].numb=25;
+			conf.indicators[1].kol_cifr=26;
+			conf.indicators[1].type_ind=27;
+			conf.indicators[1].yark=28;
+			conf.indicators[1].rez_viv=29;
+			conf.indicators[1].pol_zap=30;
+			conf.indicators[1].r1=31;
+			conf.indicators[1].r2=32;
+			conf.indicators[1].chislo=33;
+			conf.indicators[1].porog=34;
+		
+
+		
+
+		
+			conf.indicators[2].numb=35;
+			conf.indicators[2].kol_cifr=36;
+			conf.indicators[2].type_ind=37;
+			conf.indicators[2].yark=38;
+			conf.indicators[2].rez_viv=39;
+			conf.indicators[2].pol_zap=40;
+			conf.indicators[2].r1=41;
+			conf.indicators[2].r2=42;
+			conf.indicators[2].chislo=43;
+			conf.indicators[2].porog=44;
+			
+			conf.indicators[3].numb=45;
+			conf.indicators[3].kol_cifr=46;
+			conf.indicators[3].type_ind=47;
+			conf.indicators[3].yark=48;
+			conf.indicators[3].rez_viv=49;
+			conf.indicators[3].pol_zap=50;
+			conf.indicators[3].r1=51;
+			conf.indicators[3].r2=52;
+			conf.indicators[3].chislo=53;
+			conf.indicators[3].porog=54;
+				*/
+		/*		
+			conf.gr_kal1.tabl1.fz[0]=55;
+			conf.gr_kal1.tabl1.fz[1]=56;
+			conf.gr_kal1.tabl1.fz[2]=57;
+			conf.gr_kal1.tabl1.fz[3]=58;
+			conf.gr_kal1.tabl1.fz[4]=59;
+			conf.gr_kal1.tabl1.fz[5]=60;
+			conf.gr_kal1.tabl1.fz[6]=61;
+			conf.gr_kal1.tabl1.fz[7]=62;
+			conf.gr_kal1.tabl1.fz[8]=63;
+			conf.gr_kal1.tabl1.fz[9]=64;
+
+			conf.gr_kal1.tabl1.kod[0]=65;
+			conf.gr_kal1.tabl1.kod[1]=66;
+			conf.gr_kal1.tabl1.kod[2]=67;
+			conf.gr_kal1.tabl1.kod[3]=68;
+			conf.gr_kal1.tabl1.kod[4]=69;
+			conf.gr_kal1.tabl1.kod[5]=70;
+			conf.gr_kal1.tabl1.kod[6]=71;
+			conf.gr_kal1.tabl1.kod[7]=72;
+			conf.gr_kal1.tabl1.kod[8]=73;
+			conf.gr_kal1.tabl1.kod[9]=74;
+	
+			conf.gr_kal1.tabl2.fz[0]=75;
+			conf.gr_kal1.tabl2.fz[1]=76;
+			conf.gr_kal1.tabl2.fz[2]=77;
+			conf.gr_kal1.tabl2.fz[3]=78;
+			conf.gr_kal1.tabl2.fz[4]=79;
+			conf.gr_kal1.tabl2.fz[5]=80;
+			conf.gr_kal1.tabl2.fz[6]=81;
+			conf.gr_kal1.tabl2.fz[7]=82;
+			conf.gr_kal1.tabl2.fz[8]=83;
+			conf.gr_kal1.tabl2.fz[9]=84;
+
+			conf.gr_kal1.tabl2.kod[0]=85;
+			conf.gr_kal1.tabl2.kod[1]=86;
+			conf.gr_kal1.tabl2.kod[2]=87;
+			conf.gr_kal1.tabl2.kod[3]=88;
+			conf.gr_kal1.tabl2.kod[4]=89;
+			conf.gr_kal1.tabl2.kod[5]=90;
+			conf.gr_kal1.tabl2.kod[6]=91;
+			conf.gr_kal1.tabl2.kod[7]=92;
+			conf.gr_kal1.tabl2.kod[8]=93;
+			conf.gr_kal1.tabl2.kod[9]=94;	
+			
+			// dr2
+			conf.gr_kal2.tabl1.fz[0]=95;
+			conf.gr_kal2.tabl1.fz[1]=96;
+			conf.gr_kal2.tabl1.fz[2]=97;
+			conf.gr_kal2.tabl1.fz[3]=98;
+			conf.gr_kal2.tabl1.fz[4]=99;
+			conf.gr_kal2.tabl1.fz[5]=100;
+			conf.gr_kal2.tabl1.fz[6]=101;
+			conf.gr_kal2.tabl1.fz[7]=102;
+			conf.gr_kal2.tabl1.fz[8]=103;
+			conf.gr_kal2.tabl1.fz[9]=104;
+
+			conf.gr_kal2.tabl1.kod[0]=105;
+			conf.gr_kal2.tabl1.kod[1]=106;
+			conf.gr_kal2.tabl1.kod[2]=107;
+			conf.gr_kal2.tabl1.kod[3]=108;
+			conf.gr_kal2.tabl1.kod[4]=109;
+			conf.gr_kal2.tabl1.kod[5]=100;
+			conf.gr_kal2.tabl1.kod[6]=111;
+			conf.gr_kal2.tabl1.kod[7]=112;
+			conf.gr_kal2.tabl1.kod[8]=113;
+			conf.gr_kal2.tabl1.kod[9]=114;
+	
+			conf.gr_kal2.tabl2.fz[0]=115;
+			conf.gr_kal2.tabl2.fz[1]=116;
+			conf.gr_kal2.tabl2.fz[2]=117;
+			conf.gr_kal2.tabl2.fz[3]=118;
+			conf.gr_kal2.tabl2.fz[4]=119;
+			conf.gr_kal2.tabl2.fz[5]=120;
+			conf.gr_kal2.tabl2.fz[6]=121;
+			conf.gr_kal2.tabl2.fz[7]=122;
+			conf.gr_kal2.tabl2.fz[8]=123;
+			conf.gr_kal2.tabl2.fz[9]=124;
+
+			conf.gr_kal2.tabl2.kod[0]=125;
+			conf.gr_kal2.tabl2.kod[1]=126;
+			conf.gr_kal2.tabl2.kod[2]=127;
+			conf.gr_kal2.tabl2.kod[3]=128;
+			conf.gr_kal2.tabl2.kod[4]=129;
+			conf.gr_kal2.tabl2.kod[5]=130;
+			conf.gr_kal2.tabl2.kod[6]=131;
+			conf.gr_kal2.tabl2.kod[7]=132;
+			conf.gr_kal2.tabl2.kod[8]=133;
+			conf.gr_kal2.tabl2.kod[9]=134;	
+*/		
+		/*
 			txsize=sizeof(st_conf)<<1;
 	
 			for (i = 0; i < (txsize); i += 1)
@@ -605,7 +787,7 @@ if (1)
 			}	
 */
 
-			txsize=sizeof(st_conf);
+			txsize=sizeof(st_conf);  // dl = 228
 	
 			for (i = 0; i < (txsize); i += 1)
 			{

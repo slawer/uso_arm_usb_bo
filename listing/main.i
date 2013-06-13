@@ -372,7 +372,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -391,7 +391,7 @@ typedef enum IRQn
 
 
 
-#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -556,7 +556,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -589,7 +589,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15597,7 +15597,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15627,7 +15627,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15694,7 +15694,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16443,7 +16443,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -18999,7 +18999,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19013,7 +19013,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -21520,6 +21520,15 @@ typedef struct
 		st_tab_kal tabl2;	
 }  gr_kal;
 
+typedef struct 
+{
+		u8 kol_st;
+		u8 rez;
+		u16 max1;	
+		u16 max2;
+		u16 max3;
+		u16 max4;
+}  st_lin;
 
 typedef struct 
 {
@@ -21539,7 +21548,8 @@ typedef struct
 		u16 tm_rele_off;
 		u16 rez16;
 	
-	  st_indikators indicators[4];	
+
+		st_lin lin;
 	
 		gr_kal gr_kal1;
 		gr_kal gr_kal2;
@@ -22790,7 +22800,7 @@ void test_ind(u8 numb_ind)
 
  
 
-void indicate(u8 numb_ind,u16 chislo_new)
+void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 {
 		 	uint16_t  pin=0;
 			u16 chislo=chislo_new; 
@@ -22826,7 +22836,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 		if (pin==0)
 				return ;
 		
-			switch (conf.indicators[numb_ind-1].kol_cifr)
+	
+			switch (kol_cifr)
 			{
 				case 0x00:  
 					return;
@@ -22869,7 +22880,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      
 			  delay_spi(zad_spi2);	
 				
-				for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
+		
+				for (i=2;i<kol_cifr+1;i++)  {
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
 				delay_spi(zad_spi);
 				spi_send((u8) i);delay_spi(zad_spi);
@@ -22879,17 +22891,20 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				return ;
 			}	
 
-			for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+	
+			for (i=kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
 
-			for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
+	
+			for (i=1;i<kol_cifr+1;i++)
 			{	
 						simb=symb_code[zn[i]];
 				
-						if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
+		
+				if ((kol_cifr-i)==1)
 							simb+=0x80;
 				
 						if ((simb==0x7E)&(null))
@@ -22897,7 +22912,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 						else
 							null=0;
 						
-						if (i==conf.indicators[numb_ind-1].kol_cifr)
+	
+						if (i==kol_cifr)
 							simb&=0x7F;
 	
 						GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -23108,52 +23124,57 @@ int main(void)
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
 
 
-	conf.indicators[0].numb=1;
-	conf.indicators[0].kol_cifr=8;
-	conf.indicators[0].type_ind=0;
-	conf.indicators[0].yark=0x0f;
-	conf.indicators[0].rez_viv=0;   
-	conf.indicators[0].chislo=0;
-	conf.indicators[0].pol_zap=0;
-	conf.indicators[0].porog=0xffff;	
 
 
-	conf.indicators[1].numb=2;
-	conf.indicators[1].kol_cifr=4;
-	conf.indicators[1].type_ind=0;
-	conf.indicators[1].yark=0x0f;
-	conf.indicators[1].rez_viv=0;   
-	conf.indicators[1].chislo=0;
-	conf.indicators[1].pol_zap=0;
-	conf.indicators[1].porog=0xffff;	
-
-	conf.indicators[2].numb=3;
-	conf.indicators[2].kol_cifr=8;
-	conf.indicators[2].type_ind=0;
-	conf.indicators[2].yark=0x0f;
-	conf.indicators[2].rez_viv=0;   
-	conf.indicators[2].chislo=0;
-	conf.indicators[2].pol_zap=0;
-	conf.indicators[2].porog=0xffff;	
 
 
-	conf.indicators[3].numb=4;
-	conf.indicators[3].kol_cifr=4;
-	conf.indicators[3].type_ind=0;
-	conf.indicators[3].yark=0x0f;
-	conf.indicators[3].rez_viv=0;   
-	conf.indicators[3].chislo=0;
-	conf.indicators[3].pol_zap=0;
-	conf.indicators[3].porog=0xffff;	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
-
-
-
-	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators[0].type_ind);
-  init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
-	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
-  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
+	init_ind(1, 8, 0);
+  init_ind(2, 4, 0);   
+	init_ind(3, 8, 0);
+  init_ind(4, 4, 0);   
 
 
 
@@ -23292,7 +23313,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1718 "src\\main.c"
+#line 1729 "src\\main.c"
 
   
  

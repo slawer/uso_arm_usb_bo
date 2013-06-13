@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37311,6 +37311,15 @@ N		st_tab_kal tabl1;
 N		st_tab_kal tabl2;	
 N}  gr_kal;
 N
+Ntypedef struct 
+N{
+N		u8 kol_st;
+N		u8 rez;
+N		u16 max1;	
+N		u16 max2;
+N		u16 max3;
+N		u16 max4;
+N}  st_lin;
 N
 Ntypedef struct 
 N{
@@ -37330,12 +37339,13 @@ N		u16 tm_rele_on;
 N		u16 tm_rele_off;
 N		u16 rez16;
 N	
-N	  st_indikators indicators[4];	
+N//	  st_indikators indicators[4];	
+N		st_lin lin;
 N	
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 135 11 last line of file ends without a newline
+W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
@@ -37616,6 +37626,7 @@ N
 N	del++;
 N	if (del==10)
 N	{
+N		extern st_conf conf;
 N		
 N		del=0;
 N		tick++;
@@ -37646,13 +37657,13 @@ N
 N// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 
-W "src\stm32f4xx_it.c" 282 3 function "indicate" declared implicitly
-N	 indicate(1,(u16)(max[0]/10));
-W "src\stm32f4xx_it.c" 283 3 function "indicate_lin" declared implicitly
-N	 indicate_lin(2,(u16) fz_average[0], (u16) 4096, (u16) 28);	 
-N	 indicate(3,(u16)(fz_average[0]/10));
-W "src\stm32f4xx_it.c" 285 3 function "indicate_time" declared implicitly
-N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);
+W "src\stm32f4xx_it.c" 283 3 function "indicate" declared implicitly
+N	 indicate(1,(u16)(max[0]/10),3);   																// maximum
+W "src\stm32f4xx_it.c" 284 3 function "indicate_lin" declared implicitly
+N	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+N	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
+W "src\stm32f4xx_it.c" 286 3 function "indicate_time" declared implicitly
+N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time
 N		 
 N	 }		 
 N		
@@ -37667,7 +37678,7 @@ N	if (new_komand)
 N	{
 N		u16 tmp=0;
 N	
-N		
+N		// wrt_conf
 N		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
 N		{
 N			u16 i=0;
@@ -37680,10 +37691,7 @@ X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint
 N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
 N	
-N    // ??????? ????????? ?????????????????? ??????
-N  //  RCC->BDCR |=  RCC_BDCR_BDRST;
-N //   RCC->BDCR &= ~RCC_BDCR_BDRST;
-N			
+N		
 N			for (i = 0; i < rxsize-10; i += 2)
 N			{
 N			  tmp1=RxBuffer[i+10];
@@ -37740,6 +37748,7 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N		}
 N
+N		// who?
 N		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
 N		{
 N			
@@ -37768,6 +37777,7 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N		}
 N	
+N		// restart
 N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
 N		{
 N			
@@ -37794,9 +37804,15 @@ N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
+N			SCB->AIRCR = 0x05FA0004;
+X			((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x05FA0004;
+N			
+N			
+N			
 N			// need restart
 N		}
 N	
+N		// set_time
 N		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
 N		{		
 N			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
@@ -37898,12 +37914,13 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 423 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 423 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 424 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 425 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 428 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 428 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 429 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 430 7 variable "i" was declared but never referenced
 N		}
 N		
+N		// read
 N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
 N		{
 N			
@@ -37983,6 +38000,7 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N		}		
 N		
+N		// read_conf
 N		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
 N		{
 N			u16 i=0;
@@ -37994,10 +38012,185 @@ N			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 X			USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t)0x0626), ENABLE);
 N			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0C00)), ((uint16_t)0x0008), Bit_SET); 
-N
+N/*
+N		u8 address;
+N		u8 ver_po_st;
+N		u8 ver_po_ml;
+N	  u8 tek_gr_kal; 
+N	  u8 tm_antidreb;
+N		u8 revers_group_select;
+N		u8 revers_peredacha_select;
+N		u8 rez8;
+N	
+N		u16	per_usr;
+N		u16	time_max;
+N		u16 por_rele;
+N		u16 tm_rele_on;
+N		u16 tm_rele_off;
+N		u16 rez16;
+N	*/	
+N/*
+N			conf.address=1;
+N			conf.ver_po_st=2;
+N			conf.ver_po_ml=3;
+N			conf.tek_gr_kal=4;
+N			conf.tm_antidreb=5;
+N			conf.revers_group_select=6;
+N			conf.revers_peredacha_select=7;
+N			conf.rez8=8;
+N			conf.per_usr=9;
+N			conf.time_max=10;
+N			conf.por_rele=11;
+N			conf.tm_rele_on=12;
+N			conf.tm_rele_off=13;
+N			conf.rez16=14;
 N			
-N			
+N		conf.lin.kol_st=15;
+N		conf.lin.max1=16;	
+N		conf.lin.max2=17;
+N		conf.lin.max3=18;
+N		conf.lin.max4=19;
+N		*/
 N			/*
+N			conf.indicators[0].numb=15;
+N			conf.indicators[0].kol_cifr=16;
+N			conf.indicators[0].type_ind=17;
+N			conf.indicators[0].yark=18;
+N			conf.indicators[0].rez_viv=19;
+N			conf.indicators[0].pol_zap=20;
+N			conf.indicators[0].r1=21;
+N			conf.indicators[0].r2=22;
+N			conf.indicators[0].chislo=23;
+N			conf.indicators[0].porog=24;
+N
+N			conf.indicators[1].numb=25;
+N			conf.indicators[1].kol_cifr=26;
+N			conf.indicators[1].type_ind=27;
+N			conf.indicators[1].yark=28;
+N			conf.indicators[1].rez_viv=29;
+N			conf.indicators[1].pol_zap=30;
+N			conf.indicators[1].r1=31;
+N			conf.indicators[1].r2=32;
+N			conf.indicators[1].chislo=33;
+N			conf.indicators[1].porog=34;
+N		
+N
+N		
+N
+N		
+N			conf.indicators[2].numb=35;
+N			conf.indicators[2].kol_cifr=36;
+N			conf.indicators[2].type_ind=37;
+N			conf.indicators[2].yark=38;
+N			conf.indicators[2].rez_viv=39;
+N			conf.indicators[2].pol_zap=40;
+N			conf.indicators[2].r1=41;
+N			conf.indicators[2].r2=42;
+N			conf.indicators[2].chislo=43;
+N			conf.indicators[2].porog=44;
+N			
+N			conf.indicators[3].numb=45;
+N			conf.indicators[3].kol_cifr=46;
+N			conf.indicators[3].type_ind=47;
+N			conf.indicators[3].yark=48;
+N			conf.indicators[3].rez_viv=49;
+N			conf.indicators[3].pol_zap=50;
+N			conf.indicators[3].r1=51;
+N			conf.indicators[3].r2=52;
+N			conf.indicators[3].chislo=53;
+N			conf.indicators[3].porog=54;
+N				*/
+N		/*		
+N			conf.gr_kal1.tabl1.fz[0]=55;
+N			conf.gr_kal1.tabl1.fz[1]=56;
+N			conf.gr_kal1.tabl1.fz[2]=57;
+N			conf.gr_kal1.tabl1.fz[3]=58;
+N			conf.gr_kal1.tabl1.fz[4]=59;
+N			conf.gr_kal1.tabl1.fz[5]=60;
+N			conf.gr_kal1.tabl1.fz[6]=61;
+N			conf.gr_kal1.tabl1.fz[7]=62;
+N			conf.gr_kal1.tabl1.fz[8]=63;
+N			conf.gr_kal1.tabl1.fz[9]=64;
+N
+N			conf.gr_kal1.tabl1.kod[0]=65;
+N			conf.gr_kal1.tabl1.kod[1]=66;
+N			conf.gr_kal1.tabl1.kod[2]=67;
+N			conf.gr_kal1.tabl1.kod[3]=68;
+N			conf.gr_kal1.tabl1.kod[4]=69;
+N			conf.gr_kal1.tabl1.kod[5]=70;
+N			conf.gr_kal1.tabl1.kod[6]=71;
+N			conf.gr_kal1.tabl1.kod[7]=72;
+N			conf.gr_kal1.tabl1.kod[8]=73;
+N			conf.gr_kal1.tabl1.kod[9]=74;
+N	
+N			conf.gr_kal1.tabl2.fz[0]=75;
+N			conf.gr_kal1.tabl2.fz[1]=76;
+N			conf.gr_kal1.tabl2.fz[2]=77;
+N			conf.gr_kal1.tabl2.fz[3]=78;
+N			conf.gr_kal1.tabl2.fz[4]=79;
+N			conf.gr_kal1.tabl2.fz[5]=80;
+N			conf.gr_kal1.tabl2.fz[6]=81;
+N			conf.gr_kal1.tabl2.fz[7]=82;
+N			conf.gr_kal1.tabl2.fz[8]=83;
+N			conf.gr_kal1.tabl2.fz[9]=84;
+N
+N			conf.gr_kal1.tabl2.kod[0]=85;
+N			conf.gr_kal1.tabl2.kod[1]=86;
+N			conf.gr_kal1.tabl2.kod[2]=87;
+N			conf.gr_kal1.tabl2.kod[3]=88;
+N			conf.gr_kal1.tabl2.kod[4]=89;
+N			conf.gr_kal1.tabl2.kod[5]=90;
+N			conf.gr_kal1.tabl2.kod[6]=91;
+N			conf.gr_kal1.tabl2.kod[7]=92;
+N			conf.gr_kal1.tabl2.kod[8]=93;
+N			conf.gr_kal1.tabl2.kod[9]=94;	
+N			
+N			// dr2
+N			conf.gr_kal2.tabl1.fz[0]=95;
+N			conf.gr_kal2.tabl1.fz[1]=96;
+N			conf.gr_kal2.tabl1.fz[2]=97;
+N			conf.gr_kal2.tabl1.fz[3]=98;
+N			conf.gr_kal2.tabl1.fz[4]=99;
+N			conf.gr_kal2.tabl1.fz[5]=100;
+N			conf.gr_kal2.tabl1.fz[6]=101;
+N			conf.gr_kal2.tabl1.fz[7]=102;
+N			conf.gr_kal2.tabl1.fz[8]=103;
+N			conf.gr_kal2.tabl1.fz[9]=104;
+N
+N			conf.gr_kal2.tabl1.kod[0]=105;
+N			conf.gr_kal2.tabl1.kod[1]=106;
+N			conf.gr_kal2.tabl1.kod[2]=107;
+N			conf.gr_kal2.tabl1.kod[3]=108;
+N			conf.gr_kal2.tabl1.kod[4]=109;
+N			conf.gr_kal2.tabl1.kod[5]=100;
+N			conf.gr_kal2.tabl1.kod[6]=111;
+N			conf.gr_kal2.tabl1.kod[7]=112;
+N			conf.gr_kal2.tabl1.kod[8]=113;
+N			conf.gr_kal2.tabl1.kod[9]=114;
+N	
+N			conf.gr_kal2.tabl2.fz[0]=115;
+N			conf.gr_kal2.tabl2.fz[1]=116;
+N			conf.gr_kal2.tabl2.fz[2]=117;
+N			conf.gr_kal2.tabl2.fz[3]=118;
+N			conf.gr_kal2.tabl2.fz[4]=119;
+N			conf.gr_kal2.tabl2.fz[5]=120;
+N			conf.gr_kal2.tabl2.fz[6]=121;
+N			conf.gr_kal2.tabl2.fz[7]=122;
+N			conf.gr_kal2.tabl2.fz[8]=123;
+N			conf.gr_kal2.tabl2.fz[9]=124;
+N
+N			conf.gr_kal2.tabl2.kod[0]=125;
+N			conf.gr_kal2.tabl2.kod[1]=126;
+N			conf.gr_kal2.tabl2.kod[2]=127;
+N			conf.gr_kal2.tabl2.kod[3]=128;
+N			conf.gr_kal2.tabl2.kod[4]=129;
+N			conf.gr_kal2.tabl2.kod[5]=130;
+N			conf.gr_kal2.tabl2.kod[6]=131;
+N			conf.gr_kal2.tabl2.kod[7]=132;
+N			conf.gr_kal2.tabl2.kod[8]=133;
+N			conf.gr_kal2.tabl2.kod[9]=134;	
+N*/		
+N		/*
 N			txsize=sizeof(st_conf)<<1;
 N	
 N			for (i = 0; i < (txsize); i += 1)
@@ -38010,7 +38203,7 @@ N				TxBuffer[(i<<1)+1]=tmp+0x30;
 N			}	
 N*/
 N
-N			txsize=sizeof(st_conf);
+N			txsize=sizeof(st_conf);  // dl = 228
 N	
 N			for (i = 0; i < (txsize); i += 1)
 N			{
@@ -38129,7 +38322,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 671 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 853 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

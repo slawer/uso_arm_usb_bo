@@ -1193,7 +1193,7 @@ void indicate_test(u8 numb_ind, u8 test_numb)
 }
 */
 
-void indicate(u8 numb_ind,u16 chislo_new)
+void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 {
 		 	uint16_t  pin=0;
 			u16 chislo=chislo_new; //indicators[numb_ind].chislo;
@@ -1229,7 +1229,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 		if (pin==0)
 				return ;
 		
-			switch (conf.indicators[numb_ind-1].kol_cifr)
+	//		switch (conf.indicators[numb_ind-1].kol_cifr)
+			switch (kol_cifr)
 			{
 				case 0x00:  // CS0
 					return;
@@ -1272,7 +1273,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
 			  delay_spi(zad_spi2);	
 				
-				for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
+		//		for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
+				for (i=2;i<kol_cifr+1;i++)  {
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
 				delay_spi(zad_spi);
 				spi_send((u8) i);delay_spi(zad_spi);
@@ -1282,17 +1284,20 @@ void indicate(u8 numb_ind,u16 chislo_new)
 				return ;
 			}	
 
-			for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+	//		for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+			for (i=kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
 
-			for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
+	//		for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
+			for (i=1;i<kol_cifr+1;i++)
 			{	
 						simb=symb_code[zn[i]];
 				
-						if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
+		//				if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
+				if ((kol_cifr-i)==1)
 							simb+=0x80;
 				
 						if ((simb==0x7E)&(null))
@@ -1300,7 +1305,8 @@ void indicate(u8 numb_ind,u16 chislo_new)
 						else
 							null=0;
 						
-						if (i==conf.indicators[numb_ind-1].kol_cifr)
+	//					if (i==conf.indicators[numb_ind-1].kol_cifr)
+						if (i==kol_cifr)
 							simb&=0x7F;
 	
 						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -1510,7 +1516,7 @@ SPI 2:
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 
-
+/*
 	conf.indicators[0].numb=1;
 	conf.indicators[0].kol_cifr=8;
 	conf.indicators[0].type_ind=0;
@@ -1557,6 +1563,11 @@ SPI 2:
   init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
 	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
+	*/
+	init_ind(1, 8, 0);
+  init_ind(2, 4, 0);   // lineika
+	init_ind(3, 8, 0);
+  init_ind(4, 4, 0);   // time
 
 // nastroika gpio
 

@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37346,6 +37346,15 @@ N		st_tab_kal tabl1;
 N		st_tab_kal tabl2;	
 N}  gr_kal;
 N
+Ntypedef struct 
+N{
+N		u8 kol_st;
+N		u8 rez;
+N		u16 max1;	
+N		u16 max2;
+N		u16 max3;
+N		u16 max4;
+N}  st_lin;
 N
 Ntypedef struct 
 N{
@@ -37365,12 +37374,13 @@ N		u16 tm_rele_on;
 N		u16 tm_rele_off;
 N		u16 rez16;
 N	
-N	  st_indikators indicators[4];	
+N//	  st_indikators indicators[4];	
+N		st_lin lin;
 N	
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 135 11 last line of file ends without a newline
+W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
 L 58 "src\main.c" 2
 N#include "my_def_ext.h"
@@ -38846,7 +38856,7 @@ N			}
 N}
 N*/
 N
-Nvoid indicate(u8 numb_ind,u16 chislo_new)
+Nvoid indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 N{
 N		 	uint16_t  pin=0;
 N			u16 chislo=chislo_new; //indicators[numb_ind].chislo;
@@ -38882,11 +38892,12 @@ N			pin=pin_ind(numb_ind);
 N		if (pin==0)
 N				return ;
 N		
-N			switch (conf.indicators[numb_ind-1].kol_cifr)
+N	//		switch (conf.indicators[numb_ind-1].kol_cifr)
+N			switch (kol_cifr)
 N			{
 N				case 0x00:  // CS0
 N					return;
-W "src\main.c" 1236 6 statement is unreachable
+W "src\main.c" 1237 6 statement is unreachable
 N					break;
 N				case 0x01:  // CS0
 N					maximum=10;
@@ -38928,7 +38939,8 @@ N				GPIO_WriteBit(GPIOA, pin, Bit_SET);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      
 N			  delay_spi(zad_spi2);	
 N				
-N				for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
+N		//		for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
+N				for (i=2;i<kol_cifr+1;i++)  {
 N				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
 N				delay_spi(zad_spi);
@@ -38940,17 +38952,20 @@ N			  delay_spi(zad_spi2);			}
 N				return ;
 N			}	
 N
-N			for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+N	//		for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+N			for (i=kol_cifr;i>0;i--)
 N			{	
 N					zn[i]=(u8) (chislo%10);
 N					chislo=chislo/10;
 N			}
 N
-N			for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
+N	//		for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
+N			for (i=1;i<kol_cifr+1;i++)
 N			{	
 N						simb=symb_code[zn[i]];
 N				
-N						if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
+N		//				if ((conf.indicators[numb_ind-1].kol_cifr-i)==conf.indicators[numb_ind-1].pol_zap)
+N				if ((kol_cifr-i)==1)
 N							simb+=0x80;
 N				
 N						if ((simb==0x7E)&(null))
@@ -38958,7 +38973,8 @@ N							simb=0;
 N						else
 N							null=0;
 N						
-N						if (i==conf.indicators[numb_ind-1].kol_cifr)
+N	//					if (i==conf.indicators[numb_ind-1].kol_cifr)
+N						if (i==kol_cifr)
 N							simb&=0x7F;
 N	
 N						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
@@ -39189,7 +39205,7 @@ N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 N		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
 N
-N
+N/*
 N	conf.indicators[0].numb=1;
 N	conf.indicators[0].kol_cifr=8;
 N	conf.indicators[0].type_ind=0;
@@ -39236,6 +39252,11 @@ N	init_ind(conf.indicators[0].numb, conf.indicators[0].kol_cifr, conf.indicators
 N  init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicators[1].type_ind);
 N	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
 N  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
+N	*/
+N	init_ind(1, 8, 0);
+N  init_ind(2, 4, 0);   // lineika
+N	init_ind(3, 8, 0);
+N  init_ind(4, 4, 0);   // time
 N
 N// nastroika gpio
 N
@@ -39322,9 +39343,9 @@ N#endif
 N	
 N
 N  
-W "src\main.c" 1394 5 variable "i" was declared but never referenced
-W "src\main.c" 1399 11 variable "data" was declared but never referenced
-W "src\main.c" 1401 12 variable "DT" was declared but never referenced
+W "src\main.c" 1400 5 variable "i" was declared but never referenced
+W "src\main.c" 1405 11 variable "data" was declared but never referenced
+W "src\main.c" 1407 12 variable "DT" was declared but never referenced
 N}
 N
 N/**

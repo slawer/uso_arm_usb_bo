@@ -108,6 +108,15 @@ typedef struct
 		st_tab_kal tabl2;	
 }  gr_kal;
 
+typedef struct 
+{
+		u8 kol_st;
+		u8 rez;
+		u16 max1;	
+		u16 max2;
+		u16 max3;
+		u16 max4;
+}  st_lin;
 
 typedef struct 
 {
@@ -127,7 +136,8 @@ typedef struct
 		u16 tm_rele_off;
 		u16 rez16;
 	
-	  st_indikators indicators[4];	
+//	  st_indikators indicators[4];	
+		st_lin lin;
 	
 		gr_kal gr_kal1;
 		gr_kal gr_kal2;
