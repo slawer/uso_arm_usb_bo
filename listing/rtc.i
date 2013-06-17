@@ -15008,6 +15008,14 @@ typedef struct
 		gr_kal gr_kal2;
 
 } st_conf;
+
+
+extern u16 tek_kol;
+extern u16 kol_usr;
+extern u32 buf_sum;
+
+
+
 #line 11 "src\\rtc.c"
 
 
@@ -15323,6 +15331,10 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
   {
 		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 	}	
+	
+		kol_usr=conf.per_usr*10;
+		
+	
 	
 
 

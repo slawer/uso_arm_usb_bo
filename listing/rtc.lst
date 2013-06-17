@@ -29886,8 +29886,15 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
+N
+N
+Nextern u16 tek_kol;
+Nextern u16 kol_usr;
+Nextern u32 buf_sum;
+N
+N
+N
 L 11 "src\rtc.c" 2
 N
 N
@@ -30233,6 +30240,10 @@ N  {
 N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
 X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 N	}	
+N	
+N		kol_usr=conf.per_usr*10;
+N		
+N	
 N	/*
 N	for (i = 0; i < size; i += 1)
 N  {

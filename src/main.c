@@ -1457,7 +1457,7 @@ int main(void)
     rtc_Reset();
     rtc_Init();
  		
-	
+		
 //	ADC_InitTypeDef  ADC_InitStructure;
 	
        

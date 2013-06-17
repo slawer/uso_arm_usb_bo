@@ -322,6 +322,17 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
   {
 		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
 	}	
+	
+		kol_usr=conf.per_usr;
+	/*
+		conf.por_rele
+	  conf.time_max
+	  conf.tm_antidreb
+		conf.tm_rele_off
+		conf.tm_rele_on
+		conf.
+	*/	
+	
 	/*
 	for (i = 0; i < size; i += 1)
   {

@@ -37380,8 +37380,15 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
+N
+N
+Nextern u16 tek_kol;
+Nextern u16 kol_usr;
+Nextern u32 buf_sum;
+N
+N
+N
 L 58 "src\main.c" 2
 N#include "my_def_ext.h"
 L 1 ".\inc\my_def_ext.h" 1
@@ -37506,6 +37513,10 @@ Nu8 symb_code_min[13]={0x7E,0x30,0xEC,0xf8,0xB2,0xDA,0xDE,0x70,0xFE,0xFA,0xCE, 0
 N
 N
 Nst_conf conf;
+N
+Nu16 tek_kol=0;
+Nu16 kol_usr=0;
+Nu32 buf_sum=0;
 N
 N
 N
@@ -39141,7 +39152,7 @@ N    // ???????? RTC
 N    rtc_Reset();
 N    rtc_Init();
 N 		
-N	
+N		
 N//	ADC_InitTypeDef  ADC_InitStructure;
 N	
 N       

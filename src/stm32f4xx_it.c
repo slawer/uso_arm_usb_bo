@@ -177,18 +177,107 @@ void PendSV_Handler(void)
 {
 }
 
-u16 fiz_vel(u16 kod, u8 numb)
+u16 fiz_vel(u16 kod, st_tab_kal* tk)
 {
-	
+	u8 i=0, nul=0;
+	st_tab_kal *tab = tk;
 //	tab_kal
+	/*
+	    
+       
+                
+                if kod[1:]==[0,0,0,0,0,0,0,0,0]:
+                    print 'no tabl' 
+                    return kodadc
+                    
+                if kodadc<kod[0]:
+                    return fz[0]
+                
+                for i in range(1,10):
+                    
+                    if kodadc<kod[i]:
+                        if i==0:
+                            print 'i=0',fz[0]
+                            return fz[0]
+                        else:
+                            if kod[i]==0:
+                                print 'kod=0',fz[i-1]
+                                return fz[i-1]
+                            else:
+                                print 'norm',
+                                return (fz[i]-fz[i-1])*(kodadc-kod[i-1])/(kod[i]-kod[i-1])+fz[i-1]
+                                
+                    if  kod[i-1]>0 and kod[i]==0:
+                        return fz[i-1]
+                
+                return fz[9]
+
+	*/
 	
-return kod;
+	
+	/*	
+	conf.gr_kal1.tabl1.fz[0]
+	conf.gr_kal1.tabl1.kod[0]=65;
+  conf.tek_gr_kal=4;
+  sost_pribl	
+	tk
+	*/
+		for (i = 1; i < 10; i += 1)
+			if (tk->kod[i]==0) 
+					nul++;	
+	  if (nul==9)
+				return kod;
+		
+		if (kod<tk->kod[0])
+        return tk->fz[0];
+		
+		for (i = 1; i < 10; i += 1)	
+		{
+			float tmp=0;
+			if (kod<tk->kod[i]) {
+					if (i==0)
+							return tk->fz[0];
+					else  {
+							if (tk->kod[i]==0)
+									return tk->fz[i-1];
+							else  {
+								  tmp=(tk->fz[i]-tk->fz[i-1])*(kod-tk->kod[i-1])/(tk->kod[i]-tk->kod[i-1])+tk->fz[i-1]+0.5;
+									return (u16) tmp;  } } }
+									
+			if  ((tk->kod[i-1]>0)&(tk->kod[i]==0))
+					return tk->fz[i-1];
+  	}	
+    
+		return tk->fz[9];		
 }
 
 
 u16 moving_average(u16 kod, u8 numb)
 {
-return kod;
+	extern u16 tek_kol;
+	extern u16 kol_usr;
+	extern u32 buf_sum;
+	u16 tmp=0;
+	
+	if (kol_usr==0)
+		return kod;
+
+	if (kol_usr==1)
+		return kod;
+	
+	if (tek_kol<kol_usr)
+	{
+		buf_sum+=kod;
+		tek_kol++;
+		return (u16)((buf_sum/tek_kol)+0.5);
+	}
+	else
+	{
+		buf_sum+=kod;
+		tmp=(u16) ((buf_sum/tek_kol)+0.5);
+		buf_sum-=tmp;
+		return  tmp;
+	}
 }
 
 u8 test_rele(u16 kod, u8 numb)
@@ -217,8 +306,9 @@ void SysTick_Handler(void)
 		kol_average++;
 	
 	if (kol_average==10)
-	{
-	
+	{			
+		extern st_conf conf;
+		
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
@@ -227,7 +317,18 @@ void SysTick_Handler(void)
 		// раз в 100 мс
 		// вычисляем физическую виличину 
 	
-		fz[0]=fiz_vel(average[0],0);
+		
+		if (conf.tek_gr_kal==0)
+				if (sost_pribl==0)
+					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl1);
+				else
+					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl2);
+		else
+				if (sost_pribl==0)
+					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl1);
+				else
+					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
+			
 	
 		// проверяем реле на срабатывание
 		test_rele(fz[0], 0);	
@@ -248,16 +349,12 @@ void SysTick_Handler(void)
 	
 	del++;
 	if (del==10)
-	{
-		extern st_conf conf;
-		
+	{		
 		del=0;
 		tick++;
 		time_label=tick;
-
 		
 		rtc_Get(&DT1);
-
 		
 		if (DT1.Seconds==0)
 		{
@@ -280,19 +377,18 @@ void SysTick_Handler(void)
 // indicate_lin(0,(u16)fz_average[0], 4096);
 // indicate(1,(u16)(fz_average[0]/10));
 	 
+	 // dop usrednenie na vivod indicatorov???
 	 indicate(1,(u16)(max[0]/10),3);   																// maximum
 	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
-	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time
-		 
+	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
 	 }		 
 		
 	if ((tick%60)==0)
 	{
 		minute++;
 	}
-	}
-	
+	}	
 	
 	if (new_komand)
 	{
@@ -549,10 +645,12 @@ if (1)
 			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
 			
+			// dat pribl
 			TxBuffer[19]=sost_pribl+0x30;
 			TxBuffer[20]=0x20;
+			
+			
 			// zn from adc with calibr and averaging
-
 			tmp=ADC3ConvertedValue;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
@@ -581,7 +679,13 @@ if (1)
 			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
 			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-			
+		
+		/*
+     + need:
+			1 avariya   
+			2 zapis norm or error  
+			3 tek gr kal
+*/
 			txsize=35;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
@@ -791,7 +895,8 @@ if (1)
 	
 			for (i = 0; i < (txsize); i += 1)
 			{
-				TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+		//		TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+				TxBuffer[i]=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
 			}	
 			tekper=0;
 			USART_SendData(USART2, 0x3A);

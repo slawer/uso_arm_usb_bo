@@ -21555,6 +21555,14 @@ typedef struct
 		gr_kal gr_kal2;
 
 } st_conf;
+
+
+extern u16 tek_kol;
+extern u16 kol_usr;
+extern u32 buf_sum;
+
+
+
 #line 58 "src\\main.c"
 #line 1 ".\\inc\\my_def_ext.h"
 
@@ -21641,6 +21649,10 @@ u8 symb_code_min[13]={0x7E,0x30,0xEC,0xf8,0xB2,0xDA,0xDE,0x70,0xFE,0xFA,0xCE, 0x
 
 
 st_conf conf;
+
+u16 tek_kol=0;
+u16 kol_usr=0;
+u32 buf_sum=0;
 
 
 
@@ -23064,7 +23076,7 @@ int main(void)
     rtc_Reset();
     rtc_Init();
  		
-	
+		
 
 	
        

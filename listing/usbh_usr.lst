@@ -35692,8 +35692,15 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
+N
+N
+Nextern u16 tek_kol;
+Nextern u16 kol_usr;
+Nextern u32 buf_sum;
+N
+N
+N
 L 27 "src\usbh_usr.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1

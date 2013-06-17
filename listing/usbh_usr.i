@@ -20044,6 +20044,14 @@ typedef struct
 		gr_kal gr_kal2;
 
 } st_conf;
+
+
+extern u16 tek_kol;
+extern u16 kol_usr;
+extern u32 buf_sum;
+
+
+
 #line 27 "src\\usbh_usr.c"
 #line 1 "src\\rtc.h"
 

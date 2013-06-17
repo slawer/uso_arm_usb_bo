@@ -37345,8 +37345,15 @@ N
 N		gr_kal gr_kal1;
 N		gr_kal gr_kal2;
 N
-W ".\inc\my.h" 145 11 last line of file ends without a newline
 N} st_conf;
+N
+N
+Nextern u16 tek_kol;
+Nextern u16 kol_usr;
+Nextern u32 buf_sum;
+N
+N
+N
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1
@@ -37553,18 +37560,108 @@ Nvoid PendSV_Handler(void)
 N{
 N}
 N
-Nu16 fiz_vel(u16 kod, u8 numb)
+Nu16 fiz_vel(u16 kod, st_tab_kal* tk)
 N{
-N	
+N	u8 i=0, nul=0;
+N	st_tab_kal *tab = tk;
 N//	tab_kal
+N	/*
+N	    
+N       
+N                
+N                if kod[1:]==[0,0,0,0,0,0,0,0,0]:
+N                    print 'no tabl' 
+N                    return kodadc
+N                    
+N                if kodadc<kod[0]:
+N                    return fz[0]
+N                
+N                for i in range(1,10):
+N                    
+N                    if kodadc<kod[i]:
+N                        if i==0:
+N                            print 'i=0',fz[0]
+N                            return fz[0]
+N                        else:
+N                            if kod[i]==0:
+N                                print 'kod=0',fz[i-1]
+N                                return fz[i-1]
+N                            else:
+N                                print 'norm',
+N                                return (fz[i]-fz[i-1])*(kodadc-kod[i-1])/(kod[i]-kod[i-1])+fz[i-1]
+N                                
+N                    if  kod[i-1]>0 and kod[i]==0:
+N                        return fz[i-1]
+N                
+N                return fz[9]
+N
+N	*/
 N	
-Nreturn kod;
+N	
+N	/*	
+N	conf.gr_kal1.tabl1.fz[0]
+N	conf.gr_kal1.tabl1.kod[0]=65;
+N  conf.tek_gr_kal=4;
+N  sost_pribl	
+N	tk
+N	*/
+N		for (i = 1; i < 10; i += 1)
+N			if (tk->kod[i]==0) 
+N					nul++;	
+N	  if (nul==9)
+N				return kod;
+N		
+N		if (kod<tk->kod[0])
+N        return tk->fz[0];
+N		
+N		for (i = 1; i < 10; i += 1)	
+N		{
+N			float tmp=0;
+N			if (kod<tk->kod[i]) {
+N					if (i==0)
+N							return tk->fz[0];
+N					else  {
+N							if (tk->kod[i]==0)
+N									return tk->fz[i-1];
+N							else  {
+N								  tmp=(tk->fz[i]-tk->fz[i-1])*(kod-tk->kod[i-1])/(tk->kod[i]-tk->kod[i-1])+tk->fz[i-1]+0.5;
+N									return (u16) tmp;  } } }
+N									
+N			if  ((tk->kod[i-1]>0)&(tk->kod[i]==0))
+N					return tk->fz[i-1];
+N  	}	
+N    
+N		return tk->fz[9];		
+W "src\stm32f4xx_it.c" 183 14 variable "tab" was declared but never referenced
 N}
 N
 N
 Nu16 moving_average(u16 kod, u8 numb)
 N{
-Nreturn kod;
+N	extern u16 tek_kol;
+N	extern u16 kol_usr;
+N	extern u32 buf_sum;
+N	u16 tmp=0;
+N	
+N	if (kol_usr==0)
+N		return kod;
+N
+N	if (kol_usr==1)
+N		return kod;
+N	
+N	if (tek_kol<kol_usr)
+N	{
+N		buf_sum+=kod;
+N		tek_kol++;
+N		return (u16)((buf_sum/tek_kol)+0.5);
+N	}
+N	else
+N	{
+N		buf_sum+=kod;
+N		tmp=(u16) ((buf_sum/tek_kol)+0.5);
+N		buf_sum-=tmp;
+N		return  tmp;
+N	}
 N}
 N
 Nu8 test_rele(u16 kod, u8 numb)
@@ -37594,8 +37691,9 @@ N//		summa[0]+=100;
 N		kol_average++;
 N	
 N	if (kol_average==10)
-N	{
-N	
+N	{			
+N		extern st_conf conf;
+N		
 N		average[0]=summa[0]/kol_average;
 N		kol_average=0;
 N		summa[0]=0;
@@ -37604,7 +37702,18 @@ N
 N		// раз в 100 мс
 N		// вычисляем физическую виличину 
 N	
-N		fz[0]=fiz_vel(average[0],0);
+N		
+N		if (conf.tek_gr_kal==0)
+N				if (sost_pribl==0)
+N					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl1);
+N				else
+N					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl2);
+N		else
+N				if (sost_pribl==0)
+N					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl1);
+N				else
+N					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
+N			
 N	
 N		// проверяем реле на срабатывание
 N		test_rele(fz[0], 0);	
@@ -37625,16 +37734,12 @@ N			por=999;
 N	
 N	del++;
 N	if (del==10)
-N	{
-N		extern st_conf conf;
-N		
+N	{		
 N		del=0;
 N		tick++;
 N		time_label=tick;
-N
 N		
 N		rtc_Get(&DT1);
-N
 N		
 N		if (DT1.Seconds==0)
 N		{
@@ -37657,22 +37762,21 @@ N
 N// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 
-W "src\stm32f4xx_it.c" 283 3 function "indicate" declared implicitly
+N	 // dop usrednenie na vivod indicatorov???
+W "src\stm32f4xx_it.c" 381 3 function "indicate" declared implicitly
 N	 indicate(1,(u16)(max[0]/10),3);   																// maximum
-W "src\stm32f4xx_it.c" 284 3 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 382 3 function "indicate_lin" declared implicitly
 N	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
-W "src\stm32f4xx_it.c" 286 3 function "indicate_time" declared implicitly
-N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time
-N		 
+W "src\stm32f4xx_it.c" 384 3 function "indicate_time" declared implicitly
+N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
 N	 }		 
 N		
 N	if ((tick%60)==0)
 N	{
 N		minute++;
 N	}
-N	}
-N	
+N	}	
 N	
 N	if (new_komand)
 N	{
@@ -37914,10 +38018,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 428 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 428 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 429 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 430 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 524 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 524 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 525 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 526 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -37961,10 +38065,12 @@ N			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;
 N			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 N			TxBuffer[18]=0x20;
 N			
+N			// dat pribl
 N			TxBuffer[19]=sost_pribl+0x30;
 N			TxBuffer[20]=0x20;
+N			
+N			
 N			// zn from adc with calibr and averaging
-N
 N			tmp=ADC3ConvertedValue;
 N			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
@@ -37993,7 +38099,13 @@ N			tmp%=100;
 N			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 N			tmp%=10;	
 N			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-N			
+N		
+N		/*
+N     + need:
+N			1 avariya   
+N			2 zapis norm or error  
+N			3 tek gr kal
+N*/
 N			txsize=35;
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
@@ -38207,8 +38319,9 @@ N			txsize=sizeof(st_conf);  // dl = 228
 N	
 N			for (i = 0; i < (txsize); i += 1)
 N			{
-N				TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
-X				TxBuffer[i]=(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i));
+N		//		TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+N				TxBuffer[i]=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+X				TxBuffer[i]=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 N			}	
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
@@ -38322,7 +38435,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 853 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 958 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY
