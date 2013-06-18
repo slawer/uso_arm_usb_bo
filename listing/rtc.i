@@ -15016,6 +15016,29 @@ extern u32 buf_sum;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern u16 kol_pribl_vikl;
+extern u16 kol_pribl_vkl;
+
+extern u8 avariya;
+extern u8 sost_flesh;
+
+
+
 #line 11 "src\\rtc.c"
 
 
@@ -15135,6 +15158,8 @@ void rtc_Reset(void)
 
 void rtc_Init(void)
 {
+	  GPIO_InitTypeDef      GPIO_InitStructure;
+	
     
     if(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000010)) return;
     
@@ -15332,8 +15357,54 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 	}	
 	
-		kol_usr=conf.per_usr*10;
-		
+		kol_usr=conf.per_usr;
+		conf.tm_antidreb=conf.tm_antidreb*10;
+	
+		if (conf.tm_antidreb==0)
+				conf.tm_antidreb=1;
+
+
+	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010);      		
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+
+	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0040);      		
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0100);      		  
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+
+	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0080);      		  
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0200);      		  
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+	
+
+	
+	
+	
+
+
+
+
+
+
+ 	
 	
 	
 

@@ -14606,6 +14606,15 @@ void DMA_DeInit(DMA_Stream_TypeDef* DMAy_Streamx)
   DMAy_Streamx->FCR = (uint32_t)0x00000021; 
 
    
+
+
+
+
+
+
+ 
+	
+	 
   if (DMAy_Streamx == ((DMA_Stream_TypeDef *) (((((uint32_t)0x40000000) + 0x00020000) + 0x6000) + 0x010)))
   {
      

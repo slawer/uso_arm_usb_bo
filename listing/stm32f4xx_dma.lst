@@ -29917,6 +29917,15 @@ N  /* Reset DMAy Streamx FIFO control register */
 N  DMAy_Streamx->FCR = (uint32_t)0x00000021; 
 N
 N  /* Reset interrupt pending bits for the selected stream */
+N/*
+N if (DMAy_Streamx == DMA1_Stream0)		
+N  {
+N     Reset interrupt pending bits for DMA1 Stream0 
+N    DMA1->LIFCR = DMA_Stream0_IT_MASK;
+N  }
+N	*/
+N	
+N	/* Reset interrupt pending bits for the selected stream */
 N  if (DMAy_Streamx == DMA1_Stream0)
 X  if (DMAy_Streamx == ((DMA_Stream_TypeDef *) (((((uint32_t)0x40000000) + 0x00020000) + 0x6000) + 0x010)))
 N  {

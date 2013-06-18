@@ -150,4 +150,27 @@ extern u16 kol_usr;
 extern u32 buf_sum;
 
 
+#define PIN_PRIBL                         GPIO_Pin_0
+#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+
+#define PIN_RELE                         	GPIO_Pin_4
+#define PORT_RELE                    			GPIOA
+
+#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+#define PORT_K1                 					GPIOC
+#define PIN_L1                         		GPIO_Pin_6
+#define PORT_L1                 					GPIOC
+
+#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+#define PORT_K2                 					GPIOC
+#define PIN_L2                         		GPIO_Pin_8
+#define PORT_L2                 					GPIOC
+
+extern u16 kol_pribl_vikl;
+extern u16 kol_pribl_vkl;
+
+extern u8 avariya;
+extern u8 sost_flesh;
+
+
 

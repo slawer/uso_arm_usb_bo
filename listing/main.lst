@@ -37388,6 +37388,29 @@ Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
 N
+N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+N
+N#define PIN_RELE                         	GPIO_Pin_4
+N#define PORT_RELE                    			GPIOA
+N
+N#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+N#define PORT_K1                 					GPIOC
+N#define PIN_L1                         		GPIO_Pin_6
+N#define PORT_L1                 					GPIOC
+N
+N#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+N#define PORT_K2                 					GPIOC
+N#define PIN_L2                         		GPIO_Pin_8
+N#define PORT_L2                 					GPIOC
+N
+Nextern u16 kol_pribl_vikl;
+Nextern u16 kol_pribl_vkl;
+N
+Nextern u8 avariya;
+Nextern u8 sost_flesh;
+N
+N
 N
 L 58 "src\main.c" 2
 N#include "my_def_ext.h"
@@ -37517,6 +37540,29 @@ N
 Nu16 tek_kol=0;
 Nu16 kol_usr=0;
 Nu32 buf_sum=0;
+N
+N
+N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PORT_PRIBL                    		GPIOC
+N
+N#define PIN_RELE                         	GPIO_Pin_4
+N#define PORT_RELE                    			GPIOA
+N
+N#define PIN_K1                         		GPIO_Pin_7
+N#define PORT_K1                 					GPIOC
+N#define PIN_L1                         		GPIO_Pin_6
+N#define PORT_L1                 					GPIOC
+N
+N#define PIN_K2                         		GPIO_Pin_9
+N#define PORT_K2                 					GPIOC
+N#define PIN_L2                         		GPIO_Pin_8
+N#define PORT_L2                 					GPIOC
+N
+Nu16 kol_pribl_vikl=0;
+Nu16 kol_pribl_vkl=0;
+N
+Nu8 avariya=0;
+Nu8 sost_flesh=0;
 N
 N
 N
@@ -38157,11 +38203,11 @@ N				case 0x03:  // CS3
 N					pin=GPIO_Pin_3;
 X					pin=((uint16_t)0x0008);
 N					break;
-N
+N				/*
 N				case 0x04:  // CS4
 N					pin=GPIO_Pin_4;
-X					pin=((uint16_t)0x0010);
 N					break;	
+N				*/
 N				default:
 N					pin=0;
 N					break;
@@ -38210,27 +38256,26 @@ N		if (pin==0)
 N				return ;
 N		if (kol>max_kol_st)
 N		{
-W "src\main.c" 570 8 use of "=" where "==" may have been intended
-N			if (max_kol_st=28)
+N			if (max_kol_st==28)
 N			{
 N				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 N				spi_send((u8)0x01);											delay_spi(zad_spi);
-N				spi_send((u8) 0); 										delay_spi(zad_spi);	
+N				spi_send((u8) 0); 											delay_spi(zad_spi);	
 N				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
 N
 N				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 N				spi_send((u8)0x02);											delay_spi(zad_spi);
-N				spi_send((u8) 0); 										delay_spi(zad_spi);	
+N				spi_send((u8) 0); 											delay_spi(zad_spi);	
 N				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
 N
 N				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 N				spi_send((u8)0x03);											delay_spi(zad_spi);
-N				spi_send((u8) 0); 										delay_spi(zad_spi);	
+N				spi_send((u8) 0); 											delay_spi(zad_spi);	
 N				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);				
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);				
 N				
@@ -38240,7 +38285,7 @@ N				spi_send((u8)0x04);											delay_spi(zad_spi);
 N				spi_send((u8) 0x08); 										delay_spi(zad_spi);	
 N				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
-N			}
+N			 }
 N			return ;
 N		}
 N		if (kol>7)
@@ -38908,7 +38953,7 @@ N			switch (kol_cifr)
 N			{
 N				case 0x00:  // CS0
 N					return;
-W "src\main.c" 1237 6 statement is unreachable
+W "src\main.c" 1238 6 statement is unreachable
 N					break;
 N				case 0x01:  // CS0
 N					maximum=10;
@@ -39354,9 +39399,9 @@ N#endif
 N	
 N
 N  
-W "src\main.c" 1400 5 variable "i" was declared but never referenced
-W "src\main.c" 1405 11 variable "data" was declared but never referenced
-W "src\main.c" 1407 12 variable "DT" was declared but never referenced
+W "src\main.c" 1401 5 variable "i" was declared but never referenced
+W "src\main.c" 1406 11 variable "data" was declared but never referenced
+W "src\main.c" 1408 12 variable "DT" was declared but never referenced
 N}
 N
 N/**

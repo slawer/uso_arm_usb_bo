@@ -21563,6 +21563,29 @@ extern u32 buf_sum;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern u16 kol_pribl_vikl;
+extern u16 kol_pribl_vkl;
+
+extern u8 avariya;
+extern u8 sost_flesh;
+
+
+
 #line 58 "src\\main.c"
 #line 1 ".\\inc\\my_def_ext.h"
 
@@ -21653,6 +21676,29 @@ st_conf conf;
 u16 tek_kol=0;
 u16 kol_usr=0;
 u32 buf_sum=0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+u16 kol_pribl_vikl=0;
+u16 kol_pribl_vkl=0;
+
+u8 avariya=0;
+u8 sost_flesh=0;
 
 
 
@@ -22134,10 +22180,11 @@ uint16_t pin_ind(u8 numb_ind)
 				case 0x03:  
 					pin=((uint16_t)0x0008);
 					break;
+				
 
-				case 0x04:  
-					pin=((uint16_t)0x0010);
-					break;	
+
+
+ 
 				default:
 					pin=0;
 					break;
@@ -22186,28 +22233,28 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 				return ;
 		if (kol>max_kol_st)
 		{
-			if (max_kol_st=28)
+			if (max_kol_st==28)
 			{
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x01);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
 
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x02);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
 
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x03);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);				
 				
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x04);											delay_spi(zad_spi);
 				spi_send((u8) 0x08); 										delay_spi(zad_spi);	
 				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);			delay_spi(zad_spi2);
-			}
+			 }
 			return ;
 		}
 		if (kol>7)
@@ -23325,7 +23372,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1729 "src\\main.c"
+#line 1730 "src\\main.c"
 
   
  

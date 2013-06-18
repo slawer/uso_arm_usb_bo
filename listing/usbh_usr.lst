@@ -35700,6 +35700,29 @@ Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
 N
+N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+N
+N#define PIN_RELE                         	GPIO_Pin_4
+N#define PORT_RELE                    			GPIOA
+N
+N#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+N#define PORT_K1                 					GPIOC
+N#define PIN_L1                         		GPIO_Pin_6
+N#define PORT_L1                 					GPIOC
+N
+N#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+N#define PORT_K2                 					GPIOC
+N#define PIN_L2                         		GPIO_Pin_8
+N#define PORT_L2                 					GPIOC
+N
+Nextern u16 kol_pribl_vikl;
+Nextern u16 kol_pribl_vkl;
+N
+Nextern u8 avariya;
+Nextern u8 sost_flesh;
+N
+N
 N
 L 27 "src\usbh_usr.c" 2
 N#include "rtc.h"

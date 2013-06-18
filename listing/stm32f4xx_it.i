@@ -21533,6 +21533,29 @@ extern u32 buf_sum;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern u16 kol_pribl_vikl;
+extern u16 kol_pribl_vkl;
+
+extern u8 avariya;
+extern u8 sost_flesh;
+
+
+
 #line 28 "src\\stm32f4xx_it.c"
 #line 1 "src\\rtc.h"
 
@@ -21811,21 +21834,60 @@ void SysTick_Handler(void)
 {
 	extern volatile uint16_t ADC3ConvertedValue;
 	extern u32 tick;
+	extern st_conf conf;
 	
+ 
 	
+	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0001))==0)
+		kol_pribl_vikl++;
+	else
+		kol_pribl_vkl++;
 	
+	if (kol_pribl_vkl>=conf.tm_antidreb)
+	{
+			sost_pribl=1;
+			kol_pribl_vkl=0;
+		  kol_pribl_vikl=0;
+	}
 	
-	
-		summa[0]+=ADC3ConvertedValue;
+	if (kol_pribl_vikl>=conf.tm_antidreb)
+	{
+			sost_pribl=0;
+			kol_pribl_vkl=0;
+			kol_pribl_vikl=0;
+	}
 
+	
+	
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+ 
+	
+			
+	test_rele(fz[0], 0);	
+	
+	
+	
+	
+	summa[0]+=ADC3ConvertedValue;
 	 
 
-		kol_average++;
+	kol_average++;
 	
 	if (kol_average==10)
 	{			
-		extern st_conf conf;
-		
+	
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
@@ -21833,7 +21895,6 @@ void SysTick_Handler(void)
 		
 		
 		
-	
 		
 		if (conf.tek_gr_kal==0)
 				if (sost_pribl==0)
@@ -21846,9 +21907,6 @@ void SysTick_Handler(void)
 				else
 					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 			
-	
-		
-		test_rele(fz[0], 0);	
 	
 	
 		fz_average[0]=moving_average(fz[0],0);
@@ -22196,14 +22254,22 @@ rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(
 			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
 			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-		
+
+			TxBuffer[35]=0x20;
+			TxBuffer[36]=(uint8_t)(avariya)+(uint8_t)0x30;	
+
+			TxBuffer[37]=0x20;
+			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;
+			
+			TxBuffer[39]=0x20;
+			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
 		
 
 
 
 
  
-			txsize=35;
+			txsize=41;
 			tekper=0;
 			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 		}		

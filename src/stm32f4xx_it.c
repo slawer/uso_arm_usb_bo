@@ -294,29 +294,67 @@ void SysTick_Handler(void)
 {
 	extern __IO uint16_t ADC3ConvertedValue;
 	extern u32 tick;
+	extern st_conf conf;
 	
+ //  проверка состояния датчика приближений
+	
+	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
+		kol_pribl_vikl++;
+	else
+		kol_pribl_vkl++;
+	
+	if (kol_pribl_vkl>=conf.tm_antidreb)
+	{
+			sost_pribl=1;
+			kol_pribl_vkl=0;
+		  kol_pribl_vikl=0;
+	}
+	
+	if (kol_pribl_vikl>=conf.tm_antidreb)
+	{
+			sost_pribl=0;
+			kol_pribl_vkl=0;
+			kol_pribl_vikl=0;
+	}
+
+	
+	// проверка кнопок-состояния переключателей группы калибровок
+	// on 	GPIO_PORT[Led]->BSRRL = GPIO_PIN[Led];
+	// off  GPIO_PORT[Led]->BSRRH = GPIO_PIN[Led];    
+//	conf.tek_gr_kal
+	/*
+	  RCC_AHB1PeriphClockCmd(GPIO_CLK[Led], ENABLE);
+
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_PIN[Led];
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIO_PORT[Led], &GPIO_InitStructure);
+	*/
+	
+			// проверяем реле на срабатывание
+	test_rele(fz[0], 0);	
 	
 	
 	// раз в 10 мс
 	// находим среднее значение
-		summa[0]+=ADC3ConvertedValue;
-
+	summa[0]+=ADC3ConvertedValue;
 	 
 //		summa[0]+=100;
-		kol_average++;
+	kol_average++;
 	
 	if (kol_average==10)
 	{			
-		extern st_conf conf;
-		
+	
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
 		
 		
 		// раз в 100 мс
-		// вычисляем физическую виличину 
-	
+		// вычисляем физическую величину
 		
 		if (conf.tek_gr_kal==0)
 				if (sost_pribl==0)
@@ -329,9 +367,6 @@ void SysTick_Handler(void)
 				else
 					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 			
-	
-		// проверяем реле на срабатывание
-		test_rele(fz[0], 0);	
 	
 	// находим среднее значение по скользящей средней
 		fz_average[0]=moving_average(fz[0],0);
@@ -679,14 +714,22 @@ if (1)
 			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
 			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-		
+
+			TxBuffer[35]=0x20;
+			TxBuffer[36]=(uint8_t)(avariya)+(uint8_t)0x30;	
+
+			TxBuffer[37]=0x20;
+			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;
+			
+			TxBuffer[39]=0x20;
+			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
 		/*
      + need:
 			1 avariya   
 			2 zapis norm or error  
 			3 tek gr kal
 */
-			txsize=35;
+			txsize=41;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 		}		

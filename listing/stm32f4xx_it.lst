@@ -37353,6 +37353,29 @@ Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
 N
+N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+N
+N#define PIN_RELE                         	GPIO_Pin_4
+N#define PORT_RELE                    			GPIOA
+N
+N#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+N#define PORT_K1                 					GPIOC
+N#define PIN_L1                         		GPIO_Pin_6
+N#define PORT_L1                 					GPIOC
+N
+N#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+N#define PORT_K2                 					GPIOC
+N#define PIN_L2                         		GPIO_Pin_8
+N#define PORT_L2                 					GPIOC
+N
+Nextern u16 kol_pribl_vikl;
+Nextern u16 kol_pribl_vkl;
+N
+Nextern u8 avariya;
+Nextern u8 sost_flesh;
+N
+N
 N
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
@@ -37679,29 +37702,68 @@ N{
 N	extern __IO uint16_t ADC3ConvertedValue;
 X	extern volatile uint16_t ADC3ConvertedValue;
 N	extern u32 tick;
+N	extern st_conf conf;
 N	
+N //  проверка состояния датчика приближений
+N	
+N	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
+X	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0001))==0)
+N		kol_pribl_vikl++;
+N	else
+N		kol_pribl_vkl++;
+N	
+N	if (kol_pribl_vkl>=conf.tm_antidreb)
+N	{
+N			sost_pribl=1;
+N			kol_pribl_vkl=0;
+N		  kol_pribl_vikl=0;
+N	}
+N	
+N	if (kol_pribl_vikl>=conf.tm_antidreb)
+N	{
+N			sost_pribl=0;
+N			kol_pribl_vkl=0;
+N			kol_pribl_vikl=0;
+N	}
+N
+N	
+N	// проверка кнопок-состояния переключателей группы калибровок
+N	// on 	GPIO_PORT[Led]->BSRRL = GPIO_PIN[Led];
+N	// off  GPIO_PORT[Led]->BSRRH = GPIO_PIN[Led];    
+N//	conf.tek_gr_kal
+N	/*
+N	  RCC_AHB1PeriphClockCmd(GPIO_CLK[Led], ENABLE);
+N
+N
+N  GPIO_InitStructure.GPIO_Pin = GPIO_PIN[Led];
+N  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+N  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+N  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+N  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+N  GPIO_Init(GPIO_PORT[Led], &GPIO_InitStructure);
+N	*/
+N	
+N			// проверяем реле на срабатывание
+N	test_rele(fz[0], 0);	
 N	
 N	
 N	// раз в 10 мс
 N	// находим среднее значение
-N		summa[0]+=ADC3ConvertedValue;
-N
+N	summa[0]+=ADC3ConvertedValue;
 N	 
 N//		summa[0]+=100;
-N		kol_average++;
+N	kol_average++;
 N	
 N	if (kol_average==10)
 N	{			
-N		extern st_conf conf;
-N		
+N	
 N		average[0]=summa[0]/kol_average;
 N		kol_average=0;
 N		summa[0]=0;
 N		
 N		
 N		// раз в 100 мс
-N		// вычисляем физическую виличину 
-N	
+N		// вычисляем физическую величину
 N		
 N		if (conf.tek_gr_kal==0)
 N				if (sost_pribl==0)
@@ -37714,9 +37776,6 @@ N					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl1);
 N				else
 N					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 N			
-N	
-N		// проверяем реле на срабатывание
-N		test_rele(fz[0], 0);	
 N	
 N	// находим среднее значение по скользящей средней
 N		fz_average[0]=moving_average(fz[0],0);
@@ -37763,12 +37822,12 @@ N// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 
 N	 // dop usrednenie na vivod indicatorov???
-W "src\stm32f4xx_it.c" 381 3 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 416 3 function "indicate" declared implicitly
 N	 indicate(1,(u16)(max[0]/10),3);   																// maximum
-W "src\stm32f4xx_it.c" 382 3 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 417 3 function "indicate_lin" declared implicitly
 N	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
-W "src\stm32f4xx_it.c" 384 3 function "indicate_time" declared implicitly
+W "src\stm32f4xx_it.c" 419 3 function "indicate_time" declared implicitly
 N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
 N	 }		 
 N		
@@ -38018,10 +38077,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 524 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 524 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 525 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 526 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 559 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 559 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 560 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 561 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38099,14 +38158,22 @@ N			tmp%=100;
 N			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 N			tmp%=10;	
 N			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-N		
+N
+N			TxBuffer[35]=0x20;
+N			TxBuffer[36]=(uint8_t)(avariya)+(uint8_t)0x30;	
+N
+N			TxBuffer[37]=0x20;
+N			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;
+N			
+N			TxBuffer[39]=0x20;
+N			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
 N		/*
 N     + need:
 N			1 avariya   
 N			2 zapis norm or error  
 N			3 tek gr kal
 N*/
-N			txsize=35;
+N			txsize=41;
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
@@ -38435,7 +38502,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 958 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 1001 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

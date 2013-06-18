@@ -80,6 +80,29 @@ u16 kol_usr=0;
 u32 buf_sum=0;
 
 
+#define PIN_PRIBL                         GPIO_Pin_0
+#define PORT_PRIBL                    		GPIOC
+
+#define PIN_RELE                         	GPIO_Pin_4
+#define PORT_RELE                    			GPIOA
+
+#define PIN_K1                         		GPIO_Pin_7
+#define PORT_K1                 					GPIOC
+#define PIN_L1                         		GPIO_Pin_6
+#define PORT_L1                 					GPIOC
+
+#define PIN_K2                         		GPIO_Pin_9
+#define PORT_K2                 					GPIOC
+#define PIN_L2                         		GPIO_Pin_8
+#define PORT_L2                 					GPIOC
+
+u16 kol_pribl_vikl=0;
+u16 kol_pribl_vkl=0;
+
+u8 avariya=0;
+u8 sost_flesh=0;
+
+
 
 
 

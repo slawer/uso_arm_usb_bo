@@ -20052,6 +20052,29 @@ extern u32 buf_sum;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern u16 kol_pribl_vikl;
+extern u16 kol_pribl_vkl;
+
+extern u8 avariya;
+extern u8 sost_flesh;
+
+
+
 #line 27 "src\\usbh_usr.c"
 #line 1 "src\\rtc.h"
 

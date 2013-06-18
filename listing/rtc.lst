@@ -29894,6 +29894,29 @@ Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
 N
+N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+N
+N#define PIN_RELE                         	GPIO_Pin_4
+N#define PORT_RELE                    			GPIOA
+N
+N#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+N#define PORT_K1                 					GPIOC
+N#define PIN_L1                         		GPIO_Pin_6
+N#define PORT_L1                 					GPIOC
+N
+N#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+N#define PORT_K2                 					GPIOC
+N#define PIN_L2                         		GPIO_Pin_8
+N#define PORT_L2                 					GPIOC
+N
+Nextern u16 kol_pribl_vikl;
+Nextern u16 kol_pribl_vkl;
+N
+Nextern u8 avariya;
+Nextern u8 sost_flesh;
+N
+N
 N
 L 11 "src\rtc.c" 2
 N
@@ -30023,6 +30046,8 @@ N
 N// Инициализация модуля
 Nvoid rtc_Init(void)
 N{
+N	  GPIO_InitTypeDef      GPIO_InitStructure;
+N	
 N    // Если часы запущены, делать тут нечего.
 N    if(RTC->ISR & RTC_ISR_INITS) return;
 X    if(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000010)) return;
@@ -30241,8 +30266,64 @@ N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRA
 X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 N	}	
 N	
-N		kol_usr=conf.per_usr*10;
-N		
+N		kol_usr=conf.per_usr;
+N		conf.tm_antidreb=conf.tm_antidreb*10;
+N	
+N		if (conf.tm_antidreb==0)
+N				conf.tm_antidreb=1;
+N
+N//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
+N	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
+X	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010);      		
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+N	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+N
+N	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
+X	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0040);      		
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+N	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
+X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+N	
+N	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
+X	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0100);      		  
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+N	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
+X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+N
+N	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
+X	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0080);      		  
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+N	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
+X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+N	
+N	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
+X	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0200);      		  
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+N	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
+X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 
+N	
+N
+N	
+N	
+N	/*
+N		conf.por_rele
+N	  conf.time_max
+N	  conf.tm_antidreb
+N		conf.tm_rele_off
+N		conf.tm_rele_on
+N		conf.
+N	*/	
 N	
 N	/*
 N	for (i = 0; i < size; i += 1)
@@ -30329,8 +30410,8 @@ N	conf.gr_kal2.tabl2.fz[9]=32;
 N	
 N*/
 N	
-W "src\rtc.c" 256 11 variable "i1" was declared but never referenced
-W "src\rtc.c" 256 17 variable "errorindex" was declared but never referenced
+W "src\rtc.c" 258 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 258 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");

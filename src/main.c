@@ -515,10 +515,11 @@ uint16_t pin_ind(u8 numb_ind)
 				case 0x03:  // CS3
 					pin=GPIO_Pin_3;
 					break;
-
+				/*
 				case 0x04:  // CS4
 					pin=GPIO_Pin_4;
 					break;	
+				*/
 				default:
 					pin=0;
 					break;
@@ -567,28 +568,28 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 				return ;
 		if (kol>max_kol_st)
 		{
-			if (max_kol_st=28)
+			if (max_kol_st==28)
 			{
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x01);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x02);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x03);											delay_spi(zad_spi);
-				spi_send((u8) 0); 										delay_spi(zad_spi);	
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);				
 				
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x04);											delay_spi(zad_spi);
 				spi_send((u8) 0x08); 										delay_spi(zad_spi);	
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
-			}
+			 }
 			return ;
 		}
 		if (kol>7)

@@ -212,6 +212,15 @@ void DMA_DeInit(DMA_Stream_TypeDef* DMAy_Streamx)
   DMAy_Streamx->FCR = (uint32_t)0x00000021; 
 
   /* Reset interrupt pending bits for the selected stream */
+/*
+ if (DMAy_Streamx == DMA1_Stream0)		
+  {
+     Reset interrupt pending bits for DMA1 Stream0 
+    DMA1->LIFCR = DMA_Stream0_IT_MASK;
+  }
+	*/
+	
+	/* Reset interrupt pending bits for the selected stream */
   if (DMAy_Streamx == DMA1_Stream0)
   {
     /* Reset interrupt pending bits for DMA1 Stream0 */
