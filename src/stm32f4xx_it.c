@@ -296,7 +296,7 @@ void SysTick_Handler(void)
 	extern u32 tick;
 	extern st_conf conf;
 	
- //  проверка состояния датчика приближений
+ //  проверка состояния датчика приближений - 
 	
 	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
 		kol_pribl_vikl++;
@@ -306,13 +306,17 @@ void SysTick_Handler(void)
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
+			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
+			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
 			kol_pribl_vkl=0;
 		  kol_pribl_vikl=0;
-	}
+	} 
 	
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
 			sost_pribl=0;
+			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
+			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
 			kol_pribl_vkl=0;
 			kol_pribl_vikl=0;
 	}
@@ -322,6 +326,34 @@ void SysTick_Handler(void)
 	// on 	GPIO_PORT[Led]->BSRRL = GPIO_PIN[Led];
 	// off  GPIO_PORT[Led]->BSRRH = GPIO_PIN[Led];    
 //	conf.tek_gr_kal
+
+		if ((PORT_K1->IDR & PIN_K1)==0)
+			kol_gr1_vkl++;
+
+		if ((PORT_K2->IDR & PIN_K2)==0)
+			kol_gr2_vkl++;
+
+		if (kol_gr1_vkl>=conf.tm_antidreb)
+		{
+				conf.tek_gr_kal=0;
+	 // gr 1
+			PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
+			PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+
+				kol_gr1_vkl=0;
+				kol_gr2_vkl=0;
+		}		
+
+		if (kol_gr2_vkl>=conf.tm_antidreb)
+		{
+				conf.tek_gr_kal=1;
+				 // gr 2
+			PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
+			PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
+				kol_gr1_vkl=0;
+				kol_gr2_vkl=0;
+		}				
+	
 	/*
 	  RCC_AHB1PeriphClockCmd(GPIO_CLK[Led], ENABLE);
 

@@ -4,7 +4,7 @@
 .\MEDIA_USB_KEY\usb_bsp.o: .\inc\usb_conf.h
 .\MEDIA_USB_KEY\usb_bsp.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\usb_bsp.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\usb_bsp.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\usb_bsp.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\usb_bsp.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\usb_bsp.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\usb_bsp.o: .\Libraries\CMSIS\core_cm4_simd.h

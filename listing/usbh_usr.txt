@@ -5,503 +5,544 @@
                           AREA ||i.COMMAND_AudioExecuteApplication||, CODE, READONLY, ALIGN=2
 
                   COMMAND_AudioExecuteApplication PROC
-;;;394      */
-;;;395    void COMMAND_AudioExecuteApplication(void)
+;;;412      */
+;;;413    void COMMAND_AudioExecuteApplication(void)
 000000  e92d5ffc          PUSH     {r2-r12,lr}
-;;;396    {
-;;;397      /* Execute the command switch the command index */
-;;;398    	
-;;;399    //	WaveRecorderUpdate();
-;;;400    	/*
-;;;401      switch (Command_index)
-;;;402      {
-;;;403      // Start Playing from USB Flash memory 
-;;;404      case CMD_PLAY:
-;;;405        if (RepeatState == 0)
-;;;406    //      WavePlayerStart();
-;;;407        break;
-;;;408        // Start Recording in USB Flash memory  
-;;;409      case CMD_RECORD:
-;;;410        RepeatState = 0;
-;;;411        WaveRecorderUpdate();
-;;;412        break;  
-;;;413      default:
-;;;414        break;
-;;;415      }
-;;;416    	*/
-;;;417    //	minute=12345;
-;;;418    //	if (minute!=pred_minute)
-;;;419    if (buffering)
-000004  f8dfb23c          LDR      r11,|L1.580|
-000008  f89b0000          LDRB     r0,[r11,#0]  ; buffering
-00000c  2800              CMP      r0,#0                 ;396
-00000e  d07d              BEQ      |L1.268|
-;;;420    	{
-;;;421    		TDateTime DT;
-;;;422    		u8 tmp=0;
-;;;423        
-;;;424    	  rtc_Get(&DT);     	
-000010  4668              MOV      r0,sp
-000012  f7fffffe          BL       rtc_Get
-;;;425    		pred_minute=minute;
-000016  488c              LDR      r0,|L1.584|
-000018  498c              LDR      r1,|L1.588|
-;;;426    //		minute=12345;
-;;;427    		
-;;;428    	//		dec_to_chr(minute,(uint8_t*) &Buf_zap[0]);
-;;;429    		/*
-;;;430    	Buf_zap[0]=0x32;
-;;;431    	Buf_zap[1]=0x30;
-;;;432    	
-;;;433    	tmp=DT.Year/10;
-;;;434    	Buf_zap[2]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;435    	tmp%=10;
-;;;436    	Buf_zap[3]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;437    
-;;;438    	Buf_zap[4]=95;
-;;;439    	
-;;;440    	tmp=DT.Month/10;
-;;;441    	Buf_zap[5]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;442    	tmp%=10;
-;;;443    	Buf_zap[6]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;444    
-;;;445    	Buf_zap[7]=95;
-;;;446    	
-;;;447    	tmp=DT.Day/10;
-;;;448    	Buf_zap[8]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;449    	tmp%=10;
-;;;450    	Buf_zap[9]=(uint8_t)(tmp)+(uint8_t)0x30;
-;;;451    
-;;;452    	Buf_zap[10]=95;
-;;;453    	*/
-;;;454    
-;;;455    	Buf_zap[0]=(uint8_t)(DT_zap.Hours/10)+(uint8_t)0x30;
-00001a  4a8d              LDR      r2,|L1.592|
-00001c  8800              LDRH     r0,[r0,#0]            ;425  ; minute
-00001e  8008              STRH     r0,[r1,#0]            ;425
-000020  7911              LDRB     r1,[r2,#4]  ; DT_zap
-000022  270a              MOVS     r7,#0xa
-000024  fbb1f0f7          UDIV     r0,r1,r7
-000028  f1000330          ADD      r3,r0,#0x30
-00002c  4c89              LDR      r4,|L1.596|
-;;;456    	Buf_zap[1]=(uint8_t)(DT_zap.Hours%10)+(uint8_t)0x30;
-00002e  fb071010          MLS      r0,r7,r0,r1
-000032  7023              STRB     r3,[r4,#0]            ;455
-000034  3030              ADDS     r0,r0,#0x30
-000036  7060              STRB     r0,[r4,#1]
-;;;457    
-;;;458    	Buf_zap[2]=0x3A; // :
-000038  233a              MOVS     r3,#0x3a
-00003a  70a3              STRB     r3,[r4,#2]
-;;;459    
-;;;460    
-;;;461    	Buf_zap[3]=(uint8_t)(DT_zap.Minutes/10)+(uint8_t)0x30;
-00003c  7951              LDRB     r1,[r2,#5]  ; DT_zap
-;;;462    	Buf_zap[4]=(uint8_t)(DT_zap.Minutes%10)+(uint8_t)0x30;
-;;;463    
-;;;464    	Buf_zap[5]=0x3A;
-;;;465    
-;;;466    
-;;;467    	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
-;;;468    		Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
-;;;469    		
-;;;470    		//	Buf_zap[8]=0x3B; //	;
-;;;471    		//	Buf_zap[9]=0x0D; //	enter
-;;;472    			
-;;;473    	/*	
-;;;474    			dec_to_chr(time_label,(uint8_t*) &Buf_zap[6]);
-;;;475    			
-;;;476    		  Buf_zap[11]=0x20;
+;;;414    {
+;;;415      /* Execute the command switch the command index */
+;;;416    	
+;;;417    //	WaveRecorderUpdate();
+;;;418    	/*
+;;;419      switch (Command_index)
+;;;420      {
+;;;421      // Start Playing from USB Flash memory 
+;;;422      case CMD_PLAY:
+;;;423        if (RepeatState == 0)
+;;;424    //      WavePlayerStart();
+;;;425        break;
+;;;426        // Start Recording in USB Flash memory  
+;;;427      case CMD_RECORD:
+;;;428        RepeatState = 0;
+;;;429        WaveRecorderUpdate();
+;;;430        break;  
+;;;431      default:
+;;;432        break;
+;;;433      }
+;;;434    	*/
+;;;435    //	minute=12345;
+;;;436    //	if (minute!=pred_minute)
+;;;437    if (buffering)
+000004  4899              LDR      r0,|L1.620|
+000006  7800              LDRB     r0,[r0,#0]  ; buffering
+000008  2800              CMP      r0,#0                 ;414
+00000a  d075              BEQ      |L1.248|
+;;;438    	{
+;;;439    		TDateTime DT;
+;;;440    		u8 tmp=0;
+;;;441        
+;;;442    	  rtc_Get(&DT);     	
+00000c  4668              MOV      r0,sp
+00000e  f7fffffe          BL       rtc_Get
+;;;443    		pred_minute=minute;
+000012  4897              LDR      r0,|L1.624|
+000014  4997              LDR      r1,|L1.628|
+;;;444    //		minute=12345;
+;;;445    		
+;;;446    	//		dec_to_chr(minute,(uint8_t*) &Buf_zap[0]);
+;;;447    		/*
+;;;448    	Buf_zap[0]=0x32;
+;;;449    	Buf_zap[1]=0x30;
+;;;450    	
+;;;451    	tmp=DT.Year/10;
+;;;452    	Buf_zap[2]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;453    	tmp%=10;
+;;;454    	Buf_zap[3]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;455    
+;;;456    	Buf_zap[4]=95;
+;;;457    	
+;;;458    	tmp=DT.Month/10;
+;;;459    	Buf_zap[5]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;460    	tmp%=10;
+;;;461    	Buf_zap[6]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;462    
+;;;463    	Buf_zap[7]=95;
+;;;464    	
+;;;465    	tmp=DT.Day/10;
+;;;466    	Buf_zap[8]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;467    	tmp%=10;
+;;;468    	Buf_zap[9]=(uint8_t)(tmp)+(uint8_t)0x30;
+;;;469    
+;;;470    	Buf_zap[10]=95;
+;;;471    	*/
+;;;472    
+;;;473    	Buf_zap[0]=(uint8_t)(DT_zap.Hours/10)+(uint8_t)0x30;
+000016  4b98              LDR      r3,|L1.632|
+000018  8800              LDRH     r0,[r0,#0]            ;443  ; minute
+00001a  8008              STRH     r0,[r1,#0]            ;443
+00001c  791a              LDRB     r2,[r3,#4]  ; DT_zap
+00001e  f04f0b0a          MOV      r11,#0xa
+000022  4658              MOV      r0,r11
+000024  fbb2f1f0          UDIV     r1,r2,r0
+000028  f1010530          ADD      r5,r1,#0x30
+00002c  4c93              LDR      r4,|L1.636|
+;;;474    	Buf_zap[1]=(uint8_t)(DT_zap.Hours%10)+(uint8_t)0x30;
+00002e  fb0b2111          MLS      r1,r11,r1,r2
+000032  7025              STRB     r5,[r4,#0]            ;473
+000034  3130              ADDS     r1,r1,#0x30
+000036  7061              STRB     r1,[r4,#1]
+;;;475    
+;;;476    	Buf_zap[2]=0x3A; // :
+000038  253a              MOVS     r5,#0x3a
+00003a  70a5              STRB     r5,[r4,#2]
 ;;;477    
-;;;478    			sm=12;
-;;;479    			
-;;;480    			dec_to_chr(time_label,(uint8_t*) &Buf_zap[20]);
-;;;481    			Buf_zap[25]=0x3B;
-;;;482    			
-;;;483    			*/
-;;;484    			
-;;;485    			sm=8;
-00003e  4e86              LDR      r6,|L1.600|
-000040  fbb1f0f7          UDIV     r0,r1,r7              ;461
-000044  f1000530          ADD      r5,r0,#0x30           ;461
-000048  fb071010          MLS      r0,r7,r0,r1           ;462
-00004c  70e5              STRB     r5,[r4,#3]            ;461
-00004e  3030              ADDS     r0,r0,#0x30           ;462
-000050  7120              STRB     r0,[r4,#4]            ;462
-000052  7163              STRB     r3,[r4,#5]            ;464
-000054  7991              LDRB     r1,[r2,#6]            ;467  ; DT_zap
-;;;486    
-;;;487    			cnt=0;
-;;;488    			kol_zap=0;
-000056  4d82              LDR      r5,|L1.608|
-000058  fbb1f0f7          UDIV     r0,r1,r7              ;467
-00005c  f1000230          ADD      r2,r0,#0x30           ;467
-000060  fb071010          MLS      r0,r7,r0,r1           ;468
-000064  71a2              STRB     r2,[r4,#6]            ;467
-000066  3030              ADDS     r0,r0,#0x30           ;468
-000068  71e0              STRB     r0,[r4,#7]            ;468
-00006a  2008              MOVS     r0,#8                 ;485
-00006c  497b              LDR      r1,|L1.604|
-00006e  7030              STRB     r0,[r6,#0]            ;485
-000070  f04f0800          MOV      r8,#0                 ;487
-;;;489    		
+;;;478    
+;;;479    	Buf_zap[3]=(uint8_t)(DT_zap.Minutes/10)+(uint8_t)0x30;
+00003c  795a              LDRB     r2,[r3,#5]  ; DT_zap
+;;;480    	Buf_zap[4]=(uint8_t)(DT_zap.Minutes%10)+(uint8_t)0x30;
+;;;481    
+;;;482    	Buf_zap[5]=0x3A;
+;;;483    
+;;;484    
+;;;485    	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
+;;;486    		Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
+;;;487    		
+;;;488    		//	Buf_zap[8]=0x3B; //	;
+;;;489    		//	Buf_zap[9]=0x0D; //	enter
 ;;;490    			
-;;;491    
-;;;492    		if (number_buff)	
-000074  487b              LDR      r0,|L1.612|
-000076  f8a18000          STRH     r8,[r1,#0]            ;487
-00007a  f8a58000          STRH     r8,[r5,#0]            ;488
-00007e  7800              LDRB     r0,[r0,#0]  ; number_buff
-;;;493    			while (kol_zap<600)
-;;;494          {			
-;;;495    			//	Buf_adc_zap1[kol_zap]=kol_zap;
-;;;496    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
-000080  f04f093b          MOV      r9,#0x3b
-;;;497    			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
-;;;498    				kol_zap++;			
-;;;499    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
-000084  f04f0a0d          MOV      r10,#0xd
-000088  b3a0              CBZ      r0,|L1.244|
-                  |L1.138|
-00008a  882a              LDRH     r2,[r5,#0]            ;496  ; kol_zap
-00008c  7833              LDRB     r3,[r6,#0]            ;496  ; sm
-00008e  ebc200c2          RSB      r0,r2,r2,LSL #3       ;496
-000092  4418              ADD      r0,r0,r3              ;496
-000094  1901              ADDS     r1,r0,r4              ;497
-000096  f8049000          STRB     r9,[r4,r0]            ;496
-00009a  4873              LDR      r0,|L1.616|
-00009c  1c49              ADDS     r1,r1,#1              ;497
-00009e  f8300012          LDRH     r0,[r0,r2,LSL #1]     ;497
+;;;491    	/*	
+;;;492    			dec_to_chr(time_label,(uint8_t*) &Buf_zap[6]);
+;;;493    			
+;;;494    		  Buf_zap[11]=0x20;
+;;;495    
+;;;496    			sm=12;
+;;;497    			
+;;;498    			dec_to_chr(time_label,(uint8_t*) &Buf_zap[20]);
+;;;499    			Buf_zap[25]=0x3B;
+;;;500    			
+;;;501    			*/
+;;;502    			
+;;;503    			sm=8;
+;;;504    
+;;;505    			cnt=0;
+;;;506    			kol_zap=0;
+;;;507    		
+;;;508    			
+;;;509    
+;;;510    		if (number_buff)	
+;;;511    			while (kol_zap<600)
+;;;512          {			
+;;;513    			//	Buf_adc_zap1[kol_zap]=kol_zap;
+;;;514    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
+00003e  f04f083b          MOV      r8,#0x3b
+000042  fbb2f1f0          UDIV     r1,r2,r0              ;479
+000046  f1010630          ADD      r6,r1,#0x30           ;479
+00004a  fb0b2111          MLS      r1,r11,r1,r2          ;480
+00004e  70e6              STRB     r6,[r4,#3]            ;479
+000050  3130              ADDS     r1,r1,#0x30           ;480
+000052  7121              STRB     r1,[r4,#4]            ;480
+000054  7165              STRB     r5,[r4,#5]            ;482
+000056  799a              LDRB     r2,[r3,#6]            ;485  ; DT_zap
+000058  4e89              LDR      r6,|L1.640|
+00005a  fbb2f1f0          UDIV     r1,r2,r0              ;485
+00005e  fb0b2011          MLS      r0,r11,r1,r2          ;486
+000062  f1010330          ADD      r3,r1,#0x30           ;485
+000066  71a3              STRB     r3,[r4,#6]            ;485
+000068  3030              ADDS     r0,r0,#0x30           ;486
+00006a  71e0              STRB     r0,[r4,#7]            ;486
+00006c  2008              MOVS     r0,#8                 ;503
+00006e  7030              STRB     r0,[r6,#0]            ;503
+000070  4884              LDR      r0,|L1.644|
+000072  2700              MOVS     r7,#0                 ;505
+000074  4d84              LDR      r5,|L1.648|
+000076  8007              STRH     r7,[r0,#0]            ;505
+000078  4884              LDR      r0,|L1.652|
+00007a  802f              STRH     r7,[r5,#0]            ;506
+;;;515    			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
+;;;516    				kol_zap++;			
+;;;517    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+00007c  f04f090d          MOV      r9,#0xd
+000080  7800              LDRB     r0,[r0,#0]            ;510  ; number_buff
+000082  f44f7116          MOV      r1,#0x258             ;511
+000086  b3b0              CBZ      r0,|L1.246|
+000088  f8dfa204          LDR      r10,|L1.656|
+                  |L1.140|
+00008c  882a              LDRH     r2,[r5,#0]            ;514  ; kol_zap
+00008e  7833              LDRB     r3,[r6,#0]            ;514  ; sm
+000090  ebc200c2          RSB      r0,r2,r2,LSL #3       ;514
+000094  4418              ADD      r0,r0,r3              ;514
+000096  1901              ADDS     r1,r0,r4              ;515
+000098  f8048000          STRB     r8,[r4,r0]            ;514
+00009c  1c49              ADDS     r1,r1,#1              ;515
+00009e  f83a0012          LDRH     r0,[r10,r2,LSL #1]    ;515
 0000a2  f7fffffe          BL       dec_to_chr
-0000a6  8828              LDRH     r0,[r5,#0]            ;498  ; kol_zap
-0000a8  1c40              ADDS     r0,r0,#1              ;498
-0000aa  b280              UXTH     r0,r0                 ;498
-0000ac  8028              STRH     r0,[r5,#0]            ;498
+0000a6  8828              LDRH     r0,[r5,#0]            ;516  ; kol_zap
+0000a8  1c40              ADDS     r0,r0,#1              ;516
+0000aa  b280              UXTH     r0,r0                 ;516
+0000ac  8028              STRH     r0,[r5,#0]            ;516
 0000ae  7833              LDRB     r3,[r6,#0]  ; sm
 0000b0  ebc002c0          RSB      r2,r0,r0,LSL #3
 0000b4  441a              ADD      r2,r2,r3
 0000b6  4422              ADD      r2,r2,r4
-0000b8  f5b07f16          CMP      r0,#0x258             ;493
-0000bc  f802ac01          STRB     r10,[r2,#-1]
-0000c0  d3e3              BCC      |L1.138|
-0000c2  e01b              B        |L1.252|
+0000b8  f5b07f16          CMP      r0,#0x258             ;511
+0000bc  f8029c01          STRB     r9,[r2,#-1]
+0000c0  d3e4              BCC      |L1.140|
+0000c2  e01e              B        |L1.258|
                   |L1.196|
-;;;500    			}
-;;;501    		else
-;;;502    			while (kol_zap<600)
-;;;503          {			
-;;;504    			while (kol_zap<600)
-;;;505          {			
-;;;506    			//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
-;;;507    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
+;;;518    			}
+;;;519    		else
+;;;520    			while (kol_zap<600)
+;;;521          {			
+;;;522    			while (kol_zap<600)
+;;;523          {			
+;;;524    			//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
+;;;525    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
 0000c4  7833              LDRB     r3,[r6,#0]  ; sm
 0000c6  ebc001c0          RSB      r1,r0,r0,LSL #3
 0000ca  4419              ADD      r1,r1,r3
-;;;508    			 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
-0000cc  4a67              LDR      r2,|L1.620|
-0000ce  f8049001          STRB     r9,[r4,r1]            ;507
+;;;526    			 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
+0000cc  4a71              LDR      r2,|L1.660|
+0000ce  f8048001          STRB     r8,[r4,r1]            ;525
 0000d2  4421              ADD      r1,r1,r4
 0000d4  1c49              ADDS     r1,r1,#1
 0000d6  f8320010          LDRH     r0,[r2,r0,LSL #1]
 0000da  f7fffffe          BL       dec_to_chr
-;;;509    				kol_zap++;			
+;;;527    				kol_zap++;			
 0000de  8828              LDRH     r0,[r5,#0]  ; kol_zap
 0000e0  1c40              ADDS     r0,r0,#1
 0000e2  b280              UXTH     r0,r0
 0000e4  8028              STRH     r0,[r5,#0]
-;;;510    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+;;;528    				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
 0000e6  7832              LDRB     r2,[r6,#0]  ; sm
 0000e8  ebc000c0          RSB      r0,r0,r0,LSL #3
 0000ec  4410              ADD      r0,r0,r2
 0000ee  4420              ADD      r0,r0,r4
-0000f0  f800ac01          STRB     r10,[r0,#-1]
-                  |L1.244|
-0000f4  8828              LDRH     r0,[r5,#0]            ;504  ; kol_zap
-0000f6  f5b07f16          CMP      r0,#0x258             ;504
-0000fa  d3e3              BCC      |L1.196|
+0000f0  f8009c01          STRB     r9,[r0,#-1]
+0000f4  e002              B        |L1.252|
+                  |L1.246|
+0000f6  e000              B        |L1.250|
+                  |L1.248|
+0000f8  e0b5              B        |L1.614|
+                  |L1.250|
+0000fa  468a              MOV      r10,r1                ;511
                   |L1.252|
-;;;511    			}		  	
-;;;512    			}		
-;;;513    			
-;;;514    //			Buf_zap[sm+6*kol_zap]=13;
-;;;515    			
-;;;516    	//		por=0;
-;;;517    			
-;;;518    	//		f_unlink (REC_WAVE_NAME);
-;;;519    	
-;;;520    	//		f_open(&file, REC_WAVE_NAME, FA_CREATE_ALWAYS | FA_WRITE);
-;;;521    	//		f_open(&file, REC_WAVE_NAME, FA_WRITE);
-;;;522    			
-;;;523    		/*
-;;;524    			STM_EVAL_LEDOff(LED3);
-;;;525    			STM_EVAL_LEDOff(LED4);
-;;;526    			STM_EVAL_LEDOff(LED5);
-;;;527    			STM_EVAL_LEDOff(LED6);
-;;;528    		*/	
-;;;529    				/* Set ON Red LED */ 
-;;;530    			/*
-;;;531    				while ((HCD_IsDeviceConnected(&USB_OTG_Core) != 1))
-;;;532    				{
-;;;533    					STM_EVAL_LEDOff(LED5);
-;;;534    	//				Delay	(1000);		
-;;;535    				}
-;;;536    			*/	
-;;;537    				if (HCD_IsDeviceConnected(&USB_OTG_Core) == 1)
-0000fc  485c              LDR      r0,|L1.624|
-0000fe  f7fffffe          BL       HCD_IsDeviceConnected
-;;;538    				{
-;;;539    		//			if (!file_cr)
-;;;540    					{
-;;;541    					if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)	
-;;;542    				//		if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
-;;;543    						{
-;;;544    							STM_EVAL_LEDOn(LED4);
-;;;545    							f_lseek(&file, (DWORD)(file.fsize));
-;;;546    							f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
-;;;547    							f_close (&file);
-;;;548    
-;;;549    					//		if 	(DT.Minutes==0)
-;;;550    					//			if (DT.Hours==0)
-;;;551    									if (file_name[5]!=(DT.Day%10+0x30))
-;;;552    									{
-;;;553    										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
-;;;554    										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
-;;;555    									
-;;;556    										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
-;;;557    										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
-;;;558    
-;;;559    										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
-;;;560    										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
-;;;561    									}							
-;;;562    						STM_EVAL_LEDOff(LED4);							
-;;;563    						file_cr=1;
-000102  f8dfa170          LDR      r10,|L1.628|
-000106  2801              CMP      r0,#1                 ;537
-000108  d007              BEQ      |L1.282|
-;;;564    						}
-;;;565    						else
-;;;566    						{
-;;;567    							if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
-;;;568    					//		if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)
-;;;569    							{
-;;;570    								
-;;;571    								STM_EVAL_LEDOn(LED4);
-;;;572    								f_lseek(&file,(DWORD) file.fsize);				
-;;;573    								f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
-;;;574    								f_close (&file);
-;;;575    								
-;;;576    										if (file_name[5]!=(DT.Day%10+0x30))
-;;;577    										{
-;;;578    										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
-;;;579    										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
-;;;580    									
-;;;581    										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
-;;;582    										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
-;;;583    
-;;;584    										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
-;;;585    										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
-;;;586    										}
-;;;587    								
-;;;588    								STM_EVAL_LEDOff(LED4);
-;;;589    							}
-;;;590    							else
-;;;591    								STM_EVAL_LEDOn(LED5);
-;;;592    									
-;;;593    						}							
-;;;594    					}
-;;;595    				}
-;;;596    				else
-;;;597    					file_cr=0;
-00010a  e000              B        |L1.270|
-                  |L1.268|
-00010c  e003              B        |L1.278|
-                  |L1.270|
-00010e  f88a8000          STRB     r8,[r10,#0]
-                  |L1.274|
-;;;598    				
-;;;599    			buffering=0;
-000112  f88b8000          STRB     r8,[r11,#0]
-                  |L1.278|
-;;;600    		}
-;;;601    }
-000116  e8bd9ffc          POP      {r2-r12,pc}
-                  |L1.282|
-00011a  2202              MOVS     r2,#2                 ;541
-00011c  4956              LDR      r1,|L1.632|
-00011e  4857              LDR      r0,|L1.636|
-000120  f7fffffe          BL       f_open
-000124  4c55              LDR      r4,|L1.636|
-000126  f8df9150          LDR      r9,|L1.632|
-00012a  b148              CBZ      r0,|L1.320|
-00012c  2208              MOVS     r2,#8                 ;567
-00012e  4649              MOV      r1,r9                 ;567
-000130  4620              MOV      r0,r4                 ;567
+0000fc  8828              LDRH     r0,[r5,#0]            ;522  ; kol_zap
+0000fe  4550              CMP      r0,r10                ;522
+000100  d3e0              BCC      |L1.196|
+                  |L1.258|
+;;;529    			}		  	
+;;;530    			}		
+;;;531    			
+;;;532    //			Buf_zap[sm+6*kol_zap]=13;
+;;;533    			
+;;;534    	//		por=0;
+;;;535    			
+;;;536    	//		f_unlink (REC_WAVE_NAME);
+;;;537    	
+;;;538    	//		f_open(&file, REC_WAVE_NAME, FA_CREATE_ALWAYS | FA_WRITE);
+;;;539    	//		f_open(&file, REC_WAVE_NAME, FA_WRITE);
+;;;540    			
+;;;541    		/*
+;;;542    			STM_EVAL_LEDOff(LED3);
+;;;543    			STM_EVAL_LEDOff(LED4);
+;;;544    			STM_EVAL_LEDOff(LED5);
+;;;545    			STM_EVAL_LEDOff(LED6);
+;;;546    		*/	
+;;;547    				/* Set ON Red LED */ 
+;;;548    			/*
+;;;549    				while ((HCD_IsDeviceConnected(&USB_OTG_Core) != 1))
+;;;550    				{
+;;;551    					STM_EVAL_LEDOff(LED5);
+;;;552    	//				Delay	(1000);		
+;;;553    				}
+;;;554    			*/	
+;;;555    				if (HCD_IsDeviceConnected(&USB_OTG_Core) == 1)
+000102  4865              LDR      r0,|L1.664|
+000104  f7fffffe          BL       HCD_IsDeviceConnected
+;;;556    				{
+;;;557    		//			if (!file_cr)
+;;;558    					{
+;;;559    					if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)	
+;;;560    				//		if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
+;;;561    						{
+;;;562    							STM_EVAL_LEDOn(LED4);
+;;;563    							f_lseek(&file, (DWORD)(file.fsize));
+;;;564    							f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+;;;565    							f_close (&file);
+;;;566    
+;;;567    					//		if 	(DT.Minutes==0)
+;;;568    					//			if (DT.Hours==0)
+;;;569    									if (file_name[5]!=(DT.Day%10+0x30))
+;;;570    									{
+;;;571    										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+;;;572    										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+;;;573    									
+;;;574    										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+;;;575    										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+;;;576    
+;;;577    										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+;;;578    										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+;;;579    									}							
+;;;580    						STM_EVAL_LEDOff(LED4);							
+;;;581    						file_cr=1;
+;;;582    						sost_flesh=1;	
+000108  f8df8190          LDR      r8,|L1.668|
+;;;583    						PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+00010c  4c64              LDR      r4,|L1.672|
+00010e  f44f5900          MOV      r9,#0x2000
+;;;584    						PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
+000112  f44f4a80          MOV      r10,#0x4000
+000116  2801              CMP      r0,#1                 ;555
+000118  d002              BEQ      |L1.288|
+;;;585    						}
+;;;586    						else
+;;;587    						{
+;;;588    							if (f_open(&file, (const XCHAR *)&file_name, FA_CREATE_ALWAYS)== FR_OK)
+;;;589    					//		if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)
+;;;590    							{
+;;;591    								
+;;;592    								STM_EVAL_LEDOn(LED4);
+;;;593    								f_lseek(&file,(DWORD) file.fsize);				
+;;;594    								f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+;;;595    								f_close (&file);
+;;;596    								
+;;;597    										if (file_name[5]!=(DT.Day%10+0x30))
+;;;598    										{
+;;;599    										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+;;;600    										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+;;;601    									
+;;;602    										file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+;;;603    										file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+;;;604    
+;;;605    										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+;;;606    										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+;;;607    										}
+;;;608    								
+;;;609    								STM_EVAL_LEDOff(LED4);
+;;;610    								sost_flesh=1;	
+;;;611    								PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+;;;612    								PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
+;;;613    							}
+;;;614    							else
+;;;615    							{
+;;;616    								STM_EVAL_LEDOn(LED5);
+;;;617    								sost_flesh=0;	
+;;;618    								PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+;;;619    								PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+;;;620    							}
+;;;621    									
+;;;622    						}							
+;;;623    					}
+;;;624    				}
+;;;625    				else
+;;;626    				{
+;;;627    					file_cr=0;
+00011a  4862              LDR      r0,|L1.676|
+00011c  7007              STRB     r7,[r0,#0]
+;;;628    					sost_flesh=0;	
+;;;629    					PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+;;;630    					PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+00011e  e00e              B        |L1.318|
+                  |L1.288|
+000120  2202              MOVS     r2,#2                 ;559
+000122  4961              LDR      r1,|L1.680|
+000124  4861              LDR      r0,|L1.684|
+000126  f7fffffe          BL       f_open
+00012a  b178              CBZ      r0,|L1.332|
+00012c  2208              MOVS     r2,#8                 ;588
+00012e  495e              LDR      r1,|L1.680|
+000130  485e              LDR      r0,|L1.684|
 000132  f7fffffe          BL       f_open
 000136  b3e0              CBZ      r0,|L1.434|
-000138  2002              MOVS     r0,#2                 ;591
+000138  2002              MOVS     r0,#2                 ;616
 00013a  f7fffffe          BL       STM_EVAL_LEDOn
-00013e  e7e8              B        |L1.274|
-                  |L1.320|
-000140  2000              MOVS     r0,#0                 ;544
-000142  f7fffffe          BL       STM_EVAL_LEDOn
-000146  484d              LDR      r0,|L1.636|
-000148  68e1              LDR      r1,[r4,#0xc]          ;545  ; file
-00014a  f7fffffe          BL       f_lseek
-00014e  8828              LDRH     r0,[r5,#0]            ;546  ; kol_zap
-000150  7831              LDRB     r1,[r6,#0]            ;546  ; sm
-000152  ebc000c0          RSB      r0,r0,r0,LSL #3       ;546
-000156  1842              ADDS     r2,r0,r1              ;546
-000158  4b49              LDR      r3,|L1.640|
-00015a  493e              LDR      r1,|L1.596|
-00015c  4847              LDR      r0,|L1.636|
-00015e  f7fffffe          BL       f_write
-000162  4846              LDR      r0,|L1.636|
-000164  f7fffffe          BL       f_close
-000168  f89d0002          LDRB     r0,[sp,#2]            ;551
-00016c  f8991005          LDRB     r1,[r9,#5]            ;551  ; file_name
-000170  fbb0f2f7          UDIV     r2,r0,r7              ;551
-000174  fb070412          MLS      r4,r7,r2,r0           ;551
-000178  3430              ADDS     r4,r4,#0x30           ;551
-00017a  4648              MOV      r0,r9                 ;551
-00017c  428c              CMP      r4,r1                 ;551
-00017e  d01b              BEQ      |L1.440|
-000180  f89d3000          LDRB     r3,[sp,#0]            ;553
-000184  fbb3f1f7          UDIV     r1,r3,r7              ;553
-000188  f1010530          ADD      r5,r1,#0x30           ;553
-00018c  fb073111          MLS      r1,r7,r1,r3           ;554
-000190  7005              STRB     r5,[r0,#0]            ;553
-000192  3130              ADDS     r1,r1,#0x30           ;554
-000194  7041              STRB     r1,[r0,#1]            ;554
-000196  f89d1001          LDRB     r1,[sp,#1]            ;556
-00019a  fbb1f3f7          UDIV     r3,r1,r7              ;556
-00019e  fb071113          MLS      r1,r7,r3,r1           ;557
-0001a2  f1030530          ADD      r5,r3,#0x30           ;556
-0001a6  3130              ADDS     r1,r1,#0x30           ;557
-0001a8  7085              STRB     r5,[r0,#2]            ;556
-0001aa  70c1              STRB     r1,[r0,#3]            ;557
-0001ac  3230              ADDS     r2,r2,#0x30           ;559
-0001ae  7102              STRB     r2,[r0,#4]            ;559
+                  |L1.318|
+00013e  f8887000          STRB     r7,[r8,#0]            ;617
+000142  f8a4901a          STRH     r9,[r4,#0x1a]         ;618
+000146  f8a4a018          STRH     r10,[r4,#0x18]        ;619
+00014a  e08a              B        |L1.610|
+                  |L1.332|
+00014c  2000              MOVS     r0,#0                 ;562
+00014e  f7fffffe          BL       STM_EVAL_LEDOn
+000152  4856              LDR      r0,|L1.684|
+000154  68c1              LDR      r1,[r0,#0xc]          ;563  ; file
+000156  f7fffffe          BL       f_lseek
+00015a  8828              LDRH     r0,[r5,#0]            ;564  ; kol_zap
+00015c  7831              LDRB     r1,[r6,#0]            ;564  ; sm
+00015e  ebc000c0          RSB      r0,r0,r0,LSL #3       ;564
+000162  1842              ADDS     r2,r0,r1              ;564
+000164  4b52              LDR      r3,|L1.688|
+000166  4945              LDR      r1,|L1.636|
+000168  4850              LDR      r0,|L1.684|
+00016a  f7fffffe          BL       f_write
+00016e  484f              LDR      r0,|L1.684|
+000170  f7fffffe          BL       f_close
+000174  f89d0002          LDRB     r0,[sp,#2]            ;569
+000178  4659              MOV      r1,r11                ;569
+00017a  fbb0f5f1          UDIV     r5,r0,r1              ;569
+00017e  fb0b0615          MLS      r6,r11,r5,r0          ;569
+000182  4849              LDR      r0,|L1.680|
+000184  3630              ADDS     r6,r6,#0x30           ;569
+000186  7942              LDRB     r2,[r0,#5]            ;569  ; file_name
+000188  4296              CMP      r6,r2                 ;569
+00018a  d01c              BEQ      |L1.454|
+00018c  f89d3000          LDRB     r3,[sp,#0]            ;571
+000190  fbb3f2f1          UDIV     r2,r3,r1              ;571
+000194  f1020c30          ADD      r12,r2,#0x30          ;571
+000198  fb013212          MLS      r2,r1,r2,r3           ;572
+00019c  f880c000          STRB     r12,[r0,#0]           ;571
+0001a0  3230              ADDS     r2,r2,#0x30           ;572
+0001a2  7042              STRB     r2,[r0,#1]            ;572
+0001a4  f89d3001          LDRB     r3,[sp,#1]            ;574
+0001a8  fbb3f2f1          UDIV     r2,r3,r1              ;574
+0001ac  f1020c30          ADD      r12,r2,#0x30          ;574
 0001b0  e000              B        |L1.436|
                   |L1.434|
-0001b2  e008              B        |L1.454|
+0001b2  e011              B        |L1.472|
                   |L1.436|
-0001b4  f8894005          STRB     r4,[r9,#5]            ;560
-                  |L1.440|
-0001b8  2000              MOVS     r0,#0                 ;562
-0001ba  f7fffffe          BL       STM_EVAL_LEDOff
-0001be  2101              MOVS     r1,#1                 ;563
-0001c0  f88a1000          STRB     r1,[r10,#0]           ;563
-0001c4  e7a5              B        |L1.274|
+0001b4  fb0b3112          MLS      r1,r11,r2,r3          ;575
+0001b8  3130              ADDS     r1,r1,#0x30           ;575
+0001ba  f880c002          STRB     r12,[r0,#2]           ;574
+0001be  70c1              STRB     r1,[r0,#3]            ;575
+0001c0  3530              ADDS     r5,r5,#0x30           ;577
+0001c2  7105              STRB     r5,[r0,#4]            ;577
+0001c4  7146              STRB     r6,[r0,#5]            ;578
                   |L1.454|
-0001c6  2000              MOVS     r0,#0                 ;571
-0001c8  f7fffffe          BL       STM_EVAL_LEDOn
-0001cc  482b              LDR      r0,|L1.636|
-0001ce  68e1              LDR      r1,[r4,#0xc]          ;572  ; file
-0001d0  f7fffffe          BL       f_lseek
-0001d4  8828              LDRH     r0,[r5,#0]            ;573  ; kol_zap
-0001d6  7831              LDRB     r1,[r6,#0]            ;573  ; sm
-0001d8  ebc000c0          RSB      r0,r0,r0,LSL #3       ;573
-0001dc  1842              ADDS     r2,r0,r1              ;573
-0001de  4b28              LDR      r3,|L1.640|
-0001e0  491c              LDR      r1,|L1.596|
-0001e2  4826              LDR      r0,|L1.636|
-0001e4  f7fffffe          BL       f_write
-0001e8  4824              LDR      r0,|L1.636|
-0001ea  f7fffffe          BL       f_close
-0001ee  f89d0002          LDRB     r0,[sp,#2]            ;576
-0001f2  f8991005          LDRB     r1,[r9,#5]            ;576  ; file_name
-0001f6  fbb0f2f7          UDIV     r2,r0,r7              ;576
-0001fa  fb070312          MLS      r3,r7,r2,r0           ;576
-0001fe  3330              ADDS     r3,r3,#0x30           ;576
-000200  4648              MOV      r0,r9                 ;576
-000202  428b              CMP      r3,r1                 ;576
-000204  d019              BEQ      |L1.570|
-000206  f89d4000          LDRB     r4,[sp,#0]            ;578
-00020a  fbb4f1f7          UDIV     r1,r4,r7              ;578
-00020e  f1010530          ADD      r5,r1,#0x30           ;578
-000212  fb074111          MLS      r1,r7,r1,r4           ;579
-000216  7005              STRB     r5,[r0,#0]            ;578
-000218  3130              ADDS     r1,r1,#0x30           ;579
-00021a  7041              STRB     r1,[r0,#1]            ;579
-00021c  f89d4001          LDRB     r4,[sp,#1]            ;581
-000220  fbb4f1f7          UDIV     r1,r4,r7              ;581
-000224  f1010530          ADD      r5,r1,#0x30           ;581
-000228  fb074111          MLS      r1,r7,r1,r4           ;582
-00022c  3130              ADDS     r1,r1,#0x30           ;582
-00022e  7085              STRB     r5,[r0,#2]            ;581
-000230  70c1              STRB     r1,[r0,#3]            ;582
-000232  3230              ADDS     r2,r2,#0x30           ;584
-000234  7102              STRB     r2,[r0,#4]            ;584
-000236  f8893005          STRB     r3,[r9,#5]            ;585
-                  |L1.570|
-00023a  2000              MOVS     r0,#0                 ;588
-00023c  f7fffffe          BL       STM_EVAL_LEDOff
-000240  e767              B        |L1.274|
-;;;602    
+0001c6  2000              MOVS     r0,#0                 ;580
+0001c8  f7fffffe          BL       STM_EVAL_LEDOff
+0001cc  4935              LDR      r1,|L1.676|
+0001ce  2001              MOVS     r0,#1                 ;581
+0001d0  7008              STRB     r0,[r1,#0]            ;581
+0001d2  f8880000          STRB     r0,[r8,#0]            ;582
+0001d6  e040              B        |L1.602|
+                  |L1.472|
+0001d8  2000              MOVS     r0,#0                 ;592
+0001da  f7fffffe          BL       STM_EVAL_LEDOn
+0001de  4833              LDR      r0,|L1.684|
+0001e0  68c1              LDR      r1,[r0,#0xc]          ;593  ; file
+0001e2  f7fffffe          BL       f_lseek
+0001e6  8828              LDRH     r0,[r5,#0]            ;594  ; kol_zap
+0001e8  7831              LDRB     r1,[r6,#0]            ;594  ; sm
+0001ea  ebc000c0          RSB      r0,r0,r0,LSL #3       ;594
+0001ee  1842              ADDS     r2,r0,r1              ;594
+0001f0  4b2f              LDR      r3,|L1.688|
+0001f2  4922              LDR      r1,|L1.636|
+0001f4  482d              LDR      r0,|L1.684|
+0001f6  f7fffffe          BL       f_write
+0001fa  482c              LDR      r0,|L1.684|
+0001fc  f7fffffe          BL       f_close
+000200  f89d0002          LDRB     r0,[sp,#2]            ;597
+000204  4659              MOV      r1,r11                ;597
+000206  fbb0f5f1          UDIV     r5,r0,r1              ;597
+00020a  fb0b0615          MLS      r6,r11,r5,r0          ;597
+00020e  4826              LDR      r0,|L1.680|
+000210  3630              ADDS     r6,r6,#0x30           ;597
+000212  7942              LDRB     r2,[r0,#5]            ;597  ; file_name
+000214  4296              CMP      r6,r2                 ;597
+000216  d01a              BEQ      |L1.590|
+000218  f89d3000          LDRB     r3,[sp,#0]            ;599
+00021c  fbb3f2f1          UDIV     r2,r3,r1              ;599
+000220  f1020c30          ADD      r12,r2,#0x30          ;599
+000224  fb013212          MLS      r2,r1,r2,r3           ;600
+000228  f880c000          STRB     r12,[r0,#0]           ;599
+00022c  3230              ADDS     r2,r2,#0x30           ;600
+00022e  7042              STRB     r2,[r0,#1]            ;600
+000230  f89d3001          LDRB     r3,[sp,#1]            ;602
+000234  fbb3f2f1          UDIV     r2,r3,r1              ;602
+000238  fb0b3112          MLS      r1,r11,r2,r3          ;603
+00023c  f1020c30          ADD      r12,r2,#0x30          ;602
+000240  3130              ADDS     r1,r1,#0x30           ;603
+000242  f880c002          STRB     r12,[r0,#2]           ;602
+000246  70c1              STRB     r1,[r0,#3]            ;603
+000248  3530              ADDS     r5,r5,#0x30           ;605
+00024a  7105              STRB     r5,[r0,#4]            ;605
+00024c  7146              STRB     r6,[r0,#5]            ;606
+                  |L1.590|
+00024e  2000              MOVS     r0,#0                 ;609
+000250  f7fffffe          BL       STM_EVAL_LEDOff
+000254  2101              MOVS     r1,#1                 ;610
+000256  f8881000          STRB     r1,[r8,#0]            ;610
+                  |L1.602|
+00025a  f8a49018          STRH     r9,[r4,#0x18]         ;611
+00025e  f8a4a01a          STRH     r10,[r4,#0x1a]        ;612
+                  |L1.610|
+;;;631    				}
+;;;632    				
+;;;633    			buffering=0;
+000262  4802              LDR      r0,|L1.620|
+000264  7007              STRB     r7,[r0,#0]
+                  |L1.614|
+;;;634    		}
+;;;635    }
+000266  e8bd9ffc          POP      {r2-r12,pc}
+;;;636    
                           ENDP
 
-000242  0000              DCW      0x0000
-                  |L1.580|
-                          DCD      buffering
-                  |L1.584|
-                          DCD      minute
-                  |L1.588|
-                          DCD      pred_minute
-                  |L1.592|
-                          DCD      DT_zap
-                  |L1.596|
-                          DCD      Buf_zap
-                  |L1.600|
-                          DCD      ||sm||
-                  |L1.604|
-                          DCD      ||cnt||
-                  |L1.608|
-                          DCD      kol_zap
-                  |L1.612|
-                          DCD      number_buff
-                  |L1.616|
-                          DCD      Buf_adc_zap1
+00026a  0000              DCW      0x0000
                   |L1.620|
-                          DCD      Buf_adc_zap2
+                          DCD      buffering
                   |L1.624|
-                          DCD      USB_OTG_Core
+                          DCD      minute
                   |L1.628|
-                          DCD      file_cr
+                          DCD      pred_minute
                   |L1.632|
-                          DCD      ||.data||+0x1
+                          DCD      DT_zap
                   |L1.636|
-                          DCD      ||.bss||+0x430
+                          DCD      Buf_zap
                   |L1.640|
+                          DCD      ||sm||
+                  |L1.644|
+                          DCD      ||cnt||
+                  |L1.648|
+                          DCD      kol_zap
+                  |L1.652|
+                          DCD      number_buff
+                  |L1.656|
+                          DCD      Buf_adc_zap1
+                  |L1.660|
+                          DCD      Buf_adc_zap2
+                  |L1.664|
+                          DCD      USB_OTG_Core
+                  |L1.668|
+                          DCD      sost_flesh
+                  |L1.672|
+                          DCD      0x40020000
+                  |L1.676|
+                          DCD      file_cr
+                  |L1.680|
+                          DCD      ||.data||+0x1
+                  |L1.684|
+                          DCD      ||.bss||+0x430
+                  |L1.688|
                           DCD      bytesWritten
 
                           AREA ||i.USBH_USR_Configuration_DescAvailable||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_Configuration_DescAvailable PROC
-;;;233      */
-;;;234    void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
+;;;242      */
+;;;243    void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 000000  4770              BX       lr
-;;;235        USBH_InterfaceDesc_TypeDef *itfDesc,
-;;;236        USBH_EpDesc_TypeDef *epDesc)
-;;;237    {
-;;;238      /* callback for configuration descriptor */
-;;;239    }
-;;;240    
+;;;244        USBH_InterfaceDesc_TypeDef *itfDesc,
+;;;245        USBH_EpDesc_TypeDef *epDesc)
+;;;246    {
+;;;247      /* callback for configuration descriptor */
+;;;248    }
+;;;249    
                           ENDP
 
 
                           AREA ||i.USBH_USR_DeInit||, CODE, READONLY, ALIGN=2
 
                   USBH_USR_DeInit PROC
-;;;608      */
-;;;609    void USBH_USR_DeInit(void)
+;;;642      */
+;;;643    void USBH_USR_DeInit(void)
 000000  4901              LDR      r1,|L3.8|
-;;;610    {
-;;;611      USBH_USR_ApplicationState = USH_USR_FS_INIT;
+;;;644    {
+;;;645      USBH_USR_ApplicationState = USH_USR_FS_INIT;
 000002  2000              MOVS     r0,#0
 000004  7008              STRB     r0,[r1,#0]
-;;;612    }
+;;;646    }
 000006  4770              BX       lr
-;;;613    
+;;;647    
                           ENDP
 
                   |L3.8|
@@ -510,13 +551,13 @@
                           AREA ||i.USBH_USR_DeviceAddressAssigned||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_DeviceAddressAssigned PROC
-;;;223      */
-;;;224    void USBH_USR_DeviceAddressAssigned(void)
+;;;232      */
+;;;233    void USBH_USR_DeviceAddressAssigned(void)
 000000  4770              BX       lr
-;;;225    {
-;;;226      /* callback for device successfully assigned the Address */
-;;;227    }
-;;;228    
+;;;234    {
+;;;235      /* callback for device successfully assigned the Address */
+;;;236    }
+;;;237    
                           ENDP
 
 
@@ -542,7 +583,7 @@
 00000c  210a              MOVS     r1,#0xa
 00000e  fbb3f2f1          UDIV     r2,r3,r1
 000012  f1020430          ADD      r4,r2,#0x30
-000016  4818              LDR      r0,|L5.120|
+000016  481c              LDR      r0,|L5.136|
 ;;;120    	file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
 000018  fb013212          MLS      r2,r1,r2,r3
 00001c  7004              STRB     r4,[r0,#0]            ;119
@@ -601,119 +642,166 @@
 00005a  2176              MOVS     r1,#0x76
 00005c  7241              STRB     r1,[r0,#9]
 ;;;151    
-;;;152    
-;;;153    /* Red LED off when device attached */
-;;;154      STM_EVAL_LEDOff(LED5);
-00005e  2002              MOVS     r0,#2
-000060  f7fffffe          BL       STM_EVAL_LEDOff
-;;;155      /* Green LED on */
-;;;156      STM_EVAL_LEDOn(LED6);
-000064  2003              MOVS     r0,#3
-000066  f7fffffe          BL       STM_EVAL_LEDOn
-;;;157      /* TIM Interrupts enable */
-;;;158      TIM_ITConfig(TIM4, TIM_IT_CC1, ENABLE);
-00006a  2201              MOVS     r2,#1
-00006c  2102              MOVS     r1,#2
-00006e  4803              LDR      r0,|L5.124|
-000070  f7fffffe          BL       TIM_ITConfig
-;;;159    }
-000074  bd1c              POP      {r2-r4,pc}
-;;;160    
+;;;152    	sost_flesh=1;
+00005e  490b              LDR      r1,|L5.140|
+000060  2001              MOVS     r0,#1
+000062  7008              STRB     r0,[r1,#0]
+;;;153    	PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+000064  0341              LSLS     r1,r0,#13
+000066  480a              LDR      r0,|L5.144|
+000068  8301              STRH     r1,[r0,#0x18]
+;;;154    	PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
+00006a  0049              LSLS     r1,r1,#1
+00006c  8341              STRH     r1,[r0,#0x1a]
+;;;155    	
+;;;156    
+;;;157    /* Red LED off when device attached */
+;;;158      STM_EVAL_LEDOff(LED5);
+00006e  2002              MOVS     r0,#2
+000070  f7fffffe          BL       STM_EVAL_LEDOff
+;;;159      /* Green LED on */
+;;;160      STM_EVAL_LEDOn(LED6);
+000074  2003              MOVS     r0,#3
+000076  f7fffffe          BL       STM_EVAL_LEDOn
+;;;161      /* TIM Interrupts enable */
+;;;162      TIM_ITConfig(TIM4, TIM_IT_CC1, ENABLE);
+00007a  2201              MOVS     r2,#1
+00007c  2102              MOVS     r1,#2
+00007e  4805              LDR      r0,|L5.148|
+000080  f7fffffe          BL       TIM_ITConfig
+;;;163    }
+000084  bd1c              POP      {r2-r4,pc}
+;;;164    
                           ENDP
 
-000076  0000              DCW      0x0000
-                  |L5.120|
+000086  0000              DCW      0x0000
+                  |L5.136|
                           DCD      ||.data||+0x1
-                  |L5.124|
+                  |L5.140|
+                          DCD      sost_flesh
+                  |L5.144|
+                          DCD      0x40020000
+                  |L5.148|
                           DCD      0x40000800
 
                           AREA ||i.USBH_USR_DeviceDisconnected||, CODE, READONLY, ALIGN=2
 
                   USBH_USR_DeviceDisconnected PROC
-;;;175      */
-;;;176    void USBH_USR_DeviceDisconnected (void)
-000000  b510              PUSH     {r4,lr}
-;;;177    {
-;;;178      /* Red Led on if the USB Key is removed */
-;;;179      STM_EVAL_LEDOff(LED6);
-000002  2003              MOVS     r0,#3
-000004  f7fffffe          BL       STM_EVAL_LEDOff
-;;;180    	STM_EVAL_LEDOff(LED5);
-000008  2002              MOVS     r0,#2
-00000a  f7fffffe          BL       STM_EVAL_LEDOff
-;;;181    	STM_EVAL_LEDOff(LED4);
-00000e  2000              MOVS     r0,#0
-000010  f7fffffe          BL       STM_EVAL_LEDOff
-;;;182      /* Disable the Timer */
-;;;183      TIM_ITConfig(TIM4, TIM_IT_CC1 , DISABLE);
-000014  2200              MOVS     r2,#0
-000016  e8bd4010          POP      {r4,lr}
-00001a  2102              MOVS     r1,#2
-00001c  4801              LDR      r0,|L6.36|
-00001e  f7ffbffe          B.W      TIM_ITConfig
-;;;184    
-;;;185    }
-;;;186    
+;;;179      */
+;;;180    void USBH_USR_DeviceDisconnected (void)
+000000  490c              LDR      r1,|L6.52|
+;;;181    {
+000002  b510              PUSH     {r4,lr}
+;;;182    	
+;;;183    		sost_flesh=0;	
+000004  2000              MOVS     r0,#0
+000006  7008              STRB     r0,[r1,#0]
+;;;184    		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+000008  480b              LDR      r0,|L6.56|
+00000a  f44f5100          MOV      r1,#0x2000
+00000e  8341              STRH     r1,[r0,#0x1a]
+;;;185    		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+000010  0049              LSLS     r1,r1,#1
+000012  8301              STRH     r1,[r0,#0x18]
+;;;186    	
+;;;187      /* Red Led on if the USB Key is removed */
+;;;188      STM_EVAL_LEDOff(LED6);
+000014  2003              MOVS     r0,#3
+000016  f7fffffe          BL       STM_EVAL_LEDOff
+;;;189    	STM_EVAL_LEDOff(LED5);
+00001a  2002              MOVS     r0,#2
+00001c  f7fffffe          BL       STM_EVAL_LEDOff
+;;;190    	STM_EVAL_LEDOff(LED4);
+000020  2000              MOVS     r0,#0
+000022  f7fffffe          BL       STM_EVAL_LEDOff
+;;;191      /* Disable the Timer */
+;;;192      TIM_ITConfig(TIM4, TIM_IT_CC1 , DISABLE);
+000026  2200              MOVS     r2,#0
+000028  e8bd4010          POP      {r4,lr}
+00002c  2102              MOVS     r1,#2
+00002e  4803              LDR      r0,|L6.60|
+000030  f7ffbffe          B.W      TIM_ITConfig
+;;;193    
+;;;194    }
+;;;195    
                           ENDP
 
-000022  0000              DCW      0x0000
-                  |L6.36|
+                  |L6.52|
+                          DCD      sost_flesh
+                  |L6.56|
+                          DCD      0x40020000
+                  |L6.60|
                           DCD      0x40000800
 
-                          AREA ||i.USBH_USR_DeviceNotSupported||, CODE, READONLY, ALIGN=1
+                          AREA ||i.USBH_USR_DeviceNotSupported||, CODE, READONLY, ALIGN=2
 
                   USBH_USR_DeviceNotSupported PROC
-;;;290      */
-;;;291    void USBH_USR_DeviceNotSupported(void)
-000000  4770              BX       lr
-;;;292    {
-;;;293    }
-;;;294    
+;;;299      */
+;;;300    void USBH_USR_DeviceNotSupported(void)
+000000  4904              LDR      r1,|L7.20|
+;;;301    {
+;;;302    		sost_flesh=0;	
+000002  2000              MOVS     r0,#0
+000004  7008              STRB     r0,[r1,#0]
+;;;303    		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+000006  4804              LDR      r0,|L7.24|
+000008  f44f5100          MOV      r1,#0x2000
+00000c  8341              STRH     r1,[r0,#0x1a]
+;;;304    		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+00000e  0049              LSLS     r1,r1,#1
+000010  8301              STRH     r1,[r0,#0x18]
+;;;305    }
+000012  4770              BX       lr
+;;;306    
                           ENDP
 
+                  |L7.20|
+                          DCD      sost_flesh
+                  |L7.24|
+                          DCD      0x40020000
 
                           AREA ||i.USBH_USR_DeviceSpeedDetected||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_DeviceSpeedDetected PROC
-;;;203      */
-;;;204    void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
+;;;212      */
+;;;213    void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 000000  4770              BX       lr
-;;;205    {
-;;;206    }
-;;;207    
+;;;214    {
+;;;215    }
+;;;216    
                           ENDP
 
 
                           AREA ||i.USBH_USR_Device_DescAvailable||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_Device_DescAvailable PROC
-;;;212      */
-;;;213    void USBH_USR_Device_DescAvailable(void *DeviceDesc)
+;;;221      */
+;;;222    void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 000000  4770              BX       lr
-;;;214    {
-;;;215      /* callback for device descriptor */
-;;;216    }
-;;;217    
+;;;223    {
+;;;224      /* callback for device descriptor */
+;;;225    }
+;;;226    
                           ENDP
 
 
                           AREA ||i.USBH_USR_EnumerationDone||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_EnumerationDone PROC
-;;;276      */
-;;;277    void USBH_USR_EnumerationDone(void)
+;;;285      */
+;;;286    void USBH_USR_EnumerationDone(void)
 000000  b510              PUSH     {r4,lr}
-;;;278    {
-;;;279      /* 0.5 seconds delay */
-;;;280      USB_OTG_BSP_mDelay(500);
+;;;287    {
+;;;288      /* 0.5 seconds delay */
+;;;289      USB_OTG_BSP_mDelay(500);
 000002  f44f70fa          MOV      r0,#0x1f4
 000006  f7fffffe          BL       USB_OTG_BSP_mDelay
-;;;281      
-;;;282      USBH_USR_MSC_Application();
+;;;290      
+;;;291      USBH_USR_MSC_Application();
 00000a  e8bd4010          POP      {r4,lr}
 00000e  f7ffbffe          B.W      USBH_USR_MSC_Application
-;;;283    } 
-;;;284    
+;;;292    } 
+;;;293    
                           ENDP
 
 
@@ -732,234 +820,255 @@
                           AREA ||i.USBH_USR_MSC_Application||, CODE, READONLY, ALIGN=2
 
                   USBH_USR_MSC_Application PROC
-;;;322      */
-;;;323    int USBH_USR_MSC_Application(void)
-000000  b510              PUSH     {r4,lr}
-;;;324    {
-;;;325    
-;;;326      switch (USBH_USR_ApplicationState)
-000002  4c0f              LDR      r4,|L12.64|
-000004  7820              LDRB     r0,[r4,#0]  ; USBH_USR_ApplicationState
-000006  b110              CBZ      r0,|L12.14|
-000008  2801              CMP      r0,#1
-00000a  d10e              BNE      |L12.42|
-00000c  e013              B        |L12.54|
-                  |L12.14|
-;;;327      {
-;;;328        case USH_USR_FS_INIT:
-;;;329    
-;;;330          // Initialises the File System*/
-;;;331          if (f_mount( 0, &fatfs ) != FR_OK )
-00000e  490d              LDR      r1,|L12.68|
-000010  2000              MOVS     r0,#0
-000012  f7fffffe          BL       f_mount
-000016  b110              CBZ      r0,|L12.30|
-;;;332          {
-;;;333            // efs initialisation fails
-;;;334            return(-1);
-000018  f04f30ff          MOV      r0,#0xffffffff
-;;;335          }
-;;;336          
-;;;337          // Flash Disk is write protected //
-;;;338          if (USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED)
-;;;339          {
-;;;340            while(1)
-;;;341            {
-;;;342              // Red LED On //
-;;;343              STM_EVAL_LEDOn(LED5);
-;;;344            }
-;;;345          }
-;;;346          // Go to menu 
-;;;347          USBH_USR_ApplicationState = USH_USR_AUDIO;
-;;;348          break;
-;;;349    
-;;;350        case USH_USR_AUDIO:
-;;;351    
-;;;352          // Go to Audio menu 
-;;;353          COMMAND_AudioExecuteApplication();
-;;;354    
-;;;355          // Set user initialization flag //
-;;;356          USBH_USR_ApplicationState = USH_USR_FS_INIT;
-;;;357          break;
-;;;358    
-;;;359        default:
-;;;360          break;
-;;;361      }
-;;;362      return(0);
-;;;363    }
-00001c  bd10              POP      {r4,pc}
-                  |L12.30|
-00001e  480a              LDR      r0,|L12.72|
-000020  7b00              LDRB     r0,[r0,#0xc]          ;338  ; USBH_MSC_Param
-000022  2801              CMP      r0,#1                 ;338
-000024  d003              BEQ      |L12.46|
-000026  2001              MOVS     r0,#1                 ;347
-                  |L12.40|
-000028  7020              STRB     r0,[r4,#0]            ;347
-                  |L12.42|
-00002a  2000              MOVS     r0,#0                 ;362
-00002c  bd10              POP      {r4,pc}
-                  |L12.46|
-00002e  2002              MOVS     r0,#2                 ;343
-000030  f7fffffe          BL       STM_EVAL_LEDOn
-000034  e7fb              B        |L12.46|
-                  |L12.54|
-000036  f7fffffe          BL       COMMAND_AudioExecuteApplication
-00003a  2000              MOVS     r0,#0                 ;356
-00003c  e7f4              B        |L12.40|
-;;;364    
+;;;334      */
+;;;335    int USBH_USR_MSC_Application(void)
+000000  b570              PUSH     {r4-r6,lr}
+;;;336    {
+;;;337    
+;;;338      switch (USBH_USR_ApplicationState)
+000002  4c15              LDR      r4,|L12.88|
+000004  2500              MOVS     r5,#0
+000006  7820              LDRB     r0,[r4,#0]  ; USBH_USR_ApplicationState
+000008  b110              CBZ      r0,|L12.16|
+00000a  2801              CMP      r0,#1
+00000c  d121              BNE      |L12.82|
+00000e  e01d              B        |L12.76|
+                  |L12.16|
+;;;339      {
+;;;340        case USH_USR_FS_INIT:
+;;;341    
+;;;342          // Initialises the File System*/
+;;;343          if (f_mount( 0, &fatfs ) != FR_OK )
+000010  4912              LDR      r1,|L12.92|
+000012  2000              MOVS     r0,#0
+000014  f7fffffe          BL       f_mount
+;;;344          {
+;;;345            // efs initialisation fails
+;;;346    				sost_flesh=0;	
+000018  4a11              LDR      r2,|L12.96|
+;;;347    				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+00001a  f44f5300          MOV      r3,#0x2000
+00001e  4911              LDR      r1,|L12.100|
+;;;348    				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+000020  005e              LSLS     r6,r3,#1
+000022  b128              CBZ      r0,|L12.48|
+000024  7015              STRB     r5,[r2,#0]            ;346
+000026  834b              STRH     r3,[r1,#0x1a]         ;347
+000028  830e              STRH     r6,[r1,#0x18]
+;;;349            return(-1);
+00002a  f04f30ff          MOV      r0,#0xffffffff
+;;;350          }
+;;;351          
+;;;352          // Flash Disk is write protected //
+;;;353          if (USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED)
+;;;354          {
+;;;355    				sost_flesh=0;	
+;;;356    				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+;;;357    				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+;;;358            while(1)
+;;;359            {
+;;;360              // Red LED On //
+;;;361              STM_EVAL_LEDOn(LED5);
+;;;362            }
+;;;363          }
+;;;364          // Go to menu 
+;;;365          USBH_USR_ApplicationState = USH_USR_AUDIO;
+;;;366          break;
+;;;367    
+;;;368        case USH_USR_AUDIO:
+;;;369    
+;;;370          // Go to Audio menu 
+;;;371          COMMAND_AudioExecuteApplication();
+;;;372    
+;;;373          // Set user initialization flag //
+;;;374          USBH_USR_ApplicationState = USH_USR_FS_INIT;
+;;;375          break;
+;;;376    
+;;;377        default:
+;;;378          break;
+;;;379      }
+;;;380      return(0);
+;;;381    }
+00002e  bd70              POP      {r4-r6,pc}
+                  |L12.48|
+000030  480d              LDR      r0,|L12.104|
+000032  7b00              LDRB     r0,[r0,#0xc]          ;353  ; USBH_MSC_Param
+000034  2801              CMP      r0,#1                 ;353
+000036  d002              BEQ      |L12.62|
+000038  2001              MOVS     r0,#1                 ;365
+00003a  7020              STRB     r0,[r4,#0]            ;365
+00003c  e009              B        |L12.82|
+                  |L12.62|
+00003e  7015              STRB     r5,[r2,#0]            ;355
+000040  834b              STRH     r3,[r1,#0x1a]         ;356
+000042  830e              STRH     r6,[r1,#0x18]         ;357
+                  |L12.68|
+000044  2002              MOVS     r0,#2                 ;361
+000046  f7fffffe          BL       STM_EVAL_LEDOn
+00004a  e7fb              B        |L12.68|
+                  |L12.76|
+00004c  f7fffffe          BL       COMMAND_AudioExecuteApplication
+000050  7025              STRB     r5,[r4,#0]            ;374
+                  |L12.82|
+000052  2000              MOVS     r0,#0                 ;380
+000054  bd70              POP      {r4-r6,pc}
+;;;382    
                           ENDP
 
-00003e  0000              DCW      0x0000
-                  |L12.64|
+000056  0000              DCW      0x0000
+                  |L12.88|
                           DCD      ||.data||
-                  |L12.68|
+                  |L12.92|
                           DCD      ||.bss||
-                  |L12.72|
+                  |L12.96|
+                          DCD      sost_flesh
+                  |L12.100|
+                          DCD      0x40020000
+                  |L12.104|
                           DCD      USBH_MSC_Param
 
                           AREA ||i.USBH_USR_Manufacturer_String||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_Manufacturer_String PROC
-;;;245      */
-;;;246    void USBH_USR_Manufacturer_String(void *ManufacturerString)
+;;;254      */
+;;;255    void USBH_USR_Manufacturer_String(void *ManufacturerString)
 000000  4770              BX       lr
-;;;247    {
-;;;248      /* callback for  Manufacturer String */
-;;;249    }
-;;;250    
+;;;256    {
+;;;257      /* callback for  Manufacturer String */
+;;;258    }
+;;;259    
                           ENDP
 
 
                           AREA ||i.USBH_USR_OverCurrentDetected||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_OverCurrentDetected PROC
-;;;313      */
-;;;314    void USBH_USR_OverCurrentDetected (void)
+;;;325      */
+;;;326    void USBH_USR_OverCurrentDetected (void)
 000000  4770              BX       lr
-;;;315    {
-;;;316    }
-;;;317    
+;;;327    {
+;;;328    }
+;;;329    
                           ENDP
 
 
                           AREA ||i.USBH_USR_Product_String||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_Product_String PROC
-;;;255      */
-;;;256    void USBH_USR_Product_String(void *ProductString)
+;;;264      */
+;;;265    void USBH_USR_Product_String(void *ProductString)
 000000  4770              BX       lr
-;;;257    {
-;;;258      /* callback for Product String */
-;;;259    }
-;;;260    
+;;;266    {
+;;;267      /* callback for Product String */
+;;;268    }
+;;;269    
                           ENDP
 
 
                           AREA ||i.USBH_USR_ResetDevice||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_ResetDevice PROC
-;;;191      */
-;;;192    void USBH_USR_ResetDevice(void)
+;;;200      */
+;;;201    void USBH_USR_ResetDevice(void)
 000000  4770              BX       lr
-;;;193    {
-;;;194      /* callback for USB-Reset */
-;;;195    }
-;;;196    
+;;;202    {
+;;;203      /* callback for USB-Reset */
+;;;204    }
+;;;205    
                           ENDP
 
 
                           AREA ||i.USBH_USR_SerialNum_String||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_SerialNum_String PROC
-;;;265      */
-;;;266    void USBH_USR_SerialNum_String(void *SerialNumString)
+;;;274      */
+;;;275    void USBH_USR_SerialNum_String(void *SerialNumString)
 000000  4770              BX       lr
-;;;267    {
-;;;268      /* callback for SerialNum_String */
-;;;269    }
-;;;270    
+;;;276    {
+;;;277      /* callback for SerialNum_String */
+;;;278    }
+;;;279    
                           ENDP
 
 
                           AREA ||i.USBH_USR_UnrecoveredError||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_UnrecoveredError PROC
-;;;165      */
-;;;166    void USBH_USR_UnrecoveredError (void)
+;;;169      */
+;;;170    void USBH_USR_UnrecoveredError (void)
 000000  4770              BX       lr
-;;;167    {
-;;;168    }
-;;;169    
+;;;171    {
+;;;172    }
+;;;173    
                           ENDP
 
 
                           AREA ||i.USBH_USR_UserInput||, CODE, READONLY, ALIGN=1
 
                   USBH_USR_UserInput PROC
-;;;301      */
-;;;302    USBH_USR_Status USBH_USR_UserInput(void)
+;;;313      */
+;;;314    USBH_USR_Status USBH_USR_UserInput(void)
 000000  2001              MOVS     r0,#1
-;;;303    {
-;;;304      /* callback for Key botton: set by software in this case */
-;;;305      return USBH_USR_RESP_OK;
-;;;306    }
+;;;315    {
+;;;316      /* callback for Key botton: set by software in this case */
+;;;317      return USBH_USR_RESP_OK;
+;;;318    }
 000002  4770              BX       lr
-;;;307    
+;;;319    
                           ENDP
 
 
                           AREA ||i.dec_to_chr||, CODE, READONLY, ALIGN=1
 
                   dec_to_chr PROC
-;;;366    
-;;;367    void dec_to_chr(u16 chislo,uint8_t* buf)
+;;;384    
+;;;385    void dec_to_chr(u16 chislo,uint8_t* buf)
 000000  f2427310          MOV      r3,#0x2710
-;;;368    {
-;;;369    	// BYTE *wbuff = buf;
-;;;370    	u16 tmp=0;
-;;;371    		
-;;;372    	tmp=chislo/10000;
+;;;386    {
+;;;387    	// BYTE *wbuff = buf;
+;;;388    	u16 tmp=0;
+;;;389    		
+;;;390    	tmp=chislo/10000;
 000004  fbb0f2f3          UDIV     r2,r0,r3
-000008  b510              PUSH     {r4,lr}               ;368
-;;;373    		  *buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
-;;;374    			chislo%=10000;
+000008  b510              PUSH     {r4,lr}               ;386
+;;;391    		  *buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
+;;;392    			chislo%=10000;
 00000a  fb030012          MLS      r0,r3,r2,r0
-00000e  f1020430          ADD      r4,r2,#0x30           ;373
-;;;375    			buf++;
-;;;376    		  *buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
+00000e  f1020430          ADD      r4,r2,#0x30           ;391
+;;;393    			buf++;
+;;;394    		  *buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
 000012  f44f737a          MOV      r3,#0x3e8
 000016  fbb0f2f3          UDIV     r2,r0,r3
-00001a  700c              STRB     r4,[r1,#0]            ;373
-;;;377    	chislo%=1000;
+00001a  700c              STRB     r4,[r1,#0]            ;391
+;;;395    	chislo%=1000;
 00001c  fb030012          MLS      r0,r3,r2,r0
-000020  f1020430          ADD      r4,r2,#0x30           ;376
-;;;378    			buf++;
-;;;379    			*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
+000020  f1020430          ADD      r4,r2,#0x30           ;394
+;;;396    			buf++;
+;;;397    			*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
 000024  2364              MOVS     r3,#0x64
 000026  fbb0f2f3          UDIV     r2,r0,r3
-00002a  704c              STRB     r4,[r1,#1]            ;376
-;;;380    chislo%=100;
+00002a  704c              STRB     r4,[r1,#1]            ;394
+;;;398    chislo%=100;
 00002c  fb030012          MLS      r0,r3,r2,r0
-000030  f1020430          ADD      r4,r2,#0x30           ;379
-;;;381    			buf++;
-;;;382    			*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
+000030  f1020430          ADD      r4,r2,#0x30           ;397
+;;;399    			buf++;
+;;;400    			*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
 000034  230a              MOVS     r3,#0xa
 000036  fbb0f2f3          UDIV     r2,r0,r3
-00003a  708c              STRB     r4,[r1,#2]            ;379
-;;;383    	chislo%=10;
+00003a  708c              STRB     r4,[r1,#2]            ;397
+;;;401    	chislo%=10;
 00003c  fb030012          MLS      r0,r3,r2,r0
-000040  f1020430          ADD      r4,r2,#0x30           ;382
-000044  70cc              STRB     r4,[r1,#3]            ;382
-;;;384    			buf++;
-;;;385    			*buf=((uint8_t)(chislo)+(uint8_t)0x30);
+000040  f1020430          ADD      r4,r2,#0x30           ;400
+000044  70cc              STRB     r4,[r1,#3]            ;400
+;;;402    			buf++;
+;;;403    			*buf=((uint8_t)(chislo)+(uint8_t)0x30);
 000046  3030              ADDS     r0,r0,#0x30
 000048  7108              STRB     r0,[r1,#4]
-;;;386    			
-;;;387    
-;;;388    }
+;;;404    			
+;;;405    
+;;;406    }
 00004a  bd10              POP      {r4,pc}
-;;;389    
+;;;407    
                           ENDP
 
 

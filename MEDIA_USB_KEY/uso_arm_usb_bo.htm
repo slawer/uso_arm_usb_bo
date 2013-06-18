@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\MEDIA_USB_KEY\uso_arm_usb_bo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\MEDIA_USB_KEY\uso_arm_usb_bo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Tue Jun 18 14:42:55 2013
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Tue Jun 18 23:49:01 2013
 <BR><P>
-<H3>Maximum Stack Usage =        408 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        416 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 USBH_USR_EnumerationDone &rArr; USBH_USR_MSC_Application &rArr; COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 <P>
@@ -576,7 +576,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f4xx.o(RESET)
 </UL>
-<P><STRONG><a name="[9a]"></a>COMMAND_AudioExecuteApplication</STRONG> (Thumb, 578 bytes, Stack size 48 bytes, usbh_usr.o(i.COMMAND_AudioExecuteApplication))
+<P><STRONG><a name="[9a]"></a>COMMAND_AudioExecuteApplication</STRONG> (Thumb, 618 bytes, Stack size 48 bytes, usbh_usr.o(i.COMMAND_AudioExecuteApplication))
 <BR><BR>[Stack]<UL><LI>Max Depth = 392<LI>Call Chain = COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_LEDOn
@@ -1000,7 +1000,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
-<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 2546 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
+<P><STRONG><a name="[21]"></a>SysTick_Handler</STRONG> (Thumb, 2658 bytes, Stack size 40 bytes, stm32f4xx_it.o(i.SysTick_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = SysTick_Handler &rArr; moving_average &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_SendData
@@ -1489,7 +1489,7 @@ Global Symbols
 <P><STRONG><a name="[8]"></a>USBH_USR_DeviceAddressAssigned</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_DeviceAddressAssigned))
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
-<P><STRONG><a name="[2]"></a>USBH_USR_DeviceAttached</STRONG> (Thumb, 118 bytes, Stack size 16 bytes, usbh_usr.o(i.USBH_USR_DeviceAttached))
+<P><STRONG><a name="[2]"></a>USBH_USR_DeviceAttached</STRONG> (Thumb, 134 bytes, Stack size 16 bytes, usbh_usr.o(i.USBH_USR_DeviceAttached))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = USBH_USR_DeviceAttached &rArr; rtc_Get
 </UL>
 <BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ITConfig
@@ -1499,7 +1499,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
-<P><STRONG><a name="[4]"></a>USBH_USR_DeviceDisconnected</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, usbh_usr.o(i.USBH_USR_DeviceDisconnected))
+<P><STRONG><a name="[4]"></a>USBH_USR_DeviceDisconnected</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, usbh_usr.o(i.USBH_USR_DeviceDisconnected))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = USBH_USR_DeviceDisconnected
 </UL>
 <BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ITConfig
@@ -1507,7 +1507,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
-<P><STRONG><a name="[10]"></a>USBH_USR_DeviceNotSupported</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_DeviceNotSupported))
+<P><STRONG><a name="[10]"></a>USBH_USR_DeviceNotSupported</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_DeviceNotSupported))
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
 <P><STRONG><a name="[6]"></a>USBH_USR_DeviceSpeedDetected</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_DeviceSpeedDetected))
@@ -1517,7 +1517,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
 <P><STRONG><a name="[d]"></a>USBH_USR_EnumerationDone</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, usbh_usr.o(i.USBH_USR_EnumerationDone))
-<BR><BR>[Stack]<UL><LI>Max Depth = 408<LI>Call Chain = USBH_USR_EnumerationDone &rArr; USBH_USR_MSC_Application &rArr; COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
+<BR><BR>[Stack]<UL><LI>Max Depth = 416<LI>Call Chain = USBH_USR_EnumerationDone &rArr; USBH_USR_MSC_Application &rArr; COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 </UL>
 <BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_OTG_BSP_mDelay
 <LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_USR_MSC_Application
@@ -1527,8 +1527,8 @@ Global Symbols
 <P><STRONG><a name="[0]"></a>USBH_USR_Init</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usbh_usr.o(i.USBH_USR_Init))
 <BR>[Address Reference Count : 1]<UL><LI> usbh_usr.o(.data)
 </UL>
-<P><STRONG><a name="[f]"></a>USBH_USR_MSC_Application</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, usbh_usr.o(i.USBH_USR_MSC_Application))
-<BR><BR>[Stack]<UL><LI>Max Depth = 400<LI>Call Chain = USBH_USR_MSC_Application &rArr; COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
+<P><STRONG><a name="[f]"></a>USBH_USR_MSC_Application</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, usbh_usr.o(i.USBH_USR_MSC_Application))
+<BR><BR>[Stack]<UL><LI>Max Depth = 408<LI>Call Chain = USBH_USR_MSC_Application &rArr; COMMAND_AudioExecuteApplication &rArr; f_open &rArr; follow_path &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; disk_write &rArr; USBH_MSC_HandleBOTXfer &rArr; USBH_BulkSendData &rArr; HCD_SubmitRequest &rArr; USB_OTG_HC_StartXfer &rArr; USB_OTG_WritePacket
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_LEDOn
 <LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mount
@@ -2082,8 +2082,8 @@ Global Symbols
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;COMMAND_AudioExecuteApplication
 </UL>
 
-<P><STRONG><a name="[14d]"></a>rtc_Init</STRONG> (Thumb, 374 bytes, Stack size 32 bytes, rtc.o(i.rtc_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = rtc_Init &rArr; GPIO_Init
+<P><STRONG><a name="[14d]"></a>rtc_Init</STRONG> (Thumb, 444 bytes, Stack size 48 bytes, rtc.o(i.rtc_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = rtc_Init &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_WriteBackupRegister
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_ReadBackupRegister

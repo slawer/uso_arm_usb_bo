@@ -34,59 +34,59 @@
                           AREA ||i.EXTI0_IRQHandler||, CODE, READONLY, ALIGN=2
 
                   EXTI0_IRQHandler PROC
-;;;727      */
-;;;728    void EXTI0_IRQHandler(void)
+;;;1089     */
+;;;1090   void EXTI0_IRQHandler(void)
 000000  b510              PUSH     {r4,lr}
-;;;729    {
-;;;730      /* Checks whether the User Button EXTI line is asserted*/
-;;;731      if (EXTI_GetITStatus(EXTI_Line0) != RESET) 
+;;;1091   {
+;;;1092     /* Checks whether the User Button EXTI line is asserted*/
+;;;1093     if (EXTI_GetITStatus(EXTI_Line0) != RESET) 
 000002  2001              MOVS     r0,#1
 000004  f7fffffe          BL       EXTI_GetITStatus
 000008  b158              CBZ      r0,|L3.34|
-;;;732      { 
-;;;733        if (Command_index == 1)
+;;;1094     { 
+;;;1095       if (Command_index == 1)
 00000a  4808              LDR      r0,|L3.44|
 00000c  7803              LDRB     r3,[r0,#0]  ; Command_index
 00000e  2100              MOVS     r1,#0
-;;;734        {
-;;;735          RepeatState = 0;
+;;;1096       {
+;;;1097         RepeatState = 0;
 000010  4a07              LDR      r2,|L3.48|
-000012  2b01              CMP      r3,#1                 ;733
+000012  2b01              CMP      r3,#1                 ;1095
 000014  d001              BEQ      |L3.26|
-;;;736          /* Switch to play command */
-;;;737          Command_index = 0;
-;;;738        }
-;;;739        else if (Command_index == 0)
+;;;1098         /* Switch to play command */
+;;;1099         Command_index = 0;
+;;;1100       }
+;;;1101       else if (Command_index == 0)
 000016  7803              LDRB     r3,[r0,#0]  ; Command_index
 000018  b10b              CBZ      r3,|L3.30|
                   |L3.26|
-00001a  7011              STRB     r1,[r2,#0]            ;735
+00001a  7011              STRB     r1,[r2,#0]            ;1097
 00001c  e000              B        |L3.32|
                   |L3.30|
-;;;740        {
-;;;741          /* Switch to record command */
-;;;742          Command_index = 1;
+;;;1102       {
+;;;1103         /* Switch to record command */
+;;;1104         Command_index = 1;
 00001e  2101              MOVS     r1,#1
                   |L3.32|
 000020  7001              STRB     r1,[r0,#0]
                   |L3.34|
-;;;743      //    XferCplt = 1;
-;;;744      //    EVAL_AUDIO_Stop(CODEC_PDWN_SW);
-;;;745        }
-;;;746        else
-;;;747        {
-;;;748          RepeatState = 0;
-;;;749          /* Switch to play command */
-;;;750          Command_index = 0; 
-;;;751        }
-;;;752      } 
-;;;753      /* Clears the EXTI's line pending bit.*/ 
-;;;754      EXTI_ClearITPendingBit(EXTI_Line0);
+;;;1105     //    XferCplt = 1;
+;;;1106     //    EVAL_AUDIO_Stop(CODEC_PDWN_SW);
+;;;1107       }
+;;;1108       else
+;;;1109       {
+;;;1110         RepeatState = 0;
+;;;1111         /* Switch to play command */
+;;;1112         Command_index = 0; 
+;;;1113       }
+;;;1114     } 
+;;;1115     /* Clears the EXTI's line pending bit.*/ 
+;;;1116     EXTI_ClearITPendingBit(EXTI_Line0);
 000022  e8bd4010          POP      {r4,lr}
 000026  2001              MOVS     r0,#1
 000028  f7ffbffe          B.W      EXTI_ClearITPendingBit
-;;;755    }
-;;;756    
+;;;1117   }
+;;;1118   
                           ENDP
 
                   |L3.44|
@@ -97,50 +97,50 @@
                           AREA ||i.EXTI1_IRQHandler||, CODE, READONLY, ALIGN=2
 
                   EXTI1_IRQHandler PROC
-;;;643      */
-;;;644    void EXTI1_IRQHandler(void)
+;;;1005     */
+;;;1006   void EXTI1_IRQHandler(void)
 000000  b510              PUSH     {r4,lr}
-;;;645    {
-;;;646      /* Check the clic on the accelerometer to Pause/Resume Playing */
-;;;647      if(EXTI_GetITStatus(EXTI_Line1) != RESET)
+;;;1007   {
+;;;1008     /* Check the clic on the accelerometer to Pause/Resume Playing */
+;;;1009     if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 000002  2002              MOVS     r0,#2
 000004  f7fffffe          BL       EXTI_GetITStatus
 000008  2800              CMP      r0,#0
 00000a  d00f              BEQ      |L4.44|
-;;;648      {
-;;;649        if( Count==1)
+;;;1010     {
+;;;1011       if( Count==1)
 00000c  4808              LDR      r0,|L4.48|
 00000e  7843              LDRB     r3,[r0,#1]  ; Count
 000010  2200              MOVS     r2,#0
-;;;650        {
-;;;651          PauseResumeStatus = 1;
+;;;1012       {
+;;;1013         PauseResumeStatus = 1;
 000012  2101              MOVS     r1,#1
-000014  2b01              CMP      r3,#1                 ;649
+000014  2b01              CMP      r3,#1                 ;1011
 000016  d006              BEQ      |L4.38|
-;;;652          Count = 0;
-;;;653        }
-;;;654        else
-;;;655        {
-;;;656          PauseResumeStatus = 0;
+;;;1014         Count = 0;
+;;;1015       }
+;;;1016       else
+;;;1017       {
+;;;1018         PauseResumeStatus = 0;
 000018  7002              STRB     r2,[r0,#0]
-;;;657          Count = 1;
+;;;1019         Count = 1;
 00001a  7041              STRB     r1,[r0,#1]
                   |L4.28|
-;;;658        }
-;;;659        /* Clear the EXTI line 1 pending bit */
-;;;660        EXTI_ClearITPendingBit(EXTI_Line1);
+;;;1020       }
+;;;1021       /* Clear the EXTI line 1 pending bit */
+;;;1022       EXTI_ClearITPendingBit(EXTI_Line1);
 00001c  e8bd4010          POP      {r4,lr}
 000020  2002              MOVS     r0,#2
 000022  f7ffbffe          B.W      EXTI_ClearITPendingBit
                   |L4.38|
-000026  7001              STRB     r1,[r0,#0]            ;651
-000028  7042              STRB     r2,[r0,#1]            ;652
+000026  7001              STRB     r1,[r0,#0]            ;1013
+000028  7042              STRB     r2,[r0,#1]            ;1014
 00002a  e7f7              B        |L4.28|
                   |L4.44|
-;;;661      }
-;;;662    }
+;;;1023     }
+;;;1024   }
 00002c  bd10              POP      {r4,pc}
-;;;663    
+;;;1025   
                           ENDP
 
 00002e  0000              DCW      0x0000
@@ -230,14 +230,14 @@
                           AREA ||i.OTG_FS_IRQHandler||, CODE, READONLY, ALIGN=2
 
                   OTG_FS_IRQHandler PROC
-;;;773      */
-;;;774    void OTG_FS_IRQHandler(void)
+;;;1135     */
+;;;1136   void OTG_FS_IRQHandler(void)
 000000  4801              LDR      r0,|L8.8|
-;;;775    {
-;;;776      USBH_OTG_ISR_Handler(&USB_OTG_Core);
+;;;1137   {
+;;;1138     USBH_OTG_ISR_Handler(&USB_OTG_Core);
 000002  f7ffbffe          B.W      USBH_OTG_ISR_Handler
-;;;777    }
-;;;778    #endif /* MEDIA_USB_KEY */
+;;;1139   }
+;;;1140   #endif /* MEDIA_USB_KEY */
                           ENDP
 
 000006  0000              DCW      0x0000
@@ -259,63 +259,63 @@
                           AREA ||i.RCC_IRQHandler||, CODE, READONLY, ALIGN=1
 
                   RCC_IRQHandler PROC
-;;;794      */
-;;;795    void RCC_IRQHandler(void)
+;;;1156     */
+;;;1157   void RCC_IRQHandler(void)
 000000  b510              PUSH     {r4,lr}
-;;;796    {
-;;;797      if(RCC_GetITStatus(RCC_IT_HSERDY) != RESET)
+;;;1158   {
+;;;1159     if(RCC_GetITStatus(RCC_IT_HSERDY) != RESET)
 000002  2008              MOVS     r0,#8
 000004  f7fffffe          BL       RCC_GetITStatus
 000008  b148              CBZ      r0,|L10.30|
-;;;798      { 
-;;;799        /* Clear HSERDY interrupt pending bit */
-;;;800        RCC_ClearITPendingBit(RCC_IT_HSERDY);
+;;;1160     { 
+;;;1161       /* Clear HSERDY interrupt pending bit */
+;;;1162       RCC_ClearITPendingBit(RCC_IT_HSERDY);
 00000a  2008              MOVS     r0,#8
 00000c  f7fffffe          BL       RCC_ClearITPendingBit
-;;;801    
-;;;802        /* Check if the HSE clock is still available */
-;;;803        if (RCC_GetFlagStatus(RCC_FLAG_HSERDY) != RESET)
+;;;1163   
+;;;1164       /* Check if the HSE clock is still available */
+;;;1165       if (RCC_GetFlagStatus(RCC_FLAG_HSERDY) != RESET)
 000010  2031              MOVS     r0,#0x31
 000012  f7fffffe          BL       RCC_GetFlagStatus
 000016  b110              CBZ      r0,|L10.30|
-;;;804        { 
-;;;805          /* Enable PLL: once the PLL is ready the PLLRDY interrupt is generated */ 
-;;;806          RCC_PLLCmd(ENABLE);     
+;;;1166       { 
+;;;1167         /* Enable PLL: once the PLL is ready the PLLRDY interrupt is generated */ 
+;;;1168         RCC_PLLCmd(ENABLE);     
 000018  2001              MOVS     r0,#1
 00001a  f7fffffe          BL       RCC_PLLCmd
                   |L10.30|
-;;;807        }
-;;;808      }
-;;;809    
-;;;810      if(RCC_GetITStatus(RCC_IT_PLLRDY) != RESET)
+;;;1169       }
+;;;1170     }
+;;;1171   
+;;;1172     if(RCC_GetITStatus(RCC_IT_PLLRDY) != RESET)
 00001e  2010              MOVS     r0,#0x10
 000020  f7fffffe          BL       RCC_GetITStatus
 000024  2800              CMP      r0,#0
 000026  d00c              BEQ      |L10.66|
-;;;811      { 
-;;;812        /* Clear PLLRDY interrupt pending bit */
-;;;813        RCC_ClearITPendingBit(RCC_IT_PLLRDY);
+;;;1173     { 
+;;;1174       /* Clear PLLRDY interrupt pending bit */
+;;;1175       RCC_ClearITPendingBit(RCC_IT_PLLRDY);
 000028  2010              MOVS     r0,#0x10
 00002a  f7fffffe          BL       RCC_ClearITPendingBit
-;;;814    
-;;;815        /* Check if the PLL is still locked */
-;;;816        if (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) != RESET)
+;;;1176   
+;;;1177       /* Check if the PLL is still locked */
+;;;1178       if (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) != RESET)
 00002e  2039              MOVS     r0,#0x39
 000030  f7fffffe          BL       RCC_GetFlagStatus
 000034  2800              CMP      r0,#0
 000036  d004              BEQ      |L10.66|
-;;;817        { 
-;;;818          /* Select PLL as system clock source */
-;;;819          RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+;;;1179       { 
+;;;1180         /* Select PLL as system clock source */
+;;;1181         RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
 000038  e8bd4010          POP      {r4,lr}
 00003c  2002              MOVS     r0,#2
 00003e  f7ffbffe          B.W      RCC_SYSCLKConfig
                   |L10.66|
-;;;820        }
-;;;821      }
-;;;822    }
+;;;1182       }
+;;;1183     }
+;;;1184   }
 000042  bd10              POP      {r4,pc}
-;;;823    
+;;;1185   
                           ENDP
 
 
@@ -334,1630 +334,2059 @@
                           AREA ||i.SysTick_Handler||, CODE, READONLY, ALIGN=2
 
                   SysTick_Handler PROC
-;;;203      */
-;;;204    void SysTick_Handler(void)
+;;;292      */
+;;;293    void SysTick_Handler(void)
 000000  e92d5ff0          PUSH     {r4-r12,lr}
-;;;205    {
-;;;206    	extern __IO uint16_t ADC3ConvertedValue;
-;;;207    	extern u32 tick;
-;;;208    	
-;;;209    	
-;;;210    	
-;;;211    	// раз в 10 мс
-;;;212    	// находим среднее значение
-;;;213    		summa[0]+=ADC3ConvertedValue;
-000004  4afe              LDR      r2,|L12.1024|
-000006  48ff              LDR      r0,|L12.1028|
-000008  8811              LDRH     r1,[r2,#0]  ; summa
-00000a  8800              LDRH     r0,[r0,#0]  ; ADC3ConvertedValue
-;;;214    
-;;;215    	 
-;;;216    //		summa[0]+=100;
-;;;217    		kol_average++;
-00000c  4bfe              LDR      r3,|L12.1032|
-00000e  4408              ADD      r0,r0,r1              ;213
-000010  b281              UXTH     r1,r0                 ;213
-000012  8011              STRH     r1,[r2,#0]            ;213
-000014  7818              LDRB     r0,[r3,#0]  ; kol_average
-000016  2500              MOVS     r5,#0
-000018  1c40              ADDS     r0,r0,#1
-00001a  b2c0              UXTB     r0,r0
-00001c  7018              STRB     r0,[r3,#0]
-;;;218    	
-;;;219    	if (kol_average==10)
-00001e  280a              CMP      r0,#0xa
-000020  d17b              BNE      |L12.282|
-;;;220    	{
-;;;221    	
-;;;222    		average[0]=summa[0]/kol_average;
-000022  fbb1f0f0          UDIV     r0,r1,r0
-000026  49f9              LDR      r1,|L12.1036|
-;;;223    		kol_average=0;
-;;;224    		summa[0]=0;
-;;;225    		
-;;;226    		
-;;;227    		// раз в 100 мс
-;;;228    		// вычисляем физическую виличину 
-;;;229    	
-;;;230    		fz[0]=fiz_vel(average[0],0);
-;;;231    	
-;;;232    		// проверяем реле на срабатывание
-;;;233    		test_rele(fz[0], 0);	
-;;;234    	
-;;;235    	// находим среднее значение по скользящей средней
-;;;236    		fz_average[0]=moving_average(fz[0],0);
-000028  f8df93e8          LDR      r9,|L12.1044|
-;;;237    		
-;;;238    		if (fz_average[0]>max[0])
-00002c  4cfa              LDR      r4,|L12.1048|
-00002e  8008              STRH     r0,[r1,#0]            ;222
-000030  49f7              LDR      r1,|L12.1040|
-000032  701d              STRB     r5,[r3,#0]            ;223
-000034  8015              STRH     r5,[r2,#0]            ;224
-000036  8008              STRH     r0,[r1,#0]            ;230
-000038  f8a90000          STRH     r0,[r9,#0]            ;236
-00003c  8821              LDRH     r1,[r4,#0]  ; max
-00003e  4288              CMP      r0,r1
-000040  d900              BLS      |L12.68|
-;;;239    			max[0]=fz_average[0];
-000042  8020              STRH     r0,[r4,#0]
-                  |L12.68|
-;;;240    		
-;;;241    		if (number_buff)
-;;;242    			Buf_adc_zap2[por++]=por; //fz_average[0];			
-000044  48f6              LDR      r0,|L12.1056|
-000046  f8dfa3d4          LDR      r10,|L12.1052|
-00004a  8800              LDRH     r0,[r0,#0]
-00004c  f89a2000          LDRB     r2,[r10,#0]           ;241  ; number_buff
-000050  1c41              ADDS     r1,r0,#1
-000052  2a00              CMP      r2,#0                 ;241
-;;;243    		else
-;;;244    			Buf_adc_zap1[por++]=por; //fz_average[0];
-000054  4af2              LDR      r2,|L12.1056|
-000056  b289              UXTH     r1,r1                 ;242
-000058  d001              BEQ      |L12.94|
-00005a  4bf2              LDR      r3,|L12.1060|
-00005c  e000              B        |L12.96|
-                  |L12.94|
-00005e  4bf2              LDR      r3,|L12.1064|
-                  |L12.96|
-;;;245    		
-;;;246    		if (por==999)
-000060  4eef              LDR      r6,|L12.1056|
-000062  f8230010          STRH     r0,[r3,r0,LSL #1]     ;244
-000066  8011              STRH     r1,[r2,#0]            ;244
-000068  8831              LDRH     r1,[r6,#0]  ; por
-00006a  f24030e7          MOV      r0,#0x3e7
-00006e  4281              CMP      r1,r0
-000070  d100              BNE      |L12.116|
-;;;247    			por=999;
-000072  8030              STRH     r0,[r6,#0]
-                  |L12.116|
-;;;248    	
-;;;249    	del++;
-000074  49ed              LDR      r1,|L12.1068|
-;;;250    	if (del==10)
-;;;251    	{
-;;;252    		
-;;;253    		del=0;
-;;;254    		tick++;
-000076  4fee              LDR      r7,|L12.1072|
-000078  8808              LDRH     r0,[r1,#0]            ;249  ; del
-00007a  1c40              ADDS     r0,r0,#1              ;249
-00007c  b280              UXTH     r0,r0                 ;249
-00007e  8008              STRH     r0,[r1,#0]            ;249
-000080  280a              CMP      r0,#0xa               ;250
-000082  d143              BNE      |L12.268|
-000084  800d              STRH     r5,[r1,#0]            ;253
-000086  6838              LDR      r0,[r7,#0]  ; tick
-;;;255    		time_label=tick;
-000088  49ea              LDR      r1,|L12.1076|
-00008a  1c40              ADDS     r0,r0,#1              ;254
-00008c  6038              STR      r0,[r7,#0]  ; tick
-00008e  8008              STRH     r0,[r1,#0]
-;;;256    
-;;;257    		
-;;;258    		rtc_Get(&DT1);
-000090  48e9              LDR      r0,|L12.1080|
-000092  f7fffffe          BL       rtc_Get
-;;;259    
-;;;260    		
-;;;261    		if (DT1.Seconds==0)
-000096  f8df83a0          LDR      r8,|L12.1080|
-00009a  f8981006          LDRB     r1,[r8,#6]  ; DT1
-00009e  b989              CBNZ     r1,|L12.196|
-;;;262    		{
-;;;263    			number_buff^=1;
-0000a0  f89a2000          LDRB     r2,[r10,#0]  ; number_buff
-;;;264    			DT_zap=DT1;
-0000a4  48e5              LDR      r0,|L12.1084|
-0000a6  f0820201          EOR      r2,r2,#1              ;263
-0000aa  f88a2000          STRB     r2,[r10,#0]           ;263
-0000ae  f1a80204          SUB      r2,r8,#4
-0000b2  6853              LDR      r3,[r2,#4]  ; DT1
-0000b4  6003              STR      r3,[r0,#0]  ; DT_zap
-0000b6  8912              LDRH     r2,[r2,#8]  ; DT1
-0000b8  8082              STRH     r2,[r0,#4]
-0000ba  7181              STRB     r1,[r0,#6]
-;;;265    			
-;;;266    			buffering=1;
-0000bc  49e0              LDR      r1,|L12.1088|
-0000be  2001              MOVS     r0,#1
-0000c0  7008              STRB     r0,[r1,#0]
-;;;267    			por=0;
-0000c2  8035              STRH     r5,[r6,#0]
-                  |L12.196|
-;;;268    		}
-;;;269    			
-;;;270    	 if (tick%2==0)
-0000c4  7838              LDRB     r0,[r7,#0]  ; tick
-0000c6  07c0              LSLS     r0,r0,#31
-;;;271    	 {
-;;;272    		 STM_EVAL_LEDOn(LED3);		 
-;;;273    	 }
-;;;274    	 else
-;;;275    	 {
-;;;276    		 STM_EVAL_LEDOff(LED3);	 
-0000c8  f04f0001          MOV      r0,#1
-0000cc  d026              BEQ      |L12.284|
-0000ce  f7fffffe          BL       STM_EVAL_LEDOff
-                  |L12.210|
-;;;277    	 }
-;;;278    	 
-;;;279    // indicate_lin(0,(u16)fz_average[0], 4096);
-;;;280    // indicate(1,(u16)(fz_average[0]/10));
-;;;281    	 
-;;;282    	 indicate(1,(u16)(max[0]/10));
-0000d2  8820              LDRH     r0,[r4,#0]  ; max
-0000d4  240a              MOVS     r4,#0xa
-0000d6  fbb0f1f4          UDIV     r1,r0,r4
-0000da  2001              MOVS     r0,#1
-0000dc  f7fffffe          BL       indicate
-;;;283    	 indicate_lin(2,(u16) fz_average[0], (u16) 4096, (u16) 28);	 
-0000e0  464e              MOV      r6,r9
-0000e2  f8b91000          LDRH     r1,[r9,#0]  ; fz_average
-0000e6  231c              MOVS     r3,#0x1c
-0000e8  f44f5280          MOV      r2,#0x1000
-0000ec  2002              MOVS     r0,#2
-0000ee  f7fffffe          BL       indicate_lin
-;;;284    	 indicate(3,(u16)(fz_average[0]/10));
-0000f2  8830              LDRH     r0,[r6,#0]  ; fz_average
-0000f4  fbb0f1f4          UDIV     r1,r0,r4
-0000f8  2003              MOVS     r0,#3
-0000fa  f7fffffe          BL       indicate
-;;;285    	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);
-0000fe  f8982005          LDRB     r2,[r8,#5]  ; DT1
-000102  f8981004          LDRB     r1,[r8,#4]  ; DT1
-000106  2004              MOVS     r0,#4
-000108  f7fffffe          BL       indicate_time
-                  |L12.268|
-;;;286    		 
-;;;287    	 }		 
-;;;288    		
-;;;289    	if ((tick%60)==0)
-00010c  6838              LDR      r0,[r7,#0]  ; tick
-00010e  213c              MOVS     r1,#0x3c
-000110  fbb0f2f1          UDIV     r2,r0,r1
-000114  fb010012          MLS      r0,r1,r2,r0
-000118  b118              CBZ      r0,|L12.290|
-                  |L12.282|
-00011a  e006              B        |L12.298|
-                  |L12.284|
-00011c  f7fffffe          BL       STM_EVAL_LEDOn
-000120  e7d7              B        |L12.210|
-                  |L12.290|
-;;;290    	{
-;;;291    		minute++;
-000122  49c8              LDR      r1,|L12.1092|
-000124  8808              LDRH     r0,[r1,#0]  ; minute
-000126  1c40              ADDS     r0,r0,#1
-000128  8008              STRH     r0,[r1,#0]
-                  |L12.298|
-;;;292    	}
-;;;293    	}
-;;;294    	
-;;;295    	
-;;;296    	if (new_komand)
-00012a  48c7              LDR      r0,|L12.1096|
-00012c  7800              LDRB     r0,[r0,#0]  ; new_komand
-00012e  2800              CMP      r0,#0
-000130  d071              BEQ      |L12.534|
-;;;297    	{
-;;;298    		u16 tmp=0;
-;;;299    	
-;;;300    		
-;;;301    		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
-000132  4ac6              LDR      r2,|L12.1100|
-000134  7890              LDRB     r0,[r2,#2]  ; RxBuffer
-000136  2877              CMP      r0,#0x77
-000138  d048              BEQ      |L12.460|
-00013a  2000              MOVS     r0,#0
-                  |L12.316|
-00013c  78d1              LDRB     r1,[r2,#3]  ; RxBuffer
-00013e  2972              CMP      r1,#0x72
-000140  d046              BEQ      |L12.464|
-000142  2100              MOVS     r1,#0
-                  |L12.324|
-000144  4008              ANDS     r0,r0,r1
-000146  7911              LDRB     r1,[r2,#4]  ; RxBuffer
-000148  2974              CMP      r1,#0x74
-00014a  d043              BEQ      |L12.468|
-00014c  2100              MOVS     r1,#0
-                  |L12.334|
-00014e  4008              ANDS     r0,r0,r1
-000150  7951              LDRB     r1,[r2,#5]  ; RxBuffer
-000152  295f              CMP      r1,#0x5f
-000154  d040              BEQ      |L12.472|
-000156  2100              MOVS     r1,#0
-                  |L12.344|
-000158  4008              ANDS     r0,r0,r1
-00015a  7991              LDRB     r1,[r2,#6]  ; RxBuffer
-00015c  2963              CMP      r1,#0x63
-00015e  d03d              BEQ      |L12.476|
-000160  2100              MOVS     r1,#0
-                  |L12.354|
-000162  4008              ANDS     r0,r0,r1
-000164  79d1              LDRB     r1,[r2,#7]  ; RxBuffer
-000166  296f              CMP      r1,#0x6f
-000168  d03a              BEQ      |L12.480|
-00016a  2100              MOVS     r1,#0
-                  |L12.364|
-00016c  4008              ANDS     r0,r0,r1
-00016e  7a11              LDRB     r1,[r2,#8]  ; RxBuffer
-000170  296e              CMP      r1,#0x6e
-000172  d037              BEQ      |L12.484|
-000174  2100              MOVS     r1,#0
-                  |L12.374|
-000176  4008              ANDS     r0,r0,r1
-000178  49b4              LDR      r1,|L12.1100|
-00017a  7a49              LDRB     r1,[r1,#9]  ; RxBuffer
-00017c  2966              CMP      r1,#0x66
-00017e  d033              BEQ      |L12.488|
-000180  2100              MOVS     r1,#0
-                  |L12.386|
-;;;302    		{
-;;;303    			u16 i=0;
-;;;304    			u8 errors=0;
-;;;305    			
-;;;306    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-;;;307    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-;;;308    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-;;;309    	
-;;;310        // ??????? ????????? ?????????????????? ??????
-;;;311      //  RCC->BDCR |=  RCC_BDCR_BDRST;
-;;;312     //   RCC->BDCR &= ~RCC_BDCR_BDRST;
-;;;313    			
-;;;314    			for (i = 0; i < rxsize-10; i += 2)
-;;;315    			{
-;;;316    			  tmp1=RxBuffer[i+10];
-;;;317    				tmp2=RxBuffer[i+11];
-;;;318    				tmp3=0;
-;;;319    				if (tmp1>'9')	
-;;;320    						tmp3=(tmp1-0x37)<<4;
-;;;321    				else
-;;;322    						tmp3=(tmp1-0x30)<<4;
-;;;323    	
-;;;324    				if (tmp2>'9')	
-;;;325    						tmp3+=(tmp2-0x37);
-;;;326    				else
-;;;327    						tmp3+=(tmp2-0x30);				
-;;;328    				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
-;;;329    				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
-;;;330    						errors=1;
-;;;331    			}
+;;;294    {
+;;;295    	extern __IO uint16_t ADC3ConvertedValue;
+;;;296    	extern u32 tick;
+;;;297    	extern st_conf conf;
+;;;298    	
+;;;299     //  проверка состояния датчика приближений - 
+;;;300    	
+;;;301    	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
+000004  4cfd              LDR      r4,|L12.1020|
+000006  6820              LDR      r0,[r4,#0]
+;;;302    		kol_pribl_vikl++;
+;;;303    	else
+;;;304    		kol_pribl_vkl++;
+000008  4afd              LDR      r2,|L12.1024|
+00000a  4bfe              LDR      r3,|L12.1028|
+00000c  07c0              LSLS     r0,r0,#31             ;301
+00000e  d060              BEQ      |L12.210|
+000010  8810              LDRH     r0,[r2,#0]  ; kol_pribl_vkl
+000012  1c40              ADDS     r0,r0,#1
+000014  8010              STRH     r0,[r2,#0]
+                  |L12.22|
+;;;305    	
+;;;306    	if (kol_pribl_vkl>=conf.tm_antidreb)
+000016  4ffc              LDR      r7,|L12.1032|
+;;;307    	{
+;;;308    			sost_pribl=1;
+;;;309    			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
+000018  4efc              LDR      r6,|L12.1036|
+00001a  f8b2c000          LDRH     r12,[r2,#0]           ;306  ; kol_pribl_vkl
+00001e  7938              LDRB     r0,[r7,#4]            ;306  ; conf
+000020  15b1              ASRS     r1,r6,#22
+000022  2500              MOVS     r5,#0                 ;308
+;;;310    			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
+000024  f44f7a00          MOV      r10,#0x200
+000028  f04f0901          MOV      r9,#1                 ;308
+00002c  4560              CMP      r0,r12                ;306
+00002e  d808              BHI      |L12.66|
+000030  f8df83dc          LDR      r8,|L12.1040|
+000034  f8889000          STRB     r9,[r8,#0]            ;308
+000038  8371              STRH     r1,[r6,#0x1a]         ;309
+00003a  f8a6a018          STRH     r10,[r6,#0x18]
+;;;311    			kol_pribl_vkl=0;
+00003e  8015              STRH     r5,[r2,#0]
+;;;312    		  kol_pribl_vikl=0;
+000040  801d              STRH     r5,[r3,#0]
+                  |L12.66|
+;;;313    	} 
+;;;314    	
+;;;315    	if (kol_pribl_vikl>=conf.tm_antidreb)
+000042  f8b3c000          LDRH     r12,[r3,#0]  ; kol_pribl_vikl
+000046  4560              CMP      r0,r12
+000048  d808              BHI      |L12.92|
+;;;316    	{
+;;;317    			sost_pribl=0;
+00004a  f8dfc3c4          LDR      r12,|L12.1040|
+00004e  f88c5000          STRB     r5,[r12,#0]
+;;;318    			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
+000052  8331              STRH     r1,[r6,#0x18]
+;;;319    			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
+000054  f8a6a01a          STRH     r10,[r6,#0x1a]
+;;;320    			kol_pribl_vkl=0;
+000058  8015              STRH     r5,[r2,#0]
+;;;321    			kol_pribl_vikl=0;
+00005a  801d              STRH     r5,[r3,#0]
+                  |L12.92|
+;;;322    	}
+;;;323    
+;;;324    	
+;;;325    	// проверка кнопок-состояния переключателей группы калибровок
+;;;326    	// on 	GPIO_PORT[Led]->BSRRL = GPIO_PIN[Led];
+;;;327    	// off  GPIO_PORT[Led]->BSRRH = GPIO_PIN[Led];    
+;;;328    //	conf.tek_gr_kal
+;;;329    
+;;;330    		if ((PORT_K1->IDR & PIN_K1)==0)
+00005c  6822              LDR      r2,[r4,#0]
+;;;331    			kol_gr1_vkl++;
+00005e  4bed              LDR      r3,|L12.1044|
+000060  0612              LSLS     r2,r2,#24             ;330
+000062  d403              BMI      |L12.108|
+000064  881a              LDRH     r2,[r3,#0]  ; kol_gr1_vkl
+000066  f1020201          ADD      r2,r2,#1
+00006a  801a              STRH     r2,[r3,#0]
+                  |L12.108|
 ;;;332    
-;;;333    			if (errors==0)
-;;;334    			{
-;;;335    			TxBuffer[0]='w';
-;;;336    			TxBuffer[1]='r';	
-;;;337    			TxBuffer[2]='t';
-;;;338    			TxBuffer[3]='_';					
-;;;339    			TxBuffer[4]='c';		
-;;;340    			TxBuffer[5]='o';	
-;;;341    			TxBuffer[6]='n';	
-;;;342    			TxBuffer[7]='f';	
-;;;343    			TxBuffer[8]='_';	
-;;;344    			TxBuffer[9]='o';
-;;;345    			TxBuffer[10]='k';	
-;;;346    			}
-;;;347    			else
-;;;348    			{
-;;;349    				TxBuffer[0]='w';
-;;;350    				TxBuffer[1]='r';	
-;;;351    				TxBuffer[2]='t';
-;;;352    				TxBuffer[3]='_';					
-;;;353    				TxBuffer[4]='c';		
-;;;354    				TxBuffer[5]='o';	
-;;;355    				TxBuffer[6]='n';	
-;;;356    				TxBuffer[7]='f';	
-;;;357    				TxBuffer[8]='_';	
-;;;358    				TxBuffer[9]='e';
-;;;359    				TxBuffer[10]='r';	
-;;;360    			}
-;;;361    	
-;;;362    			txsize=11;
-;;;363    			tekper=0;
-000182  f8dfb2cc          LDR      r11,|L12.1104|
-000186  f8df92cc          LDR      r9,|L12.1108|
-00018a  4cb3              LDR      r4,|L12.1112|
-00018c  f8dfa2cc          LDR      r10,|L12.1116|
-000190  4208              TST      r0,r1                 ;301
-000192  f04f085f          MOV      r8,#0x5f              ;301
-000196  d073              BEQ      |L12.640|
-000198  2600              MOVS     r6,#0                 ;303
-00019a  4637              MOV      r7,r6                 ;304
-00019c  4632              MOV      r2,r6                 ;306
-00019e  f2405125          MOV      r1,#0x525             ;306
-0001a2  4648              MOV      r0,r9                 ;306
-0001a4  f7fffffe          BL       USART_ITConfig
-0001a8  2201              MOVS     r2,#1                 ;307
-0001aa  f2406126          MOV      r1,#0x626             ;307
-0001ae  4648              MOV      r0,r9                 ;307
-0001b0  f7fffffe          BL       USART_ITConfig
-0001b4  2201              MOVS     r2,#1                 ;308
-0001b6  2108              MOVS     r1,#8                 ;308
-0001b8  48a9              LDR      r0,|L12.1120|
-0001ba  f7fffffe          BL       GPIO_WriteBit
-0001be  f8dfc2a4          LDR      r12,|L12.1124|
-0001c2  4ba9              LDR      r3,|L12.1128|
-0001c4  49a9              LDR      r1,|L12.1132|
-0001c6  f8dfe284          LDR      lr,|L12.1100|
-0001ca  e033              B        |L12.564|
-                  |L12.460|
-0001cc  2001              MOVS     r0,#1                 ;301
-0001ce  e7b5              B        |L12.316|
-                  |L12.464|
-0001d0  2101              MOVS     r1,#1                 ;301
-0001d2  e7b7              B        |L12.324|
-                  |L12.468|
-0001d4  2101              MOVS     r1,#1                 ;301
-0001d6  e7ba              B        |L12.334|
-                  |L12.472|
-0001d8  2101              MOVS     r1,#1                 ;301
-0001da  e7bd              B        |L12.344|
-                  |L12.476|
-0001dc  2101              MOVS     r1,#1                 ;301
-0001de  e7c0              B        |L12.354|
-                  |L12.480|
-0001e0  2101              MOVS     r1,#1                 ;301
-0001e2  e7c3              B        |L12.364|
-                  |L12.484|
-0001e4  2101              MOVS     r1,#1                 ;301
-0001e6  e7c6              B        |L12.374|
-                  |L12.488|
-0001e8  2101              MOVS     r1,#1                 ;301
-0001ea  e7ca              B        |L12.386|
-                  |L12.492|
-0001ec  eb0e0006          ADD      r0,lr,r6              ;316
-0001f0  7a82              LDRB     r2,[r0,#0xa]          ;316
-0001f2  f88c2000          STRB     r2,[r12,#0]           ;316
-0001f6  7ac0              LDRB     r0,[r0,#0xb]          ;317
-0001f8  7018              STRB     r0,[r3,#0]            ;317
-0001fa  2a39              CMP      r2,#0x39              ;319
-0001fc  700d              STRB     r5,[r1,#0]            ;318
-0001fe  ea4f1202          LSL      r2,r2,#4              ;322
-000202  d901              BLS      |L12.520|
-000204  f5a2725c          SUB      r2,r2,#0x370          ;320
-                  |L12.520|
-000208  700a              STRB     r2,[r1,#0]            ;322
-00020a  2839              CMP      r0,#0x39              ;324
-00020c  b2d2              UXTB     r2,r2                 ;327
-00020e  4410              ADD      r0,r0,r2              ;327
-000210  d902              BLS      |L12.536|
-000212  3837              SUBS     r0,r0,#0x37           ;325
-000214  e001              B        |L12.538|
-                  |L12.534|
-000216  e36f              B        |L12.2296|
-                  |L12.536|
-000218  3830              SUBS     r0,r0,#0x30           ;327
-                  |L12.538|
-00021a  7008              STRB     r0,[r1,#0]            ;327
-00021c  b2c2              UXTB     r2,r0                 ;328
-00021e  4894              LDR      r0,|L12.1136|
-000220  eb000056          ADD      r0,r0,r6,LSR #1       ;328
-000224  7002              STRB     r2,[r0,#0]            ;328
-000226  7800              LDRB     r0,[r0,#0]            ;329
-000228  780a              LDRB     r2,[r1,#0]            ;329  ; tmp3
-00022a  4290              CMP      r0,r2                 ;329
-00022c  d000              BEQ      |L12.560|
-00022e  2701              MOVS     r7,#1                 ;330
-                  |L12.560|
-000230  1cb6              ADDS     r6,r6,#2              ;314
-000232  b2b6              UXTH     r6,r6                 ;314
-                  |L12.564|
-000234  488f              LDR      r0,|L12.1140|
-000236  8800              LDRH     r0,[r0,#0]            ;314  ; rxsize
-000238  380a              SUBS     r0,r0,#0xa            ;314
-00023a  4286              CMP      r6,r0                 ;314
-00023c  dbd6              BLT      |L12.492|
-00023e  2077              MOVS     r0,#0x77              ;301
-000240  7020              STRB     r0,[r4,#0]            ;349
-000242  2363              MOVS     r3,#0x63              ;301
-000244  226e              MOVS     r2,#0x6e              ;301
-000246  2166              MOVS     r1,#0x66              ;301
-000248  f04f0072          MOV      r0,#0x72              ;350
-00024c  2f00              CMP      r7,#0                 ;333
-00024e  7060              STRB     r0,[r4,#1]            ;350
-000250  d07e              BEQ      |L12.848|
-000252  2674              MOVS     r6,#0x74              ;351
-000254  70a6              STRB     r6,[r4,#2]            ;351
-000256  f8848003          STRB     r8,[r4,#3]            ;352
-00025a  7123              STRB     r3,[r4,#4]            ;353
-00025c  236f              MOVS     r3,#0x6f              ;354
-00025e  7163              STRB     r3,[r4,#5]            ;354
-000260  71a2              STRB     r2,[r4,#6]            ;355
-000262  71e1              STRB     r1,[r4,#7]            ;356
-000264  f8848008          STRB     r8,[r4,#8]            ;357
-000268  2165              MOVS     r1,#0x65              ;358
-00026a  7261              STRB     r1,[r4,#9]            ;358
-                  |L12.620|
-00026c  72a0              STRB     r0,[r4,#0xa]          ;359
-00026e  200b              MOVS     r0,#0xb               ;362
-000270  f8aa0000          STRH     r0,[r10,#0]           ;362
-000274  f8ab5000          STRH     r5,[r11,#0]
-;;;364    			USART_SendData(USART2, 0x3A);
-000278  213a              MOVS     r1,#0x3a
-00027a  4648              MOV      r0,r9
-00027c  f7fffffe          BL       USART_SendData
-                  |L12.640|
-;;;365    		}
-;;;366    
-;;;367    		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
-000280  4e72              LDR      r6,|L12.1100|
-000282  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
-000284  2877              CMP      r0,#0x77
-000286  d07d              BEQ      |L12.900|
-000288  2000              MOVS     r0,#0
-                  |L12.650|
-00028a  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
-00028c  2968              CMP      r1,#0x68
-00028e  d07a              BEQ      |L12.902|
-000290  2100              MOVS     r1,#0
-                  |L12.658|
-000292  4008              ANDS     r0,r0,r1
-000294  7931              LDRB     r1,[r6,#4]  ; RxBuffer
-000296  296f              CMP      r1,#0x6f
-000298  d076              BEQ      |L12.904|
-00029a  2100              MOVS     r1,#0
-                  |L12.668|
-00029c  4008              ANDS     r0,r0,r1
-00029e  7971              LDRB     r1,[r6,#5]  ; RxBuffer
-0002a0  293f              CMP      r1,#0x3f
-0002a2  d072              BEQ      |L12.906|
-0002a4  2100              MOVS     r1,#0
-                  |L12.678|
-0002a6  4208              TST      r0,r1
-;;;368    		{
-;;;369    			
-;;;370    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-;;;371    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-;;;372    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-;;;373    			
-;;;374    			TxBuffer[0]='u';
-;;;375    			TxBuffer[1]='s';	
-0002a8  f04f0773          MOV      r7,#0x73
-0002ac  d02e              BEQ      |L12.780|
-0002ae  2200              MOVS     r2,#0                 ;370
-0002b0  f2405125          MOV      r1,#0x525             ;370
-0002b4  4648              MOV      r0,r9                 ;370
-0002b6  f7fffffe          BL       USART_ITConfig
-0002ba  2201              MOVS     r2,#1                 ;371
-0002bc  f2406126          MOV      r1,#0x626             ;371
-0002c0  4648              MOV      r0,r9                 ;371
-0002c2  f7fffffe          BL       USART_ITConfig
-0002c6  2201              MOVS     r2,#1                 ;372
-0002c8  2108              MOVS     r1,#8                 ;372
-0002ca  4865              LDR      r0,|L12.1120|
-0002cc  f7fffffe          BL       GPIO_WriteBit
-0002d0  2075              MOVS     r0,#0x75              ;374
-0002d2  7020              STRB     r0,[r4,#0]            ;374
-0002d4  7067              STRB     r7,[r4,#1]
-;;;376    			TxBuffer[2]='o';
-0002d6  206f              MOVS     r0,#0x6f
-0002d8  70a0              STRB     r0,[r4,#2]
-;;;377    			TxBuffer[3]='_';					
-0002da  f8848003          STRB     r8,[r4,#3]
-;;;378    			TxBuffer[4]='a';		
-0002de  2161              MOVS     r1,#0x61
-0002e0  7121              STRB     r1,[r4,#4]
-;;;379    			TxBuffer[5]='r';	
-0002e2  2172              MOVS     r1,#0x72
-0002e4  7161              STRB     r1,[r4,#5]
-;;;380    			TxBuffer[6]='m';	
-0002e6  216d              MOVS     r1,#0x6d
-0002e8  71a1              STRB     r1,[r4,#6]
-;;;381    			TxBuffer[7]='_';	
-0002ea  f8848007          STRB     r8,[r4,#7]
-;;;382    			TxBuffer[8]='k';	
-0002ee  206b              MOVS     r0,#0x6b
-0002f0  7220              STRB     r0,[r4,#8]
-;;;383    			TxBuffer[9]='e';
-0002f2  2065              MOVS     r0,#0x65
-0002f4  7260              STRB     r0,[r4,#9]
-;;;384    			TxBuffer[10]='y';	
-0002f6  2079              MOVS     r0,#0x79
-0002f8  72a0              STRB     r0,[r4,#0xa]
-;;;385    	
-;;;386    			txsize=11;
-0002fa  210b              MOVS     r1,#0xb
-0002fc  f8aa1000          STRH     r1,[r10,#0]
-;;;387    			tekper=0;
-000300  f8ab5000          STRH     r5,[r11,#0]
-;;;388    			USART_SendData(USART2, 0x3A);
-000304  213a              MOVS     r1,#0x3a
-000306  4648              MOV      r0,r9
-000308  f7fffffe          BL       USART_SendData
-                  |L12.780|
-;;;389    		}
-;;;390    	
-;;;391    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
-00030c  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
-00030e  2872              CMP      r0,#0x72
-000310  d06e              BEQ      |L12.1008|
-000312  2000              MOVS     r0,#0
-                  |L12.788|
-000314  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
-000316  2965              CMP      r1,#0x65
-000318  d06b              BEQ      |L12.1010|
-00031a  2100              MOVS     r1,#0
+;;;333    		if ((PORT_K2->IDR & PIN_K2)==0)
+00006c  6822              LDR      r2,[r4,#0]
+00006e  0594              LSLS     r4,r2,#22
+;;;334    			kol_gr2_vkl++;
+000070  4ae9              LDR      r2,|L12.1048|
+000072  d402              BMI      |L12.122|
+000074  8814              LDRH     r4,[r2,#0]  ; kol_gr2_vkl
+000076  1c64              ADDS     r4,r4,#1
+000078  8014              STRH     r4,[r2,#0]
+                  |L12.122|
+;;;335    
+;;;336    		if (kol_gr1_vkl>=conf.tm_antidreb)
+;;;337    		{
+;;;338    				conf.tek_gr_kal=0;
+;;;339    	 // gr 1
+;;;340    			PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
+00007a  f8dfc380          LDR      r12,|L12.1020|
+00007e  f8b38000          LDRH     r8,[r3,#0]            ;336  ; kol_gr1_vkl
+000082  2440              MOVS     r4,#0x40
+000084  f10c0c08          ADD      r12,r12,#8
+;;;341    			PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+000088  f10c0602          ADD      r6,r12,#2
+00008c  4540              CMP      r0,r8                 ;336
+00008e  d805              BHI      |L12.156|
+000090  70fd              STRB     r5,[r7,#3]            ;338
+000092  f8ac4000          STRH     r4,[r12,#0]           ;340
+000096  8031              STRH     r1,[r6,#0]
+;;;342    
+;;;343    				kol_gr1_vkl=0;
+000098  801d              STRH     r5,[r3,#0]
+;;;344    				kol_gr2_vkl=0;
+00009a  8015              STRH     r5,[r2,#0]
+                  |L12.156|
+;;;345    		}		
+;;;346    
+;;;347    		if (kol_gr2_vkl>=conf.tm_antidreb)
+00009c  8817              LDRH     r7,[r2,#0]  ; kol_gr2_vkl
+00009e  42b8              CMP      r0,r7
+0000a0  d807              BHI      |L12.178|
+;;;348    		{
+;;;349    				conf.tek_gr_kal=1;
+0000a2  4fd9              LDR      r7,|L12.1032|
+0000a4  f8879003          STRB     r9,[r7,#3]
+;;;350    				 // gr 2
+;;;351    			PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
+0000a8  8034              STRH     r4,[r6,#0]
+;;;352    			PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
+0000aa  f8ac1000          STRH     r1,[r12,#0]
+;;;353    				kol_gr1_vkl=0;
+0000ae  801d              STRH     r5,[r3,#0]
+;;;354    				kol_gr2_vkl=0;
+0000b0  8015              STRH     r5,[r2,#0]
+                  |L12.178|
+;;;355    		}				
+;;;356    	
+;;;357    	/*
+;;;358    	  RCC_AHB1PeriphClockCmd(GPIO_CLK[Led], ENABLE);
+;;;359    
+;;;360    
+;;;361      GPIO_InitStructure.GPIO_Pin = GPIO_PIN[Led];
+;;;362      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+;;;363      GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+;;;364      GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+;;;365      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+;;;366      GPIO_Init(GPIO_PORT[Led], &GPIO_InitStructure);
+;;;367    	*/
+;;;368    	
+;;;369    			// проверяем реле на срабатывание
+;;;370    	test_rele(fz[0], 0);	
+;;;371    	
+;;;372    	
+;;;373    	// раз в 10 мс
+;;;374    	// находим среднее значение
+;;;375    	summa[0]+=ADC3ConvertedValue;
+0000b2  4adb              LDR      r2,|L12.1056|
+0000b4  48db              LDR      r0,|L12.1060|
+0000b6  4cd9              LDR      r4,|L12.1052|
+0000b8  8811              LDRH     r1,[r2,#0]  ; summa
+0000ba  8800              LDRH     r0,[r0,#0]  ; ADC3ConvertedValue
+;;;376    	 
+;;;377    //		summa[0]+=100;
+;;;378    	kol_average++;
+0000bc  4bda              LDR      r3,|L12.1064|
+0000be  4408              ADD      r0,r0,r1              ;375
+0000c0  b281              UXTH     r1,r0                 ;375
+0000c2  8011              STRH     r1,[r2,#0]            ;375
+0000c4  7818              LDRB     r0,[r3,#0]  ; kol_average
+0000c6  1c40              ADDS     r0,r0,#1
+0000c8  b2c0              UXTB     r0,r0
+0000ca  7018              STRB     r0,[r3,#0]
+;;;379    	
+;;;380    	if (kol_average==10)
+0000cc  280a              CMP      r0,#0xa
+0000ce  d004              BEQ      |L12.218|
+0000d0  e09f              B        |L12.530|
+                  |L12.210|
+0000d2  8818              LDRH     r0,[r3,#0]            ;302  ; kol_pribl_vikl
+0000d4  1c40              ADDS     r0,r0,#1              ;302
+0000d6  8018              STRH     r0,[r3,#0]            ;302
+0000d8  e79d              B        |L12.22|
+                  |L12.218|
+;;;381    	{			
+;;;382    	
+;;;383    		average[0]=summa[0]/kol_average;
+0000da  fbb1f0f0          UDIV     r0,r1,r0
+0000de  49d3              LDR      r1,|L12.1068|
+;;;384    		kol_average=0;
+;;;385    		summa[0]=0;
+;;;386    		
+;;;387    		
+;;;388    		// раз в 100 мс
+;;;389    		// вычисляем физическую величину
+;;;390    		
+;;;391    		if (conf.tek_gr_kal==0)
+0000e0  f8dfb324          LDR      r11,|L12.1032|
+0000e4  8008              STRH     r0,[r1,#0]            ;383
+0000e6  701d              STRB     r5,[r3,#0]            ;384
+0000e8  8015              STRH     r5,[r2,#0]            ;385
+0000ea  f89b1003          LDRB     r1,[r11,#3]  ; conf
+0000ee  2900              CMP      r1,#0
+;;;392    				if (sost_pribl==0)
+;;;393    					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl1);
+;;;394    				else
+;;;395    					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl2);
+;;;396    		else
+;;;397    				if (sost_pribl==0)
+0000f0  49c7              LDR      r1,|L12.1040|
+0000f2  7809              LDRB     r1,[r1,#0]  ; sost_pribl
+0000f4  d01b              BEQ      |L12.302|
+0000f6  2900              CMP      r1,#0
+;;;398    					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl1);
+;;;399    				else
+;;;400    					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
+0000f8  4659              MOV      r1,r11
+0000fa  d01f              BEQ      |L12.316|
+0000fc  3196              ADDS     r1,r1,#0x96
+                  |L12.254|
+0000fe  f7fffffe          BL       fiz_vel
+000102  8020              STRH     r0,[r4,#0]            ;398
+;;;401    			
+;;;402    	
+;;;403    	// находим среднее значение по скользящей средней
+;;;404    		fz_average[0]=moving_average(fz[0],0);
+000104  b280              UXTH     r0,r0
+000106  2100              MOVS     r1,#0
+000108  f7fffffe          BL       moving_average
+00010c  f8df8320          LDR      r8,|L12.1072|
+;;;405    		
+;;;406    		if (fz_average[0]>max[0])
+000110  4cc8              LDR      r4,|L12.1076|
+000112  f8a80000          STRH     r0,[r8,#0]            ;404
+000116  8821              LDRH     r1,[r4,#0]  ; max
+000118  4288              CMP      r0,r1
+00011a  d900              BLS      |L12.286|
+;;;407    			max[0]=fz_average[0];
+00011c  8020              STRH     r0,[r4,#0]
+                  |L12.286|
+;;;408    		
+;;;409    		if (number_buff)
+00011e  48c6              LDR      r0,|L12.1080|
+;;;410    			Buf_adc_zap2[por++]=por; //fz_average[0];			
+;;;411    		else
+;;;412    			Buf_adc_zap1[por++]=por; //fz_average[0];
+000120  49c6              LDR      r1,|L12.1084|
+000122  7800              LDRB     r0,[r0,#0]            ;409  ; number_buff
+000124  2800              CMP      r0,#0                 ;409
+000126  8808              LDRH     r0,[r1,#0]  ; por
+000128  d00a              BEQ      |L12.320|
+00012a  4ac5              LDR      r2,|L12.1088|
+00012c  e009              B        |L12.322|
+                  |L12.302|
+00012e  2900              CMP      r1,#0                 ;392
+000130  49b5              LDR      r1,|L12.1032|
+000132  d001              BEQ      |L12.312|
+000134  3146              ADDS     r1,r1,#0x46           ;395
+000136  e7e2              B        |L12.254|
+                  |L12.312|
+000138  311e              ADDS     r1,r1,#0x1e           ;393
+00013a  e7e0              B        |L12.254|
+                  |L12.316|
+00013c  316e              ADDS     r1,r1,#0x6e           ;398
+00013e  e7de              B        |L12.254|
+                  |L12.320|
+000140  4ac0              LDR      r2,|L12.1092|
+                  |L12.322|
+;;;413    		
+;;;414    		if (por==999)
+000142  4ebe              LDR      r6,|L12.1084|
+000144  f8220010          STRH     r0,[r2,r0,LSL #1]     ;412
+000148  1c40              ADDS     r0,r0,#1              ;412
+00014a  8008              STRH     r0,[r1,#0]            ;412
+00014c  8831              LDRH     r1,[r6,#0]  ; por
+00014e  f24030e7          MOV      r0,#0x3e7
+000152  4281              CMP      r1,r0
+000154  d100              BNE      |L12.344|
+;;;415    			por=999;
+000156  8030              STRH     r0,[r6,#0]
+                  |L12.344|
+;;;416    	
+;;;417    	del++;
+000158  49bb              LDR      r1,|L12.1096|
+;;;418    	if (del==10)
+;;;419    	{		
+;;;420    		del=0;
+;;;421    		tick++;
+00015a  4fbc              LDR      r7,|L12.1100|
+00015c  8808              LDRH     r0,[r1,#0]            ;417  ; del
+00015e  1c40              ADDS     r0,r0,#1              ;417
+000160  b280              UXTH     r0,r0                 ;417
+000162  8008              STRH     r0,[r1,#0]            ;417
+000164  280a              CMP      r0,#0xa               ;418
+000166  d145              BNE      |L12.500|
+000168  800d              STRH     r5,[r1,#0]            ;420
+00016a  6838              LDR      r0,[r7,#0]  ; tick
+;;;422    		time_label=tick;
+00016c  49b8              LDR      r1,|L12.1104|
+00016e  1c40              ADDS     r0,r0,#1              ;421
+000170  6038              STR      r0,[r7,#0]  ; tick
+000172  8008              STRH     r0,[r1,#0]
+;;;423    		
+;;;424    		rtc_Get(&DT1);
+000174  48b7              LDR      r0,|L12.1108|
+000176  f7fffffe          BL       rtc_Get
+;;;425    		
+;;;426    		if (DT1.Seconds==0)
+00017a  f8dfa2d8          LDR      r10,|L12.1108|
+00017e  f89a1006          LDRB     r1,[r10,#6]  ; DT1
+000182  b981              CBNZ     r1,|L12.422|
+;;;427    		{
+;;;428    			number_buff^=1;
+000184  48ac              LDR      r0,|L12.1080|
+000186  7802              LDRB     r2,[r0,#0]  ; number_buff
+000188  f0820201          EOR      r2,r2,#1
+00018c  7002              STRB     r2,[r0,#0]
+;;;429    			DT_zap=DT1;
+00018e  48b2              LDR      r0,|L12.1112|
+000190  f1aa0204          SUB      r2,r10,#4
+000194  6853              LDR      r3,[r2,#4]  ; DT1
+000196  6003              STR      r3,[r0,#0]  ; DT_zap
+000198  8912              LDRH     r2,[r2,#8]  ; DT1
+00019a  8082              STRH     r2,[r0,#4]
+00019c  7181              STRB     r1,[r0,#6]
+;;;430    			
+;;;431    			buffering=1;
+00019e  49af              LDR      r1,|L12.1116|
+0001a0  f8819000          STRB     r9,[r1,#0]
+;;;432    			por=0;
+0001a4  8035              STRH     r5,[r6,#0]
+                  |L12.422|
+;;;433    		}
+;;;434    			
+;;;435    	 if (tick%2==0)
+0001a6  7838              LDRB     r0,[r7,#0]  ; tick
+0001a8  07c0              LSLS     r0,r0,#31
+;;;436    	 {
+;;;437    		 STM_EVAL_LEDOn(LED3);		 
+;;;438    	 }
+;;;439    	 else
+;;;440    	 {
+;;;441    		 STM_EVAL_LEDOff(LED3);	 
+0001aa  f04f0001          MOV      r0,#1
+0001ae  d029              BEQ      |L12.516|
+0001b0  f7fffffe          BL       STM_EVAL_LEDOff
+                  |L12.436|
+;;;442    	 }
+;;;443    	 
+;;;444    // indicate_lin(0,(u16)fz_average[0], 4096);
+;;;445    // indicate(1,(u16)(fz_average[0]/10));
+;;;446    	 
+;;;447    	 // dop usrednenie na vivod indicatorov???
+;;;448    	 indicate(1,(u16)(max[0]/10),3);   																// maximum
+0001b4  8820              LDRH     r0,[r4,#0]  ; max
+0001b6  240a              MOVS     r4,#0xa
+0001b8  fbb0f1f4          UDIV     r1,r0,r4
+0001bc  2203              MOVS     r2,#3
+0001be  2001              MOVS     r0,#1
+0001c0  f7fffffe          BL       indicate
+;;;449    	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+0001c4  f89b3014          LDRB     r3,[r11,#0x14]  ; conf
+0001c8  f8bb2016          LDRH     r2,[r11,#0x16]  ; conf
+0001cc  4646              MOV      r6,r8
+0001ce  f8b81000          LDRH     r1,[r8,#0]  ; fz_average
+0001d2  2002              MOVS     r0,#2
+0001d4  f7fffffe          BL       indicate_lin
+;;;450    	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
+0001d8  8830              LDRH     r0,[r6,#0]  ; fz_average
+0001da  2203              MOVS     r2,#3
+0001dc  fbb0f1f4          UDIV     r1,r0,r4
+0001e0  4610              MOV      r0,r2
+0001e2  f7fffffe          BL       indicate
+;;;451    	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
+0001e6  f89a2005          LDRB     r2,[r10,#5]  ; DT1
+0001ea  f89a1004          LDRB     r1,[r10,#4]  ; DT1
+0001ee  2004              MOVS     r0,#4
+0001f0  f7fffffe          BL       indicate_time
+                  |L12.500|
+;;;452    	 }		 
+;;;453    		
+;;;454    	if ((tick%60)==0)
+0001f4  6838              LDR      r0,[r7,#0]  ; tick
+0001f6  213c              MOVS     r1,#0x3c
+0001f8  fbb0f2f1          UDIV     r2,r0,r1
+0001fc  fb010012          MLS      r0,r1,r2,r0
+000200  b118              CBZ      r0,|L12.522|
+000202  e006              B        |L12.530|
+                  |L12.516|
+000204  f7fffffe          BL       STM_EVAL_LEDOn
+000208  e7d4              B        |L12.436|
+                  |L12.522|
+;;;455    	{
+;;;456    		minute++;
+00020a  4895              LDR      r0,|L12.1120|
+00020c  8801              LDRH     r1,[r0,#0]  ; minute
+00020e  1c49              ADDS     r1,r1,#1
+000210  8001              STRH     r1,[r0,#0]
+                  |L12.530|
+;;;457    	}
+;;;458    	}	
+;;;459    	
+;;;460    	if (new_komand)
+000212  4894              LDR      r0,|L12.1124|
+000214  7800              LDRB     r0,[r0,#0]  ; new_komand
+000216  2800              CMP      r0,#0
+000218  d071              BEQ      |L12.766|
+;;;461    	{
+;;;462    		u16 tmp=0;
+;;;463    	
+;;;464    		// wrt_conf
+;;;465    		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='r')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='c')&(RxBuffer[7]=='o')&(RxBuffer[8]=='n')&(RxBuffer[9]=='f'))
+00021a  4a93              LDR      r2,|L12.1128|
+00021c  7890              LDRB     r0,[r2,#2]  ; RxBuffer
+00021e  2877              CMP      r0,#0x77
+000220  d048              BEQ      |L12.692|
+000222  2000              MOVS     r0,#0
+                  |L12.548|
+000224  78d1              LDRB     r1,[r2,#3]  ; RxBuffer
+000226  2972              CMP      r1,#0x72
+000228  d046              BEQ      |L12.696|
+00022a  2100              MOVS     r1,#0
+                  |L12.556|
+00022c  4008              ANDS     r0,r0,r1
+00022e  7911              LDRB     r1,[r2,#4]  ; RxBuffer
+000230  2974              CMP      r1,#0x74
+000232  d043              BEQ      |L12.700|
+000234  2100              MOVS     r1,#0
+                  |L12.566|
+000236  4008              ANDS     r0,r0,r1
+000238  7951              LDRB     r1,[r2,#5]  ; RxBuffer
+00023a  295f              CMP      r1,#0x5f
+00023c  d040              BEQ      |L12.704|
+00023e  2100              MOVS     r1,#0
+                  |L12.576|
+000240  4008              ANDS     r0,r0,r1
+000242  7991              LDRB     r1,[r2,#6]  ; RxBuffer
+000244  2963              CMP      r1,#0x63
+000246  d03d              BEQ      |L12.708|
+000248  2100              MOVS     r1,#0
+                  |L12.586|
+00024a  4008              ANDS     r0,r0,r1
+00024c  79d1              LDRB     r1,[r2,#7]  ; RxBuffer
+00024e  296f              CMP      r1,#0x6f
+000250  d03a              BEQ      |L12.712|
+000252  2100              MOVS     r1,#0
+                  |L12.596|
+000254  4008              ANDS     r0,r0,r1
+000256  7a11              LDRB     r1,[r2,#8]  ; RxBuffer
+000258  296e              CMP      r1,#0x6e
+00025a  d037              BEQ      |L12.716|
+00025c  2100              MOVS     r1,#0
+                  |L12.606|
+00025e  4008              ANDS     r0,r0,r1
+000260  4981              LDR      r1,|L12.1128|
+000262  7a49              LDRB     r1,[r1,#9]  ; RxBuffer
+000264  2966              CMP      r1,#0x66
+000266  d033              BEQ      |L12.720|
+000268  2100              MOVS     r1,#0
+                  |L12.618|
+;;;466    		{
+;;;467    			u16 i=0;
+;;;468    			u8 errors=0;
+;;;469    			
+;;;470    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+;;;471    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+;;;472    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+;;;473    	
+;;;474    		
+;;;475    			for (i = 0; i < rxsize-10; i += 2)
+;;;476    			{
+;;;477    			  tmp1=RxBuffer[i+10];
+;;;478    				tmp2=RxBuffer[i+11];
+;;;479    				tmp3=0;
+;;;480    				if (tmp1>'9')	
+;;;481    						tmp3=(tmp1-0x37)<<4;
+;;;482    				else
+;;;483    						tmp3=(tmp1-0x30)<<4;
+;;;484    	
+;;;485    				if (tmp2>'9')	
+;;;486    						tmp3+=(tmp2-0x37);
+;;;487    				else
+;;;488    						tmp3+=(tmp2-0x30);				
+;;;489    				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+;;;490    				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
+;;;491    						errors=1;
+;;;492    			}
+;;;493    
+;;;494    			if (errors==0)
+;;;495    			{
+;;;496    			TxBuffer[0]='w';
+;;;497    			TxBuffer[1]='r';	
+;;;498    			TxBuffer[2]='t';
+;;;499    			TxBuffer[3]='_';					
+;;;500    			TxBuffer[4]='c';		
+;;;501    			TxBuffer[5]='o';	
+;;;502    			TxBuffer[6]='n';	
+;;;503    			TxBuffer[7]='f';	
+;;;504    			TxBuffer[8]='_';	
+;;;505    			TxBuffer[9]='o';
+;;;506    			TxBuffer[10]='k';	
+;;;507    			}
+;;;508    			else
+;;;509    			{
+;;;510    				TxBuffer[0]='w';
+;;;511    				TxBuffer[1]='r';	
+;;;512    				TxBuffer[2]='t';
+;;;513    				TxBuffer[3]='_';					
+;;;514    				TxBuffer[4]='c';		
+;;;515    				TxBuffer[5]='o';	
+;;;516    				TxBuffer[6]='n';	
+;;;517    				TxBuffer[7]='f';	
+;;;518    				TxBuffer[8]='_';	
+;;;519    				TxBuffer[9]='e';
+;;;520    				TxBuffer[10]='r';	
+;;;521    			}
+;;;522    	
+;;;523    			txsize=11;
+;;;524    			tekper=0;
+00026a  f8dfb200          LDR      r11,|L12.1132|
+00026e  f8df9200          LDR      r9,|L12.1136|
+000272  4c80              LDR      r4,|L12.1140|
+000274  f8dfa200          LDR      r10,|L12.1144|
+000278  4208              TST      r0,r1                 ;465
+00027a  f04f085f          MOV      r8,#0x5f              ;465
+00027e  d073              BEQ      |L12.872|
+000280  2600              MOVS     r6,#0                 ;467
+000282  4637              MOV      r7,r6                 ;468
+000284  4632              MOV      r2,r6                 ;470
+000286  f2405125          MOV      r1,#0x525             ;470
+00028a  4648              MOV      r0,r9                 ;470
+00028c  f7fffffe          BL       USART_ITConfig
+000290  2201              MOVS     r2,#1                 ;471
+000292  f2406126          MOV      r1,#0x626             ;471
+000296  4648              MOV      r0,r9                 ;471
+000298  f7fffffe          BL       USART_ITConfig
+00029c  2201              MOVS     r2,#1                 ;472
+00029e  2108              MOVS     r1,#8                 ;472
+0002a0  4876              LDR      r0,|L12.1148|
+0002a2  f7fffffe          BL       GPIO_WriteBit
+0002a6  f8dfc1d8          LDR      r12,|L12.1152|
+0002aa  4b76              LDR      r3,|L12.1156|
+0002ac  4976              LDR      r1,|L12.1160|
+0002ae  f8dfe1b8          LDR      lr,|L12.1128|
+0002b2  e033              B        |L12.796|
+                  |L12.692|
+0002b4  2001              MOVS     r0,#1                 ;465
+0002b6  e7b5              B        |L12.548|
+                  |L12.696|
+0002b8  2101              MOVS     r1,#1                 ;465
+0002ba  e7b7              B        |L12.556|
+                  |L12.700|
+0002bc  2101              MOVS     r1,#1                 ;465
+0002be  e7ba              B        |L12.566|
+                  |L12.704|
+0002c0  2101              MOVS     r1,#1                 ;465
+0002c2  e7bd              B        |L12.576|
+                  |L12.708|
+0002c4  2101              MOVS     r1,#1                 ;465
+0002c6  e7c0              B        |L12.586|
+                  |L12.712|
+0002c8  2101              MOVS     r1,#1                 ;465
+0002ca  e7c3              B        |L12.596|
+                  |L12.716|
+0002cc  2101              MOVS     r1,#1                 ;465
+0002ce  e7c6              B        |L12.606|
+                  |L12.720|
+0002d0  2101              MOVS     r1,#1                 ;465
+0002d2  e7ca              B        |L12.618|
+                  |L12.724|
+0002d4  eb0e0006          ADD      r0,lr,r6              ;477
+0002d8  7a82              LDRB     r2,[r0,#0xa]          ;477
+0002da  f88c2000          STRB     r2,[r12,#0]           ;477
+0002de  7ac0              LDRB     r0,[r0,#0xb]          ;478
+0002e0  7018              STRB     r0,[r3,#0]            ;478
+0002e2  2a39              CMP      r2,#0x39              ;480
+0002e4  700d              STRB     r5,[r1,#0]            ;479
+0002e6  ea4f1202          LSL      r2,r2,#4              ;483
+0002ea  d901              BLS      |L12.752|
+0002ec  f5a2725c          SUB      r2,r2,#0x370          ;481
+                  |L12.752|
+0002f0  700a              STRB     r2,[r1,#0]            ;483
+0002f2  2839              CMP      r0,#0x39              ;485
+0002f4  b2d2              UXTB     r2,r2                 ;488
+0002f6  4410              ADD      r0,r0,r2              ;488
+0002f8  d902              BLS      |L12.768|
+0002fa  3837              SUBS     r0,r0,#0x37           ;486
+0002fc  e001              B        |L12.770|
+                  |L12.766|
+0002fe  e398              B        |L12.2610|
+                  |L12.768|
+000300  3830              SUBS     r0,r0,#0x30           ;488
+                  |L12.770|
+000302  7008              STRB     r0,[r1,#0]            ;488
+000304  b2c2              UXTB     r2,r0                 ;489
+000306  4861              LDR      r0,|L12.1164|
+000308  eb000056          ADD      r0,r0,r6,LSR #1       ;489
+00030c  7002              STRB     r2,[r0,#0]            ;489
+00030e  7800              LDRB     r0,[r0,#0]            ;490
+000310  780a              LDRB     r2,[r1,#0]            ;490  ; tmp3
+000312  4290              CMP      r0,r2                 ;490
+000314  d000              BEQ      |L12.792|
+000316  2701              MOVS     r7,#1                 ;491
+                  |L12.792|
+000318  1cb6              ADDS     r6,r6,#2              ;475
+00031a  b2b6              UXTH     r6,r6                 ;475
                   |L12.796|
-00031c  4008              ANDS     r0,r0,r1
-00031e  7931              LDRB     r1,[r6,#4]  ; RxBuffer
-000320  2973              CMP      r1,#0x73
-000322  d067              BEQ      |L12.1012|
-000324  2100              MOVS     r1,#0
-                  |L12.806|
-000326  4008              ANDS     r0,r0,r1
-000328  7971              LDRB     r1,[r6,#5]  ; RxBuffer
-00032a  2974              CMP      r1,#0x74
-00032c  d063              BEQ      |L12.1014|
-00032e  2100              MOVS     r1,#0
-                  |L12.816|
-000330  4008              ANDS     r0,r0,r1
-000332  79b1              LDRB     r1,[r6,#6]  ; RxBuffer
-000334  2961              CMP      r1,#0x61
-000336  d05f              BEQ      |L12.1016|
-000338  2100              MOVS     r1,#0
-                  |L12.826|
-00033a  4008              ANDS     r0,r0,r1
-00033c  79f1              LDRB     r1,[r6,#7]  ; RxBuffer
-00033e  2972              CMP      r1,#0x72
-000340  d05b              BEQ      |L12.1018|
-000342  2100              MOVS     r1,#0
-                  |L12.836|
-000344  4008              ANDS     r0,r0,r1
-000346  7a31              LDRB     r1,[r6,#8]  ; RxBuffer
-000348  2974              CMP      r1,#0x74
-00034a  d057              BEQ      |L12.1020|
-00034c  2100              MOVS     r1,#0
-                  |L12.846|
-00034e  e000              B        |L12.850|
-                  |L12.848|
-000350  e12f              B        |L12.1458|
-                  |L12.850|
-000352  4208              TST      r0,r1
-000354  d02f              BEQ      |L12.950|
-;;;392    		{
-;;;393    			
-;;;394    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-000356  2200              MOVS     r2,#0
-000358  f2405125          MOV      r1,#0x525
-00035c  4648              MOV      r0,r9
-00035e  f7fffffe          BL       USART_ITConfig
-;;;395    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-000362  2201              MOVS     r2,#1
-000364  f2406126          MOV      r1,#0x626
-000368  4648              MOV      r0,r9
-00036a  f7fffffe          BL       USART_ITConfig
-;;;396    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-00036e  2201              MOVS     r2,#1
-000370  2108              MOVS     r1,#8
-000372  483b              LDR      r0,|L12.1120|
-000374  f7fffffe          BL       GPIO_WriteBit
-;;;397    			
-;;;398    			TxBuffer[0]='r';
-000378  2172              MOVS     r1,#0x72
-00037a  7021              STRB     r1,[r4,#0]
-;;;399    			TxBuffer[1]='e';	
-00037c  2065              MOVS     r0,#0x65
-00037e  7060              STRB     r0,[r4,#1]
-;;;400    			TxBuffer[2]='s';
-000380  70a7              STRB     r7,[r4,#2]
-;;;401    			TxBuffer[3]='t';					
-000382  e003              B        |L12.908|
-                  |L12.900|
-000384  e123              B        |L12.1486|
-                  |L12.902|
-000386  e124              B        |L12.1490|
-                  |L12.904|
-000388  e125              B        |L12.1494|
-                  |L12.906|
-00038a  e126              B        |L12.1498|
-                  |L12.908|
-00038c  2074              MOVS     r0,#0x74
-00038e  70e0              STRB     r0,[r4,#3]
-;;;402    			TxBuffer[4]='a';		
-000390  2261              MOVS     r2,#0x61
-000392  7122              STRB     r2,[r4,#4]
-;;;403    			TxBuffer[5]='r';	
-000394  7161              STRB     r1,[r4,#5]
-;;;404    			TxBuffer[6]='t';	
-000396  71a0              STRB     r0,[r4,#6]
-;;;405    			TxBuffer[7]='_';	
-000398  f8848007          STRB     r8,[r4,#7]
-;;;406    			TxBuffer[8]='o';	
-00039c  206f              MOVS     r0,#0x6f
-00039e  7220              STRB     r0,[r4,#8]
-;;;407    			TxBuffer[9]='k';
-0003a0  206b              MOVS     r0,#0x6b
-0003a2  7260              STRB     r0,[r4,#9]
-;;;408    	
-;;;409    			txsize=10;
-0003a4  200a              MOVS     r0,#0xa
-0003a6  f8aa0000          STRH     r0,[r10,#0]
-;;;410    			tekper=0;
-0003aa  f8ab5000          STRH     r5,[r11,#0]
-;;;411    			USART_SendData(USART2, 0x3A);
-0003ae  213a              MOVS     r1,#0x3a
-0003b0  4648              MOV      r0,r9
-0003b2  f7fffffe          BL       USART_SendData
-                  |L12.950|
-;;;412    			
-;;;413    			// need restart
-;;;414    		}
-;;;415    	
-;;;416    		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
-0003b6  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
-0003b8  2873              CMP      r0,#0x73
-0003ba  d07d              BEQ      |L12.1208|
-0003bc  2000              MOVS     r0,#0
-                  |L12.958|
-0003be  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
-0003c0  2965              CMP      r1,#0x65
-0003c2  d07a              BEQ      |L12.1210|
-0003c4  2100              MOVS     r1,#0
-                  |L12.966|
-0003c6  4008              ANDS     r0,r0,r1
-0003c8  7931              LDRB     r1,[r6,#4]  ; RxBuffer
-0003ca  2974              CMP      r1,#0x74
-0003cc  d076              BEQ      |L12.1212|
-0003ce  2100              MOVS     r1,#0
-                  |L12.976|
-0003d0  4008              ANDS     r0,r0,r1
-0003d2  7971              LDRB     r1,[r6,#5]  ; RxBuffer
-0003d4  295f              CMP      r1,#0x5f
-0003d6  d072              BEQ      |L12.1214|
-0003d8  2100              MOVS     r1,#0
-                  |L12.986|
-0003da  4008              ANDS     r0,r0,r1
-0003dc  79b1              LDRB     r1,[r6,#6]  ; RxBuffer
-0003de  2974              CMP      r1,#0x74
-0003e0  d06e              BEQ      |L12.1216|
-0003e2  2100              MOVS     r1,#0
-                  |L12.996|
-0003e4  4008              ANDS     r0,r0,r1
-0003e6  79f1              LDRB     r1,[r6,#7]  ; RxBuffer
-0003e8  2969              CMP      r1,#0x69
-0003ea  d06a              BEQ      |L12.1218|
-0003ec  2100              MOVS     r1,#0
-                  |L12.1006|
-0003ee  e043              B        |L12.1144|
-                  |L12.1008|
-0003f0  e0f5              B        |L12.1502|
-                  |L12.1010|
-0003f2  e0f6              B        |L12.1506|
-                  |L12.1012|
-0003f4  e0f7              B        |L12.1510|
-                  |L12.1014|
-0003f6  e0f8              B        |L12.1514|
-                  |L12.1016|
-0003f8  e0f9              B        |L12.1518|
-                  |L12.1018|
-0003fa  e0fa              B        |L12.1522|
-                  |L12.1020|
-0003fc  e0fb              B        |L12.1526|
-0003fe  0000              DCW      0x0000
-                  |L12.1024|
-                          DCD      summa
-                  |L12.1028|
-                          DCD      ADC3ConvertedValue
-                  |L12.1032|
-                          DCD      kol_average
-                  |L12.1036|
-                          DCD      average
-                  |L12.1040|
-                          DCD      ||fz||
-                  |L12.1044|
-                          DCD      fz_average
-                  |L12.1048|
-                          DCD      max
-                  |L12.1052|
-                          DCD      number_buff
-                  |L12.1056|
-                          DCD      por
-                  |L12.1060|
-                          DCD      Buf_adc_zap2
-                  |L12.1064|
-                          DCD      Buf_adc_zap1
-                  |L12.1068|
-                          DCD      ||del||
-                  |L12.1072|
-                          DCD      tick
-                  |L12.1076|
-                          DCD      time_label
-                  |L12.1080|
-                          DCD      ||.data||+0x4
-                  |L12.1084|
-                          DCD      DT_zap
-                  |L12.1088|
-                          DCD      buffering
-                  |L12.1092|
-                          DCD      minute
-                  |L12.1096|
-                          DCD      new_komand
-                  |L12.1100|
-                          DCD      RxBuffer
-                  |L12.1104|
-                          DCD      tekper
-                  |L12.1108|
-                          DCD      0x40004400
-                  |L12.1112|
-                          DCD      TxBuffer
-                  |L12.1116|
-                          DCD      txsize
-                  |L12.1120|
-                          DCD      0x40020c00
-                  |L12.1124|
-                          DCD      tmp1
-                  |L12.1128|
-                          DCD      tmp2
-                  |L12.1132|
-                          DCD      tmp3
-                  |L12.1136|
-                          DCD      0x40024000
-                  |L12.1140|
-                          DCD      rxsize
-                  |L12.1144|
-000478  4008              ANDS     r0,r0,r1
-00047a  7a31              LDRB     r1,[r6,#8]  ; RxBuffer
-00047c  296d              CMP      r1,#0x6d
-00047e  d07d              BEQ      |L12.1404|
-000480  2100              MOVS     r1,#0
-                  |L12.1154|
-000482  4008              ANDS     r0,r0,r1
-000484  7a71              LDRB     r1,[r6,#9]  ; RxBuffer
-000486  2965              CMP      r1,#0x65
-000488  d079              BEQ      |L12.1406|
-00048a  2100              MOVS     r1,#0
-                  |L12.1164|
-00048c  4208              TST      r0,r1
-00048e  d077              BEQ      |L12.1408|
-;;;417    		{		
-;;;418    			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
-;;;419    			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
-;;;420    			extern  void rtc_Unlock(void);
-;;;421    			extern void rtc_Lock(void);
-;;;422    			
-;;;423    			uint32_t Tens, Units;
-;;;424          uint32_t TempReg = 0;
-;;;425    			u8 i=0;
-;;;426    			
-;;;427    			
-;;;428    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-000490  2200              MOVS     r2,#0
-000492  f2405125          MOV      r1,#0x525
-000496  4648              MOV      r0,r9
-000498  f7fffffe          BL       USART_ITConfig
-;;;429    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-00049c  2201              MOVS     r2,#1
-00049e  f2406126          MOV      r1,#0x626
-0004a2  4648              MOV      r0,r9
-0004a4  f7fffffe          BL       USART_ITConfig
-;;;430    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-0004a8  2201              MOVS     r2,#1
-0004aa  2108              MOVS     r1,#8
-0004ac  48fe              LDR      r0,|L12.2216|
-0004ae  f7fffffe          BL       GPIO_WriteBit
-;;;431    
-;;;432    
-;;;433    			// set time
-;;;434    		rtc_Unlock();
-0004b2  f7fffffe          BL       rtc_Unlock
-;;;435    		RTC->ISR |= RTC_ISR_INIT;
-0004b6  e005              B        |L12.1220|
-                  |L12.1208|
-0004b8  e09f              B        |L12.1530|
-                  |L12.1210|
-0004ba  e0a0              B        |L12.1534|
-                  |L12.1212|
-0004bc  e0a1              B        |L12.1538|
-                  |L12.1214|
-0004be  e0a2              B        |L12.1542|
-                  |L12.1216|
-0004c0  e0a3              B        |L12.1546|
-                  |L12.1218|
-0004c2  e0a4              B        |L12.1550|
-                  |L12.1220|
-0004c4  48f9              LDR      r0,|L12.2220|
-0004c6  6801              LDR      r1,[r0,#0]
-0004c8  f0410180          ORR      r1,r1,#0x80
-0004cc  6001              STR      r1,[r0,#0]
-                  |L12.1230|
-;;;436    		while(!(RTC->ISR & RTC_ISR_INITF)) {}
-0004ce  48f7              LDR      r0,|L12.2220|
-0004d0  6800              LDR      r0,[r0,#0]
-0004d2  0640              LSLS     r0,r0,#25
-0004d4  d5fb              BPL      |L12.1230|
-;;;437    
-;;;438    		RTC->PRER = 263; //Sync;         
-0004d6  48f5              LDR      r0,|L12.2220|
-0004d8  f2401107          MOV      r1,#0x107
-0004dc  1d00              ADDS     r0,r0,#4
-0004de  6001              STR      r1,[r0,#0]
-;;;439        RTC->PRER =263 | (127<<16); //Sync | (Async << 16);
-0004e0  49f3              LDR      r1,|L12.2224|
-0004e2  6001              STR      r1,[r0,#0]
-;;;440    			
-;;;441    			
-;;;442    			TxBuffer[0]='s';
-0004e4  7027              STRB     r7,[r4,#0]
-;;;443    			TxBuffer[1]='e';	
-0004e6  2265              MOVS     r2,#0x65
-0004e8  7062              STRB     r2,[r4,#1]
-;;;444    			TxBuffer[2]='t';
-0004ea  2174              MOVS     r1,#0x74
-0004ec  70a1              STRB     r1,[r4,#2]
-;;;445    			TxBuffer[3]='_';					
-0004ee  f8848003          STRB     r8,[r4,#3]
-;;;446    			TxBuffer[4]='t';		
-0004f2  7121              STRB     r1,[r4,#4]
-;;;447    			TxBuffer[5]='i';	
-0004f4  2169              MOVS     r1,#0x69
-0004f6  7161              STRB     r1,[r4,#5]
-;;;448    			TxBuffer[6]='m';	
-0004f8  216d              MOVS     r1,#0x6d
-0004fa  71a1              STRB     r1,[r4,#6]
-;;;449    			TxBuffer[7]='e';	
-0004fc  71e2              STRB     r2,[r4,#7]
-;;;450    			TxBuffer[8]='_';	
-0004fe  f8848008          STRB     r8,[r4,#8]
-;;;451    			TxBuffer[9]='o';
-000502  206f              MOVS     r0,#0x6f
-000504  7260              STRB     r0,[r4,#9]
-;;;452    			TxBuffer[10]='k';
-000506  206b              MOVS     r0,#0x6b
-000508  72a0              STRB     r0,[r4,#0xa]
-;;;453    			
-;;;454    
-;;;455        // set time
-;;;456    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
-00050a  7d30              LDRB     r0,[r6,#0x14]  ; RxBuffer
-00050c  7d71              LDRB     r1,[r6,#0x15]  ; RxBuffer
-00050e  3830              SUBS     r0,r0,#0x30
-000510  eb000080          ADD      r0,r0,r0,LSL #2
-000514  f06f072f          MVN      r7,#0x2f
-000518  eb070040          ADD      r0,r7,r0,LSL #1
-00051c  4408              ADD      r0,r0,r1
-00051e  b2c2              UXTB     r2,r0
-000520  7cb0              LDRB     r0,[r6,#0x12]  ; RxBuffer
-000522  7cf1              LDRB     r1,[r6,#0x13]  ; RxBuffer
-000524  3830              SUBS     r0,r0,#0x30
-000526  eb000080          ADD      r0,r0,r0,LSL #2
-00052a  eb070040          ADD      r0,r7,r0,LSL #1
-00052e  4408              ADD      r0,r0,r1
-000530  b2c1              UXTB     r1,r0
-000532  7c30              LDRB     r0,[r6,#0x10]  ; RxBuffer
-000534  7c73              LDRB     r3,[r6,#0x11]  ; RxBuffer
-000536  3830              SUBS     r0,r0,#0x30
-000538  eb000080          ADD      r0,r0,r0,LSL #2
-00053c  eb070040          ADD      r0,r7,r0,LSL #1
-000540  4418              ADD      r0,r0,r3
-000542  b2c0              UXTB     r0,r0
-000544  f7fffffe          BL       rtc_SetTime
-;;;457    
-;;;458    rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
-000548  7bb0              LDRB     r0,[r6,#0xe]  ; RxBuffer
-00054a  7bf1              LDRB     r1,[r6,#0xf]  ; RxBuffer
-00054c  3830              SUBS     r0,r0,#0x30
-00054e  eb000080          ADD      r0,r0,r0,LSL #2
-000552  eb070040          ADD      r0,r7,r0,LSL #1
-000556  4408              ADD      r0,r0,r1
-000558  b2c2              UXTB     r2,r0
-00055a  7b30              LDRB     r0,[r6,#0xc]  ; RxBuffer
-00055c  7b71              LDRB     r1,[r6,#0xd]  ; RxBuffer
-00055e  3830              SUBS     r0,r0,#0x30
-000560  eb000080          ADD      r0,r0,r0,LSL #2
-000564  7ab3              LDRB     r3,[r6,#0xa]  ; RxBuffer
-000566  eb070040          ADD      r0,r7,r0,LSL #1
-00056a  4408              ADD      r0,r0,r1
-00056c  3b30              SUBS     r3,r3,#0x30
-00056e  b2c1              UXTB     r1,r0
-000570  eb030383          ADD      r3,r3,r3,LSL #2
-000574  7af0              LDRB     r0,[r6,#0xb]  ; RxBuffer
-000576  eb070343          ADD      r3,r7,r3,LSL #1
-00057a  e002              B        |L12.1410|
-                  |L12.1404|
-00057c  e049              B        |L12.1554|
-                  |L12.1406|
-00057e  e04a              B        |L12.1558|
-                  |L12.1408|
-000580  e063              B        |L12.1610|
-                  |L12.1410|
-000582  4418              ADD      r0,r0,r3
-000584  b2c0              UXTB     r0,r0
-000586  2301              MOVS     r3,#1
-000588  f7fffffe          BL       rtc_SetDate
-;;;459    /*
-;;;460    if (1)
-;;;461    {
-;;;462    
-;;;463        TempReg = 0;
-;;;464        {
-;;;465            Tens  = ((RxBuffer[10]-0x30) / 10) & 0x0f;          // ??????? ???
-;;;466            Units = (RxBuffer[11]-0x30) & 0x0f; // ??????? ???
-;;;467            
-;;;468            TempReg |= (Tens  << 20); // YT, 20
-;;;469            TempReg |= (Units << 16); // YU, 16
-;;;470        }
-;;;471        {
-;;;472            Tens  = (RxBuffer[12]-0x30) & 0x01;          // ??????? ???????
-;;;473            Units = (RxBuffer[13]-0x30) & 0x0f; // ??????? ???????
-;;;474            
-;;;475            TempReg |= (Tens  << 12); // MT, 12
-;;;476            TempReg |= (Units << 8);  // MU, 8
-;;;477        }
-;;;478        {
-;;;479            Tens  = (RxBuffer[14]-0x30) & 0x03;          // ??????? ????
-;;;480            Units = (RxBuffer[15]-0x30) & 0x0f; // ??????? ????
-;;;481            
-;;;482            TempReg |= (Tens  << 4); // DT, 4
-;;;483            TempReg |= (Units << 0);  // DU, 0
-;;;484        }
-;;;485        {
-;;;486            TempReg |= ((1 & 0x07) << 13); // WDU, 13
-;;;487        }
-;;;488        RTC->DR = TempReg;	
-;;;489    	}	
-;;;490    */
-;;;491    		RTC->CR |= RTC_CR_FMT;
-00058c  48c7              LDR      r0,|L12.2220|
-00058e  1f00              SUBS     r0,r0,#4
-000590  6801              LDR      r1,[r0,#0]
-000592  f0410140          ORR      r1,r1,#0x40
-000596  6001              STR      r1,[r0,#0]
-;;;492        RTC->ISR &= ~RTC_ISR_INIT;
-000598  1d00              ADDS     r0,r0,#4
-00059a  6801              LDR      r1,[r0,#0]
-00059c  f0210180          BIC      r1,r1,#0x80
-0005a0  6001              STR      r1,[r0,#0]
-;;;493    		rtc_Lock();
-0005a2  f7fffffe          BL       rtc_Lock
-;;;494    
-;;;495    	
-;;;496    		rtc_Get(&DT1);
-0005a6  48c3              LDR      r0,|L12.2228|
-0005a8  f7fffffe          BL       rtc_Get
-0005ac  f8df8304          LDR      r8,|L12.2228|
-;;;497    //			while (TempReg!=RTC->DR)
-;;;498    		while (((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30))!=DT1.Day)
-0005b0  e036              B        |L12.1568|
-                  |L12.1458|
-0005b2  2074              MOVS     r0,#0x74              ;337
-0005b4  70a0              STRB     r0,[r4,#2]            ;337
-0005b6  f8848003          STRB     r8,[r4,#3]            ;338
-0005ba  7123              STRB     r3,[r4,#4]            ;339
-0005bc  206f              MOVS     r0,#0x6f              ;340
-0005be  7160              STRB     r0,[r4,#5]            ;340
-0005c0  71a2              STRB     r2,[r4,#6]            ;341
-0005c2  71e1              STRB     r1,[r4,#7]            ;342
-0005c4  f8848008          STRB     r8,[r4,#8]            ;343
-0005c8  7260              STRB     r0,[r4,#9]            ;344
-0005ca  206b              MOVS     r0,#0x6b              ;345
-0005cc  e64e              B        |L12.620|
-                  |L12.1486|
-0005ce  2001              MOVS     r0,#1                 ;367
-0005d0  e65b              B        |L12.650|
-                  |L12.1490|
-0005d2  2101              MOVS     r1,#1                 ;367
-0005d4  e65d              B        |L12.658|
-                  |L12.1494|
-0005d6  2101              MOVS     r1,#1                 ;367
-0005d8  e660              B        |L12.668|
-                  |L12.1498|
-0005da  2101              MOVS     r1,#1                 ;367
-0005dc  e663              B        |L12.678|
-                  |L12.1502|
-0005de  2001              MOVS     r0,#1                 ;391
-0005e0  e698              B        |L12.788|
-                  |L12.1506|
-0005e2  2101              MOVS     r1,#1                 ;391
-0005e4  e69a              B        |L12.796|
-                  |L12.1510|
-0005e6  2101              MOVS     r1,#1                 ;391
-0005e8  e69d              B        |L12.806|
-                  |L12.1514|
-0005ea  2101              MOVS     r1,#1                 ;391
-0005ec  e6a0              B        |L12.816|
-                  |L12.1518|
-0005ee  2101              MOVS     r1,#1                 ;391
-0005f0  e6a3              B        |L12.826|
-                  |L12.1522|
-0005f2  2101              MOVS     r1,#1                 ;391
-0005f4  e6a6              B        |L12.836|
-                  |L12.1526|
-0005f6  2101              MOVS     r1,#1                 ;391
-0005f8  e6a9              B        |L12.846|
-                  |L12.1530|
-0005fa  2001              MOVS     r0,#1                 ;416
-0005fc  e6df              B        |L12.958|
-                  |L12.1534|
-0005fe  2101              MOVS     r1,#1                 ;416
-000600  e6e1              B        |L12.966|
-                  |L12.1538|
-000602  2101              MOVS     r1,#1                 ;416
-000604  e6e4              B        |L12.976|
-                  |L12.1542|
-000606  2101              MOVS     r1,#1                 ;416
-000608  e6e7              B        |L12.986|
-                  |L12.1546|
-00060a  2101              MOVS     r1,#1                 ;416
-00060c  e6ea              B        |L12.996|
-                  |L12.1550|
-00060e  2101              MOVS     r1,#1                 ;416
-000610  e6ed              B        |L12.1006|
-                  |L12.1554|
-000612  2101              MOVS     r1,#1                 ;416
-000614  e735              B        |L12.1154|
-                  |L12.1558|
-000616  2101              MOVS     r1,#1                 ;416
-000618  e738              B        |L12.1164|
-                  |L12.1562|
-;;;499    				rtc_Get(&DT1);
-00061a  48a6              LDR      r0,|L12.2228|
-00061c  f7fffffe          BL       rtc_Get
-                  |L12.1568|
-000620  7ab0              LDRB     r0,[r6,#0xa]          ;498  ; RxBuffer
-000622  7af1              LDRB     r1,[r6,#0xb]          ;498  ; RxBuffer
-000624  3830              SUBS     r0,r0,#0x30           ;498
-000626  eb000080          ADD      r0,r0,r0,LSL #2       ;498
-00062a  eb070040          ADD      r0,r7,r0,LSL #1       ;498
-00062e  4401              ADD      r1,r1,r0              ;498
-000630  f8980002          LDRB     r0,[r8,#2]            ;498  ; DT1
-000634  4281              CMP      r1,r0                 ;498
-000636  d1f0              BNE      |L12.1562|
-;;;500    
-;;;501    				
-;;;502    			txsize=11;
-000638  200b              MOVS     r0,#0xb
-00063a  f8aa0000          STRH     r0,[r10,#0]
-;;;503    			tekper=0;
-00063e  f8ab5000          STRH     r5,[r11,#0]
-;;;504    			USART_SendData(USART2, 0x3A);
-000642  213a              MOVS     r1,#0x3a
-000644  4648              MOV      r0,r9
-000646  f7fffffe          BL       USART_SendData
-                  |L12.1610|
-;;;505    			
-;;;506    			// need restart
-;;;507    		}
-;;;508    		
-;;;509    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
-00064a  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
-00064c  2872              CMP      r0,#0x72
-00064e  d07c              BEQ      |L12.1866|
-000650  2000              MOVS     r0,#0
-                  |L12.1618|
-000652  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
-000654  2965              CMP      r1,#0x65
-000656  d079              BEQ      |L12.1868|
-000658  2100              MOVS     r1,#0
-                  |L12.1626|
-00065a  4008              ANDS     r0,r0,r1
-00065c  7931              LDRB     r1,[r6,#4]  ; RxBuffer
-00065e  2961              CMP      r1,#0x61
-000660  d075              BEQ      |L12.1870|
-000662  2100              MOVS     r1,#0
-                  |L12.1636|
-000664  4008              ANDS     r0,r0,r1
-000666  4994              LDR      r1,|L12.2232|
-000668  7949              LDRB     r1,[r1,#5]  ; RxBuffer
-00066a  2964              CMP      r1,#0x64
-00066c  d070              BEQ      |L12.1872|
-00066e  2100              MOVS     r1,#0
-                  |L12.1648|
-000670  4208              TST      r0,r1
-000672  d06e              BEQ      |L12.1874|
-;;;510    		{
-;;;511    			
-;;;512    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-000674  2200              MOVS     r2,#0
-000676  f2405125          MOV      r1,#0x525
-00067a  4648              MOV      r0,r9
-00067c  f7fffffe          BL       USART_ITConfig
-;;;513    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-000680  2201              MOVS     r2,#1
-000682  f2406126          MOV      r1,#0x626
-000686  4648              MOV      r0,r9
-000688  f7fffffe          BL       USART_ITConfig
-;;;514    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-00068c  2201              MOVS     r2,#1
-00068e  2108              MOVS     r1,#8
-000690  4885              LDR      r0,|L12.2216|
-000692  f7fffffe          BL       GPIO_WriteBit
-;;;515    			
-;;;516    			// test zapis for controlling time on fleshka
-;;;517    			tmp=por;
-000696  4889              LDR      r0,|L12.2236|
-;;;518    			TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-000698  f44f717a          MOV      r1,#0x3e8
-00069c  8800              LDRH     r0,[r0,#0]            ;517  ; por
-00069e  fbb0f2f1          UDIV     r2,r0,r1
-0006a2  f1020330          ADD      r3,r2,#0x30
-;;;519    			tmp%=1000;
-0006a6  fb010012          MLS      r0,r1,r2,r0
-0006aa  7023              STRB     r3,[r4,#0]            ;518
-;;;520    			TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-0006ac  2264              MOVS     r2,#0x64
-0006ae  fbb0f3f2          UDIV     r3,r0,r2
-0006b2  f1030630          ADD      r6,r3,#0x30
-;;;521    			tmp%=100;		
-0006b6  fb020313          MLS      r3,r2,r3,r0
-0006ba  7066              STRB     r6,[r4,#1]            ;520
-;;;522    			TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-0006bc  200a              MOVS     r0,#0xa
-0006be  fbb3f6f0          UDIV     r6,r3,r0
-;;;523    			tmp%=10;	
-0006c2  fb003316          MLS      r3,r0,r6,r3
-0006c6  f1060730          ADD      r7,r6,#0x30           ;522
-0006ca  70a7              STRB     r7,[r4,#2]            ;522
-;;;524    			TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
-0006cc  3330              ADDS     r3,r3,#0x30
-0006ce  70e3              STRB     r3,[r4,#3]
-;;;525    				
-;;;526    			TxBuffer[4]=0x20;	
+00031c  485c              LDR      r0,|L12.1168|
+00031e  8800              LDRH     r0,[r0,#0]            ;475  ; rxsize
+000320  380a              SUBS     r0,r0,#0xa            ;475
+000322  4286              CMP      r6,r0                 ;475
+000324  dbd6              BLT      |L12.724|
+000326  2077              MOVS     r0,#0x77              ;465
+000328  7020              STRB     r0,[r4,#0]            ;510
+00032a  2163              MOVS     r1,#0x63              ;465
+00032c  226e              MOVS     r2,#0x6e              ;465
+00032e  2366              MOVS     r3,#0x66              ;465
+000330  f04f0072          MOV      r0,#0x72              ;511
+000334  2f00              CMP      r7,#0                 ;494
+000336  7060              STRB     r0,[r4,#1]            ;511
+000338  d05b              BEQ      |L12.1010|
+00033a  2674              MOVS     r6,#0x74              ;512
+00033c  70a6              STRB     r6,[r4,#2]            ;512
+00033e  f8848003          STRB     r8,[r4,#3]            ;513
+000342  7121              STRB     r1,[r4,#4]            ;514
+000344  216f              MOVS     r1,#0x6f              ;515
+000346  7161              STRB     r1,[r4,#5]            ;515
+000348  71a2              STRB     r2,[r4,#6]            ;516
+00034a  71e3              STRB     r3,[r4,#7]            ;517
+00034c  f8848008          STRB     r8,[r4,#8]            ;518
+000350  2165              MOVS     r1,#0x65              ;519
+000352  7261              STRB     r1,[r4,#9]            ;519
+                  |L12.852|
+000354  72a0              STRB     r0,[r4,#0xa]          ;520
+000356  200b              MOVS     r0,#0xb               ;523
+000358  f8aa0000          STRH     r0,[r10,#0]           ;523
+00035c  f8ab5000          STRH     r5,[r11,#0]
+;;;525    			USART_SendData(USART2, 0x3A);
+000360  213a              MOVS     r1,#0x3a
+000362  4648              MOV      r0,r9
+000364  f7fffffe          BL       USART_SendData
+                  |L12.872|
+;;;526    		}
 ;;;527    
-;;;528    			// date
-;;;529    			TxBuffer[5]=(uint8_t)(DT1.Year/10)+(uint8_t)0x30;	
-0006d0  4b78              LDR      r3,|L12.2228|
-0006d2  2620              MOVS     r6,#0x20              ;526
-0006d4  7126              STRB     r6,[r4,#4]            ;526
-0006d6  f893c000          LDRB     r12,[r3,#0]  ; DT1
-0006da  fbbcf7f0          UDIV     r7,r12,r0
-0006de  f1070830          ADD      r8,r7,#0x30
-;;;530    			TxBuffer[6]=(uint8_t)(DT1.Year%10)+(uint8_t)0x30;	
-0006e2  fb00c717          MLS      r7,r0,r7,r12
-0006e6  f8848005          STRB     r8,[r4,#5]            ;529
-0006ea  3730              ADDS     r7,r7,#0x30
-0006ec  71a7              STRB     r7,[r4,#6]
-;;;531    			TxBuffer[7]=(uint8_t)(DT1.Month/10)+(uint8_t)0x30;	
-0006ee  f893c001          LDRB     r12,[r3,#1]  ; DT1
-0006f2  fbbcf7f0          UDIV     r7,r12,r0
-0006f6  f1070830          ADD      r8,r7,#0x30
-;;;532    			TxBuffer[8]=(uint8_t)(DT1.Month%10)+(uint8_t)0x30;	
-0006fa  fb00c717          MLS      r7,r0,r7,r12
-0006fe  f8848007          STRB     r8,[r4,#7]            ;531
-000702  3730              ADDS     r7,r7,#0x30
-000704  7227              STRB     r7,[r4,#8]
-;;;533    			TxBuffer[9]=(uint8_t)(DT1.Day/10)+(uint8_t)0x30;	
-000706  f893c002          LDRB     r12,[r3,#2]  ; DT1
-00070a  fbbcf7f0          UDIV     r7,r12,r0
-00070e  f1070830          ADD      r8,r7,#0x30
-;;;534    			TxBuffer[10]=(uint8_t)(DT1.Day%10)+(uint8_t)0x30;	
-000712  fb00c717          MLS      r7,r0,r7,r12
-000716  f8848009          STRB     r8,[r4,#9]            ;533
-00071a  3730              ADDS     r7,r7,#0x30
-00071c  72a7              STRB     r7,[r4,#0xa]
-;;;535    			TxBuffer[11]=0x20;				
-00071e  72e6              STRB     r6,[r4,#0xb]
-;;;536    			
-;;;537    			// time
-;;;538    			TxBuffer[12]=(uint8_t)(DT1.Hours/10)+(uint8_t)0x30;	
-000720  f893c004          LDRB     r12,[r3,#4]  ; DT1
-000724  fbbcf7f0          UDIV     r7,r12,r0
-000728  f1070830          ADD      r8,r7,#0x30
-;;;539    			TxBuffer[13]=(uint8_t)(DT1.Hours%10)+(uint8_t)0x30;			
-00072c  fb00c717          MLS      r7,r0,r7,r12
-000730  f884800c          STRB     r8,[r4,#0xc]          ;538
-000734  3730              ADDS     r7,r7,#0x30
-000736  7367              STRB     r7,[r4,#0xd]
-;;;540    			TxBuffer[14]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
-000738  f893c005          LDRB     r12,[r3,#5]  ; DT1
-00073c  fbbcf7f0          UDIV     r7,r12,r0
-000740  f1070830          ADD      r8,r7,#0x30
-000744  f884800e          STRB     r8,[r4,#0xe]
-;;;541    			TxBuffer[15]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
-000748  e004              B        |L12.1876|
-                  |L12.1866|
-00074a  e0d7              B        |L12.2300|
-                  |L12.1868|
-00074c  e0d8              B        |L12.2304|
-                  |L12.1870|
-00074e  e0d9              B        |L12.2308|
-                  |L12.1872|
-000750  e0da              B        |L12.2312|
-                  |L12.1874|
-000752  e073              B        |L12.2108|
-                  |L12.1876|
-000754  fb00c717          MLS      r7,r0,r7,r12
-000758  3730              ADDS     r7,r7,#0x30
-00075a  73e7              STRB     r7,[r4,#0xf]
-;;;542    			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
-00075c  799f              LDRB     r7,[r3,#6]  ; DT1
-00075e  fbb7f3f0          UDIV     r3,r7,r0
-000762  f1030c30          ADD      r12,r3,#0x30
-;;;543    			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
-000766  fb007313          MLS      r3,r0,r3,r7
-00076a  f884c010          STRB     r12,[r4,#0x10]        ;542
-00076e  3330              ADDS     r3,r3,#0x30
-000770  7463              STRB     r3,[r4,#0x11]
-;;;544    			TxBuffer[18]=0x20;
-;;;545    			
-;;;546    			TxBuffer[19]=sost_pribl+0x30;
-000772  4b53              LDR      r3,|L12.2240|
-000774  74a6              STRB     r6,[r4,#0x12]         ;544
-000776  781b              LDRB     r3,[r3,#0]  ; sost_pribl
-000778  3330              ADDS     r3,r3,#0x30
-00077a  74e3              STRB     r3,[r4,#0x13]
-;;;547    			TxBuffer[20]=0x20;
-;;;548    			// zn from adc with calibr and averaging
-;;;549    
-;;;550    			tmp=ADC3ConvertedValue;
-00077c  4b51              LDR      r3,|L12.2244|
-00077e  7526              STRB     r6,[r4,#0x14]         ;547
-000780  881b              LDRH     r3,[r3,#0]  ; ADC3ConvertedValue
-;;;551    			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-000782  fbb3f7f1          UDIV     r7,r3,r1
-000786  f1070c30          ADD      r12,r7,#0x30
-;;;552    			tmp%=1000;
-00078a  fb013317          MLS      r3,r1,r7,r3
-;;;553    			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-00078e  fbb3f7f2          UDIV     r7,r3,r2
-000792  f884c015          STRB     r12,[r4,#0x15]        ;551
-000796  f1070c30          ADD      r12,r7,#0x30
-;;;554    			tmp%=100;		
-00079a  fb023317          MLS      r3,r2,r7,r3
-;;;555    			TxBuffer[23]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-00079e  fbb3f7f0          UDIV     r7,r3,r0
-0007a2  f884c016          STRB     r12,[r4,#0x16]        ;553
-;;;556    			tmp%=10;	
-0007a6  fb003317          MLS      r3,r0,r7,r3
-0007aa  f1070c30          ADD      r12,r7,#0x30          ;555
-0007ae  f884c017          STRB     r12,[r4,#0x17]        ;555
-;;;557    			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
-0007b2  3330              ADDS     r3,r3,#0x30
-0007b4  7623              STRB     r3,[r4,#0x18]
-;;;558    			TxBuffer[25]=0x20;		
-;;;559    			
-;;;560    			tmp=fz_average[0];
-0007b6  4b44              LDR      r3,|L12.2248|
-0007b8  7666              STRB     r6,[r4,#0x19]         ;558
-0007ba  881b              LDRH     r3,[r3,#0]  ; fz_average
-;;;561    			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-0007bc  fbb3f7f1          UDIV     r7,r3,r1
-0007c0  f1070c30          ADD      r12,r7,#0x30
-;;;562    			tmp%=1000;
-0007c4  fb013317          MLS      r3,r1,r7,r3
-;;;563    			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-0007c8  fbb3f7f2          UDIV     r7,r3,r2
-0007cc  f884c01a          STRB     r12,[r4,#0x1a]        ;561
-0007d0  f1070c30          ADD      r12,r7,#0x30
-;;;564    			tmp%=100;		
-0007d4  fb023317          MLS      r3,r2,r7,r3
-;;;565    			TxBuffer[28]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-0007d8  fbb3f7f0          UDIV     r7,r3,r0
-0007dc  f884c01b          STRB     r12,[r4,#0x1b]        ;563
-;;;566    			tmp%=10;	
-0007e0  fb003317          MLS      r3,r0,r7,r3
-0007e4  f1070c30          ADD      r12,r7,#0x30          ;565
-0007e8  f884c01c          STRB     r12,[r4,#0x1c]        ;565
-;;;567    			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
-0007ec  3330              ADDS     r3,r3,#0x30
-0007ee  7763              STRB     r3,[r4,#0x1d]
-;;;568    			TxBuffer[30]=0x20;
-;;;569    			
-;;;570    			tmp=max[0];
-0007f0  4b36              LDR      r3,|L12.2252|
-0007f2  77a6              STRB     r6,[r4,#0x1e]         ;568
-0007f4  881b              LDRH     r3,[r3,#0]  ; max
-;;;571    			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
-0007f6  fbb3f6f1          UDIV     r6,r3,r1
-;;;572    			tmp%=1000;
-0007fa  fb013116          MLS      r1,r1,r6,r3
-;;;573    			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;
-0007fe  fbb1f3f2          UDIV     r3,r1,r2
-;;;574    			tmp%=100;		
-000802  fb021113          MLS      r1,r2,r3,r1
-;;;575    			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
-000806  fbb1f2f0          UDIV     r2,r1,r0
-00080a  f1060730          ADD      r7,r6,#0x30           ;571
-00080e  f1030630          ADD      r6,r3,#0x30           ;573
-;;;576    			tmp%=10;	
-000812  fb001012          MLS      r0,r0,r2,r1
-000816  77e7              STRB     r7,[r4,#0x1f]         ;571
-000818  f8846020          STRB     r6,[r4,#0x20]         ;573
-00081c  f1020330          ADD      r3,r2,#0x30           ;575
-000820  f8843021          STRB     r3,[r4,#0x21]         ;575
-;;;577    			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-000824  3030              ADDS     r0,r0,#0x30
-000826  f8840022          STRB     r0,[r4,#0x22]
-;;;578    			
-;;;579    			txsize=35;
-00082a  2123              MOVS     r1,#0x23
-00082c  f8aa1000          STRH     r1,[r10,#0]
-;;;580    			tekper=0;
-000830  f8ab5000          STRH     r5,[r11,#0]
-;;;581    			USART_SendData(USART2, 0x3A);
-000834  213a              MOVS     r1,#0x3a
-000836  4648              MOV      r0,r9
-000838  f7fffffe          BL       USART_SendData
-                  |L12.2108|
-;;;582    		}		
-;;;583    		
-;;;584    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
-00083c  4a1e              LDR      r2,|L12.2232|
-00083e  7890              LDRB     r0,[r2,#2]  ; RxBuffer
-000840  2872              CMP      r0,#0x72
-000842  d063              BEQ      |L12.2316|
-000844  2000              MOVS     r0,#0
-                  |L12.2118|
-000846  78d1              LDRB     r1,[r2,#3]  ; RxBuffer
-000848  2964              CMP      r1,#0x64
-00084a  d061              BEQ      |L12.2320|
-00084c  2100              MOVS     r1,#0
-                  |L12.2126|
-00084e  4008              ANDS     r0,r0,r1
-000850  7911              LDRB     r1,[r2,#4]  ; RxBuffer
-000852  295f              CMP      r1,#0x5f
-000854  d05e              BEQ      |L12.2324|
-000856  2100              MOVS     r1,#0
-                  |L12.2136|
-000858  4008              ANDS     r0,r0,r1
-00085a  7951              LDRB     r1,[r2,#5]  ; RxBuffer
-00085c  2963              CMP      r1,#0x63
-00085e  d05b              BEQ      |L12.2328|
-000860  2100              MOVS     r1,#0
-                  |L12.2146|
-000862  4008              ANDS     r0,r0,r1
-000864  7991              LDRB     r1,[r2,#6]  ; RxBuffer
-000866  296f              CMP      r1,#0x6f
-000868  d058              BEQ      |L12.2332|
-00086a  2100              MOVS     r1,#0
-                  |L12.2156|
-00086c  4008              ANDS     r0,r0,r1
-00086e  79d1              LDRB     r1,[r2,#7]  ; RxBuffer
-000870  296e              CMP      r1,#0x6e
-000872  d055              BEQ      |L12.2336|
-000874  2100              MOVS     r1,#0
-                  |L12.2166|
-000876  4008              ANDS     r0,r0,r1
-000878  7a11              LDRB     r1,[r2,#8]  ; RxBuffer
-00087a  2966              CMP      r1,#0x66
-00087c  d052              BEQ      |L12.2340|
-00087e  2100              MOVS     r1,#0
-                  |L12.2176|
-000880  4208              TST      r0,r1
-000882  d037              BEQ      |L12.2292|
-;;;585    		{
-;;;586    			u16 i=0;
-000884  2600              MOVS     r6,#0
-;;;587    			extern st_conf conf;		
-;;;588    			
-;;;589    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
-000886  4632              MOV      r2,r6
-000888  f2405125          MOV      r1,#0x525
-00088c  464f              MOV      r7,r9
-00088e  4648              MOV      r0,r9
-000890  f7fffffe          BL       USART_ITConfig
-;;;590    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
-000894  2201              MOVS     r2,#1
-000896  f2406126          MOV      r1,#0x626
-00089a  4638              MOV      r0,r7
-00089c  f7fffffe          BL       USART_ITConfig
-;;;591    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
-0008a0  2201              MOVS     r2,#1
-0008a2  2108              MOVS     r1,#8
-0008a4  4800              LDR      r0,|L12.2216|
-0008a6  e013              B        |L12.2256|
-                  |L12.2216|
-                          DCD      0x40020c00
-                  |L12.2220|
-                          DCD      0x4000280c
-                  |L12.2224|
-                          DCD      0x007f0107
-                  |L12.2228|
-                          DCD      ||.data||+0x4
-                  |L12.2232|
-                          DCD      RxBuffer
-                  |L12.2236|
-                          DCD      por
-                  |L12.2240|
+;;;528    		// who?
+;;;529    		if ((RxBuffer[2]=='w')&(RxBuffer[3]=='h')&(RxBuffer[4]=='o')&(RxBuffer[5]=='?'))
+000368  4e3f              LDR      r6,|L12.1128|
+00036a  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
+00036c  2877              CMP      r0,#0x77
+00036e  d041              BEQ      |L12.1012|
+000370  2000              MOVS     r0,#0
+                  |L12.882|
+000372  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
+000374  2968              CMP      r1,#0x68
+000376  d03e              BEQ      |L12.1014|
+000378  2100              MOVS     r1,#0
+                  |L12.890|
+00037a  4008              ANDS     r0,r0,r1
+00037c  7931              LDRB     r1,[r6,#4]  ; RxBuffer
+00037e  296f              CMP      r1,#0x6f
+000380  d03a              BEQ      |L12.1016|
+000382  2100              MOVS     r1,#0
+                  |L12.900|
+000384  4008              ANDS     r0,r0,r1
+000386  7971              LDRB     r1,[r6,#5]  ; RxBuffer
+000388  293f              CMP      r1,#0x3f
+00038a  d036              BEQ      |L12.1018|
+00038c  2100              MOVS     r1,#0
+                  |L12.910|
+00038e  4208              TST      r0,r1
+;;;530    		{
+;;;531    			
+;;;532    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+;;;533    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+;;;534    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+;;;535    			
+;;;536    			TxBuffer[0]='u';
+;;;537    			TxBuffer[1]='s';	
+000390  f04f0773          MOV      r7,#0x73
+000394  d07e              BEQ      |L12.1172|
+000396  2200              MOVS     r2,#0                 ;532
+000398  f2405125          MOV      r1,#0x525             ;532
+00039c  4648              MOV      r0,r9                 ;532
+00039e  f7fffffe          BL       USART_ITConfig
+0003a2  2201              MOVS     r2,#1                 ;533
+0003a4  f2406126          MOV      r1,#0x626             ;533
+0003a8  4648              MOV      r0,r9                 ;533
+0003aa  f7fffffe          BL       USART_ITConfig
+0003ae  2201              MOVS     r2,#1                 ;534
+0003b0  2108              MOVS     r1,#8                 ;534
+0003b2  4832              LDR      r0,|L12.1148|
+0003b4  f7fffffe          BL       GPIO_WriteBit
+0003b8  2075              MOVS     r0,#0x75              ;536
+0003ba  7020              STRB     r0,[r4,#0]            ;536
+0003bc  7067              STRB     r7,[r4,#1]
+;;;538    			TxBuffer[2]='o';
+0003be  206f              MOVS     r0,#0x6f
+0003c0  70a0              STRB     r0,[r4,#2]
+;;;539    			TxBuffer[3]='_';					
+0003c2  f8848003          STRB     r8,[r4,#3]
+;;;540    			TxBuffer[4]='a';		
+0003c6  2161              MOVS     r1,#0x61
+0003c8  7121              STRB     r1,[r4,#4]
+;;;541    			TxBuffer[5]='r';	
+0003ca  2172              MOVS     r1,#0x72
+0003cc  7161              STRB     r1,[r4,#5]
+;;;542    			TxBuffer[6]='m';	
+0003ce  216d              MOVS     r1,#0x6d
+0003d0  71a1              STRB     r1,[r4,#6]
+;;;543    			TxBuffer[7]='_';	
+0003d2  f8848007          STRB     r8,[r4,#7]
+;;;544    			TxBuffer[8]='k';	
+0003d6  206b              MOVS     r0,#0x6b
+0003d8  7220              STRB     r0,[r4,#8]
+;;;545    			TxBuffer[9]='e';
+0003da  2065              MOVS     r0,#0x65
+0003dc  7260              STRB     r0,[r4,#9]
+;;;546    			TxBuffer[10]='y';	
+0003de  2079              MOVS     r0,#0x79
+0003e0  72a0              STRB     r0,[r4,#0xa]
+;;;547    	
+;;;548    			txsize=11;
+0003e2  210b              MOVS     r1,#0xb
+0003e4  f8aa1000          STRH     r1,[r10,#0]
+;;;549    			tekper=0;
+0003e8  f8ab5000          STRH     r5,[r11,#0]
+;;;550    			USART_SendData(USART2, 0x3A);
+0003ec  213a              MOVS     r1,#0x3a
+0003ee  4648              MOV      r0,r9
+0003f0  e051              B        |L12.1174|
+                  |L12.1010|
+0003f2  e164              B        |L12.1726|
+                  |L12.1012|
+0003f4  e171              B        |L12.1754|
+                  |L12.1014|
+0003f6  e172              B        |L12.1758|
+                  |L12.1016|
+0003f8  e173              B        |L12.1762|
+                  |L12.1018|
+0003fa  e174              B        |L12.1766|
+                  |L12.1020|
+                          DCD      0x40020810
+                  |L12.1024|
+                          DCD      kol_pribl_vkl
+                  |L12.1028|
+                          DCD      kol_pribl_vikl
+                  |L12.1032|
+                          DCD      conf
+                  |L12.1036|
+                          DCD      0x40020000
+                  |L12.1040|
                           DCD      sost_pribl
-                  |L12.2244|
+                  |L12.1044|
+                          DCD      kol_gr1_vkl
+                  |L12.1048|
+                          DCD      kol_gr2_vkl
+                  |L12.1052|
+                          DCD      ||fz||
+                  |L12.1056|
+                          DCD      summa
+                  |L12.1060|
                           DCD      ADC3ConvertedValue
-                  |L12.2248|
+                  |L12.1064|
+                          DCD      kol_average
+                  |L12.1068|
+                          DCD      average
+                  |L12.1072|
                           DCD      fz_average
-                  |L12.2252|
+                  |L12.1076|
                           DCD      max
-                  |L12.2256|
-0008d0  f7fffffe          BL       GPIO_WriteBit
-;;;592    
-;;;593    			
+                  |L12.1080|
+                          DCD      number_buff
+                  |L12.1084|
+                          DCD      por
+                  |L12.1088|
+                          DCD      Buf_adc_zap2
+                  |L12.1092|
+                          DCD      Buf_adc_zap1
+                  |L12.1096|
+                          DCD      ||del||
+                  |L12.1100|
+                          DCD      tick
+                  |L12.1104|
+                          DCD      time_label
+                  |L12.1108|
+                          DCD      ||.data||+0x4
+                  |L12.1112|
+                          DCD      DT_zap
+                  |L12.1116|
+                          DCD      buffering
+                  |L12.1120|
+                          DCD      minute
+                  |L12.1124|
+                          DCD      new_komand
+                  |L12.1128|
+                          DCD      RxBuffer
+                  |L12.1132|
+                          DCD      tekper
+                  |L12.1136|
+                          DCD      0x40004400
+                  |L12.1140|
+                          DCD      TxBuffer
+                  |L12.1144|
+                          DCD      txsize
+                  |L12.1148|
+                          DCD      0x40020c00
+                  |L12.1152|
+                          DCD      tmp1
+                  |L12.1156|
+                          DCD      tmp2
+                  |L12.1160|
+                          DCD      tmp3
+                  |L12.1164|
+                          DCD      0x40024000
+                  |L12.1168|
+                          DCD      rxsize
+                  |L12.1172|
+000494  e001              B        |L12.1178|
+                  |L12.1174|
+000496  f7fffffe          BL       USART_SendData
+                  |L12.1178|
+;;;551    		}
+;;;552    	
+;;;553    		// restart
+;;;554    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='s')&(RxBuffer[5]=='t')&(RxBuffer[6]=='a')&(RxBuffer[7]=='r')&(RxBuffer[8]=='t'))
+00049a  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
+00049c  2872              CMP      r0,#0x72
+00049e  d07d              BEQ      |L12.1436|
+0004a0  2000              MOVS     r0,#0
+                  |L12.1186|
+0004a2  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
+0004a4  2965              CMP      r1,#0x65
+0004a6  d07a              BEQ      |L12.1438|
+0004a8  2100              MOVS     r1,#0
+                  |L12.1194|
+0004aa  4008              ANDS     r0,r0,r1
+0004ac  7931              LDRB     r1,[r6,#4]  ; RxBuffer
+0004ae  2973              CMP      r1,#0x73
+0004b0  d076              BEQ      |L12.1440|
+0004b2  2100              MOVS     r1,#0
+                  |L12.1204|
+0004b4  4008              ANDS     r0,r0,r1
+0004b6  7971              LDRB     r1,[r6,#5]  ; RxBuffer
+0004b8  2974              CMP      r1,#0x74
+0004ba  d072              BEQ      |L12.1442|
+0004bc  2100              MOVS     r1,#0
+                  |L12.1214|
+0004be  4008              ANDS     r0,r0,r1
+0004c0  79b1              LDRB     r1,[r6,#6]  ; RxBuffer
+0004c2  2961              CMP      r1,#0x61
+0004c4  d06e              BEQ      |L12.1444|
+0004c6  2100              MOVS     r1,#0
+                  |L12.1224|
+0004c8  4008              ANDS     r0,r0,r1
+0004ca  79f1              LDRB     r1,[r6,#7]  ; RxBuffer
+0004cc  2972              CMP      r1,#0x72
+0004ce  d06a              BEQ      |L12.1446|
+0004d0  2100              MOVS     r1,#0
+                  |L12.1234|
+0004d2  4008              ANDS     r0,r0,r1
+0004d4  7a31              LDRB     r1,[r6,#8]  ; RxBuffer
+0004d6  2974              CMP      r1,#0x74
+0004d8  d066              BEQ      |L12.1448|
+0004da  2100              MOVS     r1,#0
+                  |L12.1244|
+0004dc  4208              TST      r0,r1
+0004de  d02d              BEQ      |L12.1340|
+;;;555    		{
+;;;556    			
+;;;557    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+0004e0  2200              MOVS     r2,#0
+0004e2  f2405125          MOV      r1,#0x525
+0004e6  4648              MOV      r0,r9
+0004e8  f7fffffe          BL       USART_ITConfig
+;;;558    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+0004ec  2201              MOVS     r2,#1
+0004ee  f2406126          MOV      r1,#0x626
+0004f2  4648              MOV      r0,r9
+0004f4  f7fffffe          BL       USART_ITConfig
+;;;559    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+0004f8  2201              MOVS     r2,#1
+0004fa  2108              MOVS     r1,#8
+0004fc  48fe              LDR      r0,|L12.2296|
+0004fe  f7fffffe          BL       GPIO_WriteBit
+;;;560    			
+;;;561    			TxBuffer[0]='r';
+000502  2272              MOVS     r2,#0x72
+000504  7022              STRB     r2,[r4,#0]
+;;;562    			TxBuffer[1]='e';	
+000506  2065              MOVS     r0,#0x65
+000508  7060              STRB     r0,[r4,#1]
+;;;563    			TxBuffer[2]='s';
+00050a  70a7              STRB     r7,[r4,#2]
+;;;564    			TxBuffer[3]='t';					
+00050c  2074              MOVS     r0,#0x74
+00050e  70e0              STRB     r0,[r4,#3]
+;;;565    			TxBuffer[4]='a';		
+000510  2161              MOVS     r1,#0x61
+000512  7121              STRB     r1,[r4,#4]
+;;;566    			TxBuffer[5]='r';	
+000514  7162              STRB     r2,[r4,#5]
+;;;567    			TxBuffer[6]='t';	
+000516  71a0              STRB     r0,[r4,#6]
+;;;568    			TxBuffer[7]='_';	
+000518  f8848007          STRB     r8,[r4,#7]
+;;;569    			TxBuffer[8]='o';	
+00051c  206f              MOVS     r0,#0x6f
+00051e  7220              STRB     r0,[r4,#8]
+;;;570    			TxBuffer[9]='k';
+000520  206b              MOVS     r0,#0x6b
+000522  7260              STRB     r0,[r4,#9]
+;;;571    	
+;;;572    			txsize=10;
+000524  210a              MOVS     r1,#0xa
+000526  f8aa1000          STRH     r1,[r10,#0]
+;;;573    			tekper=0;
+00052a  f8ab5000          STRH     r5,[r11,#0]
+;;;574    			USART_SendData(USART2, 0x3A);
+00052e  213a              MOVS     r1,#0x3a
+000530  4648              MOV      r0,r9
+000532  f7fffffe          BL       USART_SendData
+;;;575    			
+;;;576    			SCB->AIRCR = 0x05FA0004;
+000536  49f2              LDR      r1,|L12.2304|
+000538  48f0              LDR      r0,|L12.2300|
+00053a  6008              STR      r0,[r1,#0]
+                  |L12.1340|
+;;;577    			
+;;;578    			
+;;;579    			
+;;;580    			// need restart
+;;;581    		}
+;;;582    	
+;;;583    		// set_time
+;;;584    		if ((RxBuffer[2]=='s')&(RxBuffer[3]=='e')&(RxBuffer[4]=='t')&(RxBuffer[5]=='_')&(RxBuffer[6]=='t')&(RxBuffer[7]=='i')&(RxBuffer[8]=='m')&(RxBuffer[9]=='e'))
+00053c  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
+00053e  2873              CMP      r0,#0x73
+000540  d07e              BEQ      |L12.1600|
+000542  2000              MOVS     r0,#0
+                  |L12.1348|
+000544  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
+000546  2965              CMP      r1,#0x65
+000548  d07b              BEQ      |L12.1602|
+00054a  2100              MOVS     r1,#0
+                  |L12.1356|
+00054c  4008              ANDS     r0,r0,r1
+00054e  7931              LDRB     r1,[r6,#4]  ; RxBuffer
+000550  2974              CMP      r1,#0x74
+000552  d077              BEQ      |L12.1604|
+000554  2100              MOVS     r1,#0
+                  |L12.1366|
+000556  4008              ANDS     r0,r0,r1
+000558  7971              LDRB     r1,[r6,#5]  ; RxBuffer
+00055a  295f              CMP      r1,#0x5f
+00055c  d073              BEQ      |L12.1606|
+00055e  2100              MOVS     r1,#0
+                  |L12.1376|
+000560  4008              ANDS     r0,r0,r1
+000562  79b1              LDRB     r1,[r6,#6]  ; RxBuffer
+000564  2974              CMP      r1,#0x74
+000566  d06f              BEQ      |L12.1608|
+000568  2100              MOVS     r1,#0
+                  |L12.1386|
+00056a  4008              ANDS     r0,r0,r1
+00056c  79f1              LDRB     r1,[r6,#7]  ; RxBuffer
+00056e  2969              CMP      r1,#0x69
+000570  d06b              BEQ      |L12.1610|
+000572  2100              MOVS     r1,#0
+                  |L12.1396|
+000574  4008              ANDS     r0,r0,r1
+000576  7a31              LDRB     r1,[r6,#8]  ; RxBuffer
+000578  296d              CMP      r1,#0x6d
+00057a  d067              BEQ      |L12.1612|
+00057c  2100              MOVS     r1,#0
+                  |L12.1406|
+00057e  4008              ANDS     r0,r0,r1
+000580  7a71              LDRB     r1,[r6,#9]  ; RxBuffer
+000582  2965              CMP      r1,#0x65
+000584  d07d              BEQ      |L12.1666|
+000586  2100              MOVS     r1,#0
+                  |L12.1416|
+000588  4208              TST      r0,r1
+00058a  d07b              BEQ      |L12.1668|
+;;;585    		{		
+;;;586    			extern void rtc_SetDate(uint8_t Day, uint8_t Month, uint8_t Year, uint8_t DayOfWeek);
+;;;587    			extern  void rtc_SetTime(uint8_t Hours, uint8_t Minutes, uint8_t Seconds);
+;;;588    			extern  void rtc_Unlock(void);
+;;;589    			extern void rtc_Lock(void);
+;;;590    			
+;;;591    			uint32_t Tens, Units;
+;;;592          uint32_t TempReg = 0;
+;;;593    			u8 i=0;
 ;;;594    			
-;;;595    			/*
-;;;596    			txsize=sizeof(st_conf)<<1;
-;;;597    	
-;;;598    			for (i = 0; i < (txsize); i += 1)
-;;;599    			{
-;;;600    				u16 tmp=0;
-;;;601    	//			TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
-;;;602    				tmp=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
-;;;603    				TxBuffer[i<<1]=(tmp>>8)+0x30;
-;;;604    				TxBuffer[(i<<1)+1]=tmp+0x30;
-;;;605    			}	
-;;;606    */
-;;;607    
-;;;608    			txsize=sizeof(st_conf);
-0008d4  21e4              MOVS     r1,#0xe4
-;;;609    	
-;;;610    			for (i = 0; i < (txsize); i += 1)
-;;;611    			{
-;;;612    				TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
-0008d6  4814              LDR      r0,|L12.2344|
-0008d8  f8aa1000          STRH     r1,[r10,#0]           ;608
-                  |L12.2268|
-0008dc  5d82              LDRB     r2,[r0,r6]
-0008de  55a2              STRB     r2,[r4,r6]
-0008e0  1c76              ADDS     r6,r6,#1              ;610
-0008e2  b2b6              UXTH     r6,r6                 ;610
-0008e4  428e              CMP      r6,r1                 ;610
-0008e6  d3f9              BCC      |L12.2268|
-;;;613    			}	
-;;;614    			tekper=0;
-0008e8  f8ab5000          STRH     r5,[r11,#0]
-;;;615    			USART_SendData(USART2, 0x3A);
-0008ec  213a              MOVS     r1,#0x3a
-0008ee  4638              MOV      r0,r7
-0008f0  f7fffffe          BL       USART_SendData
-                  |L12.2292|
-;;;616    		}		
-;;;617    		
-;;;618    		new_komand=0;
-0008f4  480d              LDR      r0,|L12.2348|
-0008f6  7005              STRB     r5,[r0,#0]
+;;;595    			
+;;;596    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+00058c  2200              MOVS     r2,#0
+00058e  f2405125          MOV      r1,#0x525
+000592  4648              MOV      r0,r9
+000594  f7fffffe          BL       USART_ITConfig
+;;;597    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+000598  2201              MOVS     r2,#1
+00059a  e006              B        |L12.1450|
+                  |L12.1436|
+00059c  e0a5              B        |L12.1770|
+                  |L12.1438|
+00059e  e0a6              B        |L12.1774|
+                  |L12.1440|
+0005a0  e0a7              B        |L12.1778|
+                  |L12.1442|
+0005a2  e0a8              B        |L12.1782|
+                  |L12.1444|
+0005a4  e0a9              B        |L12.1786|
+                  |L12.1446|
+0005a6  e0aa              B        |L12.1790|
+                  |L12.1448|
+0005a8  e0ab              B        |L12.1794|
+                  |L12.1450|
+0005aa  f2406126          MOV      r1,#0x626
+0005ae  4648              MOV      r0,r9
+0005b0  f7fffffe          BL       USART_ITConfig
+;;;598    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+0005b4  2201              MOVS     r2,#1
+0005b6  2108              MOVS     r1,#8
+0005b8  48cf              LDR      r0,|L12.2296|
+0005ba  f7fffffe          BL       GPIO_WriteBit
+;;;599    
+;;;600    
+;;;601    			// set time
+;;;602    		rtc_Unlock();
+0005be  f7fffffe          BL       rtc_Unlock
+;;;603    		RTC->ISR |= RTC_ISR_INIT;
+0005c2  48d0              LDR      r0,|L12.2308|
+0005c4  6801              LDR      r1,[r0,#0]
+0005c6  f0410180          ORR      r1,r1,#0x80
+0005ca  6001              STR      r1,[r0,#0]
+                  |L12.1484|
+;;;604    		while(!(RTC->ISR & RTC_ISR_INITF)) {}
+0005cc  48cd              LDR      r0,|L12.2308|
+0005ce  6800              LDR      r0,[r0,#0]
+0005d0  0640              LSLS     r0,r0,#25
+0005d2  d5fb              BPL      |L12.1484|
+;;;605    
+;;;606    		RTC->PRER = 263; //Sync;         
+0005d4  48cb              LDR      r0,|L12.2308|
+0005d6  f2401107          MOV      r1,#0x107
+0005da  1d00              ADDS     r0,r0,#4
+0005dc  6001              STR      r1,[r0,#0]
+;;;607        RTC->PRER =263 | (127<<16); //Sync | (Async << 16);
+0005de  49ca              LDR      r1,|L12.2312|
+0005e0  6001              STR      r1,[r0,#0]
+;;;608    			
+;;;609    			
+;;;610    			TxBuffer[0]='s';
+0005e2  7027              STRB     r7,[r4,#0]
+;;;611    			TxBuffer[1]='e';	
+0005e4  2165              MOVS     r1,#0x65
+0005e6  7061              STRB     r1,[r4,#1]
+;;;612    			TxBuffer[2]='t';
+0005e8  2074              MOVS     r0,#0x74
+0005ea  70a0              STRB     r0,[r4,#2]
+;;;613    			TxBuffer[3]='_';					
+0005ec  f8848003          STRB     r8,[r4,#3]
+;;;614    			TxBuffer[4]='t';		
+0005f0  7120              STRB     r0,[r4,#4]
+;;;615    			TxBuffer[5]='i';	
+0005f2  2069              MOVS     r0,#0x69
+0005f4  7160              STRB     r0,[r4,#5]
+;;;616    			TxBuffer[6]='m';	
+0005f6  206d              MOVS     r0,#0x6d
+0005f8  71a0              STRB     r0,[r4,#6]
+;;;617    			TxBuffer[7]='e';	
+0005fa  71e1              STRB     r1,[r4,#7]
+;;;618    			TxBuffer[8]='_';	
+0005fc  f8848008          STRB     r8,[r4,#8]
+;;;619    			TxBuffer[9]='o';
+000600  206f              MOVS     r0,#0x6f
+000602  7260              STRB     r0,[r4,#9]
+;;;620    			TxBuffer[10]='k';
+000604  206b              MOVS     r0,#0x6b
+000606  72a0              STRB     r0,[r4,#0xa]
+;;;621    			
+;;;622    
+;;;623        // set time
+;;;624    rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+000608  7d30              LDRB     r0,[r6,#0x14]  ; RxBuffer
+00060a  7d71              LDRB     r1,[r6,#0x15]  ; RxBuffer
+00060c  3830              SUBS     r0,r0,#0x30
+00060e  eb000080          ADD      r0,r0,r0,LSL #2
+000612  f06f072f          MVN      r7,#0x2f
+000616  eb070040          ADD      r0,r7,r0,LSL #1
+00061a  4408              ADD      r0,r0,r1
+00061c  b2c2              UXTB     r2,r0
+00061e  7cb0              LDRB     r0,[r6,#0x12]  ; RxBuffer
+000620  7cf1              LDRB     r1,[r6,#0x13]  ; RxBuffer
+000622  3830              SUBS     r0,r0,#0x30
+000624  eb000080          ADD      r0,r0,r0,LSL #2
+000628  eb070040          ADD      r0,r7,r0,LSL #1
+00062c  4408              ADD      r0,r0,r1
+00062e  b2c1              UXTB     r1,r0
+000630  7c30              LDRB     r0,[r6,#0x10]  ; RxBuffer
+000632  7c73              LDRB     r3,[r6,#0x11]  ; RxBuffer
+000634  3830              SUBS     r0,r0,#0x30
+000636  eb000080          ADD      r0,r0,r0,LSL #2
+00063a  eb070040          ADD      r0,r7,r0,LSL #1
+00063e  e006              B        |L12.1614|
+                  |L12.1600|
+000640  e061              B        |L12.1798|
+                  |L12.1602|
+000642  e062              B        |L12.1802|
+                  |L12.1604|
+000644  e063              B        |L12.1806|
+                  |L12.1606|
+000646  e064              B        |L12.1810|
+                  |L12.1608|
+000648  e065              B        |L12.1814|
+                  |L12.1610|
+00064a  e066              B        |L12.1818|
+                  |L12.1612|
+00064c  e067              B        |L12.1822|
+                  |L12.1614|
+00064e  4418              ADD      r0,r0,r3
+000650  b2c0              UXTB     r0,r0
+000652  f7fffffe          BL       rtc_SetTime
+;;;625    
+;;;626    rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
+000656  7bb0              LDRB     r0,[r6,#0xe]  ; RxBuffer
+000658  7bf1              LDRB     r1,[r6,#0xf]  ; RxBuffer
+00065a  3830              SUBS     r0,r0,#0x30
+00065c  eb000080          ADD      r0,r0,r0,LSL #2
+000660  eb070040          ADD      r0,r7,r0,LSL #1
+000664  4408              ADD      r0,r0,r1
+000666  b2c2              UXTB     r2,r0
+000668  7b30              LDRB     r0,[r6,#0xc]  ; RxBuffer
+00066a  7b71              LDRB     r1,[r6,#0xd]  ; RxBuffer
+00066c  3830              SUBS     r0,r0,#0x30
+00066e  eb000080          ADD      r0,r0,r0,LSL #2
+000672  eb070040          ADD      r0,r7,r0,LSL #1
+000676  4408              ADD      r0,r0,r1
+000678  7ab3              LDRB     r3,[r6,#0xa]  ; RxBuffer
+00067a  b2c1              UXTB     r1,r0
+00067c  7af0              LDRB     r0,[r6,#0xb]  ; RxBuffer
+00067e  3b30              SUBS     r3,r3,#0x30
+000680  e001              B        |L12.1670|
+                  |L12.1666|
+000682  e04e              B        |L12.1826|
+                  |L12.1668|
+000684  e067              B        |L12.1878|
+                  |L12.1670|
+000686  eb030383          ADD      r3,r3,r3,LSL #2
+00068a  eb070343          ADD      r3,r7,r3,LSL #1
+00068e  4418              ADD      r0,r0,r3
+000690  b2c0              UXTB     r0,r0
+000692  2301              MOVS     r3,#1
+000694  f7fffffe          BL       rtc_SetDate
+;;;627    /*
+;;;628    if (1)
+;;;629    {
+;;;630    
+;;;631        TempReg = 0;
+;;;632        {
+;;;633            Tens  = ((RxBuffer[10]-0x30) / 10) & 0x0f;          // ??????? ???
+;;;634            Units = (RxBuffer[11]-0x30) & 0x0f; // ??????? ???
+;;;635            
+;;;636            TempReg |= (Tens  << 20); // YT, 20
+;;;637            TempReg |= (Units << 16); // YU, 16
+;;;638        }
+;;;639        {
+;;;640            Tens  = (RxBuffer[12]-0x30) & 0x01;          // ??????? ???????
+;;;641            Units = (RxBuffer[13]-0x30) & 0x0f; // ??????? ???????
+;;;642            
+;;;643            TempReg |= (Tens  << 12); // MT, 12
+;;;644            TempReg |= (Units << 8);  // MU, 8
+;;;645        }
+;;;646        {
+;;;647            Tens  = (RxBuffer[14]-0x30) & 0x03;          // ??????? ????
+;;;648            Units = (RxBuffer[15]-0x30) & 0x0f; // ??????? ????
+;;;649            
+;;;650            TempReg |= (Tens  << 4); // DT, 4
+;;;651            TempReg |= (Units << 0);  // DU, 0
+;;;652        }
+;;;653        {
+;;;654            TempReg |= ((1 & 0x07) << 13); // WDU, 13
+;;;655        }
+;;;656        RTC->DR = TempReg;	
+;;;657    	}	
+;;;658    */
+;;;659    		RTC->CR |= RTC_CR_FMT;
+000698  489a              LDR      r0,|L12.2308|
+00069a  1f00              SUBS     r0,r0,#4
+00069c  6801              LDR      r1,[r0,#0]
+00069e  f0410140          ORR      r1,r1,#0x40
+0006a2  6001              STR      r1,[r0,#0]
+;;;660        RTC->ISR &= ~RTC_ISR_INIT;
+0006a4  1d00              ADDS     r0,r0,#4
+0006a6  6801              LDR      r1,[r0,#0]
+0006a8  f0210180          BIC      r1,r1,#0x80
+0006ac  6001              STR      r1,[r0,#0]
+;;;661    		rtc_Lock();
+0006ae  f7fffffe          BL       rtc_Lock
+;;;662    
+;;;663    	
+;;;664    		rtc_Get(&DT1);
+0006b2  4896              LDR      r0,|L12.2316|
+0006b4  f7fffffe          BL       rtc_Get
+0006b8  f8df8250          LDR      r8,|L12.2316|
+;;;665    //			while (TempReg!=RTC->DR)
+;;;666    		while (((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30))!=DT1.Day)
+0006bc  e036              B        |L12.1836|
+                  |L12.1726|
+0006be  2074              MOVS     r0,#0x74              ;498
+0006c0  70a0              STRB     r0,[r4,#2]            ;498
+0006c2  f8848003          STRB     r8,[r4,#3]            ;499
+0006c6  7121              STRB     r1,[r4,#4]            ;500
+0006c8  216f              MOVS     r1,#0x6f              ;501
+0006ca  7161              STRB     r1,[r4,#5]            ;501
+0006cc  71a2              STRB     r2,[r4,#6]            ;502
+0006ce  71e3              STRB     r3,[r4,#7]            ;503
+0006d0  f8848008          STRB     r8,[r4,#8]            ;504
+0006d4  7261              STRB     r1,[r4,#9]            ;505
+0006d6  206b              MOVS     r0,#0x6b              ;506
+0006d8  e63c              B        |L12.852|
+                  |L12.1754|
+0006da  2001              MOVS     r0,#1                 ;529
+0006dc  e649              B        |L12.882|
+                  |L12.1758|
+0006de  2101              MOVS     r1,#1                 ;529
+0006e0  e64b              B        |L12.890|
+                  |L12.1762|
+0006e2  2101              MOVS     r1,#1                 ;529
+0006e4  e64e              B        |L12.900|
+                  |L12.1766|
+0006e6  2101              MOVS     r1,#1                 ;529
+0006e8  e651              B        |L12.910|
+                  |L12.1770|
+0006ea  2001              MOVS     r0,#1                 ;554
+0006ec  e6d9              B        |L12.1186|
+                  |L12.1774|
+0006ee  2101              MOVS     r1,#1                 ;554
+0006f0  e6db              B        |L12.1194|
+                  |L12.1778|
+0006f2  2101              MOVS     r1,#1                 ;554
+0006f4  e6de              B        |L12.1204|
+                  |L12.1782|
+0006f6  2101              MOVS     r1,#1                 ;554
+0006f8  e6e1              B        |L12.1214|
+                  |L12.1786|
+0006fa  2101              MOVS     r1,#1                 ;554
+0006fc  e6e4              B        |L12.1224|
+                  |L12.1790|
+0006fe  2101              MOVS     r1,#1                 ;554
+000700  e6e7              B        |L12.1234|
+                  |L12.1794|
+000702  2101              MOVS     r1,#1                 ;554
+000704  e6ea              B        |L12.1244|
+                  |L12.1798|
+000706  2001              MOVS     r0,#1                 ;584
+000708  e71c              B        |L12.1348|
+                  |L12.1802|
+00070a  2101              MOVS     r1,#1                 ;584
+00070c  e71e              B        |L12.1356|
+                  |L12.1806|
+00070e  2101              MOVS     r1,#1                 ;584
+000710  e721              B        |L12.1366|
+                  |L12.1810|
+000712  2101              MOVS     r1,#1                 ;584
+000714  e724              B        |L12.1376|
+                  |L12.1814|
+000716  2101              MOVS     r1,#1                 ;584
+000718  e727              B        |L12.1386|
+                  |L12.1818|
+00071a  2101              MOVS     r1,#1                 ;584
+00071c  e72a              B        |L12.1396|
+                  |L12.1822|
+00071e  2101              MOVS     r1,#1                 ;584
+000720  e72d              B        |L12.1406|
+                  |L12.1826|
+000722  2101              MOVS     r1,#1                 ;584
+000724  e730              B        |L12.1416|
+                  |L12.1830|
+;;;667    				rtc_Get(&DT1);
+000726  4879              LDR      r0,|L12.2316|
+000728  f7fffffe          BL       rtc_Get
+                  |L12.1836|
+00072c  7ab0              LDRB     r0,[r6,#0xa]          ;666  ; RxBuffer
+00072e  7af1              LDRB     r1,[r6,#0xb]          ;666  ; RxBuffer
+000730  3830              SUBS     r0,r0,#0x30           ;666
+000732  eb000080          ADD      r0,r0,r0,LSL #2       ;666
+000736  eb070040          ADD      r0,r7,r0,LSL #1       ;666
+00073a  4401              ADD      r1,r1,r0              ;666
+00073c  f8980002          LDRB     r0,[r8,#2]            ;666  ; DT1
+000740  4281              CMP      r1,r0                 ;666
+000742  d1f0              BNE      |L12.1830|
+;;;668    
+;;;669    				
+;;;670    			txsize=11;
+000744  210b              MOVS     r1,#0xb
+000746  f8aa1000          STRH     r1,[r10,#0]
+;;;671    			tekper=0;
+00074a  f8ab5000          STRH     r5,[r11,#0]
+;;;672    			USART_SendData(USART2, 0x3A);
+00074e  213a              MOVS     r1,#0x3a
+000750  4648              MOV      r0,r9
+000752  f7fffffe          BL       USART_SendData
+                  |L12.1878|
+;;;673    			
+;;;674    			// need restart
+;;;675    		}
+;;;676    		
+;;;677    		// read
+;;;678    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
+000756  78b0              LDRB     r0,[r6,#2]  ; RxBuffer
+000758  2872              CMP      r0,#0x72
+00075a  d07d              BEQ      |L12.2136|
+00075c  2000              MOVS     r0,#0
+                  |L12.1886|
+00075e  78f1              LDRB     r1,[r6,#3]  ; RxBuffer
+000760  2965              CMP      r1,#0x65
+000762  d07a              BEQ      |L12.2138|
+000764  2100              MOVS     r1,#0
+                  |L12.1894|
+000766  4008              ANDS     r0,r0,r1
+000768  7931              LDRB     r1,[r6,#4]  ; RxBuffer
+00076a  2961              CMP      r1,#0x61
+00076c  d076              BEQ      |L12.2140|
+00076e  2100              MOVS     r1,#0
+                  |L12.1904|
+000770  4008              ANDS     r0,r0,r1
+000772  4967              LDR      r1,|L12.2320|
+000774  7949              LDRB     r1,[r1,#5]  ; RxBuffer
+000776  2964              CMP      r1,#0x64
+000778  d071              BEQ      |L12.2142|
+00077a  2100              MOVS     r1,#0
+                  |L12.1916|
+00077c  4208              TST      r0,r1
+00077e  d06f              BEQ      |L12.2144|
+;;;679    		{
+;;;680    			
+;;;681    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+000780  2200              MOVS     r2,#0
+000782  f2405125          MOV      r1,#0x525
+000786  4648              MOV      r0,r9
+000788  f7fffffe          BL       USART_ITConfig
+;;;682    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+00078c  2201              MOVS     r2,#1
+00078e  f2406126          MOV      r1,#0x626
+000792  4648              MOV      r0,r9
+000794  f7fffffe          BL       USART_ITConfig
+;;;683    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+000798  2201              MOVS     r2,#1
+00079a  2108              MOVS     r1,#8
+00079c  4856              LDR      r0,|L12.2296|
+00079e  f7fffffe          BL       GPIO_WriteBit
+;;;684    			
+;;;685    			// test zapis for controlling time on fleshka
+;;;686    			tmp=por;
+0007a2  485c              LDR      r0,|L12.2324|
+;;;687    			TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+0007a4  f44f727a          MOV      r2,#0x3e8
+0007a8  8800              LDRH     r0,[r0,#0]            ;686  ; por
+0007aa  fbb0f1f2          UDIV     r1,r0,r2
+0007ae  f1010330          ADD      r3,r1,#0x30
+0007b2  7023              STRB     r3,[r4,#0]
+;;;688    			tmp%=1000;
+0007b4  fb020011          MLS      r0,r2,r1,r0
+;;;689    			TxBuffer[1]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+0007b8  2364              MOVS     r3,#0x64
+0007ba  fbb0f1f3          UDIV     r1,r0,r3
+0007be  f1010630          ADD      r6,r1,#0x30
+;;;690    			tmp%=100;		
+0007c2  fb030111          MLS      r1,r3,r1,r0
+0007c6  7066              STRB     r6,[r4,#1]            ;689
+;;;691    			TxBuffer[2]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+0007c8  200a              MOVS     r0,#0xa
+0007ca  fbb1f6f0          UDIV     r6,r1,r0
+;;;692    			tmp%=10;	
+0007ce  fb001116          MLS      r1,r0,r6,r1
+0007d2  f1060730          ADD      r7,r6,#0x30           ;691
+0007d6  70a7              STRB     r7,[r4,#2]            ;691
+;;;693    			TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
+0007d8  3130              ADDS     r1,r1,#0x30
+0007da  70e1              STRB     r1,[r4,#3]
+;;;694    				
+;;;695    			TxBuffer[4]=0x20;	
+;;;696    
+;;;697    			// date
+;;;698    			TxBuffer[5]=(uint8_t)(DT1.Year/10)+(uint8_t)0x30;	
+0007dc  4e4b              LDR      r6,|L12.2316|
+0007de  2120              MOVS     r1,#0x20              ;695
+0007e0  7121              STRB     r1,[r4,#4]            ;695
+0007e2  f896c000          LDRB     r12,[r6,#0]  ; DT1
+0007e6  fbbcf7f0          UDIV     r7,r12,r0
+0007ea  f1070830          ADD      r8,r7,#0x30
+;;;699    			TxBuffer[6]=(uint8_t)(DT1.Year%10)+(uint8_t)0x30;	
+0007ee  fb00c717          MLS      r7,r0,r7,r12
+0007f2  f8848005          STRB     r8,[r4,#5]            ;698
+0007f6  3730              ADDS     r7,r7,#0x30
+0007f8  71a7              STRB     r7,[r4,#6]
+;;;700    			TxBuffer[7]=(uint8_t)(DT1.Month/10)+(uint8_t)0x30;	
+0007fa  f896c001          LDRB     r12,[r6,#1]  ; DT1
+0007fe  fbbcf7f0          UDIV     r7,r12,r0
+000802  f1070830          ADD      r8,r7,#0x30
+;;;701    			TxBuffer[8]=(uint8_t)(DT1.Month%10)+(uint8_t)0x30;	
+000806  fb00c717          MLS      r7,r0,r7,r12
+00080a  f8848007          STRB     r8,[r4,#7]            ;700
+00080e  3730              ADDS     r7,r7,#0x30
+000810  7227              STRB     r7,[r4,#8]
+;;;702    			TxBuffer[9]=(uint8_t)(DT1.Day/10)+(uint8_t)0x30;	
+000812  78b7              LDRB     r7,[r6,#2]  ; DT1
+000814  fbb7f8f0          UDIV     r8,r7,r0
+;;;703    			TxBuffer[10]=(uint8_t)(DT1.Day%10)+(uint8_t)0x30;	
+000818  fb007718          MLS      r7,r0,r8,r7
+00081c  f1080c30          ADD      r12,r8,#0x30          ;702
+000820  f884c009          STRB     r12,[r4,#9]           ;702
+000824  3730              ADDS     r7,r7,#0x30
+000826  72a7              STRB     r7,[r4,#0xa]
+;;;704    			TxBuffer[11]=0x20;				
+000828  72e1              STRB     r1,[r4,#0xb]
+;;;705    			
+;;;706    			// time
+;;;707    			TxBuffer[12]=(uint8_t)(DT1.Hours/10)+(uint8_t)0x30;	
+00082a  f896c004          LDRB     r12,[r6,#4]  ; DT1
+00082e  fbbcf7f0          UDIV     r7,r12,r0
+000832  f1070830          ADD      r8,r7,#0x30
+;;;708    			TxBuffer[13]=(uint8_t)(DT1.Hours%10)+(uint8_t)0x30;			
+000836  fb00c717          MLS      r7,r0,r7,r12
+00083a  f884800c          STRB     r8,[r4,#0xc]          ;707
+00083e  3730              ADDS     r7,r7,#0x30
+000840  7367              STRB     r7,[r4,#0xd]
+;;;709    			TxBuffer[14]=(uint8_t)(DT1.Minutes/10)+(uint8_t)0x30;	
+000842  f896c005          LDRB     r12,[r6,#5]  ; DT1
+000846  fbbcf7f0          UDIV     r7,r12,r0
+00084a  f1070830          ADD      r8,r7,#0x30
+;;;710    			TxBuffer[15]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
+00084e  fb00c717          MLS      r7,r0,r7,r12
+000852  f884800e          STRB     r8,[r4,#0xe]          ;709
+000856  e004              B        |L12.2146|
+                  |L12.2136|
+000858  e0ed              B        |L12.2614|
+                  |L12.2138|
+00085a  e0ee              B        |L12.2618|
+                  |L12.2140|
+00085c  e0ef              B        |L12.2622|
+                  |L12.2142|
+00085e  e0f0              B        |L12.2626|
+                  |L12.2144|
+000860  e09e              B        |L12.2464|
+                  |L12.2146|
+000862  3730              ADDS     r7,r7,#0x30
+000864  73e7              STRB     r7,[r4,#0xf]
+;;;711    			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
+000866  79b7              LDRB     r7,[r6,#6]  ; DT1
+000868  fbb7f6f0          UDIV     r6,r7,r0
+00086c  f1060c30          ADD      r12,r6,#0x30
+;;;712    			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+000870  fb007616          MLS      r6,r0,r6,r7
+000874  f884c010          STRB     r12,[r4,#0x10]        ;711
+000878  3630              ADDS     r6,r6,#0x30
+00087a  7466              STRB     r6,[r4,#0x11]
+;;;713    			TxBuffer[18]=0x20;
+;;;714    			
+;;;715    			// dat pribl
+;;;716    			TxBuffer[19]=sost_pribl+0x30;
+00087c  4e26              LDR      r6,|L12.2328|
+00087e  74a1              STRB     r1,[r4,#0x12]         ;713
+000880  7836              LDRB     r6,[r6,#0]  ; sost_pribl
+000882  3630              ADDS     r6,r6,#0x30
+000884  74e6              STRB     r6,[r4,#0x13]
+;;;717    			TxBuffer[20]=0x20;
+;;;718    			
+;;;719    			
+;;;720    			// zn from adc with calibr and averaging
+;;;721    			tmp=ADC3ConvertedValue;
+000886  4e25              LDR      r6,|L12.2332|
+000888  7521              STRB     r1,[r4,#0x14]         ;717
+00088a  8836              LDRH     r6,[r6,#0]  ; ADC3ConvertedValue
+;;;722    			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+00088c  fbb6f7f2          UDIV     r7,r6,r2
+000890  f1070c30          ADD      r12,r7,#0x30
+;;;723    			tmp%=1000;
+000894  fb026617          MLS      r6,r2,r7,r6
+;;;724    			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+000898  fbb6f7f3          UDIV     r7,r6,r3
+00089c  f884c015          STRB     r12,[r4,#0x15]        ;722
+0008a0  f1070c30          ADD      r12,r7,#0x30
+;;;725    			tmp%=100;		
+0008a4  fb036617          MLS      r6,r3,r7,r6
+;;;726    			TxBuffer[23]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+0008a8  fbb6f7f0          UDIV     r7,r6,r0
+0008ac  f884c016          STRB     r12,[r4,#0x16]        ;724
+;;;727    			tmp%=10;	
+0008b0  fb006617          MLS      r6,r0,r7,r6
+0008b4  f1070c30          ADD      r12,r7,#0x30          ;726
+0008b8  f884c017          STRB     r12,[r4,#0x17]        ;726
+;;;728    			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
+0008bc  3630              ADDS     r6,r6,#0x30
+0008be  7626              STRB     r6,[r4,#0x18]
+;;;729    			TxBuffer[25]=0x20;		
+;;;730    			
+;;;731    			tmp=fz_average[0];
+0008c0  4e17              LDR      r6,|L12.2336|
+0008c2  7661              STRB     r1,[r4,#0x19]         ;729
+0008c4  8836              LDRH     r6,[r6,#0]  ; fz_average
+;;;732    			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+0008c6  fbb6f7f2          UDIV     r7,r6,r2
+0008ca  f1070c30          ADD      r12,r7,#0x30
+;;;733    			tmp%=1000;
+0008ce  fb026617          MLS      r6,r2,r7,r6
+;;;734    			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+0008d2  fbb6f7f3          UDIV     r7,r6,r3
+0008d6  f884c01a          STRB     r12,[r4,#0x1a]        ;732
+0008da  f1070c30          ADD      r12,r7,#0x30
+;;;735    			tmp%=100;		
+0008de  fb036617          MLS      r6,r3,r7,r6
+;;;736    			TxBuffer[28]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+0008e2  fbb6f7f0          UDIV     r7,r6,r0
+0008e6  f884c01b          STRB     r12,[r4,#0x1b]        ;734
+0008ea  f1070c30          ADD      r12,r7,#0x30
+;;;737    			tmp%=10;	
+0008ee  fb006617          MLS      r6,r0,r7,r6
+0008f2  f884c01c          STRB     r12,[r4,#0x1c]        ;736
+;;;738    			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
+0008f6  e015              B        |L12.2340|
                   |L12.2296|
-;;;619    	}
-;;;620    	
-;;;621    
-;;;622    	
-;;;623    				//	indicators[0].chislo=1234;
-;;;624    		//		indicators[1].chislo=1234;
-;;;625    		//		indicate (0);
-;;;626    		//		indicate (1);
-;;;627    				
-;;;628    }
-0008f8  e8bd9ff0          POP      {r4-r12,pc}
+                          DCD      0x40020c00
                   |L12.2300|
-0008fc  2001              MOVS     r0,#1                 ;509
-0008fe  e6a8              B        |L12.1618|
+                          DCD      0x05fa0004
                   |L12.2304|
-000900  2101              MOVS     r1,#1                 ;509
-000902  e6aa              B        |L12.1626|
+                          DCD      0xe000ed0c
                   |L12.2308|
-000904  2101              MOVS     r1,#1                 ;509
-000906  e6ad              B        |L12.1636|
+                          DCD      0x4000280c
                   |L12.2312|
-000908  2101              MOVS     r1,#1                 ;509
-00090a  e6b1              B        |L12.1648|
+                          DCD      0x007f0107
                   |L12.2316|
-00090c  2001              MOVS     r0,#1                 ;584
-00090e  e79a              B        |L12.2118|
+                          DCD      ||.data||+0x4
                   |L12.2320|
-000910  2101              MOVS     r1,#1                 ;584
-000912  e79c              B        |L12.2126|
+                          DCD      RxBuffer
                   |L12.2324|
-000914  2101              MOVS     r1,#1                 ;584
-000916  e79f              B        |L12.2136|
+                          DCD      por
                   |L12.2328|
-000918  2101              MOVS     r1,#1                 ;584
-00091a  e7a2              B        |L12.2146|
+                          DCD      sost_pribl
                   |L12.2332|
-00091c  2101              MOVS     r1,#1                 ;584
-00091e  e7a5              B        |L12.2156|
+                          DCD      ADC3ConvertedValue
                   |L12.2336|
-000920  2101              MOVS     r1,#1                 ;584
-000922  e7a8              B        |L12.2166|
+                          DCD      fz_average
                   |L12.2340|
-000924  2101              MOVS     r1,#1                 ;584
-000926  e7ab              B        |L12.2176|
-;;;629    
+000924  3630              ADDS     r6,r6,#0x30
+000926  7766              STRB     r6,[r4,#0x1d]
+;;;739    			TxBuffer[30]=0x20;
+;;;740    			
+;;;741    			tmp=max[0];
+000928  4e4e              LDR      r6,|L12.2660|
+00092a  77a1              STRB     r1,[r4,#0x1e]         ;739
+00092c  8836              LDRH     r6,[r6,#0]  ; max
+;;;742    			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+00092e  fbb6f7f2          UDIV     r7,r6,r2
+;;;743    			tmp%=1000;
+000932  fb026217          MLS      r2,r2,r7,r6
+;;;744    			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+000936  fbb2f6f3          UDIV     r6,r2,r3
+;;;745    			tmp%=100;		
+00093a  fb032216          MLS      r2,r3,r6,r2
+;;;746    			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+00093e  fbb2f3f0          UDIV     r3,r2,r0
+000942  f1070c30          ADD      r12,r7,#0x30          ;742
+000946  f1060730          ADD      r7,r6,#0x30           ;744
+00094a  f884c01f          STRB     r12,[r4,#0x1f]        ;742
+;;;747    			tmp%=10;	
+00094e  fb002013          MLS      r0,r0,r3,r2
+000952  f8847020          STRB     r7,[r4,#0x20]         ;744
+000956  f1030630          ADD      r6,r3,#0x30           ;746
+00095a  f8846021          STRB     r6,[r4,#0x21]         ;746
+;;;748    			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
+00095e  3030              ADDS     r0,r0,#0x30
+000960  f8840022          STRB     r0,[r4,#0x22]
+;;;749    
+;;;750    			TxBuffer[35]=0x20;
+;;;751    			TxBuffer[36]=(uint8_t)(avariya)+(uint8_t)0x30;	
+000964  4840              LDR      r0,|L12.2664|
+000966  f8841023          STRB     r1,[r4,#0x23]         ;750
+00096a  7800              LDRB     r0,[r0,#0]  ; avariya
+00096c  3030              ADDS     r0,r0,#0x30
+00096e  f8840024          STRB     r0,[r4,#0x24]
+;;;752    
+;;;753    			TxBuffer[37]=0x20;
+;;;754    			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;
+000972  483e              LDR      r0,|L12.2668|
+000974  f8841025          STRB     r1,[r4,#0x25]         ;753
+000978  7800              LDRB     r0,[r0,#0]  ; sost_flesh
+00097a  3030              ADDS     r0,r0,#0x30
+00097c  f8840026          STRB     r0,[r4,#0x26]
+;;;755    			
+;;;756    			TxBuffer[39]=0x20;
+;;;757    			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
+000980  483b              LDR      r0,|L12.2672|
+000982  f8841027          STRB     r1,[r4,#0x27]         ;756
+;;;758    		/*
+;;;759         + need:
+;;;760    			1 avariya   
+;;;761    			2 zapis norm or error  
+;;;762    			3 tek gr kal
+;;;763    */
+;;;764    			txsize=41;
+000986  2129              MOVS     r1,#0x29
+000988  78c0              LDRB     r0,[r0,#3]            ;757  ; conf
+00098a  3030              ADDS     r0,r0,#0x30           ;757
+00098c  f8840028          STRB     r0,[r4,#0x28]         ;757
+000990  f8aa1000          STRH     r1,[r10,#0]
+;;;765    			tekper=0;
+000994  f8ab5000          STRH     r5,[r11,#0]
+;;;766    			USART_SendData(USART2, 0x3A);
+000998  213a              MOVS     r1,#0x3a
+00099a  4648              MOV      r0,r9
+00099c  f7fffffe          BL       USART_SendData
+                  |L12.2464|
+;;;767    		}		
+;;;768    		
+;;;769    		// read_conf
+;;;770    		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
+0009a0  4a34              LDR      r2,|L12.2676|
+0009a2  7890              LDRB     r0,[r2,#2]  ; RxBuffer
+0009a4  2872              CMP      r0,#0x72
+0009a6  d04e              BEQ      |L12.2630|
+0009a8  2000              MOVS     r0,#0
+                  |L12.2474|
+0009aa  78d1              LDRB     r1,[r2,#3]  ; RxBuffer
+0009ac  2964              CMP      r1,#0x64
+0009ae  d04c              BEQ      |L12.2634|
+0009b0  2100              MOVS     r1,#0
+                  |L12.2482|
+0009b2  4008              ANDS     r0,r0,r1
+0009b4  7911              LDRB     r1,[r2,#4]  ; RxBuffer
+0009b6  295f              CMP      r1,#0x5f
+0009b8  d049              BEQ      |L12.2638|
+0009ba  2100              MOVS     r1,#0
+                  |L12.2492|
+0009bc  4008              ANDS     r0,r0,r1
+0009be  7951              LDRB     r1,[r2,#5]  ; RxBuffer
+0009c0  2963              CMP      r1,#0x63
+0009c2  d046              BEQ      |L12.2642|
+0009c4  2100              MOVS     r1,#0
+                  |L12.2502|
+0009c6  4008              ANDS     r0,r0,r1
+0009c8  7991              LDRB     r1,[r2,#6]  ; RxBuffer
+0009ca  296f              CMP      r1,#0x6f
+0009cc  d043              BEQ      |L12.2646|
+0009ce  2100              MOVS     r1,#0
+                  |L12.2512|
+0009d0  4008              ANDS     r0,r0,r1
+0009d2  79d1              LDRB     r1,[r2,#7]  ; RxBuffer
+0009d4  296e              CMP      r1,#0x6e
+0009d6  d040              BEQ      |L12.2650|
+0009d8  2100              MOVS     r1,#0
+                  |L12.2522|
+0009da  4008              ANDS     r0,r0,r1
+0009dc  7a11              LDRB     r1,[r2,#8]  ; RxBuffer
+0009de  2966              CMP      r1,#0x66
+0009e0  d03d              BEQ      |L12.2654|
+0009e2  2100              MOVS     r1,#0
+                  |L12.2532|
+0009e4  4208              TST      r0,r1
+0009e6  d022              BEQ      |L12.2606|
+;;;771    		{
+;;;772    			u16 i=0;
+0009e8  2600              MOVS     r6,#0
+;;;773    			extern st_conf conf;		
+;;;774    			
+;;;775    			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
+0009ea  4632              MOV      r2,r6
+0009ec  f2405125          MOV      r1,#0x525
+0009f0  464f              MOV      r7,r9
+0009f2  4648              MOV      r0,r9
+0009f4  f7fffffe          BL       USART_ITConfig
+;;;776    			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+0009f8  2201              MOVS     r2,#1
+0009fa  f2406126          MOV      r1,#0x626
+0009fe  4638              MOV      r0,r7
+000a00  f7fffffe          BL       USART_ITConfig
+;;;777    			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
+000a04  2201              MOVS     r2,#1
+000a06  2108              MOVS     r1,#8
+000a08  481b              LDR      r0,|L12.2680|
+000a0a  f7fffffe          BL       GPIO_WriteBit
+;;;778    /*
+;;;779    		u8 address;
+;;;780    		u8 ver_po_st;
+;;;781    		u8 ver_po_ml;
+;;;782    	  u8 tek_gr_kal; 
+;;;783    	  u8 tm_antidreb;
+;;;784    		u8 revers_group_select;
+;;;785    		u8 revers_peredacha_select;
+;;;786    		u8 rez8;
+;;;787    	
+;;;788    		u16	per_usr;
+;;;789    		u16	time_max;
+;;;790    		u16 por_rele;
+;;;791    		u16 tm_rele_on;
+;;;792    		u16 tm_rele_off;
+;;;793    		u16 rez16;
+;;;794    	*/	
+;;;795    /*
+;;;796    			conf.address=1;
+;;;797    			conf.ver_po_st=2;
+;;;798    			conf.ver_po_ml=3;
+;;;799    			conf.tek_gr_kal=4;
+;;;800    			conf.tm_antidreb=5;
+;;;801    			conf.revers_group_select=6;
+;;;802    			conf.revers_peredacha_select=7;
+;;;803    			conf.rez8=8;
+;;;804    			conf.per_usr=9;
+;;;805    			conf.time_max=10;
+;;;806    			conf.por_rele=11;
+;;;807    			conf.tm_rele_on=12;
+;;;808    			conf.tm_rele_off=13;
+;;;809    			conf.rez16=14;
+;;;810    			
+;;;811    		conf.lin.kol_st=15;
+;;;812    		conf.lin.max1=16;	
+;;;813    		conf.lin.max2=17;
+;;;814    		conf.lin.max3=18;
+;;;815    		conf.lin.max4=19;
+;;;816    		*/
+;;;817    			/*
+;;;818    			conf.indicators[0].numb=15;
+;;;819    			conf.indicators[0].kol_cifr=16;
+;;;820    			conf.indicators[0].type_ind=17;
+;;;821    			conf.indicators[0].yark=18;
+;;;822    			conf.indicators[0].rez_viv=19;
+;;;823    			conf.indicators[0].pol_zap=20;
+;;;824    			conf.indicators[0].r1=21;
+;;;825    			conf.indicators[0].r2=22;
+;;;826    			conf.indicators[0].chislo=23;
+;;;827    			conf.indicators[0].porog=24;
+;;;828    
+;;;829    			conf.indicators[1].numb=25;
+;;;830    			conf.indicators[1].kol_cifr=26;
+;;;831    			conf.indicators[1].type_ind=27;
+;;;832    			conf.indicators[1].yark=28;
+;;;833    			conf.indicators[1].rez_viv=29;
+;;;834    			conf.indicators[1].pol_zap=30;
+;;;835    			conf.indicators[1].r1=31;
+;;;836    			conf.indicators[1].r2=32;
+;;;837    			conf.indicators[1].chislo=33;
+;;;838    			conf.indicators[1].porog=34;
+;;;839    		
+;;;840    
+;;;841    		
+;;;842    
+;;;843    		
+;;;844    			conf.indicators[2].numb=35;
+;;;845    			conf.indicators[2].kol_cifr=36;
+;;;846    			conf.indicators[2].type_ind=37;
+;;;847    			conf.indicators[2].yark=38;
+;;;848    			conf.indicators[2].rez_viv=39;
+;;;849    			conf.indicators[2].pol_zap=40;
+;;;850    			conf.indicators[2].r1=41;
+;;;851    			conf.indicators[2].r2=42;
+;;;852    			conf.indicators[2].chislo=43;
+;;;853    			conf.indicators[2].porog=44;
+;;;854    			
+;;;855    			conf.indicators[3].numb=45;
+;;;856    			conf.indicators[3].kol_cifr=46;
+;;;857    			conf.indicators[3].type_ind=47;
+;;;858    			conf.indicators[3].yark=48;
+;;;859    			conf.indicators[3].rez_viv=49;
+;;;860    			conf.indicators[3].pol_zap=50;
+;;;861    			conf.indicators[3].r1=51;
+;;;862    			conf.indicators[3].r2=52;
+;;;863    			conf.indicators[3].chislo=53;
+;;;864    			conf.indicators[3].porog=54;
+;;;865    				*/
+;;;866    		/*		
+;;;867    			conf.gr_kal1.tabl1.fz[0]=55;
+;;;868    			conf.gr_kal1.tabl1.fz[1]=56;
+;;;869    			conf.gr_kal1.tabl1.fz[2]=57;
+;;;870    			conf.gr_kal1.tabl1.fz[3]=58;
+;;;871    			conf.gr_kal1.tabl1.fz[4]=59;
+;;;872    			conf.gr_kal1.tabl1.fz[5]=60;
+;;;873    			conf.gr_kal1.tabl1.fz[6]=61;
+;;;874    			conf.gr_kal1.tabl1.fz[7]=62;
+;;;875    			conf.gr_kal1.tabl1.fz[8]=63;
+;;;876    			conf.gr_kal1.tabl1.fz[9]=64;
+;;;877    
+;;;878    			conf.gr_kal1.tabl1.kod[0]=65;
+;;;879    			conf.gr_kal1.tabl1.kod[1]=66;
+;;;880    			conf.gr_kal1.tabl1.kod[2]=67;
+;;;881    			conf.gr_kal1.tabl1.kod[3]=68;
+;;;882    			conf.gr_kal1.tabl1.kod[4]=69;
+;;;883    			conf.gr_kal1.tabl1.kod[5]=70;
+;;;884    			conf.gr_kal1.tabl1.kod[6]=71;
+;;;885    			conf.gr_kal1.tabl1.kod[7]=72;
+;;;886    			conf.gr_kal1.tabl1.kod[8]=73;
+;;;887    			conf.gr_kal1.tabl1.kod[9]=74;
+;;;888    	
+;;;889    			conf.gr_kal1.tabl2.fz[0]=75;
+;;;890    			conf.gr_kal1.tabl2.fz[1]=76;
+;;;891    			conf.gr_kal1.tabl2.fz[2]=77;
+;;;892    			conf.gr_kal1.tabl2.fz[3]=78;
+;;;893    			conf.gr_kal1.tabl2.fz[4]=79;
+;;;894    			conf.gr_kal1.tabl2.fz[5]=80;
+;;;895    			conf.gr_kal1.tabl2.fz[6]=81;
+;;;896    			conf.gr_kal1.tabl2.fz[7]=82;
+;;;897    			conf.gr_kal1.tabl2.fz[8]=83;
+;;;898    			conf.gr_kal1.tabl2.fz[9]=84;
+;;;899    
+;;;900    			conf.gr_kal1.tabl2.kod[0]=85;
+;;;901    			conf.gr_kal1.tabl2.kod[1]=86;
+;;;902    			conf.gr_kal1.tabl2.kod[2]=87;
+;;;903    			conf.gr_kal1.tabl2.kod[3]=88;
+;;;904    			conf.gr_kal1.tabl2.kod[4]=89;
+;;;905    			conf.gr_kal1.tabl2.kod[5]=90;
+;;;906    			conf.gr_kal1.tabl2.kod[6]=91;
+;;;907    			conf.gr_kal1.tabl2.kod[7]=92;
+;;;908    			conf.gr_kal1.tabl2.kod[8]=93;
+;;;909    			conf.gr_kal1.tabl2.kod[9]=94;	
+;;;910    			
+;;;911    			// dr2
+;;;912    			conf.gr_kal2.tabl1.fz[0]=95;
+;;;913    			conf.gr_kal2.tabl1.fz[1]=96;
+;;;914    			conf.gr_kal2.tabl1.fz[2]=97;
+;;;915    			conf.gr_kal2.tabl1.fz[3]=98;
+;;;916    			conf.gr_kal2.tabl1.fz[4]=99;
+;;;917    			conf.gr_kal2.tabl1.fz[5]=100;
+;;;918    			conf.gr_kal2.tabl1.fz[6]=101;
+;;;919    			conf.gr_kal2.tabl1.fz[7]=102;
+;;;920    			conf.gr_kal2.tabl1.fz[8]=103;
+;;;921    			conf.gr_kal2.tabl1.fz[9]=104;
+;;;922    
+;;;923    			conf.gr_kal2.tabl1.kod[0]=105;
+;;;924    			conf.gr_kal2.tabl1.kod[1]=106;
+;;;925    			conf.gr_kal2.tabl1.kod[2]=107;
+;;;926    			conf.gr_kal2.tabl1.kod[3]=108;
+;;;927    			conf.gr_kal2.tabl1.kod[4]=109;
+;;;928    			conf.gr_kal2.tabl1.kod[5]=100;
+;;;929    			conf.gr_kal2.tabl1.kod[6]=111;
+;;;930    			conf.gr_kal2.tabl1.kod[7]=112;
+;;;931    			conf.gr_kal2.tabl1.kod[8]=113;
+;;;932    			conf.gr_kal2.tabl1.kod[9]=114;
+;;;933    	
+;;;934    			conf.gr_kal2.tabl2.fz[0]=115;
+;;;935    			conf.gr_kal2.tabl2.fz[1]=116;
+;;;936    			conf.gr_kal2.tabl2.fz[2]=117;
+;;;937    			conf.gr_kal2.tabl2.fz[3]=118;
+;;;938    			conf.gr_kal2.tabl2.fz[4]=119;
+;;;939    			conf.gr_kal2.tabl2.fz[5]=120;
+;;;940    			conf.gr_kal2.tabl2.fz[6]=121;
+;;;941    			conf.gr_kal2.tabl2.fz[7]=122;
+;;;942    			conf.gr_kal2.tabl2.fz[8]=123;
+;;;943    			conf.gr_kal2.tabl2.fz[9]=124;
+;;;944    
+;;;945    			conf.gr_kal2.tabl2.kod[0]=125;
+;;;946    			conf.gr_kal2.tabl2.kod[1]=126;
+;;;947    			conf.gr_kal2.tabl2.kod[2]=127;
+;;;948    			conf.gr_kal2.tabl2.kod[3]=128;
+;;;949    			conf.gr_kal2.tabl2.kod[4]=129;
+;;;950    			conf.gr_kal2.tabl2.kod[5]=130;
+;;;951    			conf.gr_kal2.tabl2.kod[6]=131;
+;;;952    			conf.gr_kal2.tabl2.kod[7]=132;
+;;;953    			conf.gr_kal2.tabl2.kod[8]=133;
+;;;954    			conf.gr_kal2.tabl2.kod[9]=134;	
+;;;955    */		
+;;;956    		/*
+;;;957    			txsize=sizeof(st_conf)<<1;
+;;;958    	
+;;;959    			for (i = 0; i < (txsize); i += 1)
+;;;960    			{
+;;;961    				u16 tmp=0;
+;;;962    	//			TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+;;;963    				tmp=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+;;;964    				TxBuffer[i<<1]=(tmp>>8)+0x30;
+;;;965    				TxBuffer[(i<<1)+1]=tmp+0x30;
+;;;966    			}	
+;;;967    */
+;;;968    
+;;;969    			txsize=sizeof(st_conf);  // dl = 228
+000a0e  21be              MOVS     r1,#0xbe
+000a10  481a              LDR      r0,|L12.2684|
+000a12  f8aa1000          STRH     r1,[r10,#0]
+                  |L12.2582|
+;;;970    	
+;;;971    			for (i = 0; i < (txsize); i += 1)
+;;;972    			{
+;;;973    		//		TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
+;;;974    				TxBuffer[i]=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+000a16  5c32              LDRB     r2,[r6,r0]
+000a18  55a2              STRB     r2,[r4,r6]
+000a1a  1c76              ADDS     r6,r6,#1              ;971
+000a1c  b2b6              UXTH     r6,r6                 ;971
+000a1e  428e              CMP      r6,r1                 ;971
+000a20  d3f9              BCC      |L12.2582|
+;;;975    			}	
+;;;976    			tekper=0;
+000a22  f8ab5000          STRH     r5,[r11,#0]
+;;;977    			USART_SendData(USART2, 0x3A);
+000a26  213a              MOVS     r1,#0x3a
+000a28  4638              MOV      r0,r7
+000a2a  f7fffffe          BL       USART_SendData
+                  |L12.2606|
+;;;978    		}		
+;;;979    		
+;;;980    		new_komand=0;
+000a2e  4814              LDR      r0,|L12.2688|
+000a30  7005              STRB     r5,[r0,#0]
+                  |L12.2610|
+;;;981    	}
+;;;982    	
+;;;983    
+;;;984    	
+;;;985    				//	indicators[0].chislo=1234;
+;;;986    		//		indicators[1].chislo=1234;
+;;;987    		//		indicate (0);
+;;;988    		//		indicate (1);
+;;;989    				
+;;;990    }
+000a32  e8bd9ff0          POP      {r4-r12,pc}
+                  |L12.2614|
+000a36  2001              MOVS     r0,#1                 ;678
+000a38  e691              B        |L12.1886|
+                  |L12.2618|
+000a3a  2101              MOVS     r1,#1                 ;678
+000a3c  e693              B        |L12.1894|
+                  |L12.2622|
+000a3e  2101              MOVS     r1,#1                 ;678
+000a40  e696              B        |L12.1904|
+                  |L12.2626|
+000a42  2101              MOVS     r1,#1                 ;678
+000a44  e69a              B        |L12.1916|
+                  |L12.2630|
+000a46  2001              MOVS     r0,#1                 ;770
+000a48  e7af              B        |L12.2474|
+                  |L12.2634|
+000a4a  2101              MOVS     r1,#1                 ;770
+000a4c  e7b1              B        |L12.2482|
+                  |L12.2638|
+000a4e  2101              MOVS     r1,#1                 ;770
+000a50  e7b4              B        |L12.2492|
+                  |L12.2642|
+000a52  2101              MOVS     r1,#1                 ;770
+000a54  e7b7              B        |L12.2502|
+                  |L12.2646|
+000a56  2101              MOVS     r1,#1                 ;770
+000a58  e7ba              B        |L12.2512|
+                  |L12.2650|
+000a5a  2101              MOVS     r1,#1                 ;770
+000a5c  e7bd              B        |L12.2522|
+                  |L12.2654|
+000a5e  2101              MOVS     r1,#1                 ;770
+000a60  e7c0              B        |L12.2532|
+;;;991    
                           ENDP
 
-                  |L12.2344|
+000a62  0000              DCW      0x0000
+                  |L12.2660|
+                          DCD      max
+                  |L12.2664|
+                          DCD      avariya
+                  |L12.2668|
+                          DCD      sost_flesh
+                  |L12.2672|
                           DCD      conf
-                  |L12.2348|
+                  |L12.2676|
+                          DCD      RxBuffer
+                  |L12.2680|
+                          DCD      0x40020c00
+                  |L12.2684|
+                          DCD      0x40024000
+                  |L12.2688|
                           DCD      new_komand
 
                           AREA ||i.TIM2_IRQHandler||, CODE, READONLY, ALIGN=1
 
                   TIM2_IRQHandler PROC
-;;;762      */
-;;;763    void TIM2_IRQHandler(void)
+;;;1124     */
+;;;1125   void TIM2_IRQHandler(void)
 000000  f7ffbffe          B.W      USB_OTG_BSP_TimerIRQ
-;;;764    {
-;;;765      USB_OTG_BSP_TimerIRQ();
-;;;766    }
-;;;767    
+;;;1126   {
+;;;1127     USB_OTG_BSP_TimerIRQ();
+;;;1128   }
+;;;1129   
                           ENDP
 
 
                           AREA ||i.TIM4_IRQHandler||, CODE, READONLY, ALIGN=2
 
                   TIM4_IRQHandler PROC
-;;;668      */
-;;;669    void TIM4_IRQHandler(void)
+;;;1030     */
+;;;1031   void TIM4_IRQHandler(void)
 000000  b510              PUSH     {r4,lr}
-;;;670    {
-;;;671       uint8_t clickreg = 0;
-;;;672    
-;;;673    	
-;;;674      /* Checks whether the TIM interrupt has occurred */
-;;;675      if (TIM_GetITStatus(TIM4, TIM_IT_CC1) != RESET)
+;;;1032   {
+;;;1033      uint8_t clickreg = 0;
+;;;1034   
+;;;1035   	
+;;;1036     /* Checks whether the TIM interrupt has occurred */
+;;;1037     if (TIM_GetITStatus(TIM4, TIM_IT_CC1) != RESET)
 000002  4c0d              LDR      r4,|L14.56|
 000004  2102              MOVS     r1,#2
 000006  4620              MOV      r0,r4
 000008  f7fffffe          BL       TIM_GetITStatus
 00000c  2800              CMP      r0,#0
 00000e  d011              BEQ      |L14.52|
-;;;676      {
-;;;677        TIM_ClearITPendingBit(TIM4, TIM_IT_CC1);
+;;;1038     {
+;;;1039       TIM_ClearITPendingBit(TIM4, TIM_IT_CC1);
 000010  2102              MOVS     r1,#2
 000012  4620              MOV      r0,r4
 000014  f7fffffe          BL       TIM_ClearITPendingBit
-;;;678    		/*
-;;;679        if( LED_Toggle == 3)
-;;;680        {
-;;;681          // LED3 Orange toggling 
-;;;682          STM_EVAL_LEDToggle(LED3);
-;;;683          STM_EVAL_LEDOff(LED6);
-;;;684          STM_EVAL_LEDOff(LED4);
-;;;685        }
-;;;686        else if( LED_Toggle == 4)
-;;;687        {
-;;;688          // LED4 Green toggling 
-;;;689          STM_EVAL_LEDToggle(LED4);
-;;;690          STM_EVAL_LEDOff(LED6);
-;;;691          STM_EVAL_LEDOff(LED3);
-;;;692        }
-;;;693        else if( LED_Toggle == 6)
-;;;694        {
-;;;695          // LED6 Blue toggling 
-;;;696          STM_EVAL_LEDOff(LED3);
-;;;697          STM_EVAL_LEDOff(LED4);
-;;;698          STM_EVAL_LEDToggle(LED6);
-;;;699        }
-;;;700        else if (LED_Toggle ==0)
-;;;701        {
-;;;702          // LED6 Blue On to signal Pause 
-;;;703          STM_EVAL_LEDOn(LED6);
-;;;704        }
-;;;705        else if (LED_Toggle == 7)
-;;;706        {
-;;;707          // LED4 toggling with frequency = 439.4 Hz 
-;;;708          STM_EVAL_LEDOff(LED3);
-;;;709          STM_EVAL_LEDOff(LED4);
-;;;710          STM_EVAL_LEDOff(LED5);
-;;;711          STM_EVAL_LEDOff(LED6);
-;;;712        }
-;;;713    		*/
-;;;714    	
-;;;715    
-;;;716        capture = TIM_GetCapture1(TIM4);
+;;;1040   		/*
+;;;1041       if( LED_Toggle == 3)
+;;;1042       {
+;;;1043         // LED3 Orange toggling 
+;;;1044         STM_EVAL_LEDToggle(LED3);
+;;;1045         STM_EVAL_LEDOff(LED6);
+;;;1046         STM_EVAL_LEDOff(LED4);
+;;;1047       }
+;;;1048       else if( LED_Toggle == 4)
+;;;1049       {
+;;;1050         // LED4 Green toggling 
+;;;1051         STM_EVAL_LEDToggle(LED4);
+;;;1052         STM_EVAL_LEDOff(LED6);
+;;;1053         STM_EVAL_LEDOff(LED3);
+;;;1054       }
+;;;1055       else if( LED_Toggle == 6)
+;;;1056       {
+;;;1057         // LED6 Blue toggling 
+;;;1058         STM_EVAL_LEDOff(LED3);
+;;;1059         STM_EVAL_LEDOff(LED4);
+;;;1060         STM_EVAL_LEDToggle(LED6);
+;;;1061       }
+;;;1062       else if (LED_Toggle ==0)
+;;;1063       {
+;;;1064         // LED6 Blue On to signal Pause 
+;;;1065         STM_EVAL_LEDOn(LED6);
+;;;1066       }
+;;;1067       else if (LED_Toggle == 7)
+;;;1068       {
+;;;1069         // LED4 toggling with frequency = 439.4 Hz 
+;;;1070         STM_EVAL_LEDOff(LED3);
+;;;1071         STM_EVAL_LEDOff(LED4);
+;;;1072         STM_EVAL_LEDOff(LED5);
+;;;1073         STM_EVAL_LEDOff(LED6);
+;;;1074       }
+;;;1075   		*/
+;;;1076   	
+;;;1077   
+;;;1078       capture = TIM_GetCapture1(TIM4);
 000018  4620              MOV      r0,r4
 00001a  f7fffffe          BL       TIM_GetCapture1
 00001e  b281              UXTH     r1,r0
 000020  4806              LDR      r0,|L14.60|
 000022  8041              STRH     r1,[r0,#2]
-;;;717        TIM_SetCompare1(TIM4, capture + CCR_Val);
+;;;1079       TIM_SetCompare1(TIM4, capture + CCR_Val);
 000024  4806              LDR      r0,|L14.64|
 000026  8800              LDRH     r0,[r0,#0]  ; CCR_Val
 000028  4401              ADD      r1,r1,r0
@@ -1965,10 +2394,10 @@
 00002c  e8bd4010          POP      {r4,lr}
 000030  f7ffbffe          B.W      TIM_SetCompare1
                   |L14.52|
-;;;718      }
-;;;719    }
+;;;1080     }
+;;;1081   }
 000034  bd10              POP      {r4,pc}
-;;;720    
+;;;1082   
                           ENDP
 
 000036  0000              DCW      0x0000
@@ -1996,46 +2425,249 @@
                           ENDP
 
 
-                          AREA ||i.fiz_vel||, CODE, READONLY, ALIGN=1
+                          AREA ||i.fiz_vel||, CODE, READONLY, ALIGN=2
 
                   fiz_vel PROC
 ;;;179    
-;;;180    u16 fiz_vel(u16 kod, u8 numb)
-000000  4770              BX       lr
+;;;180    u16 fiz_vel(u16 kod, st_tab_kal* tk)
+000000  b510              PUSH     {r4,lr}
 ;;;181    {
-;;;182    	
-;;;183    //	tab_kal
-;;;184    	
-;;;185    return kod;
-;;;186    }
-;;;187    
+;;;182    	u8 i=0, nul=0;
+000002  2300              MOVS     r3,#0
+;;;183    	st_tab_kal *tab = tk;
+;;;184    //	tab_kal
+;;;185    	/*
+;;;186    	    
+;;;187           
+;;;188                    
+;;;189                    if kod[1:]==[0,0,0,0,0,0,0,0,0]:
+;;;190                        print 'no tabl' 
+;;;191                        return kodadc
+;;;192                        
+;;;193                    if kodadc<kod[0]:
+;;;194                        return fz[0]
+;;;195                    
+;;;196                    for i in range(1,10):
+;;;197                        
+;;;198                        if kodadc<kod[i]:
+;;;199                            if i==0:
+;;;200                                print 'i=0',fz[0]
+;;;201                                return fz[0]
+;;;202                            else:
+;;;203                                if kod[i]==0:
+;;;204                                    print 'kod=0',fz[i-1]
+;;;205                                    return fz[i-1]
+;;;206                                else:
+;;;207                                    print 'norm',
+;;;208                                    return (fz[i]-fz[i-1])*(kodadc-kod[i-1])/(kod[i]-kod[i-1])+fz[i-1]
+;;;209                                    
+;;;210                        if  kod[i-1]>0 and kod[i]==0:
+;;;211                            return fz[i-1]
+;;;212                    
+;;;213                    return fz[9]
+;;;214    
+;;;215    	*/
+;;;216    	
+;;;217    	
+;;;218    	/*	
+;;;219    	conf.gr_kal1.tabl1.fz[0]
+;;;220    	conf.gr_kal1.tabl1.kod[0]=65;
+;;;221      conf.tek_gr_kal=4;
+;;;222      sost_pribl	
+;;;223    	tk
+;;;224    	*/
+;;;225    		for (i = 1; i < 10; i += 1)
+000004  2201              MOVS     r2,#1
+                  |L16.6|
+;;;226    			if (tk->kod[i]==0) 
+000006  f8314012          LDRH     r4,[r1,r2,LSL #1]
+00000a  b90c              CBNZ     r4,|L16.16|
+;;;227    					nul++;	
+00000c  1c5b              ADDS     r3,r3,#1
+00000e  b2db              UXTB     r3,r3
+                  |L16.16|
+000010  1c52              ADDS     r2,r2,#1              ;225
+000012  b2d2              UXTB     r2,r2                 ;225
+000014  2a0a              CMP      r2,#0xa               ;225
+000016  d3f6              BCC      |L16.6|
+;;;228    	  if (nul==9)
+000018  2b09              CMP      r3,#9
+00001a  d023              BEQ      |L16.100|
+;;;229    				return kod;
+;;;230    		
+;;;231    		if (kod<tk->kod[0])
+00001c  880a              LDRH     r2,[r1,#0]
+00001e  4282              CMP      r2,r0
+000020  d821              BHI      |L16.102|
+;;;232            return tk->fz[0];
+;;;233    		
+;;;234    		for (i = 1; i < 10; i += 1)	
+000022  2201              MOVS     r2,#1
+                  |L16.36|
+;;;235    		{
+;;;236    			float tmp=0;
+;;;237    			if (kod<tk->kod[i]) {
+000024  f8313012          LDRH     r3,[r1,r2,LSL #1]
+000028  4283              CMP      r3,r0
+00002a  d91e              BLS      |L16.106|
+;;;238    					if (i==0)
+00002c  b1da              CBZ      r2,|L16.102|
+;;;239    							return tk->fz[0];
+;;;240    					else  {
+;;;241    							if (tk->kod[i]==0)
+00002e  041c              LSLS     r4,r3,#16
+000030  0c24              LSRS     r4,r4,#16
+000032  d026              BEQ      |L16.130|
+;;;242    									return tk->fz[i-1];
+;;;243    							else  {
+;;;244    								  tmp=(tk->fz[i]-tk->fz[i-1])*(kod-tk->kod[i-1])/(tk->kod[i]-tk->kod[i-1])+tk->fz[i-1]+0.5;
+000034  eb010142          ADD      r1,r1,r2,LSL #1
+000038  8a8c              LDRH     r4,[r1,#0x14]
+00003a  8a4a              LDRH     r2,[r1,#0x12]
+00003c  f8311c02          LDRH     r1,[r1,#-2]
+000040  1aa4              SUBS     r4,r4,r2
+000042  1a40              SUBS     r0,r0,r1
+000044  4344              MULS     r4,r0,r4
+000046  1a58              SUBS     r0,r3,r1
+000048  fb94f0f0          SDIV     r0,r4,r0
+00004c  4410              ADD      r0,r0,r2
+00004e  f7fffffe          BL       __aeabi_i2d
+000052  2200              MOVS     r2,#0
+000054  4b0d              LDR      r3,|L16.140|
+000056  f7fffffe          BL       __aeabi_dadd
+00005a  f7fffffe          BL       __aeabi_d2f
+;;;245    									return (u16) tmp;  } } }
+00005e  f7fffffe          BL       __aeabi_f2uiz
+000062  b280              UXTH     r0,r0
+                  |L16.100|
+;;;246    									
+;;;247    			if  ((tk->kod[i-1]>0)&(tk->kod[i]==0))
+;;;248    					return tk->fz[i-1];
+;;;249      	}	
+;;;250        
+;;;251    		return tk->fz[9];		
+;;;252    }
+000064  bd10              POP      {r4,pc}
+                  |L16.102|
+000066  8a88              LDRH     r0,[r1,#0x14]         ;239
+000068  bd10              POP      {r4,pc}
+                  |L16.106|
+00006a  eb010442          ADD      r4,r1,r2,LSL #1       ;247
+00006e  f8344c02          LDRH     r4,[r4,#-2]           ;247
+000072  b104              CBZ      r4,|L16.118|
+000074  b12b              CBZ      r3,|L16.130|
+                  |L16.118|
+000076  1c52              ADDS     r2,r2,#1              ;234
+000078  b2d2              UXTB     r2,r2                 ;234
+00007a  2a0a              CMP      r2,#0xa               ;234
+00007c  d3d2              BCC      |L16.36|
+00007e  8cc8              LDRH     r0,[r1,#0x26]         ;251
+000080  bd10              POP      {r4,pc}
+                  |L16.130|
+000082  eb010042          ADD      r0,r1,r2,LSL #1       ;248
+000086  8a40              LDRH     r0,[r0,#0x12]         ;248
+000088  bd10              POP      {r4,pc}
+;;;253    
                           ENDP
 
+00008a  0000              DCW      0x0000
+                  |L16.140|
+                          DCD      0x3fe00000
 
-                          AREA ||i.moving_average||, CODE, READONLY, ALIGN=1
+                          AREA ||i.moving_average||, CODE, READONLY, ALIGN=2
 
                   moving_average PROC
-;;;188    
-;;;189    u16 moving_average(u16 kod, u8 numb)
-000000  4770              BX       lr
-;;;190    {
-;;;191    return kod;
-;;;192    }
-;;;193    
+;;;254    
+;;;255    u16 moving_average(u16 kod, u8 numb)
+000000  b570              PUSH     {r4-r6,lr}
+;;;256    {
+;;;257    	extern u16 tek_kol;
+;;;258    	extern u16 kol_usr;
+;;;259    	extern u32 buf_sum;
+;;;260    	u16 tmp=0;
+;;;261    	
+;;;262    	if (kol_usr==0)
+000002  4916              LDR      r1,|L17.92|
+000004  880a              LDRH     r2,[r1,#0]  ; kol_usr
+000006  2a00              CMP      r2,#0                 ;256
+000008  d018              BEQ      |L17.60|
+;;;263    		return kod;
+;;;264    
+;;;265    	if (kol_usr==1)
+00000a  2a01              CMP      r2,#1
+00000c  d016              BEQ      |L17.60|
+;;;266    		return kod;
+;;;267    	
+;;;268    	if (tek_kol<kol_usr)
+00000e  4b14              LDR      r3,|L17.96|
+;;;269    	{
+;;;270    		buf_sum+=kod;
+000010  4d14              LDR      r5,|L17.100|
+;;;271    		tek_kol++;
+;;;272    		return (u16)((buf_sum/tek_kol)+0.5);
+000012  4e15              LDR      r6,|L17.104|
+000014  8819              LDRH     r1,[r3,#0]            ;268  ; tek_kol
+000016  682c              LDR      r4,[r5,#0]            ;270
+000018  4291              CMP      r1,r2                 ;268
+00001a  4404              ADD      r4,r4,r0              ;270
+00001c  d20f              BCS      |L17.62|
+00001e  1c49              ADDS     r1,r1,#1              ;271
+000020  b288              UXTH     r0,r1                 ;271
+000022  602c              STR      r4,[r5,#0]            ;271  ; buf_sum
+000024  8018              STRH     r0,[r3,#0]            ;271
+000026  fbb4f0f0          UDIV     r0,r4,r0
+00002a  f7fffffe          BL       __aeabi_ui2d
+00002e  2200              MOVS     r2,#0
+000030  4633              MOV      r3,r6
+000032  f7fffffe          BL       __aeabi_dadd
+000036  f7fffffe          BL       __aeabi_d2uiz
+00003a  b280              UXTH     r0,r0
+                  |L17.60|
+;;;273    	}
+;;;274    	else
+;;;275    	{
+;;;276    		buf_sum+=kod;
+;;;277    		tmp=(u16) ((buf_sum/tek_kol)+0.5);
+;;;278    		buf_sum-=tmp;
+;;;279    		return  tmp;
+;;;280    	}
+;;;281    }
+00003c  bd70              POP      {r4-r6,pc}
+                  |L17.62|
+00003e  fbb4f0f1          UDIV     r0,r4,r1              ;277
+000042  f7fffffe          BL       __aeabi_ui2d
+000046  2200              MOVS     r2,#0                 ;277
+000048  4633              MOV      r3,r6                 ;277
+00004a  f7fffffe          BL       __aeabi_dadd
+00004e  f7fffffe          BL       __aeabi_d2uiz
+000052  b280              UXTH     r0,r0                 ;277
+000054  1a21              SUBS     r1,r4,r0              ;278
+000056  6029              STR      r1,[r5,#0]            ;278  ; buf_sum
+000058  bd70              POP      {r4-r6,pc}
+;;;282    
                           ENDP
 
+00005a  0000              DCW      0x0000
+                  |L17.92|
+                          DCD      kol_usr
+                  |L17.96|
+                          DCD      tek_kol
+                  |L17.100|
+                          DCD      buf_sum
+                  |L17.104|
+                          DCD      0x3fe00000
 
                           AREA ||i.test_rele||, CODE, READONLY, ALIGN=1
 
                   test_rele PROC
-;;;193    
-;;;194    u8 test_rele(u16 kod, u8 numb)
+;;;282    
+;;;283    u8 test_rele(u16 kod, u8 numb)
 000000  2000              MOVS     r0,#0
-;;;195    {
-;;;196    return 0;
-;;;197    }
+;;;284    {
+;;;285    return 0;
+;;;286    }
 000002  4770              BX       lr
-;;;198    
+;;;287    
                           ENDP
 
 

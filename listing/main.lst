@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37387,25 +37387,42 @@ Nextern u16 tek_kol;
 Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
-N
 N#define PIN_PRIBL                         GPIO_Pin_0
-N#define PORT_PRIBL                    		GPIOC //((GPIO_TypeDef *) GPIOC_BASE)
+N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
 N#define PORT_RELE                    			GPIOA
 N
-N#define PIN_K1                         		GPIO_Pin_7   // vvod knopka 1
+N#define PIN_K1                         		GPIO_Pin_7
 N#define PORT_K1                 					GPIOC
 N#define PIN_L1                         		GPIO_Pin_6
 N#define PORT_L1                 					GPIOC
 N
-N#define PIN_K2                         		GPIO_Pin_9	 // vvod knopka 2
+N#define PIN_K2                         		GPIO_Pin_9
 N#define PORT_K2                 					GPIOC
 N#define PIN_L2                         		GPIO_Pin_8
 N#define PORT_L2                 					GPIOC
 N
+N#define PIN_PER_NIZ                       GPIO_Pin_8
+N#define PORT_PER_NIZ                			GPIOA
+N
+N#define PIN_PER_VERH                      GPIO_Pin_9
+N#define PORT_PER_VERH                			GPIOA
+N
+N#define PIN_ZAP_EN                      	GPIO_Pin_13
+N#define PORT_ZAP_EN              				  GPIOA
+N
+N#define PIN_ZAP_DIS                      	GPIO_Pin_14
+N#define PORT_ZAP_DIS              				GPIOA
+N
+N#define PIN_AVARIYA                      	GPIO_Pin_15
+N#define PORT_AVARIYA                			GPIOA	
+N
 Nextern u16 kol_pribl_vikl;
 Nextern u16 kol_pribl_vkl;
+N
+Nextern u16 kol_gr1_vkl;
+Nextern u16 kol_gr2_vkl;
 N
 Nextern u8 avariya;
 Nextern u8 sost_flesh;
@@ -37558,8 +37575,26 @@ N#define PORT_K2                 					GPIOC
 N#define PIN_L2                         		GPIO_Pin_8
 N#define PORT_L2                 					GPIOC
 N
+N#define PIN_PER_NIZ                       GPIO_Pin_8
+N#define PORT_PER_NIZ                			GPIOA
+N
+N#define PIN_PER_VERH                      GPIO_Pin_9
+N#define PORT_PER_VERH                			GPIOA
+N
+N#define PIN_ZAP_EN                      	GPIO_Pin_13
+N#define PORT_ZAP_EN              				  GPIOA
+N
+N#define PIN_ZAP_DIS                      	GPIO_Pin_14
+N#define PORT_ZAP_DIS              				GPIOA
+N
+N#define PIN_AVARIYA                      	GPIO_Pin_15
+N#define PORT_AVARIYA                			GPIOA
+N
 Nu16 kol_pribl_vikl=0;
 Nu16 kol_pribl_vkl=0;
+N
+Nu16 kol_gr1_vkl=0;
+Nu16 kol_gr2_vkl=0;
 N
 Nu8 avariya=0;
 Nu8 sost_flesh=0;

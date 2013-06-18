@@ -2,7 +2,7 @@
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\inc\usb_conf.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\usbh_msc_fatfs.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\usbh_msc_fatfs.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -37,7 +37,7 @@
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Utilities\Third_Party\fat_fs\diskio.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Utilities\Third_Party\fat_fs\integer.h
-.\MEDIA_USB_KEY\usbh_msc_fatfs.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\MEDIA_USB_KEY\usbh_msc_fatfs.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\STM32_USB_HOST_Library\usbh_core.h
 .\MEDIA_USB_KEY\usbh_msc_fatfs.o: .\Libraries\STM32_USB_OTG_Driver\usb_hcd.h

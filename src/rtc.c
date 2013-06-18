@@ -362,8 +362,25 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
 	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
 	
-
-	
+	if (conf.tek_gr_kal==0)
+	{
+		//  dr kal ==0 - pervaya
+		PORT_L1->BSRRL = PIN_L1;  // on  PIN_L1
+	  PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+	}
+	else
+	{
+		//  dr kal ==1 - vtoraya
+		PORT_L1->BSRRH = PIN_L1;  // off  PIN_L1
+	  PORT_L2->BSRRL = PIN_L2;	// on   PIN_L2
+	}
+      
+		sost_flesh=0;	
+		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+		
+		avariya=0;
+		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
 	
 	/*
 		conf.por_rele

@@ -149,6 +149,10 @@ void USBH_USR_DeviceAttached(void)
 	file_name[8]=0x73;
 	file_name[9]=0x76;
 
+	sost_flesh=1;
+	PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+	PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
+	
 
 /* Red LED off when device attached */
   STM_EVAL_LEDOff(LED5);
@@ -175,6 +179,11 @@ void USBH_USR_UnrecoveredError (void)
   */
 void USBH_USR_DeviceDisconnected (void)
 {
+	
+		sost_flesh=0;	
+		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+	
   /* Red Led on if the USB Key is removed */
   STM_EVAL_LEDOff(LED6);
 	STM_EVAL_LEDOff(LED5);
@@ -290,6 +299,9 @@ void USBH_USR_EnumerationDone(void)
   */
 void USBH_USR_DeviceNotSupported(void)
 {
+		sost_flesh=0;	
+		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 }
 
 
@@ -331,12 +343,18 @@ int USBH_USR_MSC_Application(void)
       if (f_mount( 0, &fatfs ) != FR_OK )
       {
         // efs initialisation fails
+				sost_flesh=0;	
+				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
         return(-1);
       }
       
       // Flash Disk is write protected //
       if (USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED)
       {
+				sost_flesh=0;	
+				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
         while(1)
         {
           // Red LED On //
@@ -561,6 +579,9 @@ if (buffering)
 									}							
 						STM_EVAL_LEDOff(LED4);							
 						file_cr=1;
+						sost_flesh=1;	
+						PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+						PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
 						}
 						else
 						{
@@ -586,15 +607,28 @@ if (buffering)
 										}
 								
 								STM_EVAL_LEDOff(LED4);
+								sost_flesh=1;	
+								PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
+								PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
 							}
 							else
+							{
 								STM_EVAL_LEDOn(LED5);
+								sost_flesh=0;	
+								PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+								PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+							}
 									
 						}							
 					}
 				}
 				else
+				{
 					file_cr=0;
+					sost_flesh=0;	
+					PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+					PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+				}
 				
 			buffering=0;
 		}

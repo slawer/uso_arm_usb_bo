@@ -96,8 +96,26 @@ u32 buf_sum=0;
 #define PIN_L2                         		GPIO_Pin_8
 #define PORT_L2                 					GPIOC
 
+#define PIN_PER_NIZ                       GPIO_Pin_8
+#define PORT_PER_NIZ                			GPIOA
+
+#define PIN_PER_VERH                      GPIO_Pin_9
+#define PORT_PER_VERH                			GPIOA
+
+#define PIN_ZAP_EN                      	GPIO_Pin_13
+#define PORT_ZAP_EN              				  GPIOA
+
+#define PIN_ZAP_DIS                      	GPIO_Pin_14
+#define PORT_ZAP_DIS              				GPIOA
+
+#define PIN_AVARIYA                      	GPIO_Pin_15
+#define PORT_AVARIYA                			GPIOA
+
 u16 kol_pribl_vikl=0;
 u16 kol_pribl_vkl=0;
+
+u16 kol_gr1_vkl=0;
+u16 kol_gr2_vkl=0;
 
 u8 avariya=0;
 u8 sost_flesh=0;

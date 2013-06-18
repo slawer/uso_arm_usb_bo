@@ -5,58 +5,58 @@
                           AREA ||i.DMA_ClearFlag||, CODE, READONLY, ALIGN=2
 
                   DMA_ClearFlag PROC
-;;;1052     */
-;;;1053   void DMA_ClearFlag(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FLAG)
+;;;1061     */
+;;;1062   void DMA_ClearFlag(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FLAG)
 000000  4a07              LDR      r2,|L1.32|
-;;;1054   {
-;;;1055     DMA_TypeDef* DMAy;
-;;;1056   
-;;;1057     /* Check the parameters */
-;;;1058     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;1059     assert_param(IS_DMA_CLEAR_FLAG(DMA_FLAG));
-;;;1060   
-;;;1061     /* Determine the DMA to which belongs the stream */
-;;;1062     if (DMAy_Streamx < DMA2_Stream0)
+;;;1063   {
+;;;1064     DMA_TypeDef* DMAy;
+;;;1065   
+;;;1066     /* Check the parameters */
+;;;1067     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;1068     assert_param(IS_DMA_CLEAR_FLAG(DMA_FLAG));
+;;;1069   
+;;;1070     /* Determine the DMA to which belongs the stream */
+;;;1071     if (DMAy_Streamx < DMA2_Stream0)
 000002  4290              CMP      r0,r2
 000004  d201              BCS      |L1.10|
-;;;1063     {
-;;;1064       /* DMAy_Streamx belongs to DMA1 */
-;;;1065       DMAy = DMA1; 
+;;;1072     {
+;;;1073       /* DMAy_Streamx belongs to DMA1 */
+;;;1074       DMAy = DMA1; 
 000006  4807              LDR      r0,|L1.36|
 000008  e001              B        |L1.14|
                   |L1.10|
-;;;1066     } 
-;;;1067     else 
-;;;1068     {
-;;;1069       /* DMAy_Streamx belongs to DMA2 */
-;;;1070       DMAy = DMA2; 
+;;;1075     } 
+;;;1076     else 
+;;;1077     {
+;;;1078       /* DMAy_Streamx belongs to DMA2 */
+;;;1079       DMAy = DMA2; 
 00000a  4805              LDR      r0,|L1.32|
 00000c  3810              SUBS     r0,r0,#0x10
                   |L1.14|
-;;;1071     }
-;;;1072   
-;;;1073     /* Check if LIFCR or HIFCR register is targeted */
-;;;1074     if ((DMA_FLAG & HIGH_ISR_MASK) != (uint32_t)RESET)
-;;;1075     {
-;;;1076       /* Set DMAy HIFCR register clear flag bits */
-;;;1077       DMAy->HIFCR = (uint32_t)(DMA_FLAG & RESERVED_MASK);
+;;;1080     }
+;;;1081   
+;;;1082     /* Check if LIFCR or HIFCR register is targeted */
+;;;1083     if ((DMA_FLAG & HIGH_ISR_MASK) != (uint32_t)RESET)
+;;;1084     {
+;;;1085       /* Set DMAy HIFCR register clear flag bits */
+;;;1086       DMAy->HIFCR = (uint32_t)(DMA_FLAG & RESERVED_MASK);
 00000e  4a06              LDR      r2,|L1.40|
-000010  008b              LSLS     r3,r1,#2              ;1074
+000010  008b              LSLS     r3,r1,#2              ;1083
 000012  ea010102          AND      r1,r1,r2
 000016  d501              BPL      |L1.28|
 000018  60c1              STR      r1,[r0,#0xc]
-;;;1078     }
-;;;1079     else 
-;;;1080     {
-;;;1081       /* Set DMAy LIFCR register clear flag bits */
-;;;1082       DMAy->LIFCR = (uint32_t)(DMA_FLAG & RESERVED_MASK);
-;;;1083     }    
-;;;1084   }
+;;;1087     }
+;;;1088     else 
+;;;1089     {
+;;;1090       /* Set DMAy LIFCR register clear flag bits */
+;;;1091       DMAy->LIFCR = (uint32_t)(DMA_FLAG & RESERVED_MASK);
+;;;1092     }    
+;;;1093   }
 00001a  4770              BX       lr
                   |L1.28|
-00001c  6081              STR      r1,[r0,#8]            ;1082
+00001c  6081              STR      r1,[r0,#8]            ;1091
 00001e  4770              BX       lr
-;;;1085   
+;;;1094   
                           ENDP
 
                   |L1.32|
@@ -69,58 +69,58 @@
                           AREA ||i.DMA_ClearITPendingBit||, CODE, READONLY, ALIGN=2
 
                   DMA_ClearITPendingBit PROC
-;;;1233     */
-;;;1234   void DMA_ClearITPendingBit(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT)
+;;;1242     */
+;;;1243   void DMA_ClearITPendingBit(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT)
 000000  4a07              LDR      r2,|L2.32|
-;;;1235   {
-;;;1236     DMA_TypeDef* DMAy;
-;;;1237   
-;;;1238     /* Check the parameters */
-;;;1239     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;1240     assert_param(IS_DMA_CLEAR_IT(DMA_IT));
-;;;1241   
-;;;1242     /* Determine the DMA to which belongs the stream */
-;;;1243     if (DMAy_Streamx < DMA2_Stream0)
+;;;1244   {
+;;;1245     DMA_TypeDef* DMAy;
+;;;1246   
+;;;1247     /* Check the parameters */
+;;;1248     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;1249     assert_param(IS_DMA_CLEAR_IT(DMA_IT));
+;;;1250   
+;;;1251     /* Determine the DMA to which belongs the stream */
+;;;1252     if (DMAy_Streamx < DMA2_Stream0)
 000002  4290              CMP      r0,r2
 000004  d201              BCS      |L2.10|
-;;;1244     {
-;;;1245       /* DMAy_Streamx belongs to DMA1 */
-;;;1246       DMAy = DMA1; 
+;;;1253     {
+;;;1254       /* DMAy_Streamx belongs to DMA1 */
+;;;1255       DMAy = DMA1; 
 000006  4807              LDR      r0,|L2.36|
 000008  e001              B        |L2.14|
                   |L2.10|
-;;;1247     } 
-;;;1248     else 
-;;;1249     {
-;;;1250       /* DMAy_Streamx belongs to DMA2 */
-;;;1251       DMAy = DMA2; 
+;;;1256     } 
+;;;1257     else 
+;;;1258     {
+;;;1259       /* DMAy_Streamx belongs to DMA2 */
+;;;1260       DMAy = DMA2; 
 00000a  4805              LDR      r0,|L2.32|
 00000c  3810              SUBS     r0,r0,#0x10
                   |L2.14|
-;;;1252     }
-;;;1253   
-;;;1254     /* Check if LIFCR or HIFCR register is targeted */
-;;;1255     if ((DMA_IT & HIGH_ISR_MASK) != (uint32_t)RESET)
-;;;1256     {
-;;;1257       /* Set DMAy HIFCR register clear interrupt bits */
-;;;1258       DMAy->HIFCR = (uint32_t)(DMA_IT & RESERVED_MASK);
+;;;1261     }
+;;;1262   
+;;;1263     /* Check if LIFCR or HIFCR register is targeted */
+;;;1264     if ((DMA_IT & HIGH_ISR_MASK) != (uint32_t)RESET)
+;;;1265     {
+;;;1266       /* Set DMAy HIFCR register clear interrupt bits */
+;;;1267       DMAy->HIFCR = (uint32_t)(DMA_IT & RESERVED_MASK);
 00000e  4a06              LDR      r2,|L2.40|
-000010  008b              LSLS     r3,r1,#2              ;1255
+000010  008b              LSLS     r3,r1,#2              ;1264
 000012  ea010102          AND      r1,r1,r2
 000016  d501              BPL      |L2.28|
 000018  60c1              STR      r1,[r0,#0xc]
-;;;1259     }
-;;;1260     else 
-;;;1261     {
-;;;1262       /* Set DMAy LIFCR register clear interrupt bits */
-;;;1263       DMAy->LIFCR = (uint32_t)(DMA_IT & RESERVED_MASK);
-;;;1264     }   
-;;;1265   }
+;;;1268     }
+;;;1269     else 
+;;;1270     {
+;;;1271       /* Set DMAy LIFCR register clear interrupt bits */
+;;;1272       DMAy->LIFCR = (uint32_t)(DMA_IT & RESERVED_MASK);
+;;;1273     }   
+;;;1274   }
 00001a  4770              BX       lr
                   |L2.28|
-00001c  6081              STR      r1,[r0,#8]            ;1263
+00001c  6081              STR      r1,[r0,#8]            ;1272
 00001e  4770              BX       lr
-;;;1266   
+;;;1275   
                           ENDP
 
                   |L2.32|
@@ -133,35 +133,35 @@
                           AREA ||i.DMA_Cmd||, CODE, READONLY, ALIGN=1
 
                   DMA_Cmd PROC
-;;;469      */
-;;;470    void DMA_Cmd(DMA_Stream_TypeDef* DMAy_Streamx, FunctionalState NewState)
+;;;478      */
+;;;479    void DMA_Cmd(DMA_Stream_TypeDef* DMAy_Streamx, FunctionalState NewState)
 000000  2900              CMP      r1,#0
-;;;471    {
-;;;472      /* Check the parameters */
-;;;473      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;474      assert_param(IS_FUNCTIONAL_STATE(NewState));
-;;;475    
-;;;476      if (NewState != DISABLE)
-;;;477      {
-;;;478        /* Enable the selected DMAy Streamx by setting EN bit */
-;;;479        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_EN;
-;;;480      }
-;;;481      else
-;;;482      {
-;;;483        /* Disable the selected DMAy Streamx by clearing EN bit */
-;;;484        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_EN;
+;;;480    {
+;;;481      /* Check the parameters */
+;;;482      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;483      assert_param(IS_FUNCTIONAL_STATE(NewState));
+;;;484    
+;;;485      if (NewState != DISABLE)
+;;;486      {
+;;;487        /* Enable the selected DMAy Streamx by setting EN bit */
+;;;488        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_EN;
+;;;489      }
+;;;490      else
+;;;491      {
+;;;492        /* Disable the selected DMAy Streamx by clearing EN bit */
+;;;493        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_EN;
 000002  6801              LDR      r1,[r0,#0]
 000004  d002              BEQ      |L3.12|
-000006  f0410101          ORR      r1,r1,#1              ;479
+000006  f0410101          ORR      r1,r1,#1              ;488
 00000a  e001              B        |L3.16|
                   |L3.12|
 00000c  f0210101          BIC      r1,r1,#1
                   |L3.16|
-000010  6001              STR      r1,[r0,#0]            ;479
-;;;485      }
-;;;486    }
+000010  6001              STR      r1,[r0,#0]            ;488
+;;;494      }
+;;;495    }
 000012  4770              BX       lr
-;;;487    
+;;;496    
                           ENDP
 
 
@@ -208,215 +208,224 @@
 00001a  6141              STR      r1,[r0,#0x14]
 ;;;213    
 ;;;214      /* Reset interrupt pending bits for the selected stream */
-;;;215      if (DMAy_Streamx == DMA1_Stream0)
-;;;216      {
-;;;217        /* Reset interrupt pending bits for DMA1 Stream0 */
-;;;218        DMA1->LIFCR = DMA_Stream0_IT_MASK;
+;;;215    /*
+;;;216     if (DMAy_Streamx == DMA1_Stream0)		
+;;;217      {
+;;;218         Reset interrupt pending bits for DMA1 Stream0 
+;;;219        DMA1->LIFCR = DMA_Stream0_IT_MASK;
+;;;220      }
+;;;221    	*/
+;;;222    	
+;;;223    	/* Reset interrupt pending bits for the selected stream */
+;;;224      if (DMAy_Streamx == DMA1_Stream0)
+;;;225      {
+;;;226        /* Reset interrupt pending bits for DMA1 Stream0 */
+;;;227        DMA1->LIFCR = DMA_Stream0_IT_MASK;
 00001c  493c              LDR      r1,|L4.272|
 00001e  4a3c              LDR      r2,|L4.272|
 000020  253d              MOVS     r5,#0x3d
 000022  3910              SUBS     r1,r1,#0x10
-000024  4290              CMP      r0,r2                 ;215
+000024  4290              CMP      r0,r2                 ;224
 000026  d102              BNE      |L4.46|
 000028  608d              STR      r5,[r1,#8]
                   |L4.42|
-;;;219      }
-;;;220      else if (DMAy_Streamx == DMA1_Stream1)
-;;;221      {
-;;;222        /* Reset interrupt pending bits for DMA1 Stream1 */
-;;;223        DMA1->LIFCR = DMA_Stream1_IT_MASK;
-;;;224      }
-;;;225      else if (DMAy_Streamx == DMA1_Stream2)
-;;;226      {
-;;;227        /* Reset interrupt pending bits for DMA1 Stream2 */
-;;;228        DMA1->LIFCR = DMA_Stream2_IT_MASK;
-;;;229      }
-;;;230      else if (DMAy_Streamx == DMA1_Stream3)
-;;;231      {
-;;;232        /* Reset interrupt pending bits for DMA1 Stream3 */
-;;;233        DMA1->LIFCR = DMA_Stream3_IT_MASK;
-;;;234      }
-;;;235      else if (DMAy_Streamx == DMA1_Stream4)
-;;;236      {
-;;;237        /* Reset interrupt pending bits for DMA1 Stream4 */
-;;;238        DMA1->HIFCR = DMA_Stream4_IT_MASK;
-;;;239      }
-;;;240      else if (DMAy_Streamx == DMA1_Stream5)
-;;;241      {
-;;;242        /* Reset interrupt pending bits for DMA1 Stream5 */
-;;;243        DMA1->HIFCR = DMA_Stream5_IT_MASK;
-;;;244      }
-;;;245      else if (DMAy_Streamx == DMA1_Stream6)
-;;;246      {
-;;;247        /* Reset interrupt pending bits for DMA1 Stream6 */
-;;;248        DMA1->HIFCR = (uint32_t)DMA_Stream6_IT_MASK;
-;;;249      }
-;;;250      else if (DMAy_Streamx == DMA1_Stream7)
-;;;251      {
-;;;252        /* Reset interrupt pending bits for DMA1 Stream7 */
-;;;253        DMA1->HIFCR = DMA_Stream7_IT_MASK;
-;;;254      }
-;;;255      else if (DMAy_Streamx == DMA2_Stream0)
-;;;256      {
-;;;257        /* Reset interrupt pending bits for DMA2 Stream0 */
-;;;258        DMA2->LIFCR = DMA_Stream0_IT_MASK;
-;;;259      }
-;;;260      else if (DMAy_Streamx == DMA2_Stream1)
-;;;261      {
-;;;262        /* Reset interrupt pending bits for DMA2 Stream1 */
-;;;263        DMA2->LIFCR = DMA_Stream1_IT_MASK;
-;;;264      }
-;;;265      else if (DMAy_Streamx == DMA2_Stream2)
-;;;266      {
-;;;267        /* Reset interrupt pending bits for DMA2 Stream2 */
-;;;268        DMA2->LIFCR = DMA_Stream2_IT_MASK;
-;;;269      }
-;;;270      else if (DMAy_Streamx == DMA2_Stream3)
-;;;271      {
-;;;272        /* Reset interrupt pending bits for DMA2 Stream3 */
-;;;273        DMA2->LIFCR = DMA_Stream3_IT_MASK;
-;;;274      }
-;;;275      else if (DMAy_Streamx == DMA2_Stream4)
-;;;276      {
-;;;277        /* Reset interrupt pending bits for DMA2 Stream4 */
-;;;278        DMA2->HIFCR = DMA_Stream4_IT_MASK;
-;;;279      }
-;;;280      else if (DMAy_Streamx == DMA2_Stream5)
-;;;281      {
-;;;282        /* Reset interrupt pending bits for DMA2 Stream5 */
-;;;283        DMA2->HIFCR = DMA_Stream5_IT_MASK;
-;;;284      }
-;;;285      else if (DMAy_Streamx == DMA2_Stream6)
-;;;286      {
-;;;287        /* Reset interrupt pending bits for DMA2 Stream6 */
-;;;288        DMA2->HIFCR = DMA_Stream6_IT_MASK;
-;;;289      }
-;;;290      else 
-;;;291      {
-;;;292        if (DMAy_Streamx == DMA2_Stream7)
-;;;293        {
-;;;294          /* Reset interrupt pending bits for DMA2 Stream7 */
-;;;295          DMA2->HIFCR = DMA_Stream7_IT_MASK;
-;;;296        }
-;;;297      }
-;;;298    }
+;;;228      }
+;;;229      else if (DMAy_Streamx == DMA1_Stream1)
+;;;230      {
+;;;231        /* Reset interrupt pending bits for DMA1 Stream1 */
+;;;232        DMA1->LIFCR = DMA_Stream1_IT_MASK;
+;;;233      }
+;;;234      else if (DMAy_Streamx == DMA1_Stream2)
+;;;235      {
+;;;236        /* Reset interrupt pending bits for DMA1 Stream2 */
+;;;237        DMA1->LIFCR = DMA_Stream2_IT_MASK;
+;;;238      }
+;;;239      else if (DMAy_Streamx == DMA1_Stream3)
+;;;240      {
+;;;241        /* Reset interrupt pending bits for DMA1 Stream3 */
+;;;242        DMA1->LIFCR = DMA_Stream3_IT_MASK;
+;;;243      }
+;;;244      else if (DMAy_Streamx == DMA1_Stream4)
+;;;245      {
+;;;246        /* Reset interrupt pending bits for DMA1 Stream4 */
+;;;247        DMA1->HIFCR = DMA_Stream4_IT_MASK;
+;;;248      }
+;;;249      else if (DMAy_Streamx == DMA1_Stream5)
+;;;250      {
+;;;251        /* Reset interrupt pending bits for DMA1 Stream5 */
+;;;252        DMA1->HIFCR = DMA_Stream5_IT_MASK;
+;;;253      }
+;;;254      else if (DMAy_Streamx == DMA1_Stream6)
+;;;255      {
+;;;256        /* Reset interrupt pending bits for DMA1 Stream6 */
+;;;257        DMA1->HIFCR = (uint32_t)DMA_Stream6_IT_MASK;
+;;;258      }
+;;;259      else if (DMAy_Streamx == DMA1_Stream7)
+;;;260      {
+;;;261        /* Reset interrupt pending bits for DMA1 Stream7 */
+;;;262        DMA1->HIFCR = DMA_Stream7_IT_MASK;
+;;;263      }
+;;;264      else if (DMAy_Streamx == DMA2_Stream0)
+;;;265      {
+;;;266        /* Reset interrupt pending bits for DMA2 Stream0 */
+;;;267        DMA2->LIFCR = DMA_Stream0_IT_MASK;
+;;;268      }
+;;;269      else if (DMAy_Streamx == DMA2_Stream1)
+;;;270      {
+;;;271        /* Reset interrupt pending bits for DMA2 Stream1 */
+;;;272        DMA2->LIFCR = DMA_Stream1_IT_MASK;
+;;;273      }
+;;;274      else if (DMAy_Streamx == DMA2_Stream2)
+;;;275      {
+;;;276        /* Reset interrupt pending bits for DMA2 Stream2 */
+;;;277        DMA2->LIFCR = DMA_Stream2_IT_MASK;
+;;;278      }
+;;;279      else if (DMAy_Streamx == DMA2_Stream3)
+;;;280      {
+;;;281        /* Reset interrupt pending bits for DMA2 Stream3 */
+;;;282        DMA2->LIFCR = DMA_Stream3_IT_MASK;
+;;;283      }
+;;;284      else if (DMAy_Streamx == DMA2_Stream4)
+;;;285      {
+;;;286        /* Reset interrupt pending bits for DMA2 Stream4 */
+;;;287        DMA2->HIFCR = DMA_Stream4_IT_MASK;
+;;;288      }
+;;;289      else if (DMAy_Streamx == DMA2_Stream5)
+;;;290      {
+;;;291        /* Reset interrupt pending bits for DMA2 Stream5 */
+;;;292        DMA2->HIFCR = DMA_Stream5_IT_MASK;
+;;;293      }
+;;;294      else if (DMAy_Streamx == DMA2_Stream6)
+;;;295      {
+;;;296        /* Reset interrupt pending bits for DMA2 Stream6 */
+;;;297        DMA2->HIFCR = DMA_Stream6_IT_MASK;
+;;;298      }
+;;;299      else 
+;;;300      {
+;;;301        if (DMAy_Streamx == DMA2_Stream7)
+;;;302        {
+;;;303          /* Reset interrupt pending bits for DMA2 Stream7 */
+;;;304          DMA2->HIFCR = DMA_Stream7_IT_MASK;
+;;;305        }
+;;;306      }
+;;;307    }
 00002a  e8bd83f0          POP      {r4-r9,pc}
                   |L4.46|
 00002e  4a38              LDR      r2,|L4.272|
-000030  f44f6674          MOV      r6,#0xf40             ;223
-000034  3218              ADDS     r2,r2,#0x18           ;220
-000036  4290              CMP      r0,r2                 ;220
+000030  f44f6674          MOV      r6,#0xf40             ;232
+000034  3218              ADDS     r2,r2,#0x18           ;229
+000036  4290              CMP      r0,r2                 ;229
 000038  d101              BNE      |L4.62|
-00003a  608e              STR      r6,[r1,#8]            ;223
+00003a  608e              STR      r6,[r1,#8]            ;232
 00003c  e7f5              B        |L4.42|
                   |L4.62|
 00003e  4a34              LDR      r2,|L4.272|
-000040  f44f1774          MOV      r7,#0x3d0000          ;228
-000044  3230              ADDS     r2,r2,#0x30           ;225
-000046  4290              CMP      r0,r2                 ;225
+000040  f44f1774          MOV      r7,#0x3d0000          ;237
+000044  3230              ADDS     r2,r2,#0x30           ;234
+000046  4290              CMP      r0,r2                 ;234
 000048  d101              BNE      |L4.78|
-00004a  608f              STR      r7,[r1,#8]            ;228
+00004a  608f              STR      r7,[r1,#8]            ;237
 00004c  e7ed              B        |L4.42|
                   |L4.78|
 00004e  4a30              LDR      r2,|L4.272|
-000050  f04f6c74          MOV      r12,#0xf400000        ;233
-000054  3248              ADDS     r2,r2,#0x48           ;230
-000056  4290              CMP      r0,r2                 ;230
+000050  f04f6c74          MOV      r12,#0xf400000        ;242
+000054  3248              ADDS     r2,r2,#0x48           ;239
+000056  4290              CMP      r0,r2                 ;239
 000058  d102              BNE      |L4.96|
-00005a  f8c1c008          STR      r12,[r1,#8]           ;233
+00005a  f8c1c008          STR      r12,[r1,#8]           ;242
 00005e  e7e4              B        |L4.42|
                   |L4.96|
 000060  4b2b              LDR      r3,|L4.272|
 000062  4a2c              LDR      r2,|L4.276|
-000064  3360              ADDS     r3,r3,#0x60           ;235
-000066  4298              CMP      r0,r3                 ;235
+000064  3360              ADDS     r3,r3,#0x60           ;244
+000066  4298              CMP      r0,r3                 ;244
 000068  d101              BNE      |L4.110|
-00006a  60ca              STR      r2,[r1,#0xc]          ;238
+00006a  60ca              STR      r2,[r1,#0xc]          ;247
 00006c  e7dd              B        |L4.42|
                   |L4.110|
 00006e  4c28              LDR      r4,|L4.272|
 000070  4b29              LDR      r3,|L4.280|
-000072  3478              ADDS     r4,r4,#0x78           ;240
-000074  42a0              CMP      r0,r4                 ;240
+000072  3478              ADDS     r4,r4,#0x78           ;249
+000074  42a0              CMP      r0,r4                 ;249
 000076  d101              BNE      |L4.124|
-000078  60cb              STR      r3,[r1,#0xc]          ;243
+000078  60cb              STR      r3,[r1,#0xc]          ;252
 00007a  e7d6              B        |L4.42|
                   |L4.124|
 00007c  f8df8090          LDR      r8,|L4.272|
 000080  4c26              LDR      r4,|L4.284|
-000082  f1080890          ADD      r8,r8,#0x90           ;245
-000086  4540              CMP      r0,r8                 ;245
+000082  f1080890          ADD      r8,r8,#0x90           ;254
+000086  4540              CMP      r0,r8                 ;254
 000088  d101              BNE      |L4.142|
-00008a  60cc              STR      r4,[r1,#0xc]          ;248
+00008a  60cc              STR      r4,[r1,#0xc]          ;257
 00008c  e7cd              B        |L4.42|
                   |L4.142|
 00008e  f8df8080          LDR      r8,|L4.272|
-000092  f04f593d          MOV      r9,#0x2f400000        ;253
-000096  f10808a8          ADD      r8,r8,#0xa8           ;250
-00009a  4540              CMP      r0,r8                 ;250
+000092  f04f593d          MOV      r9,#0x2f400000        ;262
+000096  f10808a8          ADD      r8,r8,#0xa8           ;259
+00009a  4540              CMP      r0,r8                 ;259
 00009c  d102              BNE      |L4.164|
-00009e  f8c1900c          STR      r9,[r1,#0xc]          ;253
+00009e  f8c1900c          STR      r9,[r1,#0xc]          ;262
 0000a2  e7c2              B        |L4.42|
                   |L4.164|
 0000a4  491e              LDR      r1,|L4.288|
 0000a6  f8df8078          LDR      r8,|L4.288|
-0000aa  3908              SUBS     r1,r1,#8              ;258
-0000ac  4540              CMP      r0,r8                 ;255
+0000aa  3908              SUBS     r1,r1,#8              ;267
+0000ac  4540              CMP      r0,r8                 ;264
 0000ae  d101              BNE      |L4.180|
-0000b0  600d              STR      r5,[r1,#0]            ;258
+0000b0  600d              STR      r5,[r1,#0]            ;267
 0000b2  e7ba              B        |L4.42|
                   |L4.180|
 0000b4  4d1a              LDR      r5,|L4.288|
-0000b6  3518              ADDS     r5,r5,#0x18           ;260
-0000b8  42a8              CMP      r0,r5                 ;260
+0000b6  3518              ADDS     r5,r5,#0x18           ;269
+0000b8  42a8              CMP      r0,r5                 ;269
 0000ba  d101              BNE      |L4.192|
-0000bc  600e              STR      r6,[r1,#0]            ;263
+0000bc  600e              STR      r6,[r1,#0]            ;272
 0000be  e7b4              B        |L4.42|
                   |L4.192|
 0000c0  4d17              LDR      r5,|L4.288|
-0000c2  3530              ADDS     r5,r5,#0x30           ;265
-0000c4  42a8              CMP      r0,r5                 ;265
+0000c2  3530              ADDS     r5,r5,#0x30           ;274
+0000c4  42a8              CMP      r0,r5                 ;274
 0000c6  d101              BNE      |L4.204|
-0000c8  600f              STR      r7,[r1,#0]            ;268
+0000c8  600f              STR      r7,[r1,#0]            ;277
 0000ca  e7ae              B        |L4.42|
                   |L4.204|
 0000cc  4d14              LDR      r5,|L4.288|
-0000ce  3548              ADDS     r5,r5,#0x48           ;270
-0000d0  42a8              CMP      r0,r5                 ;270
+0000ce  3548              ADDS     r5,r5,#0x48           ;279
+0000d0  42a8              CMP      r0,r5                 ;279
 0000d2  d102              BNE      |L4.218|
-0000d4  f8c1c000          STR      r12,[r1,#0]           ;273
+0000d4  f8c1c000          STR      r12,[r1,#0]           ;282
 0000d8  e7a7              B        |L4.42|
                   |L4.218|
 0000da  4d11              LDR      r5,|L4.288|
 0000dc  4910              LDR      r1,|L4.288|
-0000de  3560              ADDS     r5,r5,#0x60           ;275
-0000e0  1f09              SUBS     r1,r1,#4              ;278
-0000e2  42a8              CMP      r0,r5                 ;275
+0000de  3560              ADDS     r5,r5,#0x60           ;284
+0000e0  1f09              SUBS     r1,r1,#4              ;287
+0000e2  42a8              CMP      r0,r5                 ;284
 0000e4  d101              BNE      |L4.234|
-0000e6  600a              STR      r2,[r1,#0]            ;278
+0000e6  600a              STR      r2,[r1,#0]            ;287
 0000e8  e79f              B        |L4.42|
                   |L4.234|
 0000ea  4a0d              LDR      r2,|L4.288|
-0000ec  3278              ADDS     r2,r2,#0x78           ;280
-0000ee  4290              CMP      r0,r2                 ;280
+0000ec  3278              ADDS     r2,r2,#0x78           ;289
+0000ee  4290              CMP      r0,r2                 ;289
 0000f0  d101              BNE      |L4.246|
-0000f2  600b              STR      r3,[r1,#0]            ;283
+0000f2  600b              STR      r3,[r1,#0]            ;292
 0000f4  e799              B        |L4.42|
                   |L4.246|
 0000f6  4a0a              LDR      r2,|L4.288|
-0000f8  3290              ADDS     r2,r2,#0x90           ;285
-0000fa  4290              CMP      r0,r2                 ;285
+0000f8  3290              ADDS     r2,r2,#0x90           ;294
+0000fa  4290              CMP      r0,r2                 ;294
 0000fc  d101              BNE      |L4.258|
-0000fe  600c              STR      r4,[r1,#0]            ;288
+0000fe  600c              STR      r4,[r1,#0]            ;297
 000100  e793              B        |L4.42|
                   |L4.258|
 000102  4a07              LDR      r2,|L4.288|
-000104  32a8              ADDS     r2,r2,#0xa8           ;292
-000106  4290              CMP      r0,r2                 ;292
+000104  32a8              ADDS     r2,r2,#0xa8           ;301
+000106  4290              CMP      r0,r2                 ;301
 000108  d18f              BNE      |L4.42|
-00010a  f8c19000          STR      r9,[r1,#0]            ;295
+00010a  f8c19000          STR      r9,[r1,#0]            ;304
 00010e  e78c              B        |L4.42|
-;;;299    
+;;;308    
                           ENDP
 
                   |L4.272|
@@ -433,311 +442,311 @@
                           AREA ||i.DMA_DoubleBufferModeCmd||, CODE, READONLY, ALIGN=1
 
                   DMA_DoubleBufferModeCmd PROC
-;;;748      */
-;;;749    void DMA_DoubleBufferModeCmd(DMA_Stream_TypeDef* DMAy_Streamx, FunctionalState NewState)
+;;;757      */
+;;;758    void DMA_DoubleBufferModeCmd(DMA_Stream_TypeDef* DMAy_Streamx, FunctionalState NewState)
 000000  2900              CMP      r1,#0
-;;;750    {  
-;;;751      /* Check the parameters */
-;;;752      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;753      assert_param(IS_FUNCTIONAL_STATE(NewState));
-;;;754    
-;;;755      /* Configure the Double Buffer mode */
-;;;756      if (NewState != DISABLE)
-;;;757      {
-;;;758        /* Enable the Double buffer mode */
-;;;759        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_DBM;
-;;;760      }
-;;;761      else
-;;;762      {
-;;;763        /* Disable the Double buffer mode */
-;;;764        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_DBM;
+;;;759    {  
+;;;760      /* Check the parameters */
+;;;761      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;762      assert_param(IS_FUNCTIONAL_STATE(NewState));
+;;;763    
+;;;764      /* Configure the Double Buffer mode */
+;;;765      if (NewState != DISABLE)
+;;;766      {
+;;;767        /* Enable the Double buffer mode */
+;;;768        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_DBM;
+;;;769      }
+;;;770      else
+;;;771      {
+;;;772        /* Disable the Double buffer mode */
+;;;773        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_DBM;
 000002  6801              LDR      r1,[r0,#0]
 000004  d002              BEQ      |L5.12|
-000006  f4412180          ORR      r1,r1,#0x40000        ;759
+000006  f4412180          ORR      r1,r1,#0x40000        ;768
 00000a  e001              B        |L5.16|
                   |L5.12|
 00000c  f4212180          BIC      r1,r1,#0x40000
                   |L5.16|
-000010  6001              STR      r1,[r0,#0]            ;759
-;;;765      }
-;;;766    }
+000010  6001              STR      r1,[r0,#0]            ;768
+;;;774      }
+;;;775    }
 000012  4770              BX       lr
-;;;767    
+;;;776    
                           ENDP
 
 
                           AREA ||i.DMA_DoubleBufferModeConfig||, CODE, READONLY, ALIGN=1
 
                   DMA_DoubleBufferModeConfig PROC
-;;;717      */
-;;;718    void DMA_DoubleBufferModeConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t Memory1BaseAddr,
+;;;726      */
+;;;727    void DMA_DoubleBufferModeConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t Memory1BaseAddr,
 000000  2a00              CMP      r2,#0
-;;;719                                    uint32_t DMA_CurrentMemory)
-;;;720    {  
-;;;721      /* Check the parameters */
-;;;722      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;723      assert_param(IS_DMA_CURRENT_MEM(DMA_CurrentMemory));
-;;;724    
-;;;725      if (DMA_CurrentMemory != DMA_Memory_0)
-;;;726      {
-;;;727        /* Set Memory 1 as current memory address */
-;;;728        DMAy_Streamx->CR |= (uint32_t)(DMA_SxCR_CT);    
-;;;729      }
-;;;730      else
-;;;731      {
-;;;732        /* Set Memory 0 as current memory address */
-;;;733        DMAy_Streamx->CR &= ~(uint32_t)(DMA_SxCR_CT);    
+;;;728                                    uint32_t DMA_CurrentMemory)
+;;;729    {  
+;;;730      /* Check the parameters */
+;;;731      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;732      assert_param(IS_DMA_CURRENT_MEM(DMA_CurrentMemory));
+;;;733    
+;;;734      if (DMA_CurrentMemory != DMA_Memory_0)
+;;;735      {
+;;;736        /* Set Memory 1 as current memory address */
+;;;737        DMAy_Streamx->CR |= (uint32_t)(DMA_SxCR_CT);    
+;;;738      }
+;;;739      else
+;;;740      {
+;;;741        /* Set Memory 0 as current memory address */
+;;;742        DMAy_Streamx->CR &= ~(uint32_t)(DMA_SxCR_CT);    
 000002  6802              LDR      r2,[r0,#0]
 000004  d002              BEQ      |L6.12|
-000006  f4422200          ORR      r2,r2,#0x80000        ;728
+000006  f4422200          ORR      r2,r2,#0x80000        ;737
 00000a  e001              B        |L6.16|
                   |L6.12|
 00000c  f4222200          BIC      r2,r2,#0x80000
                   |L6.16|
 000010  6002              STR      r2,[r0,#0]
-;;;734      }
-;;;735    
-;;;736      /* Write to DMAy Streamx M1AR */
-;;;737      DMAy_Streamx->M1AR = Memory1BaseAddr;
+;;;743      }
+;;;744    
+;;;745      /* Write to DMAy Streamx M1AR */
+;;;746      DMAy_Streamx->M1AR = Memory1BaseAddr;
 000012  6101              STR      r1,[r0,#0x10]
-;;;738    }
+;;;747    }
 000014  4770              BX       lr
-;;;739    
+;;;748    
                           ENDP
 
 
                           AREA ||i.DMA_FlowControllerConfig||, CODE, READONLY, ALIGN=1
 
                   DMA_FlowControllerConfig PROC
-;;;541      */
-;;;542    void DMA_FlowControllerConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FlowCtrl)
+;;;550      */
+;;;551    void DMA_FlowControllerConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FlowCtrl)
 000000  2900              CMP      r1,#0
-;;;543    {
-;;;544      /* Check the parameters */
-;;;545      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;546      assert_param(IS_DMA_FLOW_CTRL(DMA_FlowCtrl));
-;;;547    
-;;;548      /* Check the needed flow controller  */
-;;;549      if(DMA_FlowCtrl != DMA_FlowCtrl_Memory)
-;;;550      {
-;;;551        /* Configure DMA_SxCR_PFCTRL bit with the input parameter */
-;;;552        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_PFCTRL;   
-;;;553      }
-;;;554      else
-;;;555      {
-;;;556        /* Clear the PFCTRL bit: Memory is the flow controller */
-;;;557        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_PFCTRL;    
+;;;552    {
+;;;553      /* Check the parameters */
+;;;554      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;555      assert_param(IS_DMA_FLOW_CTRL(DMA_FlowCtrl));
+;;;556    
+;;;557      /* Check the needed flow controller  */
+;;;558      if(DMA_FlowCtrl != DMA_FlowCtrl_Memory)
+;;;559      {
+;;;560        /* Configure DMA_SxCR_PFCTRL bit with the input parameter */
+;;;561        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_PFCTRL;   
+;;;562      }
+;;;563      else
+;;;564      {
+;;;565        /* Clear the PFCTRL bit: Memory is the flow controller */
+;;;566        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_PFCTRL;    
 000002  6801              LDR      r1,[r0,#0]
 000004  d002              BEQ      |L7.12|
-000006  f0410120          ORR      r1,r1,#0x20           ;552
+000006  f0410120          ORR      r1,r1,#0x20           ;561
 00000a  e001              B        |L7.16|
                   |L7.12|
 00000c  f0210120          BIC      r1,r1,#0x20
                   |L7.16|
-000010  6001              STR      r1,[r0,#0]            ;552
-;;;558      }
-;;;559    }
+000010  6001              STR      r1,[r0,#0]            ;561
+;;;567      }
+;;;568    }
 000012  4770              BX       lr
-;;;560    /**
+;;;569    /**
                           ENDP
 
 
                           AREA ||i.DMA_GetCmdStatus||, CODE, READONLY, ALIGN=1
 
                   DMA_GetCmdStatus PROC
-;;;924      */
-;;;925    FunctionalState DMA_GetCmdStatus(DMA_Stream_TypeDef* DMAy_Streamx)
+;;;933      */
+;;;934    FunctionalState DMA_GetCmdStatus(DMA_Stream_TypeDef* DMAy_Streamx)
 000000  4601              MOV      r1,r0
-;;;926    {
-;;;927      FunctionalState state = DISABLE;
+;;;935    {
+;;;936      FunctionalState state = DISABLE;
 000002  2000              MOVS     r0,#0
-;;;928    
-;;;929      /* Check the parameters */
-;;;930      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;931    
-;;;932      if ((DMAy_Streamx->CR & (uint32_t)DMA_SxCR_EN) != 0)
+;;;937    
+;;;938      /* Check the parameters */
+;;;939      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;940    
+;;;941      if ((DMAy_Streamx->CR & (uint32_t)DMA_SxCR_EN) != 0)
 000004  6809              LDR      r1,[r1,#0]
 000006  07c9              LSLS     r1,r1,#31
 000008  d000              BEQ      |L8.12|
-;;;933      {
-;;;934        /* The selected DMAy Streamx EN bit is set (DMA is still transferring) */
-;;;935        state = ENABLE;
+;;;942      {
+;;;943        /* The selected DMAy Streamx EN bit is set (DMA is still transferring) */
+;;;944        state = ENABLE;
 00000a  2001              MOVS     r0,#1
                   |L8.12|
-;;;936      }
-;;;937      else
-;;;938      {
-;;;939        /* The selected DMAy Streamx EN bit is cleared (DMA is disabled and 
-;;;940            all transfers are complete) */
-;;;941        state = DISABLE;
-;;;942      }
-;;;943      return state;
-;;;944    }
+;;;945      }
+;;;946      else
+;;;947      {
+;;;948        /* The selected DMAy Streamx EN bit is cleared (DMA is disabled and 
+;;;949            all transfers are complete) */
+;;;950        state = DISABLE;
+;;;951      }
+;;;952      return state;
+;;;953    }
 00000c  4770              BX       lr
-;;;945    
+;;;954    
                           ENDP
 
 
                           AREA ||i.DMA_GetCurrDataCounter||, CODE, READONLY, ALIGN=1
 
                   DMA_GetCurrDataCounter PROC
-;;;640      */
-;;;641    uint16_t DMA_GetCurrDataCounter(DMA_Stream_TypeDef* DMAy_Streamx)
+;;;649      */
+;;;650    uint16_t DMA_GetCurrDataCounter(DMA_Stream_TypeDef* DMAy_Streamx)
 000000  6840              LDR      r0,[r0,#4]
-;;;642    {
-;;;643      /* Check the parameters */
-;;;644      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;645    
-;;;646      /* Return the number of remaining data units for DMAy Streamx */
-;;;647      return ((uint16_t)(DMAy_Streamx->NDTR));
+;;;651    {
+;;;652      /* Check the parameters */
+;;;653      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;654    
+;;;655      /* Return the number of remaining data units for DMAy Streamx */
+;;;656      return ((uint16_t)(DMAy_Streamx->NDTR));
 000002  b280              UXTH     r0,r0
-;;;648    }
+;;;657    }
 000004  4770              BX       lr
-;;;649    /**
+;;;658    /**
                           ENDP
 
 
                           AREA ||i.DMA_GetCurrentMemoryTarget||, CODE, READONLY, ALIGN=1
 
                   DMA_GetCurrentMemoryTarget PROC
-;;;815      */
-;;;816    uint32_t DMA_GetCurrentMemoryTarget(DMA_Stream_TypeDef* DMAy_Streamx)
+;;;824      */
+;;;825    uint32_t DMA_GetCurrentMemoryTarget(DMA_Stream_TypeDef* DMAy_Streamx)
 000000  4601              MOV      r1,r0
-;;;817    {
-;;;818      uint32_t tmp = 0;
+;;;826    {
+;;;827      uint32_t tmp = 0;
 000002  2000              MOVS     r0,#0
-;;;819      
-;;;820      /* Check the parameters */
-;;;821      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;822    
-;;;823      /* Get the current memory target */
-;;;824      if ((DMAy_Streamx->CR & DMA_SxCR_CT) != 0)
+;;;828      
+;;;829      /* Check the parameters */
+;;;830      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;831    
+;;;832      /* Get the current memory target */
+;;;833      if ((DMAy_Streamx->CR & DMA_SxCR_CT) != 0)
 000004  6809              LDR      r1,[r1,#0]
 000006  0309              LSLS     r1,r1,#12
 000008  d500              BPL      |L10.12|
-;;;825      {
-;;;826        /* Current memory buffer used is Memory 1 */
-;;;827        tmp = 1;
+;;;834      {
+;;;835        /* Current memory buffer used is Memory 1 */
+;;;836        tmp = 1;
 00000a  2001              MOVS     r0,#1
                   |L10.12|
-;;;828      }  
-;;;829      else
-;;;830      {
-;;;831        /* Current memory buffer used is Memory 0 */
-;;;832        tmp = 0;    
-;;;833      }
-;;;834      return tmp;
-;;;835    }
+;;;837      }  
+;;;838      else
+;;;839      {
+;;;840        /* Current memory buffer used is Memory 0 */
+;;;841        tmp = 0;    
+;;;842      }
+;;;843      return tmp;
+;;;844    }
 00000c  4770              BX       lr
-;;;836    /**
+;;;845    /**
                           ENDP
 
 
                           AREA ||i.DMA_GetFIFOStatus||, CODE, READONLY, ALIGN=1
 
                   DMA_GetFIFOStatus PROC
-;;;958      */
-;;;959    uint32_t DMA_GetFIFOStatus(DMA_Stream_TypeDef* DMAy_Streamx)
+;;;967      */
+;;;968    uint32_t DMA_GetFIFOStatus(DMA_Stream_TypeDef* DMAy_Streamx)
 000000  6940              LDR      r0,[r0,#0x14]
-;;;960    {
-;;;961      uint32_t tmpreg = 0;
-;;;962     
-;;;963      /* Check the parameters */
-;;;964      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;965      
-;;;966      /* Get the FIFO level bits */
-;;;967      tmpreg = (uint32_t)((DMAy_Streamx->FCR & DMA_SxFCR_FS));
+;;;969    {
+;;;970      uint32_t tmpreg = 0;
+;;;971     
+;;;972      /* Check the parameters */
+;;;973      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;974      
+;;;975      /* Get the FIFO level bits */
+;;;976      tmpreg = (uint32_t)((DMAy_Streamx->FCR & DMA_SxFCR_FS));
 000002  f0000038          AND      r0,r0,#0x38
-;;;968      
-;;;969      return tmpreg;
-;;;970    }
+;;;977      
+;;;978      return tmpreg;
+;;;979    }
 000006  4770              BX       lr
-;;;971    
+;;;980    
                           ENDP
 
 
                           AREA ||i.DMA_GetFlagStatus||, CODE, READONLY, ALIGN=2
 
                   DMA_GetFlagStatus PROC
-;;;985      */
-;;;986    FlagStatus DMA_GetFlagStatus(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FLAG)
+;;;994      */
+;;;995    FlagStatus DMA_GetFlagStatus(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_FLAG)
 000000  4602              MOV      r2,r0
-;;;987    {
-;;;988      FlagStatus bitstatus = RESET;
-;;;989      DMA_TypeDef* DMAy;
-;;;990      uint32_t tmpreg = 0;
-;;;991    
-;;;992      /* Check the parameters */
-;;;993      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;994      assert_param(IS_DMA_GET_FLAG(DMA_FLAG));
-;;;995    
-;;;996      /* Determine the DMA to which belongs the stream */
-;;;997      if (DMAy_Streamx < DMA2_Stream0)
+;;;996    {
+;;;997      FlagStatus bitstatus = RESET;
+;;;998      DMA_TypeDef* DMAy;
+;;;999      uint32_t tmpreg = 0;
+;;;1000   
+;;;1001     /* Check the parameters */
+;;;1002     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;1003     assert_param(IS_DMA_GET_FLAG(DMA_FLAG));
+;;;1004   
+;;;1005     /* Determine the DMA to which belongs the stream */
+;;;1006     if (DMAy_Streamx < DMA2_Stream0)
 000002  4b09              LDR      r3,|L12.40|
-000004  2000              MOVS     r0,#0                 ;988
+000004  2000              MOVS     r0,#0                 ;997
 000006  429a              CMP      r2,r3
 000008  d201              BCS      |L12.14|
-;;;998      {
-;;;999        /* DMAy_Streamx belongs to DMA1 */
-;;;1000       DMAy = DMA1; 
+;;;1007     {
+;;;1008       /* DMAy_Streamx belongs to DMA1 */
+;;;1009       DMAy = DMA1; 
 00000a  4a08              LDR      r2,|L12.44|
 00000c  e001              B        |L12.18|
                   |L12.14|
-;;;1001     } 
-;;;1002     else 
-;;;1003     {
-;;;1004       /* DMAy_Streamx belongs to DMA2 */
-;;;1005       DMAy = DMA2; 
+;;;1010     } 
+;;;1011     else 
+;;;1012     {
+;;;1013       /* DMAy_Streamx belongs to DMA2 */
+;;;1014       DMAy = DMA2; 
 00000e  4a06              LDR      r2,|L12.40|
 000010  3a10              SUBS     r2,r2,#0x10
                   |L12.18|
-;;;1006     }
-;;;1007   
-;;;1008     /* Check if the flag is in HISR or LISR */
-;;;1009     if ((DMA_FLAG & HIGH_ISR_MASK) != (uint32_t)RESET)
+;;;1015     }
+;;;1016   
+;;;1017     /* Check if the flag is in HISR or LISR */
+;;;1018     if ((DMA_FLAG & HIGH_ISR_MASK) != (uint32_t)RESET)
 000012  008b              LSLS     r3,r1,#2
 000014  d501              BPL      |L12.26|
-;;;1010     {
-;;;1011       /* Get DMAy HISR register value */
-;;;1012       tmpreg = DMAy->HISR;
+;;;1019     {
+;;;1020       /* Get DMAy HISR register value */
+;;;1021       tmpreg = DMAy->HISR;
 000016  6852              LDR      r2,[r2,#4]
 000018  e000              B        |L12.28|
                   |L12.26|
-;;;1013     }
-;;;1014     else
-;;;1015     {
-;;;1016       /* Get DMAy LISR register value */
-;;;1017       tmpreg = DMAy->LISR;
+;;;1022     }
+;;;1023     else
+;;;1024     {
+;;;1025       /* Get DMAy LISR register value */
+;;;1026       tmpreg = DMAy->LISR;
 00001a  6812              LDR      r2,[r2,#0]
                   |L12.28|
-;;;1018     }   
-;;;1019    
-;;;1020     /* Mask the reserved bits */
-;;;1021     tmpreg &= (uint32_t)RESERVED_MASK;
+;;;1027     }   
+;;;1028    
+;;;1029     /* Mask the reserved bits */
+;;;1030     tmpreg &= (uint32_t)RESERVED_MASK;
 00001c  4b04              LDR      r3,|L12.48|
 00001e  401a              ANDS     r2,r2,r3
-;;;1022   
-;;;1023     /* Check the status of the specified DMA flag */
-;;;1024     if ((tmpreg & DMA_FLAG) != (uint32_t)RESET)
+;;;1031   
+;;;1032     /* Check the status of the specified DMA flag */
+;;;1033     if ((tmpreg & DMA_FLAG) != (uint32_t)RESET)
 000020  420a              TST      r2,r1
 000022  d000              BEQ      |L12.38|
-;;;1025     {
-;;;1026       /* DMA_FLAG is set */
-;;;1027       bitstatus = SET;
+;;;1034     {
+;;;1035       /* DMA_FLAG is set */
+;;;1036       bitstatus = SET;
 000024  2001              MOVS     r0,#1
                   |L12.38|
-;;;1028     }
-;;;1029     else
-;;;1030     {
-;;;1031       /* DMA_FLAG is reset */
-;;;1032       bitstatus = RESET;
-;;;1033     }
-;;;1034   
-;;;1035     /* Return the DMA_FLAG status */
-;;;1036     return  bitstatus;
-;;;1037   }
+;;;1037     }
+;;;1038     else
+;;;1039     {
+;;;1040       /* DMA_FLAG is reset */
+;;;1041       bitstatus = RESET;
+;;;1042     }
+;;;1043   
+;;;1044     /* Return the DMA_FLAG status */
+;;;1045     return  bitstatus;
+;;;1046   }
 000026  4770              BX       lr
-;;;1038   
+;;;1047   
                           ENDP
 
                   |L12.40|
@@ -750,114 +759,114 @@
                           AREA ||i.DMA_GetITStatus||, CODE, READONLY, ALIGN=2
 
                   DMA_GetITStatus PROC
-;;;1151     */
-;;;1152   ITStatus DMA_GetITStatus(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT)
+;;;1160     */
+;;;1161   ITStatus DMA_GetITStatus(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT)
 000000  b530              PUSH     {r4,r5,lr}
-;;;1153   {
-;;;1154     ITStatus bitstatus = RESET;
-;;;1155     DMA_TypeDef* DMAy;
-;;;1156     uint32_t tmpreg = 0, enablestatus = 0;
-;;;1157   
-;;;1158     /* Check the parameters */
-;;;1159     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;1160     assert_param(IS_DMA_GET_IT(DMA_IT));
-;;;1161    
-;;;1162     /* Determine the DMA to which belongs the stream */
-;;;1163     if (DMAy_Streamx < DMA2_Stream0)
+;;;1162   {
+;;;1163     ITStatus bitstatus = RESET;
+;;;1164     DMA_TypeDef* DMAy;
+;;;1165     uint32_t tmpreg = 0, enablestatus = 0;
+;;;1166   
+;;;1167     /* Check the parameters */
+;;;1168     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;1169     assert_param(IS_DMA_GET_IT(DMA_IT));
+;;;1170    
+;;;1171     /* Determine the DMA to which belongs the stream */
+;;;1172     if (DMAy_Streamx < DMA2_Stream0)
 000002  4a10              LDR      r2,|L13.68|
-000004  2400              MOVS     r4,#0                 ;1154
+000004  2400              MOVS     r4,#0                 ;1163
 000006  4290              CMP      r0,r2
 000008  d201              BCS      |L13.14|
-;;;1164     {
-;;;1165       /* DMAy_Streamx belongs to DMA1 */
-;;;1166       DMAy = DMA1; 
+;;;1173     {
+;;;1174       /* DMAy_Streamx belongs to DMA1 */
+;;;1175       DMAy = DMA1; 
 00000a  4a0f              LDR      r2,|L13.72|
 00000c  e001              B        |L13.18|
                   |L13.14|
-;;;1167     } 
-;;;1168     else 
-;;;1169     {
-;;;1170       /* DMAy_Streamx belongs to DMA2 */
-;;;1171       DMAy = DMA2; 
+;;;1176     } 
+;;;1177     else 
+;;;1178     {
+;;;1179       /* DMAy_Streamx belongs to DMA2 */
+;;;1180       DMAy = DMA2; 
 00000e  4a0d              LDR      r2,|L13.68|
 000010  3a10              SUBS     r2,r2,#0x10
                   |L13.18|
-;;;1172     }
-;;;1173   
-;;;1174     /* Check if the interrupt enable bit is in the CR or FCR register */
-;;;1175     if ((DMA_IT & TRANSFER_IT_MASK) != (uint32_t)RESET)
+;;;1181     }
+;;;1182   
+;;;1183     /* Check if the interrupt enable bit is in the CR or FCR register */
+;;;1184     if ((DMA_IT & TRANSFER_IT_MASK) != (uint32_t)RESET)
 000012  4b0e              LDR      r3,|L13.76|
 000014  4219              TST      r1,r3
 000016  d005              BEQ      |L13.36|
-;;;1176     {
-;;;1177       /* Get the interrupt enable position mask in CR register */
-;;;1178       tmpreg = (uint32_t)((DMA_IT >> 11) & TRANSFER_IT_ENABLE_MASK);   
+;;;1185     {
+;;;1186       /* Get the interrupt enable position mask in CR register */
+;;;1187       tmpreg = (uint32_t)((DMA_IT >> 11) & TRANSFER_IT_ENABLE_MASK);   
 000018  231e              MOVS     r3,#0x1e
 00001a  ea0325d1          AND      r5,r3,r1,LSR #11
-;;;1179       
-;;;1180       /* Check the enable bit in CR register */
-;;;1181       enablestatus = (uint32_t)(DMAy_Streamx->CR & tmpreg);
+;;;1188       
+;;;1189       /* Check the enable bit in CR register */
+;;;1190       enablestatus = (uint32_t)(DMAy_Streamx->CR & tmpreg);
 00001e  6803              LDR      r3,[r0,#0]
 000020  402b              ANDS     r3,r3,r5
 000022  e002              B        |L13.42|
                   |L13.36|
-;;;1182     }
-;;;1183     else 
-;;;1184     {
-;;;1185       /* Check the enable bit in FCR register */
-;;;1186       enablestatus = (uint32_t)(DMAy_Streamx->FCR & DMA_IT_FE); 
+;;;1191     }
+;;;1192     else 
+;;;1193     {
+;;;1194       /* Check the enable bit in FCR register */
+;;;1195       enablestatus = (uint32_t)(DMAy_Streamx->FCR & DMA_IT_FE); 
 000024  6940              LDR      r0,[r0,#0x14]
 000026  f0000380          AND      r3,r0,#0x80
                   |L13.42|
-;;;1187     }
-;;;1188    
-;;;1189     /* Check if the interrupt pending flag is in LISR or HISR */
-;;;1190     if ((DMA_IT & HIGH_ISR_MASK) != (uint32_t)RESET)
+;;;1196     }
+;;;1197    
+;;;1198     /* Check if the interrupt pending flag is in LISR or HISR */
+;;;1199     if ((DMA_IT & HIGH_ISR_MASK) != (uint32_t)RESET)
 00002a  0088              LSLS     r0,r1,#2
 00002c  d501              BPL      |L13.50|
-;;;1191     {
-;;;1192       /* Get DMAy HISR register value */
-;;;1193       tmpreg = DMAy->HISR ;
+;;;1200     {
+;;;1201       /* Get DMAy HISR register value */
+;;;1202       tmpreg = DMAy->HISR ;
 00002e  6850              LDR      r0,[r2,#4]
 000030  e000              B        |L13.52|
                   |L13.50|
-;;;1194     }
-;;;1195     else
-;;;1196     {
-;;;1197       /* Get DMAy LISR register value */
-;;;1198       tmpreg = DMAy->LISR ;
+;;;1203     }
+;;;1204     else
+;;;1205     {
+;;;1206       /* Get DMAy LISR register value */
+;;;1207       tmpreg = DMAy->LISR ;
 000032  6810              LDR      r0,[r2,#0]
                   |L13.52|
-;;;1199     } 
-;;;1200   
-;;;1201     /* mask all reserved bits */
-;;;1202     tmpreg &= (uint32_t)RESERVED_MASK;
+;;;1208     } 
+;;;1209   
+;;;1210     /* mask all reserved bits */
+;;;1211     tmpreg &= (uint32_t)RESERVED_MASK;
 000034  4a06              LDR      r2,|L13.80|
 000036  4010              ANDS     r0,r0,r2
-;;;1203   
-;;;1204     /* Check the status of the specified DMA interrupt */
-;;;1205     if (((tmpreg & DMA_IT) != (uint32_t)RESET) && (enablestatus != (uint32_t)RESET))
+;;;1212   
+;;;1213     /* Check the status of the specified DMA interrupt */
+;;;1214     if (((tmpreg & DMA_IT) != (uint32_t)RESET) && (enablestatus != (uint32_t)RESET))
 000038  4208              TST      r0,r1
 00003a  d001              BEQ      |L13.64|
 00003c  b103              CBZ      r3,|L13.64|
-;;;1206     {
-;;;1207       /* DMA_IT is set */
-;;;1208       bitstatus = SET;
+;;;1215     {
+;;;1216       /* DMA_IT is set */
+;;;1217       bitstatus = SET;
 00003e  2401              MOVS     r4,#1
                   |L13.64|
-;;;1209     }
-;;;1210     else
-;;;1211     {
-;;;1212       /* DMA_IT is reset */
-;;;1213       bitstatus = RESET;
-;;;1214     }
-;;;1215   
-;;;1216     /* Return the DMA_IT status */
-;;;1217     return  bitstatus;
+;;;1218     }
+;;;1219     else
+;;;1220     {
+;;;1221       /* DMA_IT is reset */
+;;;1222       bitstatus = RESET;
+;;;1223     }
+;;;1224   
+;;;1225     /* Return the DMA_IT status */
+;;;1226     return  bitstatus;
 000040  4620              MOV      r0,r4
-;;;1218   }
+;;;1227   }
 000042  bd30              POP      {r4,r5,pc}
-;;;1219   
+;;;1228   
                           ENDP
 
                   |L13.68|
@@ -872,124 +881,124 @@
                           AREA ||i.DMA_ITConfig||, CODE, READONLY, ALIGN=1
 
                   DMA_ITConfig PROC
-;;;1099     */
-;;;1100   void DMA_ITConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT, FunctionalState NewState)
+;;;1108     */
+;;;1109   void DMA_ITConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_IT, FunctionalState NewState)
 000000  060b              LSLS     r3,r1,#24
-;;;1101   {
+;;;1110   {
 000002  d507              BPL      |L14.20|
-;;;1102     /* Check the parameters */
-;;;1103     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;1104     assert_param(IS_DMA_CONFIG_IT(DMA_IT));
-;;;1105     assert_param(IS_FUNCTIONAL_STATE(NewState));
-;;;1106   
-;;;1107     /* Check if the DMA_IT parameter contains a FIFO interrupt */
-;;;1108     if ((DMA_IT & DMA_IT_FE) != 0)
-;;;1109     {
-;;;1110       if (NewState != DISABLE)
-;;;1111       {
-;;;1112         /* Enable the selected DMA FIFO interrupts */
-;;;1113         DMAy_Streamx->FCR |= (uint32_t)DMA_IT_FE;
-;;;1114       }    
-;;;1115       else 
-;;;1116       {
-;;;1117         /* Disable the selected DMA FIFO interrupts */
-;;;1118         DMAy_Streamx->FCR &= ~(uint32_t)DMA_IT_FE;  
+;;;1111     /* Check the parameters */
+;;;1112     assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;1113     assert_param(IS_DMA_CONFIG_IT(DMA_IT));
+;;;1114     assert_param(IS_FUNCTIONAL_STATE(NewState));
+;;;1115   
+;;;1116     /* Check if the DMA_IT parameter contains a FIFO interrupt */
+;;;1117     if ((DMA_IT & DMA_IT_FE) != 0)
+;;;1118     {
+;;;1119       if (NewState != DISABLE)
+;;;1120       {
+;;;1121         /* Enable the selected DMA FIFO interrupts */
+;;;1122         DMAy_Streamx->FCR |= (uint32_t)DMA_IT_FE;
+;;;1123       }    
+;;;1124       else 
+;;;1125       {
+;;;1126         /* Disable the selected DMA FIFO interrupts */
+;;;1127         DMAy_Streamx->FCR &= ~(uint32_t)DMA_IT_FE;  
 000004  6943              LDR      r3,[r0,#0x14]
 000006  b112              CBZ      r2,|L14.14|
-000008  f0430380          ORR      r3,r3,#0x80           ;1113
+000008  f0430380          ORR      r3,r3,#0x80           ;1122
 00000c  e001              B        |L14.18|
                   |L14.14|
 00000e  f0230380          BIC      r3,r3,#0x80
                   |L14.18|
-000012  6143              STR      r3,[r0,#0x14]         ;1113
+000012  6143              STR      r3,[r0,#0x14]         ;1122
                   |L14.20|
-;;;1119       }
-;;;1120     }
-;;;1121   
-;;;1122     /* Check if the DMA_IT parameter contains a Transfer interrupt */
-;;;1123     if (DMA_IT != DMA_IT_FE)
+;;;1128       }
+;;;1129     }
+;;;1130   
+;;;1131     /* Check if the DMA_IT parameter contains a Transfer interrupt */
+;;;1132     if (DMA_IT != DMA_IT_FE)
 000014  2980              CMP      r1,#0x80
 000016  d008              BEQ      |L14.42|
-;;;1124     {
-;;;1125       if (NewState != DISABLE)
+;;;1133     {
+;;;1134       if (NewState != DISABLE)
 000018  2a00              CMP      r2,#0
-;;;1126       {
-;;;1127         /* Enable the selected DMA transfer interrupts */
-;;;1128         DMAy_Streamx->CR |= (uint32_t)(DMA_IT  & TRANSFER_IT_ENABLE_MASK);
-;;;1129       }
-;;;1130       else
-;;;1131       {
-;;;1132         /* Disable the selected DMA transfer interrupts */
-;;;1133         DMAy_Streamx->CR &= ~(uint32_t)(DMA_IT & TRANSFER_IT_ENABLE_MASK);
+;;;1135       {
+;;;1136         /* Enable the selected DMA transfer interrupts */
+;;;1137         DMAy_Streamx->CR |= (uint32_t)(DMA_IT  & TRANSFER_IT_ENABLE_MASK);
+;;;1138       }
+;;;1139       else
+;;;1140       {
+;;;1141         /* Disable the selected DMA transfer interrupts */
+;;;1142         DMAy_Streamx->CR &= ~(uint32_t)(DMA_IT & TRANSFER_IT_ENABLE_MASK);
 00001a  6802              LDR      r2,[r0,#0]
-00001c  f001011e          AND      r1,r1,#0x1e           ;1128
+00001c  f001011e          AND      r1,r1,#0x1e           ;1137
 000020  d001              BEQ      |L14.38|
-000022  430a              ORRS     r2,r2,r1              ;1128
+000022  430a              ORRS     r2,r2,r1              ;1137
 000024  e000              B        |L14.40|
                   |L14.38|
 000026  438a              BICS     r2,r2,r1
                   |L14.40|
 000028  6002              STR      r2,[r0,#0]
                   |L14.42|
-;;;1134       }    
-;;;1135     }
-;;;1136   }
+;;;1143       }    
+;;;1144     }
+;;;1145   }
 00002a  4770              BX       lr
-;;;1137   
+;;;1146   
                           ENDP
 
 
                           AREA ||i.DMA_Init||, CODE, READONLY, ALIGN=2
 
                   DMA_Init PROC
-;;;310      */
-;;;311    void DMA_Init(DMA_Stream_TypeDef* DMAy_Streamx, DMA_InitTypeDef* DMA_InitStruct)
+;;;319      */
+;;;320    void DMA_Init(DMA_Stream_TypeDef* DMAy_Streamx, DMA_InitTypeDef* DMA_InitStruct)
 000000  b530              PUSH     {r4,r5,lr}
-;;;312    {
-;;;313      uint32_t tmpreg = 0;
-;;;314    
-;;;315      /* Check the parameters */
-;;;316      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;317      assert_param(IS_DMA_CHANNEL(DMA_InitStruct->DMA_Channel));
-;;;318      assert_param(IS_DMA_DIRECTION(DMA_InitStruct->DMA_DIR));
-;;;319      assert_param(IS_DMA_BUFFER_SIZE(DMA_InitStruct->DMA_BufferSize));
-;;;320      assert_param(IS_DMA_PERIPHERAL_INC_STATE(DMA_InitStruct->DMA_PeripheralInc));
-;;;321      assert_param(IS_DMA_MEMORY_INC_STATE(DMA_InitStruct->DMA_MemoryInc));
-;;;322      assert_param(IS_DMA_PERIPHERAL_DATA_SIZE(DMA_InitStruct->DMA_PeripheralDataSize));
-;;;323      assert_param(IS_DMA_MEMORY_DATA_SIZE(DMA_InitStruct->DMA_MemoryDataSize));
-;;;324      assert_param(IS_DMA_MODE(DMA_InitStruct->DMA_Mode));
-;;;325      assert_param(IS_DMA_PRIORITY(DMA_InitStruct->DMA_Priority));
-;;;326      assert_param(IS_DMA_FIFO_MODE_STATE(DMA_InitStruct->DMA_FIFOMode));
-;;;327      assert_param(IS_DMA_FIFO_THRESHOLD(DMA_InitStruct->DMA_FIFOThreshold));
-;;;328      assert_param(IS_DMA_MEMORY_BURST(DMA_InitStruct->DMA_MemoryBurst));
-;;;329      assert_param(IS_DMA_PERIPHERAL_BURST(DMA_InitStruct->DMA_PeripheralBurst));
-;;;330    
-;;;331      /*------------------------- DMAy Streamx CR Configuration ------------------*/
-;;;332      /* Get the DMAy_Streamx CR value */
-;;;333      tmpreg = DMAy_Streamx->CR;
+;;;321    {
+;;;322      uint32_t tmpreg = 0;
+;;;323    
+;;;324      /* Check the parameters */
+;;;325      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;326      assert_param(IS_DMA_CHANNEL(DMA_InitStruct->DMA_Channel));
+;;;327      assert_param(IS_DMA_DIRECTION(DMA_InitStruct->DMA_DIR));
+;;;328      assert_param(IS_DMA_BUFFER_SIZE(DMA_InitStruct->DMA_BufferSize));
+;;;329      assert_param(IS_DMA_PERIPHERAL_INC_STATE(DMA_InitStruct->DMA_PeripheralInc));
+;;;330      assert_param(IS_DMA_MEMORY_INC_STATE(DMA_InitStruct->DMA_MemoryInc));
+;;;331      assert_param(IS_DMA_PERIPHERAL_DATA_SIZE(DMA_InitStruct->DMA_PeripheralDataSize));
+;;;332      assert_param(IS_DMA_MEMORY_DATA_SIZE(DMA_InitStruct->DMA_MemoryDataSize));
+;;;333      assert_param(IS_DMA_MODE(DMA_InitStruct->DMA_Mode));
+;;;334      assert_param(IS_DMA_PRIORITY(DMA_InitStruct->DMA_Priority));
+;;;335      assert_param(IS_DMA_FIFO_MODE_STATE(DMA_InitStruct->DMA_FIFOMode));
+;;;336      assert_param(IS_DMA_FIFO_THRESHOLD(DMA_InitStruct->DMA_FIFOThreshold));
+;;;337      assert_param(IS_DMA_MEMORY_BURST(DMA_InitStruct->DMA_MemoryBurst));
+;;;338      assert_param(IS_DMA_PERIPHERAL_BURST(DMA_InitStruct->DMA_PeripheralBurst));
+;;;339    
+;;;340      /*------------------------- DMAy Streamx CR Configuration ------------------*/
+;;;341      /* Get the DMAy_Streamx CR value */
+;;;342      tmpreg = DMAy_Streamx->CR;
 000002  6803              LDR      r3,[r0,#0]
-;;;334    
-;;;335      /* Clear CHSEL, MBURST, PBURST, PL, MSIZE, PSIZE, MINC, PINC, CIRC and DIR bits */
-;;;336      tmpreg &= ((uint32_t)~(DMA_SxCR_CHSEL | DMA_SxCR_MBURST | DMA_SxCR_PBURST | \
+;;;343    
+;;;344      /* Clear CHSEL, MBURST, PBURST, PL, MSIZE, PSIZE, MINC, PINC, CIRC and DIR bits */
+;;;345      tmpreg &= ((uint32_t)~(DMA_SxCR_CHSEL | DMA_SxCR_MBURST | DMA_SxCR_PBURST | \
 000004  4a12              LDR      r2,|L15.80|
-;;;337                             DMA_SxCR_PL | DMA_SxCR_MSIZE | DMA_SxCR_PSIZE | \
-;;;338                             DMA_SxCR_MINC | DMA_SxCR_PINC | DMA_SxCR_CIRC | \
-;;;339                             DMA_SxCR_DIR));
-;;;340    
-;;;341      /* Configure DMAy Streamx: */
-;;;342      /* Set CHSEL bits according to DMA_CHSEL value */
-;;;343      /* Set DIR bits according to DMA_DIR value */
-;;;344      /* Set PINC bit according to DMA_PeripheralInc value */
-;;;345      /* Set MINC bit according to DMA_MemoryInc value */
-;;;346      /* Set PSIZE bits according to DMA_PeripheralDataSize value */
-;;;347      /* Set MSIZE bits according to DMA_MemoryDataSize value */
-;;;348      /* Set CIRC bit according to DMA_Mode value */
-;;;349      /* Set PL bits according to DMA_Priority value */
-;;;350      /* Set MBURST bits according to DMA_MemoryBurst value */
-;;;351      /* Set PBURST bits according to DMA_PeripheralBurst value */
-;;;352      tmpreg |= DMA_InitStruct->DMA_Channel | DMA_InitStruct->DMA_DIR |
+;;;346                             DMA_SxCR_PL | DMA_SxCR_MSIZE | DMA_SxCR_PSIZE | \
+;;;347                             DMA_SxCR_MINC | DMA_SxCR_PINC | DMA_SxCR_CIRC | \
+;;;348                             DMA_SxCR_DIR));
+;;;349    
+;;;350      /* Configure DMAy Streamx: */
+;;;351      /* Set CHSEL bits according to DMA_CHSEL value */
+;;;352      /* Set DIR bits according to DMA_DIR value */
+;;;353      /* Set PINC bit according to DMA_PeripheralInc value */
+;;;354      /* Set MINC bit according to DMA_MemoryInc value */
+;;;355      /* Set PSIZE bits according to DMA_PeripheralDataSize value */
+;;;356      /* Set MSIZE bits according to DMA_MemoryDataSize value */
+;;;357      /* Set CIRC bit according to DMA_Mode value */
+;;;358      /* Set PL bits according to DMA_Priority value */
+;;;359      /* Set MBURST bits according to DMA_MemoryBurst value */
+;;;360      /* Set PBURST bits according to DMA_PeripheralBurst value */
+;;;361      tmpreg |= DMA_InitStruct->DMA_Channel | DMA_InitStruct->DMA_DIR |
 000006  68cc              LDR      r4,[r1,#0xc]
-000008  4013              ANDS     r3,r3,r2              ;336
+000008  4013              ANDS     r3,r3,r2              ;345
 00000a  680a              LDR      r2,[r1,#0]
 00000c  4322              ORRS     r2,r2,r4
 00000e  e9d14505          LDRD     r4,r5,[r1,#0x14]
@@ -1008,56 +1017,56 @@
 00002a  6b8c              LDR      r4,[r1,#0x38]
 00002c  4322              ORRS     r2,r2,r4
 00002e  431a              ORRS     r2,r2,r3
-;;;353                DMA_InitStruct->DMA_PeripheralInc | DMA_InitStruct->DMA_MemoryInc |
-;;;354                DMA_InitStruct->DMA_PeripheralDataSize | DMA_InitStruct->DMA_MemoryDataSize |
-;;;355                DMA_InitStruct->DMA_Mode | DMA_InitStruct->DMA_Priority |
-;;;356                DMA_InitStruct->DMA_MemoryBurst | DMA_InitStruct->DMA_PeripheralBurst;
-;;;357    
-;;;358      /* Write to DMAy Streamx CR register */
-;;;359      DMAy_Streamx->CR = tmpreg;
+;;;362                DMA_InitStruct->DMA_PeripheralInc | DMA_InitStruct->DMA_MemoryInc |
+;;;363                DMA_InitStruct->DMA_PeripheralDataSize | DMA_InitStruct->DMA_MemoryDataSize |
+;;;364                DMA_InitStruct->DMA_Mode | DMA_InitStruct->DMA_Priority |
+;;;365                DMA_InitStruct->DMA_MemoryBurst | DMA_InitStruct->DMA_PeripheralBurst;
+;;;366    
+;;;367      /* Write to DMAy Streamx CR register */
+;;;368      DMAy_Streamx->CR = tmpreg;
 000030  6002              STR      r2,[r0,#0]
-;;;360    
-;;;361      /*------------------------- DMAy Streamx FCR Configuration -----------------*/
-;;;362      /* Get the DMAy_Streamx FCR value */
-;;;363      tmpreg = DMAy_Streamx->FCR;
+;;;369    
+;;;370      /*------------------------- DMAy Streamx FCR Configuration -----------------*/
+;;;371      /* Get the DMAy_Streamx FCR value */
+;;;372      tmpreg = DMAy_Streamx->FCR;
 000032  6942              LDR      r2,[r0,#0x14]
-;;;364    
-;;;365      /* Clear DMDIS and FTH bits */
-;;;366      tmpreg &= (uint32_t)~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
+;;;373    
+;;;374      /* Clear DMDIS and FTH bits */
+;;;375      tmpreg &= (uint32_t)~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
 000034  f0220307          BIC      r3,r2,#7
 000038  e9d1240b          LDRD     r2,r4,[r1,#0x2c]
-;;;367    
-;;;368      /* Configure DMAy Streamx FIFO: 
-;;;369        Set DMDIS bits according to DMA_FIFOMode value 
-;;;370        Set FTH bits according to DMA_FIFOThreshold value */
-;;;371      tmpreg |= DMA_InitStruct->DMA_FIFOMode | DMA_InitStruct->DMA_FIFOThreshold;
+;;;376    
+;;;377      /* Configure DMAy Streamx FIFO: 
+;;;378        Set DMDIS bits according to DMA_FIFOMode value 
+;;;379        Set FTH bits according to DMA_FIFOThreshold value */
+;;;380      tmpreg |= DMA_InitStruct->DMA_FIFOMode | DMA_InitStruct->DMA_FIFOThreshold;
 00003c  4322              ORRS     r2,r2,r4
 00003e  431a              ORRS     r2,r2,r3
-;;;372    
-;;;373      /* Write to DMAy Streamx CR */
-;;;374      DMAy_Streamx->FCR = tmpreg;
+;;;381    
+;;;382      /* Write to DMAy Streamx CR */
+;;;383      DMAy_Streamx->FCR = tmpreg;
 000040  6142              STR      r2,[r0,#0x14]
-;;;375    
-;;;376      /*------------------------- DMAy Streamx NDTR Configuration ----------------*/
-;;;377      /* Write to DMAy Streamx NDTR register */
-;;;378      DMAy_Streamx->NDTR = DMA_InitStruct->DMA_BufferSize;
+;;;384    
+;;;385      /*------------------------- DMAy Streamx NDTR Configuration ----------------*/
+;;;386      /* Write to DMAy Streamx NDTR register */
+;;;387      DMAy_Streamx->NDTR = DMA_InitStruct->DMA_BufferSize;
 000042  690a              LDR      r2,[r1,#0x10]
 000044  6042              STR      r2,[r0,#4]
-;;;379    
-;;;380      /*------------------------- DMAy Streamx PAR Configuration -----------------*/
-;;;381      /* Write to DMAy Streamx PAR */
-;;;382      DMAy_Streamx->PAR = DMA_InitStruct->DMA_PeripheralBaseAddr;
+;;;388    
+;;;389      /*------------------------- DMAy Streamx PAR Configuration -----------------*/
+;;;390      /* Write to DMAy Streamx PAR */
+;;;391      DMAy_Streamx->PAR = DMA_InitStruct->DMA_PeripheralBaseAddr;
 000046  684a              LDR      r2,[r1,#4]
 000048  6082              STR      r2,[r0,#8]
-;;;383    
-;;;384      /*------------------------- DMAy Streamx M0AR Configuration ----------------*/
-;;;385      /* Write to DMAy Streamx M0AR */
-;;;386      DMAy_Streamx->M0AR = DMA_InitStruct->DMA_Memory0BaseAddr;
+;;;392    
+;;;393      /*------------------------- DMAy Streamx M0AR Configuration ----------------*/
+;;;394      /* Write to DMAy Streamx M0AR */
+;;;395      DMAy_Streamx->M0AR = DMA_InitStruct->DMA_Memory0BaseAddr;
 00004a  6889              LDR      r1,[r1,#8]
 00004c  60c1              STR      r1,[r0,#0xc]
-;;;387    }
+;;;396    }
 00004e  bd30              POP      {r4,r5,pc}
-;;;388    
+;;;397    
                           ENDP
 
                   |L15.80|
@@ -1066,160 +1075,160 @@
                           AREA ||i.DMA_MemoryTargetConfig||, CODE, READONLY, ALIGN=1
 
                   DMA_MemoryTargetConfig PROC
-;;;789      */
-;;;790    void DMA_MemoryTargetConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t MemoryBaseAddr,
+;;;798      */
+;;;799    void DMA_MemoryTargetConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t MemoryBaseAddr,
 000000  b10a              CBZ      r2,|L16.6|
-;;;791                               uint32_t DMA_MemoryTarget)
-;;;792    {
-;;;793      /* Check the parameters */
-;;;794      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;795      assert_param(IS_DMA_CURRENT_MEM(DMA_MemoryTarget));
-;;;796        
-;;;797      /* Check the Memory target to be configured */
-;;;798      if (DMA_MemoryTarget != DMA_Memory_0)
-;;;799      {
-;;;800        /* Write to DMAy Streamx M1AR */
-;;;801        DMAy_Streamx->M1AR = MemoryBaseAddr;    
+;;;800                               uint32_t DMA_MemoryTarget)
+;;;801    {
+;;;802      /* Check the parameters */
+;;;803      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;804      assert_param(IS_DMA_CURRENT_MEM(DMA_MemoryTarget));
+;;;805        
+;;;806      /* Check the Memory target to be configured */
+;;;807      if (DMA_MemoryTarget != DMA_Memory_0)
+;;;808      {
+;;;809        /* Write to DMAy Streamx M1AR */
+;;;810        DMAy_Streamx->M1AR = MemoryBaseAddr;    
 000002  6101              STR      r1,[r0,#0x10]
-;;;802      }  
-;;;803      else
-;;;804      {
-;;;805        /* Write to DMAy Streamx M0AR */
-;;;806        DMAy_Streamx->M0AR = MemoryBaseAddr;  
-;;;807      }
-;;;808    }
+;;;811      }  
+;;;812      else
+;;;813      {
+;;;814        /* Write to DMAy Streamx M0AR */
+;;;815        DMAy_Streamx->M0AR = MemoryBaseAddr;  
+;;;816      }
+;;;817    }
 000004  4770              BX       lr
                   |L16.6|
-000006  60c1              STR      r1,[r0,#0xc]          ;806
+000006  60c1              STR      r1,[r0,#0xc]          ;815
 000008  4770              BX       lr
-;;;809    
+;;;818    
                           ENDP
 
 
                           AREA ||i.DMA_PeriphIncOffsetSizeConfig||, CODE, READONLY, ALIGN=1
 
                   DMA_PeriphIncOffsetSizeConfig PROC
-;;;505      */
-;;;506    void DMA_PeriphIncOffsetSizeConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_Pincos)
+;;;514      */
+;;;515    void DMA_PeriphIncOffsetSizeConfig(DMA_Stream_TypeDef* DMAy_Streamx, uint32_t DMA_Pincos)
 000000  2900              CMP      r1,#0
-;;;507    {
-;;;508      /* Check the parameters */
-;;;509      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;510      assert_param(IS_DMA_PINCOS_SIZE(DMA_Pincos));
-;;;511    
-;;;512      /* Check the needed Peripheral increment offset */
-;;;513      if(DMA_Pincos != DMA_PINCOS_Psize)
-;;;514      {
-;;;515        /* Configure DMA_SxCR_PINCOS bit with the input parameter */
-;;;516        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_PINCOS;     
-;;;517      }
-;;;518      else
-;;;519      {
-;;;520        /* Clear the PINCOS bit: Peripheral address incremented according to PSIZE */
-;;;521        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_PINCOS;    
+;;;516    {
+;;;517      /* Check the parameters */
+;;;518      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;519      assert_param(IS_DMA_PINCOS_SIZE(DMA_Pincos));
+;;;520    
+;;;521      /* Check the needed Peripheral increment offset */
+;;;522      if(DMA_Pincos != DMA_PINCOS_Psize)
+;;;523      {
+;;;524        /* Configure DMA_SxCR_PINCOS bit with the input parameter */
+;;;525        DMAy_Streamx->CR |= (uint32_t)DMA_SxCR_PINCOS;     
+;;;526      }
+;;;527      else
+;;;528      {
+;;;529        /* Clear the PINCOS bit: Peripheral address incremented according to PSIZE */
+;;;530        DMAy_Streamx->CR &= ~(uint32_t)DMA_SxCR_PINCOS;    
 000002  6801              LDR      r1,[r0,#0]
 000004  d002              BEQ      |L17.12|
-000006  f4414100          ORR      r1,r1,#0x8000         ;516
+000006  f4414100          ORR      r1,r1,#0x8000         ;525
 00000a  e001              B        |L17.16|
                   |L17.12|
 00000c  f4214100          BIC      r1,r1,#0x8000
                   |L17.16|
-000010  6001              STR      r1,[r0,#0]            ;516
-;;;522      }
-;;;523    }
+000010  6001              STR      r1,[r0,#0]            ;525
+;;;531      }
+;;;532    }
 000012  4770              BX       lr
-;;;524    
+;;;533    
                           ENDP
 
 
                           AREA ||i.DMA_SetCurrDataCounter||, CODE, READONLY, ALIGN=1
 
                   DMA_SetCurrDataCounter PROC
-;;;625      */
-;;;626    void DMA_SetCurrDataCounter(DMA_Stream_TypeDef* DMAy_Streamx, uint16_t Counter)
+;;;634      */
+;;;635    void DMA_SetCurrDataCounter(DMA_Stream_TypeDef* DMAy_Streamx, uint16_t Counter)
 000000  6041              STR      r1,[r0,#4]
-;;;627    {
-;;;628      /* Check the parameters */
-;;;629      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
-;;;630    
-;;;631      /* Write the number of data units to be transferred */
-;;;632      DMAy_Streamx->NDTR = (uint16_t)Counter;
-;;;633    }
+;;;636    {
+;;;637      /* Check the parameters */
+;;;638      assert_param(IS_DMA_ALL_PERIPH(DMAy_Streamx));
+;;;639    
+;;;640      /* Write the number of data units to be transferred */
+;;;641      DMAy_Streamx->NDTR = (uint16_t)Counter;
+;;;642    }
 000002  4770              BX       lr
-;;;634    
+;;;643    
                           ENDP
 
 
                           AREA ||i.DMA_StructInit||, CODE, READONLY, ALIGN=1
 
                   DMA_StructInit PROC
-;;;394      */
-;;;395    void DMA_StructInit(DMA_InitTypeDef* DMA_InitStruct)
+;;;403      */
+;;;404    void DMA_StructInit(DMA_InitTypeDef* DMA_InitStruct)
 000000  2100              MOVS     r1,#0
-;;;396    {
-;;;397      /*-------------- Reset DMA init structure parameters values ----------------*/
-;;;398      /* Initialize the DMA_Channel member */
-;;;399      DMA_InitStruct->DMA_Channel = 0;
-;;;400    
-;;;401      /* Initialize the DMA_PeripheralBaseAddr member */
-;;;402      DMA_InitStruct->DMA_PeripheralBaseAddr = 0;
-000002  6001              STR      r1,[r0,#0]
-;;;403    
-;;;404      /* Initialize the DMA_Memory0BaseAddr member */
-;;;405      DMA_InitStruct->DMA_Memory0BaseAddr = 0;
-000004  6041              STR      r1,[r0,#4]
-;;;406    
-;;;407      /* Initialize the DMA_DIR member */
-;;;408      DMA_InitStruct->DMA_DIR = DMA_DIR_PeripheralToMemory;
-000006  6081              STR      r1,[r0,#8]
+;;;405    {
+;;;406      /*-------------- Reset DMA init structure parameters values ----------------*/
+;;;407      /* Initialize the DMA_Channel member */
+;;;408      DMA_InitStruct->DMA_Channel = 0;
 ;;;409    
-;;;410      /* Initialize the DMA_BufferSize member */
-;;;411      DMA_InitStruct->DMA_BufferSize = 0;
-000008  60c1              STR      r1,[r0,#0xc]
+;;;410      /* Initialize the DMA_PeripheralBaseAddr member */
+;;;411      DMA_InitStruct->DMA_PeripheralBaseAddr = 0;
+000002  6001              STR      r1,[r0,#0]
 ;;;412    
-;;;413      /* Initialize the DMA_PeripheralInc member */
-;;;414      DMA_InitStruct->DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-00000a  6101              STR      r1,[r0,#0x10]
+;;;413      /* Initialize the DMA_Memory0BaseAddr member */
+;;;414      DMA_InitStruct->DMA_Memory0BaseAddr = 0;
+000004  6041              STR      r1,[r0,#4]
 ;;;415    
-;;;416      /* Initialize the DMA_MemoryInc member */
-;;;417      DMA_InitStruct->DMA_MemoryInc = DMA_MemoryInc_Disable;
-00000c  6141              STR      r1,[r0,#0x14]
+;;;416      /* Initialize the DMA_DIR member */
+;;;417      DMA_InitStruct->DMA_DIR = DMA_DIR_PeripheralToMemory;
+000006  6081              STR      r1,[r0,#8]
 ;;;418    
-;;;419      /* Initialize the DMA_PeripheralDataSize member */
-;;;420      DMA_InitStruct->DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-00000e  6181              STR      r1,[r0,#0x18]
+;;;419      /* Initialize the DMA_BufferSize member */
+;;;420      DMA_InitStruct->DMA_BufferSize = 0;
+000008  60c1              STR      r1,[r0,#0xc]
 ;;;421    
-;;;422      /* Initialize the DMA_MemoryDataSize member */
-;;;423      DMA_InitStruct->DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-000010  61c1              STR      r1,[r0,#0x1c]
+;;;422      /* Initialize the DMA_PeripheralInc member */
+;;;423      DMA_InitStruct->DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+00000a  6101              STR      r1,[r0,#0x10]
 ;;;424    
-;;;425      /* Initialize the DMA_Mode member */
-;;;426      DMA_InitStruct->DMA_Mode = DMA_Mode_Normal;
-000012  6201              STR      r1,[r0,#0x20]
+;;;425      /* Initialize the DMA_MemoryInc member */
+;;;426      DMA_InitStruct->DMA_MemoryInc = DMA_MemoryInc_Disable;
+00000c  6141              STR      r1,[r0,#0x14]
 ;;;427    
-;;;428      /* Initialize the DMA_Priority member */
-;;;429      DMA_InitStruct->DMA_Priority = DMA_Priority_Low;
-000014  6241              STR      r1,[r0,#0x24]
+;;;428      /* Initialize the DMA_PeripheralDataSize member */
+;;;429      DMA_InitStruct->DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+00000e  6181              STR      r1,[r0,#0x18]
 ;;;430    
-;;;431      /* Initialize the DMA_FIFOMode member */
-;;;432      DMA_InitStruct->DMA_FIFOMode = DMA_FIFOMode_Disable;
-000016  6281              STR      r1,[r0,#0x28]
+;;;431      /* Initialize the DMA_MemoryDataSize member */
+;;;432      DMA_InitStruct->DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+000010  61c1              STR      r1,[r0,#0x1c]
 ;;;433    
-;;;434      /* Initialize the DMA_FIFOThreshold member */
-;;;435      DMA_InitStruct->DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
-000018  62c1              STR      r1,[r0,#0x2c]
+;;;434      /* Initialize the DMA_Mode member */
+;;;435      DMA_InitStruct->DMA_Mode = DMA_Mode_Normal;
+000012  6201              STR      r1,[r0,#0x20]
 ;;;436    
-;;;437      /* Initialize the DMA_MemoryBurst member */
-;;;438      DMA_InitStruct->DMA_MemoryBurst = DMA_MemoryBurst_Single;
-00001a  6301              STR      r1,[r0,#0x30]
+;;;437      /* Initialize the DMA_Priority member */
+;;;438      DMA_InitStruct->DMA_Priority = DMA_Priority_Low;
+000014  6241              STR      r1,[r0,#0x24]
 ;;;439    
-;;;440      /* Initialize the DMA_PeripheralBurst member */
-;;;441      DMA_InitStruct->DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+;;;440      /* Initialize the DMA_FIFOMode member */
+;;;441      DMA_InitStruct->DMA_FIFOMode = DMA_FIFOMode_Disable;
+000016  6281              STR      r1,[r0,#0x28]
+;;;442    
+;;;443      /* Initialize the DMA_FIFOThreshold member */
+;;;444      DMA_InitStruct->DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
+000018  62c1              STR      r1,[r0,#0x2c]
+;;;445    
+;;;446      /* Initialize the DMA_MemoryBurst member */
+;;;447      DMA_InitStruct->DMA_MemoryBurst = DMA_MemoryBurst_Single;
+00001a  6301              STR      r1,[r0,#0x30]
+;;;448    
+;;;449      /* Initialize the DMA_PeripheralBurst member */
+;;;450      DMA_InitStruct->DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
 00001c  6341              STR      r1,[r0,#0x34]
 00001e  6381              STR      r1,[r0,#0x38]
-;;;442    }
+;;;451    }
 000020  4770              BX       lr
-;;;443    
+;;;452    
                           ENDP
 
 
