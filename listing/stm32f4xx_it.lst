@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37439,6 +37439,10 @@ S
 N#endif
 L 29 "src\stm32f4xx_it.c" 2
 N
+N
+Nu16	kol_rele_on=0;
+Nu16	kol_rele_off=0;
+N
 NTDateTime DT1;
 N		
 N
@@ -37672,7 +37676,7 @@ N					return tk->fz[i-1];
 N  	}	
 N    
 N		return tk->fz[9];		
-W "src\stm32f4xx_it.c" 183 14 variable "tab" was declared but never referenced
+W "src\stm32f4xx_it.c" 187 14 variable "tab" was declared but never referenced
 N}
 N
 N
@@ -37704,9 +37708,33 @@ N		return  tmp;
 N	}
 N}
 N
-Nu8 test_rele(u16 kod, u8 numb)
+Nu8 test_rele(u16 fz, u8 numb)
 N{
-Nreturn 0;
+N	extern st_conf conf;
+N	
+N	if (fz>conf.por_rele)
+N			kol_rele_on++;			
+N	else
+N			kol_rele_off++;
+N		
+N	if (kol_rele_on>=conf.tm_rele_on)
+N	{
+N		kol_rele_on=0;
+N		kol_rele_off=0;
+N		avariya=1;
+N		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x8000);	
+N	}
+N	
+N	if (kol_rele_off>=conf.tm_rele_off)
+N	{
+N		kol_rele_on=0;
+N		kol_rele_off=0;
+N		avariya=0;
+N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);  	
+N	}
+W "src\stm32f4xx_it.c" 311 1 missing return statement at end of non-void function "test_rele"
 N}
 N
 N/**
@@ -37881,12 +37909,12 @@ N// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 
 N	 // dop usrednenie na vivod indicatorov???
-W "src\stm32f4xx_it.c" 448 3 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 473 3 function "indicate" declared implicitly
 N	 indicate(1,(u16)(max[0]/10),3);   																// maximum
-W "src\stm32f4xx_it.c" 449 3 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 474 3 function "indicate_lin" declared implicitly
 N	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
-W "src\stm32f4xx_it.c" 451 3 function "indicate_time" declared implicitly
+W "src\stm32f4xx_it.c" 476 3 function "indicate_time" declared implicitly
 N	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
 N	 }		 
 N		
@@ -38136,10 +38164,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 591 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 591 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 592 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 593 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 616 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 616 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 617 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 618 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38561,7 +38589,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 1033 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 1058 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

@@ -4,7 +4,7 @@
 .\MEDIA_USB_KEY\ff.o: .\inc\usb_conf.h
 .\MEDIA_USB_KEY\ff.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -37,7 +37,7 @@
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_usart.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32F4xx_StdPeriph_Driver\misc.h
-.\MEDIA_USB_KEY\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\MEDIA_USB_KEY\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\MEDIA_USB_KEY\ff.o: Utilities\Third_Party\fat_fs\ffconf.h
 .\MEDIA_USB_KEY\ff.o: Utilities\Third_Party\fat_fs\diskio.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
@@ -56,4 +56,4 @@
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_core.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.h
 .\MEDIA_USB_KEY\ff.o: .\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h
-.\MEDIA_USB_KEY\ff.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h
+.\MEDIA_USB_KEY\ff.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h

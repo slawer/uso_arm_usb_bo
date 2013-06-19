@@ -126,6 +126,8 @@ void rtc_Reset(void)
 // Инициализация модуля
 void rtc_Init(void)
 {
+		u32 tmp=0;
+	
 	  GPIO_InitTypeDef      GPIO_InitStructure;
 	
     // Если часы запущены, делать тут нечего.
@@ -138,6 +140,7 @@ void rtc_Init(void)
     PWR->CR |= PWR_CR_DBP;
    
 /*
+	//  Кварц MC306-G-06Q-32.768 (JFVNY)
 	 //  start LSE
 		RCC->BDCR |= RCC_BDCR_LSEON;
 		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
@@ -151,6 +154,104 @@ void rtc_Init(void)
 		
 		   // Включим тактирование RTC
     RCC->BDCR |= RCC_BDCR_RTCEN;
+*/
+ 
+/* RTC configuration set 
+PWR->CR |= (1<<8);	 // Access to RTC and RTC backup registers and backup SRAM enabled
+RCC->CSR &= (1<<0);	 // LSI Off
+RCC->BDCR = 0x00000000;	 // Reset BDCR register
+RCC->BDCR |= (1<<15);	 // RTC clock enable
+RCC->BDCR |= (1<<0);	 // LSE On
+RCC->BDCR &= ~(1<<2);	 // LSE not bypassed quartz On
+RCC->BDCR &= ~(1<<16);	 // Backup domain software reset not activated
+RCC->BDCR |= (0x1<<8);	 // LSE used as the RTC clock
+RTC->WPR = 0x000000CA;	 // Key protect 1
+RTC->WPR = 0x00000053;	 // Key protect 2
+RTC->ISR |= (1<<7);	 // Initialization mode On
+for(;((RTC->ISR & 0x40) == 0x00);)	// delay while initialization flag will be set
+{
+}
+*/	
+	/* 
+	JFVNY MC306G06 6 50000 32768 2 9.3
+	PC14/OSC32_IN   (PC14)
+	PC15/OSC32_OUT (PC15)
+	PB2/BOOT1    (PB2)
+*/
+
+
+/*
+	//     push pull out  in kvarc
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14|GPIO_Pin_15;      		  //  vvod  knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    										// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
+	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+
+	for(tmp=0;tmp<10000;tmp++)	// delay while initialization flag will be set
+	{ __ASM volatile ("nop"); 	}
+
+//	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
+	GPIOA->BSRRL = GPIO_Pin_14;
+//	GPIOA->BSRRL = GPIO_Pin_15;
+	GPIOB->BSRRL = GPIO_Pin_2;
+	
+	for(tmp=0;tmp<1000000;tmp++)	
+	{ __ASM volatile ("nop"); 	}
+	
+//     analog in kvarc
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14|GPIO_Pin_15;      		  //  vvod  knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN;    										// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;  										//GPIO_OType_PP		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
+	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+
+		 //  start LSE
+		RCC->BDCR |= RCC_BDCR_LSEON;
+		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
+			
+		while (!(RCC->BDCR & RCC_BDCR_LSERDY)) ;
+		
+		RCC->BDCR |=  RCC_BDCR_BDRST;
+    RCC->BDCR &= ~RCC_BDCR_BDRST;
+		
+	// Выберем его как источник тактирования RTC:
+    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
+		
+		   // Включим тактирование RTC
+    RCC->BDCR |= RCC_BDCR_RTCEN;
+*/
+			
+			
+/*	
+
+Попробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
+	GPIOC->CRH |= GPIO_CRH_MODE14_1 |GPIO_CRH_MODE15_1; // Out 2 MHZ
+	GPIOC->CRH &= ~(GPIO_CRH_CNF14|GPIO_CRH_CNF15); // PUSH pull
+	Delay();
+	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
+	Delay();
+	GPIOC->CRH &= ~(GPIO_CRH_MODE14_1|GPIO_CRH_MODE15_1); // Analog IN 
+	RCC->BDCR |= RCC_BDCR_LSEON;
+
+KX-38 32.768 kHz 6pF,
+		32.768kHz crystal, with 6pF CL and 50kOhm ESR. 
+		a 15MOhm parallel resistor.
+if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+{
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // Enable PWR clock 
+ 
+ //   PWR_BackupAccessCmd(ENABLE); // Allow access to BKP Domain 
+		 RCC->CSR = RCC_CSR_LSION;
+    RCC_LSEConfig(RCC_LSE_ON); // Enable the LSE oscillator 
+ 
+    while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) // Wait till LSE is ready
+		{
+		 __ASM volatile ("nop");   
+		}
+}
 */
 
     // Запускаем LSI:

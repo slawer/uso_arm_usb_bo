@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29152,7 +29152,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -30063,6 +30063,8 @@ N
 N// Инициализация модуля
 Nvoid rtc_Init(void)
 N{
+N		u32 tmp=0;
+N	
 N	  GPIO_InitTypeDef      GPIO_InitStructure;
 N	
 N    // Если часы запущены, делать тут нечего.
@@ -30078,6 +30080,7 @@ N    PWR->CR |= PWR_CR_DBP;
 X    ((PWR_TypeDef *) (((uint32_t)0x40000000) + 0x7000))->CR |= ((uint16_t)0x0100);
 N   
 N/*
+N	//  Кварц MC306-G-06Q-32.768 (JFVNY)
 N	 //  start LSE
 N		RCC->BDCR |= RCC_BDCR_LSEON;
 N		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
@@ -30091,6 +30094,104 @@ N    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
 N		
 N		   // Включим тактирование RTC
 N    RCC->BDCR |= RCC_BDCR_RTCEN;
+N*/
+N 
+N/* RTC configuration set 
+NPWR->CR |= (1<<8);	 // Access to RTC and RTC backup registers and backup SRAM enabled
+NRCC->CSR &= (1<<0);	 // LSI Off
+NRCC->BDCR = 0x00000000;	 // Reset BDCR register
+NRCC->BDCR |= (1<<15);	 // RTC clock enable
+NRCC->BDCR |= (1<<0);	 // LSE On
+NRCC->BDCR &= ~(1<<2);	 // LSE not bypassed quartz On
+NRCC->BDCR &= ~(1<<16);	 // Backup domain software reset not activated
+NRCC->BDCR |= (0x1<<8);	 // LSE used as the RTC clock
+NRTC->WPR = 0x000000CA;	 // Key protect 1
+NRTC->WPR = 0x00000053;	 // Key protect 2
+NRTC->ISR |= (1<<7);	 // Initialization mode On
+Nfor(;((RTC->ISR & 0x40) == 0x00);)	// delay while initialization flag will be set
+N{
+N}
+N*/	
+N	/* 
+N	JFVNY MC306G06 6 50000 32768 2 9.3
+N	PC14/OSC32_IN   (PC14)
+N	PC15/OSC32_OUT (PC15)
+N	PB2/BOOT1    (PB2)
+N*/
+N
+N
+N/*
+N	//     push pull out  in kvarc
+N	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14|GPIO_Pin_15;      		  //  vvod  knopka 1
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    										// 	rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
+N	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+N
+N	for(tmp=0;tmp<10000;tmp++)	// delay while initialization flag will be set
+N	{ __ASM volatile ("nop"); 	}
+N
+N//	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
+N	GPIOA->BSRRL = GPIO_Pin_14;
+N//	GPIOA->BSRRL = GPIO_Pin_15;
+N	GPIOB->BSRRL = GPIO_Pin_2;
+N	
+N	for(tmp=0;tmp<1000000;tmp++)	
+N	{ __ASM volatile ("nop"); 	}
+N	
+N//     analog in kvarc
+N	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14|GPIO_Pin_15;      		  //  vvod  knopka 1
+N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN;    										// 	rezim vivoda
+N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;  										//GPIO_OType_PP		//
+N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
+N	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+N
+N		 //  start LSE
+N		RCC->BDCR |= RCC_BDCR_LSEON;
+N		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
+N			
+N		while (!(RCC->BDCR & RCC_BDCR_LSERDY)) ;
+N		
+N		RCC->BDCR |=  RCC_BDCR_BDRST;
+N    RCC->BDCR &= ~RCC_BDCR_BDRST;
+N		
+N	// Выберем его как источник тактирования RTC:
+N    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+N    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
+N		
+N		   // Включим тактирование RTC
+N    RCC->BDCR |= RCC_BDCR_RTCEN;
+N*/
+N			
+N			
+N/*	
+N
+NПопробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
+N	GPIOC->CRH |= GPIO_CRH_MODE14_1 |GPIO_CRH_MODE15_1; // Out 2 MHZ
+N	GPIOC->CRH &= ~(GPIO_CRH_CNF14|GPIO_CRH_CNF15); // PUSH pull
+N	Delay();
+N	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
+N	Delay();
+N	GPIOC->CRH &= ~(GPIO_CRH_MODE14_1|GPIO_CRH_MODE15_1); // Analog IN 
+N	RCC->BDCR |= RCC_BDCR_LSEON;
+N
+NKX-38 32.768 kHz 6pF,
+N		32.768kHz crystal, with 6pF CL and 50kOhm ESR. 
+N		a 15MOhm parallel resistor.
+Nif (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+N{
+N
+N    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // Enable PWR clock 
+N 
+N //   PWR_BackupAccessCmd(ENABLE); // Allow access to BKP Domain 
+N		 RCC->CSR = RCC_CSR_LSION;
+N    RCC_LSEConfig(RCC_LSE_ON); // Enable the LSE oscillator 
+N 
+N    while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) // Wait till LSE is ready
+N		{
+N		 __ASM volatile ("nop");   
+N		}
+N}
 N*/
 N
 N    // Запускаем LSI:
@@ -30451,8 +30552,8 @@ N	conf.gr_kal2.tabl2.fz[9]=32;
 N	
 N*/
 N	
-W "src\rtc.c" 258 11 variable "i1" was declared but never referenced
-W "src\rtc.c" 258 17 variable "errorindex" was declared but never referenced
+W "src\rtc.c" 359 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 359 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");
@@ -30631,6 +30732,7 @@ N
 N	
 N	*/
 N	
+W "src\rtc.c" 129 7 variable "tmp" was declared but never referenced
 N}
 N
 N// Получить текущее время

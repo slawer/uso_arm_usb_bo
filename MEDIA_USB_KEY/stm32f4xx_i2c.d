@@ -2,7 +2,7 @@
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_i2c.h
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\stm32f4xx_i2c.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\stm32f4xx_i2c.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\stm32f4xx_i2c.o: .\Libraries\CMSIS\core_cm4_simd.h

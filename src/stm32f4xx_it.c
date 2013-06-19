@@ -27,6 +27,10 @@
 #include "my.h"
 #include "rtc.h"
 
+
+u16	kol_rele_on=0;
+u16	kol_rele_off=0;
+
 TDateTime DT1;
 		
 
@@ -280,9 +284,30 @@ u16 moving_average(u16 kod, u8 numb)
 	}
 }
 
-u8 test_rele(u16 kod, u8 numb)
+u8 test_rele(u16 fz, u8 numb)
 {
-return 0;
+	extern st_conf conf;
+	
+	if (fz>conf.por_rele)
+			kol_rele_on++;			
+	else
+			kol_rele_off++;
+		
+	if (kol_rele_on>=conf.tm_rele_on)
+	{
+		kol_rele_on=0;
+		kol_rele_off=0;
+		avariya=1;
+		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA
+	}
+	
+	if (kol_rele_off>=conf.tm_rele_off)
+	{
+		kol_rele_on=0;
+		kol_rele_off=0;
+		avariya=0;
+		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+	}
 }
 
 /**
