@@ -30,6 +30,8 @@
 
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
+u16 time_max=0;
+u8 tk_null=0;
 
 TDateTime DT1;
 		
@@ -226,11 +228,13 @@ u16 fiz_vel(u16 kod, st_tab_kal* tk)
   sost_pribl	
 	tk
 	*/
+		tk_null=0;
 		for (i = 1; i < 10; i += 1)
 			if (tk->kod[i]==0) 
 					nul++;	
 	  if (nul==9)
-				return kod;
+		{		tk_null=1;
+				return kod; }
 		
 		if (kod<tk->kod[0])
         return tk->fz[0];
@@ -427,9 +431,16 @@ void SysTick_Handler(void)
 	
 	// находим среднее значение по скользящей средней
 		fz_average[0]=moving_average(fz[0],0);
-		
+
+		// time max
+		if (time_max>=conf.time_max) {
+				max[0]=0;
+				time_max=0;  }
+		time_max++;
+		// detect max
 		if (fz_average[0]>max[0])
 			max[0]=fz_average[0];
+
 		
 		if (number_buff)
 			Buf_adc_zap2[por++]=por; //fz_average[0];			
@@ -468,13 +479,40 @@ void SysTick_Handler(void)
 	 
 // indicate_lin(0,(u16)fz_average[0], 4096);
 // indicate(1,(u16)(fz_average[0]/10));
-	 
-	 // dop usrednenie na vivod indicatorov???
-	 indicate(1,(u16)(max[0]/10),3);   																// maximum
-	 indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
-	 indicate(3,(u16)(fz_average[0]/10),3);														// tek
-	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
-	 }		 
+	 if (tk_null==1)
+	 {
+		 indicate_err(1);   	// tek
+		 indicate_err(2);			// lineika 
+		 indicate_err(3);			// maximum
+	//	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time	
+	 }
+	 else
+	 {		
+	 if ((avariya==1)&((tick%2)==0))
+	 {
+			ind_blank_all();   	
+		}
+		else
+		{
+		 // dop usrednenie na vivod indicatorov???
+		 indicate(1,(u16)(u16)(fz_average[0]),3);   																// tek
+
+			if (conf.tek_gr_kal==0)
+					if (sost_pribl==0)
+						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+					else
+						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+			else
+					if (sost_pribl==0)
+						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
+					else
+						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
+		 
+		 indicate(3,(u16)(max[0]),3);														// maximum
+		 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
+		}
+	 }	
+ }	 
 		
 	if ((tick%60)==0)
 	{

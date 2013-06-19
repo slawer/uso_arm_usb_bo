@@ -3,7 +3,7 @@
 .\MEDIA_USB_KEY\usb_hcd.o: .\inc\usb_conf.h
 .\MEDIA_USB_KEY\usb_hcd.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\usb_hcd.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\usb_hcd.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\usb_hcd.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\usb_hcd.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\usb_hcd.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\usb_hcd.o: .\Libraries\CMSIS\core_cm4_simd.h

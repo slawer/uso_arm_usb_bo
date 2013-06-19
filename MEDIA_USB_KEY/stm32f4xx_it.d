@@ -2,7 +2,7 @@
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\main.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\CMSIS\core_cm4_simd.h
@@ -38,7 +38,7 @@
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery_audio_codec.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.h
-.\MEDIA_USB_KEY\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
+.\MEDIA_USB_KEY\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\stm32f4xx_it.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\waveplayer.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\main.h
@@ -53,7 +53,7 @@
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\inc\usbh_usr.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\ff.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\integer.h
-.\MEDIA_USB_KEY\stm32f4xx_it.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\MEDIA_USB_KEY\stm32f4xx_it.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Utilities\Third_Party\fat_fs\ffconf.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_core.h
 .\MEDIA_USB_KEY\stm32f4xx_it.o: .\Libraries\STM32_USB_HOST_Library\usbh_def.h

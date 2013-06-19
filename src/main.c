@@ -24,6 +24,7 @@
 u8 in=0, poz=0;
 		u32 tmp=0;
 		u8 kol=0;
+		float fl_tmp=0;
 		
 u32  zad_spi=10000,zad_spi2=100000;
 
@@ -533,10 +534,13 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 		uint16_t  pin=0;
 		const u8 tabl[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
 		u8 viv=0;
+		
 //		u16  zad_spi=1000,zad_spi2=10000;
 
 	 tmp=(u32) (max_kol_st*zn);
-	 kol=(u8) (tmp/maks);
+	fl_tmp=(float) ((float)zn/(float)maks*(float)max_kol_st);
+	fl_tmp+=0.5;
+	 kol=(u8) (fl_tmp);
 
 	
 /*
@@ -566,7 +570,7 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 	  pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
-		if (kol>max_kol_st)
+		if ((kol>max_kol_st)|(zn>=maks))
 		{
 			if (max_kol_st==28)
 			{
@@ -928,6 +932,65 @@ void test_lin(void)
 }
 */
 
+void indicate_err(u8 numb_ind)
+{
+			uint16_t  pin=0;
+			u8 i=0;
+	
+			pin=pin_ind(numb_ind);
+			if (pin==0)
+				return;
+			
+			for (i=1;i<9;i++)
+			{
+				// error
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);
+				spi_send((u8) i);					delay_spi(zad_spi);
+				spi_send(0x01);					  delay_spi(zad_spi);			
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
+			}	
+}
+
+void ind_blank_all(void)
+{
+		u8 i=0,ind=0;
+
+			for (i=1;i<9;i++)
+			{
+				// blank all
+				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_RESET);      delay_spi(zad_spi);
+				spi_send((u8) i);					delay_spi(zad_spi);
+				spi_send(0x00);					  delay_spi(zad_spi);			
+				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);      		delay_spi(zad_spi2);
+			}
+			
+			for (i=1;i<9;i++)
+			{
+				// blank all
+				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_RESET);      delay_spi(zad_spi);
+				spi_send((u8) i);					delay_spi(zad_spi);
+				spi_send(0x00);					  delay_spi(zad_spi);			
+				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET);      		delay_spi(zad_spi2);
+			}
+
+			for (i=1;i<9;i++)
+			{
+				// blank all
+				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_RESET);      delay_spi(zad_spi);
+				spi_send((u8) i);					delay_spi(zad_spi);
+				spi_send(0x00);					  delay_spi(zad_spi);			
+				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_SET);      		delay_spi(zad_spi2);
+			}
+			
+			for (i=1;i<9;i++)
+			{
+				// blank all
+				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET);      delay_spi(zad_spi);
+				spi_send((u8) i);					delay_spi(zad_spi);
+				spi_send(0x00);					  delay_spi(zad_spi);			
+				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET);      		delay_spi(zad_spi2);
+			}			
+}
 void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 {
 			uint16_t  pin=0;
@@ -1285,12 +1348,21 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 				return ;
 			}	
 
+			
 	//		for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
 			for (i=kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
+			/*
+			zn[0]=0;
+			zn[1]=1;
+			zn[2]=2;
+			zn[3]=3;
+			zn[4]=4;
+			zn[5]=5;
+*/
 
 	//		for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
 			for (i=1;i<kol_cifr+1;i++)
@@ -1313,6 +1385,9 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
 						spi_send((u8) i);delay_spi(zad_spi);
 						spi_send(simb); delay_spi(zad_spi);			
+				//		spi_send(symb_code[i]); delay_spi(zad_spi);	
+								//  indicators
+								//   12.3
 						GPIO_WriteBit(GPIOA, pin, Bit_SET);    			delay_spi(zad_spi2);				
 			}
 }
