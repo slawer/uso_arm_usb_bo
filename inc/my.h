@@ -190,4 +190,4 @@ extern u8 avariya;
 extern u8 sost_flesh;
 
 
-
+#define LSE 1

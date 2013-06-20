@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37393,7 +37393,7 @@ Nextern u8 avariya;
 Nextern u8 sost_flesh;
 N
 N
-N
+N#define LSE 1
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1
@@ -38264,7 +38264,7 @@ N			TxBuffer[20]=0x20;
 N			
 N			
 N			// zn from adc with calibr and averaging
-N			tmp=ADC3ConvertedValue%1000;
+N			tmp=ADC3ConvertedValue%10000;
 N			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -38274,7 +38274,7 @@ N			tmp%=10;
 N			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
 N			TxBuffer[25]=0x20;		
 N			
-N			tmp=fz_average[0]%1000;
+N			tmp=fz_average[0]%10000;
 N			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -38284,7 +38284,7 @@ N			tmp%=10;
 N			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
 N			TxBuffer[30]=0x20;
 N			
-N			tmp=max[0]%1000;
+N			tmp=max[0]%10000;
 N			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;

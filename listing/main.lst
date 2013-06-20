@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37429,7 +37429,7 @@ Nextern u8 avariya;
 Nextern u8 sost_flesh;
 N
 N
-N
+N#define LSE 1
 L 59 "src\main.c" 2
 N#include "my_def_ext.h"
 L 1 ".\inc\my_def_ext.h" 1
@@ -37599,6 +37599,8 @@ Nu16 kol_gr2_vkl=0;
 N
 Nu8 avariya=0;
 Nu8 sost_flesh=0;
+N
+N
 N
 N
 N
@@ -39411,7 +39413,7 @@ N  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicator
 N	*/
 N	test_ind_all(1);
 N	
-N	for (i = 0; i < 100; i ++)
+N	for (i = 0; i < 50; i ++)
 N		delay_spi(1000000);
 N	test_ind_all(0);
 N	init_ind(1, 8, 0);
