@@ -490,7 +490,10 @@ void SysTick_Handler(void)
 	 {		
 	 if ((avariya==1)&((tick%2)==0))
 	 {
-			ind_blank_all();   	
+			ind_blank_all(1); 
+			ind_blank_all(2); 
+			ind_blank_all(3); 
+	//		ind_blank_all(4); 		 
 		}
 		else
 		{
@@ -509,7 +512,11 @@ void SysTick_Handler(void)
 						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
 		 
 		 indicate(3,(u16)(max[0]),3);														// maximum
-		 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
+		
+			if ((tick%2)==0)
+				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+			else
+				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	
 		}
 	 }	
  }	 
@@ -781,7 +788,7 @@ if (1)
 			
 			
 			// zn from adc with calibr and averaging
-			tmp=ADC3ConvertedValue;
+			tmp=ADC3ConvertedValue%1000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -791,7 +798,7 @@ if (1)
 			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
 			TxBuffer[25]=0x20;		
 			
-			tmp=fz_average[0];
+			tmp=fz_average[0]%1000;
 			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -801,7 +808,7 @@ if (1)
 			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
 			TxBuffer[30]=0x20;
 			
-			tmp=max[0];
+			tmp=max[0]%1000;
 			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;

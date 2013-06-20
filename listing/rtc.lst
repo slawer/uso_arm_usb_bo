@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29152,7 +29152,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -30145,12 +30145,9 @@ N	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN;    										// 	rezim vivoda
 N	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;  										//GPIO_OType_PP		//
 N	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
 N	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+N*/
 N
-N		 //  start LSE
-N		RCC->BDCR |= RCC_BDCR_LSEON;
-N		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
-N			
-N		while (!(RCC->BDCR & RCC_BDCR_LSERDY)) ;
+N /*
 N		
 N		RCC->BDCR |=  RCC_BDCR_BDRST;
 N    RCC->BDCR &= ~RCC_BDCR_BDRST;
@@ -30161,9 +30158,7 @@ N    RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
 N		
 N		   // Включим тактирование RTC
 N    RCC->BDCR |= RCC_BDCR_RTCEN;
-N*/
-N			
-N			
+N	*/	
 N/*	
 N
 NПопробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
@@ -30193,8 +30188,42 @@ N		 __ASM volatile ("nop");
 N		}
 N}
 N*/
-N
+N/*
 N    // Запускаем LSI:
+N    RCC->CSR |= RCC_CSR_LSION;
+N    
+N    // Ждём, когда он заведётся
+N    while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
+N    
+N    // Ок, генератор на 32 кГц завёлся.
+N    
+N    // Сбросим состояние энергонезависимого домена
+N    RCC->BDCR |=  RCC_BDCR_BDRST;
+N    RCC->BDCR &= ~RCC_BDCR_BDRST;
+N    
+N    // Выберем его как источник тактирования RTC:
+N    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+N    RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
+N      
+N    // Включим тактирование RTC
+N    RCC->BDCR |= RCC_BDCR_RTCEN;
+N */
+N
+N/*
+N● Access to the backup SRAM
+N1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
+Nperipheral clock enable register (RCC_APB1ENR)
+N2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
+Nbackup domain
+N3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
+Nperipheral clock register (RCC_AHB1ENR)
+N
+Nuint8_t *BKPRam = (uint8_t *)0x40024000;
+N
+N
+N*/	
+N
+N   // Запускаем LSI:
 N    RCC->CSR |= RCC_CSR_LSION;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR |= ((uint32_t)0x00000001);
 N    
@@ -30219,73 +30248,34 @@ N
 N    // Включим тактирование RTC
 N    RCC->BDCR |= RCC_BDCR_RTCEN;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00008000);
-N 
-N
+N			
 N/*
-N● Access to the backup SRAM
-N1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
-Nperipheral clock enable register (RCC_APB1ENR)
-N2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
-Nbackup domain
-N3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
-Nperipheral clock register (RCC_AHB1ENR)
-N
-Nuint8_t *BKPRam = (uint8_t *)0x40024000;
-N
-N
-N*/			
-N    // Снимем защиту от записи с регистров RTC
-N    rtc_Unlock();
-N    {
-N        // Здесь можем менять регистры RTC
-N
+N		 //  start LSE
+N		 RCC->BDCR |= RCC_BDCR_LSEON;
+N		 while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}			
+N		 while (!(RCC->BDCR & RCC_BDCR_LSERDY)) {}			
+N		 RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
+N			
+N      // Снимем защиту от записи с регистров RTC
+N      rtc_Unlock();
 N        // Войдём в режим инициализации:
-N        RTC->ISR |= RTC_ISR_INIT;
-X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= ((uint32_t)0x00000080);
-N        
-N        // Ждём, когда это произойдёт
-N
-N
-N
+N      RTC->ISR |= RTC_ISR_INIT;
 N			while(!(RTC->ISR & RTC_ISR_INITF)) {}
-X			while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
-N        
-N        // Часы остановлены. Режим инициализации
-N        // Настроим предделитель для получения частоты 1 Гц.
-N        
-N        // LSI: 
-N        // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-N        {  //  32768Hz, а нам нужны
-N            uint32_t Sync = 263;   // 15 бит
-N            uint32_t Async =127;  // 7 бит
-N            
-N            // Сначала записываем величину для синхронного предделителя
-N            RTC->PRER = Sync;
-X            ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = Sync;
-N            
-N            // Теперь добавим для асинхронного предделителя
-N            RTC->PRER =Sync | (Async << 16);
-X            ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER =Sync | (Async << 16);
-N					
-N			//		RTC->PRER = 0x00000000; // RESET PRER register
-N			//		RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
-N			//		RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-N        }
-N        
+N
+N					RTC->PRER = 0x00000000; // RESET PRER register
+N					RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
+N					RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
+N     */          
 N        // Устанавливаем дату: 30.05.13, пятница
-N //       rtc_SetDate(2, 6, 13, 7);
-N        
+N				//       rtc_SetDate(2, 6, 13, 7);       
 N        // Устанавливаем время: 15:00:00
-N  //      rtc_SetTime(0, 0, 00);
-N        
+N				//      rtc_SetTime(0, 0, 00);       
 N        // Переведём часы в 24-часовой формат
-N        RTC->CR |= RTC_CR_FMT;
-X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR |= ((uint32_t)0x00000040);
-N        
+N        RTC->CR |= RTC_CR_FMT;        
+X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->CR |= ((uint32_t)0x00000040);        
 N        // Инициализация закончилась
-N        RTC->ISR &= ~RTC_ISR_INIT;
-X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~((uint32_t)0x00000080);
-N    }   
+N        RTC->ISR &= ~RTC_ISR_INIT;   
+X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR &= ~((uint32_t)0x00000080);   
 N    rtc_Lock();
 N		
 N		// Allow access to BKP Domain 
@@ -30552,8 +30542,8 @@ N	conf.gr_kal2.tabl2.fz[9]=32;
 N	
 N*/
 N	
-W "src\rtc.c" 359 11 variable "i1" was declared but never referenced
-W "src\rtc.c" 359 17 variable "errorindex" was declared but never referenced
+W "src\rtc.c" 353 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 353 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");

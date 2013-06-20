@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37931,17 +37931,20 @@ N	 {
 N	 if ((avariya==1)&((tick%2)==0))
 N	 {
 W "src\stm32f4xx_it.c" 493 4 function "ind_blank_all" declared implicitly
-N			ind_blank_all();   	
+N			ind_blank_all(1); 
+N			ind_blank_all(2); 
+N			ind_blank_all(3); 
+N	//		ind_blank_all(4); 		 
 N		}
 N		else
 N		{
 N		 // dop usrednenie na vivod indicatorov???
-W "src\stm32f4xx_it.c" 498 4 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 501 4 function "indicate" declared implicitly
 N		 indicate(1,(u16)(u16)(fz_average[0]),3);   																// tek
 N
 N			if (conf.tek_gr_kal==0)
 N					if (sost_pribl==0)
-W "src\stm32f4xx_it.c" 502 7 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 505 7 function "indicate_lin" declared implicitly
 N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N					else
 N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
@@ -37952,8 +37955,12 @@ N					else
 N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
 N		 
 N		 indicate(3,(u16)(max[0]),3);														// maximum
-W "src\stm32f4xx_it.c" 512 4 function "indicate_time" declared implicitly
-N		 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time		 
+N		
+N			if ((tick%2)==0)
+W "src\stm32f4xx_it.c" 517 5 function "indicate_time" declared implicitly
+N				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+N			else
+N				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	
 N		}
 N	 }	
 N }	 
@@ -38204,10 +38211,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 654 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 654 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 655 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 656 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 661 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 661 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 662 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 663 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38257,7 +38264,7 @@ N			TxBuffer[20]=0x20;
 N			
 N			
 N			// zn from adc with calibr and averaging
-N			tmp=ADC3ConvertedValue;
+N			tmp=ADC3ConvertedValue%1000;
 N			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -38267,7 +38274,7 @@ N			tmp%=10;
 N			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
 N			TxBuffer[25]=0x20;		
 N			
-N			tmp=fz_average[0];
+N			tmp=fz_average[0]%1000;
 N			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[27]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -38277,7 +38284,7 @@ N			tmp%=10;
 N			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
 N			TxBuffer[30]=0x20;
 N			
-N			tmp=max[0];
+N			tmp=max[0]%1000;
 N			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 N			tmp%=1000;
 N			TxBuffer[32]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -38629,7 +38636,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 1096 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 1103 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -38186,32 +38186,38 @@ N}
 N
 N
 N
-Nvoid test_ind_all(void)
+Nvoid test_ind_all(u8 rez)
 N{
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_RESET); 			
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_RESET); 			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_RESET); 
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_RESET); 
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_RESET);  			
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_RESET);  			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET); 
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_RESET); 
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_4, Bit_RESET);     
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0010), Bit_RESET);     
-N				delay_spi(100);
-N				spi_send(0x0f);delay_spi(100);
-N				spi_send(0x01); delay_spi(100);
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET); 			
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_SET); 			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET); 
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_SET); 
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_SET);  			
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_SET);  			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET); 
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_SET); 
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_4, Bit_SET);   
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0010), Bit_SET);   
-N				delay_spi(1000);
+N	
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_RESET); 	delay_spi(zad_spi);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_RESET); 	delay_spi(zad_spi);
+N				spi_send(0x0f); delay_spi(zad_spi);				
+N				spi_send(rez);  delay_spi(zad_spi);
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);		delay_spi(zad_spi2);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_SET);		delay_spi(zad_spi2);
+N
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_RESET); 	delay_spi(zad_spi);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_RESET); 	delay_spi(zad_spi);
+N				spi_send(0x0f); delay_spi(zad_spi);				
+N				spi_send(rez);  delay_spi(zad_spi);
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET);		delay_spi(zad_spi2);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_SET);		delay_spi(zad_spi2);
+N
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_RESET); 	delay_spi(zad_spi);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_RESET); 	delay_spi(zad_spi);
+N				spi_send(0x0f); delay_spi(zad_spi);				
+N				spi_send(rez);  delay_spi(zad_spi);
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_SET);		delay_spi(zad_spi2);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_SET);		delay_spi(zad_spi2);
+N
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET); 	delay_spi(zad_spi);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_RESET); 	delay_spi(zad_spi);
+N				spi_send(0x0f); delay_spi(zad_spi);				
+N				spi_send(rez);  delay_spi(zad_spi);
+N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET);		delay_spi(zad_spi2);	
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_SET);		delay_spi(zad_spi2);	
+N	
+N				
 N}
 N
 Nuint16_t pin_ind(u8 numb_ind)
@@ -38220,22 +38226,22 @@ N	uint16_t  pin=0;
 N
 N			switch (numb_ind-1)
 N			{
-N				case 0x00:  // CS0
+N				case 0x00:  // CS0   PA0
 N					pin=GPIO_Pin_0;
 X					pin=((uint16_t)0x0001);
 N					break;
 N
-N				case 0x01:  // CS1
+N				case 0x01:  // CS1	PA1
 N					pin=GPIO_Pin_1;
 X					pin=((uint16_t)0x0002);
 N					break;
 N
-N				case 0x02:  // CS2
+N				case 0x02:  // CS2	PA2
 N					pin=GPIO_Pin_2;
 X					pin=((uint16_t)0x0004);
 N					break;
 N
-N				case 0x03:  // CS3
+N				case 0x03:  // CS3	PA3
 N					pin=GPIO_Pin_3;
 X					pin=((uint16_t)0x0008);
 N					break;
@@ -38692,54 +38698,27 @@ X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x
 N			}	
 N}
 N
-Nvoid ind_blank_all(void)
+Nvoid ind_blank_all(u8 numb_ind)
 N{
 N		u8 i=0,ind=0;
+N		uint16_t  pin=0;
+N	
+N		pin=pin_ind(numb_ind);
+N		if (pin==0)
+N				return;
 N
 N			for (i=1;i<9;i++)
 N			{
 N				// blank all
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_RESET);      delay_spi(zad_spi);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_RESET);      delay_spi(zad_spi);
+N				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      delay_spi(zad_spi);
 N				spi_send((u8) i);					delay_spi(zad_spi);
 N				spi_send(0x00);					  delay_spi(zad_spi);			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);      		delay_spi(zad_spi2);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0001), Bit_SET);      		delay_spi(zad_spi2);
+N				GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
+X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      		delay_spi(zad_spi2);
 N			}
-N			
-N			for (i=1;i<9;i++)
-N			{
-N				// blank all
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_RESET);      delay_spi(zad_spi);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_RESET);      delay_spi(zad_spi);
-N				spi_send((u8) i);					delay_spi(zad_spi);
-N				spi_send(0x00);					  delay_spi(zad_spi);			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET);      		delay_spi(zad_spi2);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0002), Bit_SET);      		delay_spi(zad_spi2);
-N			}
-N
-N			for (i=1;i<9;i++)
-N			{
-N				// blank all
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_RESET);      delay_spi(zad_spi);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_RESET);      delay_spi(zad_spi);
-N				spi_send((u8) i);					delay_spi(zad_spi);
-N				spi_send(0x00);					  delay_spi(zad_spi);			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_SET);      		delay_spi(zad_spi2);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0004), Bit_SET);      		delay_spi(zad_spi2);
-N			}
-N			
-N			for (i=1;i<9;i++)
-N			{
-N				// blank all
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET);      delay_spi(zad_spi);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_RESET);      delay_spi(zad_spi);
-N				spi_send((u8) i);					delay_spi(zad_spi);
-N				spi_send(0x00);					  delay_spi(zad_spi);			
-N				GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET);      		delay_spi(zad_spi2);
-X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), ((uint16_t)0x0008), Bit_SET);      		delay_spi(zad_spi2);
-N			}			
-W "src\main.c" 956 10 variable "ind" was declared but never referenced
+N		
+W "src\main.c" 964 10 variable "ind" was declared but never referenced
 N}
 Nvoid init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 N{
@@ -38810,24 +38789,21 @@ N			spi_send(0x0F);					delay_spi(zad_spi);
 N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);
 X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     delay_spi(zad_spi2);
 N
-N	
+N/*	
 N		// test
 N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      delay_spi(zad_spi);
 N			spi_send((u8) 0x0f);					delay_spi(zad_spi);
 N			spi_send(0x01);					delay_spi(zad_spi);			
 N			GPIO_WriteBit(GPIOA, pin, Bit_SET);      delay_spi(zad_spi2);
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      delay_spi(zad_spi2);
 N
 N		  delay_spi(zad_spi2*50);	
 N		
 N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      delay_spi(zad_spi);
 N			spi_send((u8) 0x0f);					delay_spi(zad_spi);
 N			spi_send(0x00);					delay_spi(zad_spi);			
-N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);					
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     delay_spi(zad_spi2);					
-N	//		test_ind_all();
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);			
+N*/			
+N	//		test_ind_all(1);
 N	//	test_lin();
 N}
 N
@@ -39062,7 +39038,7 @@ N			switch (kol_cifr)
 N			{
 N				case 0x00:  // CS0
 N					return;
-W "src\main.c" 1301 6 statement is unreachable
+W "src\main.c" 1289 6 statement is unreachable
 N					break;
 N				case 0x01:  // CS0
 N					maximum=10;
@@ -39167,6 +39143,7 @@ N
 Nvoid indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 N{
 N		 	uint16_t  pin=0;
+N			u8 i=0;
 N
 N/*
 N			switch (numb_ind)
@@ -39192,6 +39169,7 @@ N					pin=GPIO_Pin_4;
 N					break;						
 N			}
 N	*/
+N	
 N			  pin=pin_ind(numb_ind);
 N		if (pin==0)
 N				return ;
@@ -39203,47 +39181,48 @@ N				spi_send(0x00); delay_spi(100);
 N				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //  
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      
 N				delay_spi(1000);
+N	/*	
+N			for (i=1;i<8;i++)
+N			{		
+N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);   delay_spi(zad_spi);
+N			spi_send(i);														delay_spi(zad_spi);
+N			spi_send(symb_code[i]); 														delay_spi(zad_spi);
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);						
+N			}		
+N	*/	
 N
-N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
-N			delay_spi(100);
-N			spi_send(1);delay_spi(100);
+N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);     delay_spi(zad_spi);
+N			spi_send(1);															delay_spi(zad_spi);
 N			if (hh/10==0)
 N				spi_send(0); 
 N			else
 N				spi_send(symb_code[hh/10]); 
-N			delay_spi(100);	
-N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     
-N			delay_spi(1000);	
+N			delay_spi(zad_spi);
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);       delay_spi(zad_spi2);
 N	
-N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
-N			delay_spi(100);
-N			spi_send(2);delay_spi(100);
-N			spi_send(0x80*en+symb_code[hh%10]); delay_spi(100);	
-N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     
-N			delay_spi(1000);				
+N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);     delay_spi(zad_spi);
+N			spi_send(2);															delay_spi(zad_spi);
+N			spi_send(0x80*en+symb_code[hh%10]); 			delay_spi(zad_spi);	
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     	delay_spi(zad_spi2);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     	delay_spi(zad_spi2);
 N			
-N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
-N			delay_spi(100);
-N			spi_send(3);delay_spi(100);
-N			spi_send(1*en+symb_code_min[mm/10]); delay_spi(100);	
-N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     
-N			delay_spi(1000);	
+N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);     delay_spi(zad_spi);
+N			spi_send(3);															delay_spi(zad_spi);
+N			spi_send(1*en+symb_code_min[mm/10]); 			delay_spi(zad_spi);
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);    	  delay_spi(zad_spi2);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);    	  delay_spi(zad_spi2);
 N
-N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);      
-N			delay_spi(100);
-N			spi_send(4);delay_spi(100);
-N			spi_send(symb_code_min[mm%10]); delay_spi(100);	
-N			GPIO_WriteBit(GPIOA, pin, Bit_SET);     
-X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);     
-N			delay_spi(1000);	
-N	
+N			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_RESET);     delay_spi(zad_spi);
+N			spi_send(4);															delay_spi(zad_spi);
+N			spi_send(symb_code_min[mm%10]); 					delay_spi(zad_spi);
+N			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);       delay_spi(zad_spi2);
+W "src\main.c" 1387 7 variable "i" was declared but never referenced
 N}
 N
 N
@@ -39373,8 +39352,8 @@ N
 N	
 N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
 X		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
-N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1|GPIO_Pin_0;  //  vivod for CS
-X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0002)|((uint16_t)0x0001);  
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS
+X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0001)|((uint16_t)0x0002)|((uint16_t)0x0004)|((uint16_t)0x0008);  
 N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
 N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
@@ -39430,10 +39409,17 @@ N  init_ind(conf.indicators[1].numb, conf.indicators[1].kol_cifr, conf.indicator
 N	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
 N  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 N	*/
+N	test_ind_all(1);
+N	
+N	for (i = 0; i < 100; i ++)
+N		delay_spi(1000000);
+N	test_ind_all(0);
 N	init_ind(1, 8, 0);
 N  init_ind(2, 4, 0);   // lineika
 N	init_ind(3, 8, 0);
 N  init_ind(4, 4, 0);   // time
+N	
+N
 N
 N// nastroika gpio
 N
@@ -39520,9 +39506,8 @@ N#endif
 N	
 N
 N  
-W "src\main.c" 1476 5 variable "i" was declared but never referenced
-W "src\main.c" 1481 11 variable "data" was declared but never referenced
-W "src\main.c" 1483 12 variable "DT" was declared but never referenced
+W "src\main.c" 1471 11 variable "data" was declared but never referenced
+W "src\main.c" 1473 12 variable "DT" was declared but never referenced
 N}
 N
 N/**

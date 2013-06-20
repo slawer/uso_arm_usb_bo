@@ -205,12 +205,9 @@ for(;((RTC->ISR & 0x40) == 0x00);)	// delay while initialization flag will be se
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;  										//GPIO_OType_PP		//
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
 	GPIO_Init(GPIOC, &GPIO_InitStructure); 
+*/
 
-		 //  start LSE
-		RCC->BDCR |= RCC_BDCR_LSEON;
-		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
-			
-		while (!(RCC->BDCR & RCC_BDCR_LSERDY)) ;
+ /*
 		
 		RCC->BDCR |=  RCC_BDCR_BDRST;
     RCC->BDCR &= ~RCC_BDCR_BDRST;
@@ -221,9 +218,7 @@ for(;((RTC->ISR & 0x40) == 0x00);)	// delay while initialization flag will be se
 		
 		   // Включим тактирование RTC
     RCC->BDCR |= RCC_BDCR_RTCEN;
-*/
-			
-			
+	*/	
 /*	
 
 Попробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
@@ -253,7 +248,7 @@ if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
 		}
 }
 */
-
+/*
     // Запускаем LSI:
     RCC->CSR |= RCC_CSR_LSION;
     
@@ -272,7 +267,7 @@ if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
       
     // Включим тактирование RTC
     RCC->BDCR |= RCC_BDCR_RTCEN;
- 
+ */
 
 /*
 ● Access to the backup SRAM
@@ -286,53 +281,52 @@ peripheral clock register (RCC_AHB1ENR)
 uint8_t *BKPRam = (uint8_t *)0x40024000;
 
 
-*/			
-    // Снимем защиту от записи с регистров RTC
-    rtc_Unlock();
-    {
-        // Здесь можем менять регистры RTC
+*/	
 
+   // Запускаем LSI:
+    RCC->CSR |= RCC_CSR_LSION;
+    
+    // Ждём, когда он заведётся
+    while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
+    
+    // Ок, генератор на 32 кГц завёлся.
+    
+    // Сбросим состояние энергонезависимого домена
+    RCC->BDCR |=  RCC_BDCR_BDRST;
+    RCC->BDCR &= ~RCC_BDCR_BDRST;
+    
+    // Выберем его как источник тактирования RTC:
+    RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+    RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
+      
+    // Включим тактирование RTC
+    RCC->BDCR |= RCC_BDCR_RTCEN;
+			
+/*
+		 //  start LSE
+		 RCC->BDCR |= RCC_BDCR_LSEON;
+		 while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}			
+		 while (!(RCC->BDCR & RCC_BDCR_LSERDY)) {}			
+		 RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
+			
+      // Снимем защиту от записи с регистров RTC
+      rtc_Unlock();
         // Войдём в режим инициализации:
-        RTC->ISR |= RTC_ISR_INIT;
-        
-        // Ждём, когда это произойдёт
-
-
-
+      RTC->ISR |= RTC_ISR_INIT;
 			while(!(RTC->ISR & RTC_ISR_INITF)) {}
-        
-        // Часы остановлены. Режим инициализации
-        // Настроим предделитель для получения частоты 1 Гц.
-        
-        // LSI: 
-        // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-        {  //  32768Hz, а нам нужны
-            uint32_t Sync = 263;   // 15 бит
-            uint32_t Async =127;  // 7 бит
-            
-            // Сначала записываем величину для синхронного предделителя
-            RTC->PRER = Sync;
-            
-            // Теперь добавим для асинхронного предделителя
-            RTC->PRER =Sync | (Async << 16);
-					
-			//		RTC->PRER = 0x00000000; // RESET PRER register
-			//		RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
-			//		RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-        }
-        
+
+					RTC->PRER = 0x00000000; // RESET PRER register
+					RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
+					RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
+     */          
         // Устанавливаем дату: 30.05.13, пятница
- //       rtc_SetDate(2, 6, 13, 7);
-        
+				//       rtc_SetDate(2, 6, 13, 7);       
         // Устанавливаем время: 15:00:00
-  //      rtc_SetTime(0, 0, 00);
-        
+				//      rtc_SetTime(0, 0, 00);       
         // Переведём часы в 24-часовой формат
-        RTC->CR |= RTC_CR_FMT;
-        
+        RTC->CR |= RTC_CR_FMT;        
         // Инициализация закончилась
-        RTC->ISR &= ~RTC_ISR_INIT;
-    }   
+        RTC->ISR &= ~RTC_ISR_INIT;   
     rtc_Lock();
 		
 		// Allow access to BKP Domain 
