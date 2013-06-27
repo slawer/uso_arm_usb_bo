@@ -1601,9 +1601,9 @@ SPI 2:
 		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 //		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		//	speed
 		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
-	
+
 /*
 		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka

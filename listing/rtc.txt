@@ -5,72 +5,72 @@
                           AREA ||i.rtc_Get||, CODE, READONLY, ALIGN=2
 
                   rtc_Get PROC
-;;;759    // Получить текущее время
-;;;760    void rtc_Get(TDateTime * DateTime)
+;;;755    // Получить текущее время
+;;;756    void rtc_Get(TDateTime * DateTime)
 000000  4921              LDR      r1,|L1.136|
-;;;761    {
+;;;757    {
 000002  b510              PUSH     {r4,lr}
-;;;762        uint32_t Date = RTC->DR;
+;;;758        uint32_t Date = RTC->DR;
 000004  6809              LDR      r1,[r1,#0]
-;;;763        uint32_t Time = RTC->TR;
+;;;759        uint32_t Time = RTC->TR;
 000006  4a20              LDR      r2,|L1.136|
 000008  1f12              SUBS     r2,r2,#4
 00000a  6812              LDR      r2,[r2,#0]
-;;;764        
-;;;765        // Очистим
-;;;766        memset(DateTime, 0, sizeof(*DateTime));
+;;;760        
+;;;761        // Очистим
+;;;762        memset(DateTime, 0, sizeof(*DateTime));
 00000c  2300              MOVS     r3,#0
 00000e  6003              STR      r3,[r0,#0]
 000010  8083              STRH     r3,[r0,#4]
-;;;767        
-;;;768        // Год
-;;;769        DateTime->Year      = ((Date >> 20) & 0x0f) * 10 + ((Date >> 16) & 0x0f);
+;;;763        
+;;;764        // Год
+;;;765        DateTime->Year      = ((Date >> 20) & 0x0f) * 10 + ((Date >> 16) & 0x0f);
 000012  f3c15303          UBFX     r3,r1,#20,#4
 000016  eb030383          ADD      r3,r3,r3,LSL #2
 00001a  f3c14403          UBFX     r4,r1,#16,#4
 00001e  eb040343          ADD      r3,r4,r3,LSL #1
 000022  7003              STRB     r3,[r0,#0]
-;;;770        // Месяц
-;;;771        DateTime->Month     = ((Date >> 12) & 0x01) * 10 + ((Date >>  8) & 0x0f);
+;;;766        // Месяц
+;;;767        DateTime->Month     = ((Date >> 12) & 0x01) * 10 + ((Date >>  8) & 0x0f);
 000024  f3c13300          UBFX     r3,r1,#12,#1
 000028  eb030383          ADD      r3,r3,r3,LSL #2
 00002c  f3c12403          UBFX     r4,r1,#8,#4
 000030  eb040343          ADD      r3,r4,r3,LSL #1
 000034  7043              STRB     r3,[r0,#1]
-;;;772        // День
-;;;773        DateTime->Day       = ((Date >>  4) & 0x03) * 10 + ((Date >>  0) & 0x0f);
+;;;768        // День
+;;;769        DateTime->Day       = ((Date >>  4) & 0x03) * 10 + ((Date >>  0) & 0x0f);
 000036  f3c11301          UBFX     r3,r1,#4,#2
 00003a  f001040f          AND      r4,r1,#0xf
 00003e  eb030383          ADD      r3,r3,r3,LSL #2
 000042  eb040343          ADD      r3,r4,r3,LSL #1
 000046  7083              STRB     r3,[r0,#2]
-;;;774        // День недели
-;;;775        DateTime->DayOfWeek = ((Date >> 13) & 0x07);
+;;;770        // День недели
+;;;771        DateTime->DayOfWeek = ((Date >> 13) & 0x07);
 000048  f3c13142          UBFX     r1,r1,#13,#3
 00004c  70c1              STRB     r1,[r0,#3]
-;;;776        
-;;;777        // Час
-;;;778        DateTime->Hours     = ((Time >> 20) & 0x03) * 10 + ((Time >> 16) & 0x0f);
+;;;772        
+;;;773        // Час
+;;;774        DateTime->Hours     = ((Time >> 20) & 0x03) * 10 + ((Time >> 16) & 0x0f);
 00004e  f3c25101          UBFX     r1,r2,#20,#2
 000052  eb010181          ADD      r1,r1,r1,LSL #2
 000056  f3c24303          UBFX     r3,r2,#16,#4
 00005a  eb030141          ADD      r1,r3,r1,LSL #1
 00005e  7101              STRB     r1,[r0,#4]
-;;;779        // Минуты
-;;;780        DateTime->Minutes   = ((Time >> 12) & 0x07) * 10 + ((Time >> 8) & 0x0f);
+;;;775        // Минуты
+;;;776        DateTime->Minutes   = ((Time >> 12) & 0x07) * 10 + ((Time >> 8) & 0x0f);
 000060  f3c23102          UBFX     r1,r2,#12,#3
 000064  eb010181          ADD      r1,r1,r1,LSL #2
 000068  f3c22303          UBFX     r3,r2,#8,#4
 00006c  eb030141          ADD      r1,r3,r1,LSL #1
 000070  7141              STRB     r1,[r0,#5]
-;;;781        // Секунды
-;;;782        DateTime->Seconds   = ((Time >> 4) & 0x07) * 10 + ((Time >> 0) & 0x0f);
+;;;777        // Секунды
+;;;778        DateTime->Seconds   = ((Time >> 4) & 0x07) * 10 + ((Time >> 0) & 0x0f);
 000072  f3c21102          UBFX     r1,r2,#4,#3
 000076  f002030f          AND      r3,r2,#0xf
 00007a  eb010181          ADD      r1,r1,r1,LSL #2
 00007e  eb030141          ADD      r1,r3,r1,LSL #1
 000082  7181              STRB     r1,[r0,#6]
-;;;783    }
+;;;779    }
 000084  bd10              POP      {r4,pc}
                           ENDP
 
@@ -91,21 +91,21 @@
 ;;;132    	
 ;;;133        // Если часы запущены, делать тут нечего.
 ;;;134        if(RTC->ISR & RTC_ISR_INITS) return;
-000004  4a6d              LDR      r2,|L2.444|
+000004  4a66              LDR      r2,|L2.416|
 000006  6810              LDR      r0,[r2,#0]
 000008  06c0              LSLS     r0,r0,#27
-00000a  d47d              BMI      |L2.264|
+00000a  d47c              BMI      |L2.262|
 ;;;135        
 ;;;136        // Включим тактирование PWR
 ;;;137        RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-00000c  486c              LDR      r0,|L2.448|
+00000c  4865              LDR      r0,|L2.420|
 00000e  6801              LDR      r1,[r0,#0]
 000010  f0415180          ORR      r1,r1,#0x10000000
 000014  6001              STR      r1,[r0,#0]
 ;;;138        
 ;;;139        // Разрешим доступ к управляющим регистрам энергонезависимого домена
 ;;;140        PWR->CR |= PWR_CR_DBP;
-000016  486b              LDR      r0,|L2.452|
+000016  4864              LDR      r0,|L2.424|
 000018  6801              LDR      r1,[r0,#0]
 00001a  f4417180          ORR      r1,r1,#0x100
 00001e  6001              STR      r1,[r0,#0]
@@ -176,744 +176,724 @@
 ;;;205    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;  										//GPIO_OType_PP		//
 ;;;206    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 									//	speed
 ;;;207    	GPIO_Init(GPIOC, &GPIO_InitStructure); 
-;;;208    
-;;;209    		 //  start LSE
-;;;210    		RCC->BDCR |= RCC_BDCR_LSEON;
-;;;211    		while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}
-;;;212    			
-;;;213    		while (!(RCC->BDCR & RCC_BDCR_LSERDY)) ;
+;;;208    */
+;;;209    
+;;;210     /*
+;;;211    		
+;;;212    		RCC->BDCR |=  RCC_BDCR_BDRST;
+;;;213        RCC->BDCR &= ~RCC_BDCR_BDRST;
 ;;;214    		
-;;;215    		RCC->BDCR |=  RCC_BDCR_BDRST;
-;;;216        RCC->BDCR &= ~RCC_BDCR_BDRST;
-;;;217    		
-;;;218    	// Выберем его как источник тактирования RTC:
-;;;219        RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
-;;;220        RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
-;;;221    		
-;;;222    		   // Включим тактирование RTC
-;;;223        RCC->BDCR |= RCC_BDCR_RTCEN;
-;;;224    */
-;;;225    			
-;;;226    			
-;;;227    /*	
-;;;228    
-;;;229    Попробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
-;;;230    	GPIOC->CRH |= GPIO_CRH_MODE14_1 |GPIO_CRH_MODE15_1; // Out 2 MHZ
-;;;231    	GPIOC->CRH &= ~(GPIO_CRH_CNF14|GPIO_CRH_CNF15); // PUSH pull
-;;;232    	Delay();
-;;;233    	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
-;;;234    	Delay();
-;;;235    	GPIOC->CRH &= ~(GPIO_CRH_MODE14_1|GPIO_CRH_MODE15_1); // Analog IN 
-;;;236    	RCC->BDCR |= RCC_BDCR_LSEON;
-;;;237    
-;;;238    KX-38 32.768 kHz 6pF,
-;;;239    		32.768kHz crystal, with 6pF CL and 50kOhm ESR. 
-;;;240    		a 15MOhm parallel resistor.
-;;;241    if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
-;;;242    {
-;;;243    
-;;;244        RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // Enable PWR clock 
-;;;245     
-;;;246     //   PWR_BackupAccessCmd(ENABLE); // Allow access to BKP Domain 
-;;;247    		 RCC->CSR = RCC_CSR_LSION;
-;;;248        RCC_LSEConfig(RCC_LSE_ON); // Enable the LSE oscillator 
-;;;249     
-;;;250        while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) // Wait till LSE is ready
-;;;251    		{
-;;;252    		 __ASM volatile ("nop");   
-;;;253    		}
-;;;254    }
-;;;255    */
-;;;256    
-;;;257        // Запускаем LSI:
-;;;258        RCC->CSR |= RCC_CSR_LSION;
-000020  4867              LDR      r0,|L2.448|
+;;;215    	// Выберем его как источник тактирования RTC:
+;;;216        RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+;;;217        RCC->BDCR |= (RCC_BDCR_RTCSEL_0); // запишем 0b10
+;;;218    		
+;;;219    		   // Включим тактирование RTC
+;;;220        RCC->BDCR |= RCC_BDCR_RTCEN;
+;;;221    	*/	
+;;;222    /*	
+;;;223    
+;;;224    Попробуйте дать ему пинка. Сконфигурируйте ноги на выход и подайте напряжение на кварц на четверть периода. Потом уже снова на вход и запускайте генератор. Заводились даже 12 пФ кварцы. Только работали нестабильно.
+;;;225    	GPIOC->CRH |= GPIO_CRH_MODE14_1 |GPIO_CRH_MODE15_1; // Out 2 MHZ
+;;;226    	GPIOC->CRH &= ~(GPIO_CRH_CNF14|GPIO_CRH_CNF15); // PUSH pull
+;;;227    	Delay();
+;;;228    	GPIOA->BSRR = GPIO_BSRR_BS14; // Boot the cristal 
+;;;229    	Delay();
+;;;230    	GPIOC->CRH &= ~(GPIO_CRH_MODE14_1|GPIO_CRH_MODE15_1); // Analog IN 
+;;;231    	RCC->BDCR |= RCC_BDCR_LSEON;
+;;;232    
+;;;233    KX-38 32.768 kHz 6pF,
+;;;234    		32.768kHz crystal, with 6pF CL and 50kOhm ESR. 
+;;;235    		a 15MOhm parallel resistor.
+;;;236    if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+;;;237    {
+;;;238    
+;;;239        RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // Enable PWR clock 
+;;;240     
+;;;241     //   PWR_BackupAccessCmd(ENABLE); // Allow access to BKP Domain 
+;;;242    		 RCC->CSR = RCC_CSR_LSION;
+;;;243        RCC_LSEConfig(RCC_LSE_ON); // Enable the LSE oscillator 
+;;;244     
+;;;245        while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) // Wait till LSE is ready
+;;;246    		{
+;;;247    		 __ASM volatile ("nop");   
+;;;248    		}
+;;;249    }
+;;;250    */
+;;;251    /*
+;;;252        // Запускаем LSI:
+;;;253        RCC->CSR |= RCC_CSR_LSION;
+;;;254        
+;;;255        // Ждём, когда он заведётся
+;;;256        while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
+;;;257        
+;;;258        // Ок, генератор на 32 кГц завёлся.
+;;;259        
+;;;260        // Сбросим состояние энергонезависимого домена
+;;;261        RCC->BDCR |=  RCC_BDCR_BDRST;
+;;;262        RCC->BDCR &= ~RCC_BDCR_BDRST;
+;;;263        
+;;;264        // Выберем его как источник тактирования RTC:
+;;;265        RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+;;;266        RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
+;;;267          
+;;;268        // Включим тактирование RTC
+;;;269        RCC->BDCR |= RCC_BDCR_RTCEN;
+;;;270     */
+;;;271    
+;;;272    /*
+;;;273    ● Access to the backup SRAM
+;;;274    1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
+;;;275    peripheral clock enable register (RCC_APB1ENR)
+;;;276    2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
+;;;277    backup domain
+;;;278    3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
+;;;279    peripheral clock register (RCC_AHB1ENR)
+;;;280    
+;;;281    uint8_t *BKPRam = (uint8_t *)0x40024000;
+;;;282    
+;;;283    
+;;;284    */	
+;;;285    
+;;;286       // Запускаем LSI:
+;;;287        RCC->CSR |= RCC_CSR_LSION;
+000020  4860              LDR      r0,|L2.420|
 000022  3034              ADDS     r0,r0,#0x34
 000024  6801              LDR      r1,[r0,#0]
 000026  f0410101          ORR      r1,r1,#1
 00002a  6001              STR      r1,[r0,#0]
                   |L2.44|
-;;;259        
-;;;260        // Ждём, когда он заведётся
-;;;261        while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
+;;;288        
+;;;289        // Ждём, когда он заведётся
+;;;290        while(!(RCC->CSR & RCC_CSR_LSIRDY)) {}
 00002c  6801              LDR      r1,[r0,#0]
 00002e  0789              LSLS     r1,r1,#30
 000030  d5fc              BPL      |L2.44|
-;;;262        
-;;;263        // Ок, генератор на 32 кГц завёлся.
-;;;264        
-;;;265        // Сбросим состояние энергонезависимого домена
-;;;266        RCC->BDCR |=  RCC_BDCR_BDRST;
-000032  4863              LDR      r0,|L2.448|
+;;;291        
+;;;292        // Ок, генератор на 32 кГц завёлся.
+;;;293        
+;;;294        // Сбросим состояние энергонезависимого домена
+;;;295        RCC->BDCR |=  RCC_BDCR_BDRST;
+000032  485c              LDR      r0,|L2.420|
 000034  3030              ADDS     r0,r0,#0x30
 000036  6801              LDR      r1,[r0,#0]
 000038  f4413180          ORR      r1,r1,#0x10000
 00003c  6001              STR      r1,[r0,#0]
-;;;267        RCC->BDCR &= ~RCC_BDCR_BDRST;
+;;;296        RCC->BDCR &= ~RCC_BDCR_BDRST;
 00003e  6801              LDR      r1,[r0,#0]
 000040  f4213180          BIC      r1,r1,#0x10000
 000044  6001              STR      r1,[r0,#0]
-;;;268        
-;;;269        // Выберем его как источник тактирования RTC:
-;;;270        RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
+;;;297        
+;;;298        // Выберем его как источник тактирования RTC:
+;;;299        RCC->BDCR &= ~RCC_BDCR_RTCSEL; // сбросим
 000046  6801              LDR      r1,[r0,#0]
 000048  f4217140          BIC      r1,r1,#0x300
 00004c  6001              STR      r1,[r0,#0]
-;;;271        RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
+;;;300        RCC->BDCR |= (RCC_BDCR_RTCSEL_1); // запишем 0b10
 00004e  6801              LDR      r1,[r0,#0]
 000050  f4417100          ORR      r1,r1,#0x200
 000054  6001              STR      r1,[r0,#0]
-;;;272          
-;;;273        // Включим тактирование RTC
-;;;274        RCC->BDCR |= RCC_BDCR_RTCEN;
+;;;301          
+;;;302        // Включим тактирование RTC
+;;;303        RCC->BDCR |= RCC_BDCR_RTCEN;
 000056  6801              LDR      r1,[r0,#0]
 000058  f4414100          ORR      r1,r1,#0x8000
 00005c  6001              STR      r1,[r0,#0]
-;;;275     
-;;;276    
-;;;277    /*
-;;;278    ● Access to the backup SRAM
-;;;279    1. Enable the power interface clock by setting the PWREN bits in the RCC APB1
-;;;280    peripheral clock enable register (RCC_APB1ENR)
-;;;281    2. Set the DBP bit in the PWR power control register (PWR_CR) to enable access to the
-;;;282    backup domain
-;;;283    3. Enable the backup SRAM clock by setting BKPSRAMEN bit in the RCC AHB1
-;;;284    peripheral clock register (RCC_AHB1ENR)
-;;;285    
-;;;286    uint8_t *BKPRam = (uint8_t *)0x40024000;
-;;;287    
-;;;288    
-;;;289    */			
-;;;290        // Снимем защиту от записи с регистров RTC
-;;;291        rtc_Unlock();
-00005e  f7fffffe          BL       rtc_Unlock
-;;;292        {
-;;;293            // Здесь можем менять регистры RTC
-;;;294    
-;;;295            // Войдём в режим инициализации:
-;;;296            RTC->ISR |= RTC_ISR_INIT;
-000062  6810              LDR      r0,[r2,#0]
-000064  f0400080          ORR      r0,r0,#0x80
-000068  6010              STR      r0,[r2,#0]
-                  |L2.106|
-;;;297            
-;;;298            // Ждём, когда это произойдёт
-;;;299    
-;;;300    
-;;;301    
-;;;302    			while(!(RTC->ISR & RTC_ISR_INITF)) {}
+;;;304    			
+;;;305    /*
+;;;306    		 //  start LSE
+;;;307    		 RCC->BDCR |= RCC_BDCR_LSEON;
+;;;308    		 while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}			
+;;;309    		 while (!(RCC->BDCR & RCC_BDCR_LSERDY)) {}			
+;;;310    		 RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
+;;;311    			
+;;;312          // Снимем защиту от записи с регистров RTC
+;;;313          rtc_Unlock();
+;;;314            // Войдём в режим инициализации:
+;;;315          RTC->ISR |= RTC_ISR_INIT;
+;;;316    			while(!(RTC->ISR & RTC_ISR_INITF)) {}
+;;;317    
+;;;318    					RTC->PRER = 0x00000000; // RESET PRER register
+;;;319    					RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
+;;;320    					RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
+;;;321         */          
+;;;322            // Устанавливаем дату: 30.05.13, пятница
+;;;323    				//       rtc_SetDate(2, 6, 13, 7);       
+;;;324            // Устанавливаем время: 15:00:00
+;;;325    				//      rtc_SetTime(0, 0, 00);       
+;;;326            // Переведём часы в 24-часовой формат
+;;;327            RTC->CR |= RTC_CR_FMT;        
+00005e  4850              LDR      r0,|L2.416|
+000060  1f00              SUBS     r0,r0,#4
+000062  6801              LDR      r1,[r0,#0]
+000064  f0410140          ORR      r1,r1,#0x40
+000068  6001              STR      r1,[r0,#0]
+;;;328            // Инициализация закончилась
+;;;329            RTC->ISR &= ~RTC_ISR_INIT;   
 00006a  6810              LDR      r0,[r2,#0]
-00006c  0640              LSLS     r0,r0,#25
-00006e  d5fc              BPL      |L2.106|
-;;;303            
-;;;304            // Часы остановлены. Режим инициализации
-;;;305            // Настроим предделитель для получения частоты 1 Гц.
-;;;306            
-;;;307            // LSI: 
-;;;308            // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-;;;309            {  //  32768Hz, а нам нужны
-;;;310                uint32_t Sync = 263;   // 15 бит
-;;;311                uint32_t Async =127;  // 7 бит
-;;;312                
-;;;313                // Сначала записываем величину для синхронного предделителя
-;;;314                RTC->PRER = Sync;
-000070  4952              LDR      r1,|L2.444|
-000072  f2401007          MOV      r0,#0x107             ;310
-000076  1d09              ADDS     r1,r1,#4
+00006c  f0200080          BIC      r0,r0,#0x80
+000070  6010              STR      r0,[r2,#0]
+000072  494b              LDR      r1,|L2.416|
+000074  20ff              MOVS     r0,#0xff
+000076  3118              ADDS     r1,r1,#0x18
 000078  6008              STR      r0,[r1,#0]
-;;;315                
-;;;316                // Теперь добавим для асинхронного предделителя
-;;;317                RTC->PRER =Sync | (Async << 16);
-00007a  4853              LDR      r0,|L2.456|
-00007c  6008              STR      r0,[r1,#0]
-;;;318    					
-;;;319    			//		RTC->PRER = 0x00000000; // RESET PRER register
-;;;320    			//		RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
-;;;321    			//		RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-;;;322            }
-;;;323            
-;;;324            // Устанавливаем дату: 30.05.13, пятница
-;;;325     //       rtc_SetDate(2, 6, 13, 7);
-;;;326            
-;;;327            // Устанавливаем время: 15:00:00
-;;;328      //      rtc_SetTime(0, 0, 00);
-;;;329            
-;;;330            // Переведём часы в 24-часовой формат
-;;;331            RTC->CR |= RTC_CR_FMT;
-00007e  484f              LDR      r0,|L2.444|
-000080  1f00              SUBS     r0,r0,#4
-000082  6801              LDR      r1,[r0,#0]
-000084  f0410140          ORR      r1,r1,#0x40
-000088  6001              STR      r1,[r0,#0]
-;;;332            
-;;;333            // Инициализация закончилась
-;;;334            RTC->ISR &= ~RTC_ISR_INIT;
-00008a  6810              LDR      r0,[r2,#0]
-00008c  f0200080          BIC      r0,r0,#0x80
-000090  6010              STR      r0,[r2,#0]
-000092  494a              LDR      r1,|L2.444|
-000094  20ff              MOVS     r0,#0xff
-000096  3118              ADDS     r1,r1,#0x18
-000098  6008              STR      r0,[r1,#0]
-;;;335        }   
-;;;336        rtc_Lock();
+;;;330        rtc_Lock();
+;;;331    		
+;;;332    		// Allow access to BKP Domain 
+;;;333    //PWR_BackupAccessCmd(ENABLE);
+;;;334    
+;;;335    // Write to the first RTC Backup Data Register 
+;;;336    RTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
+00007a  f24a51a5          MOV      r1,#0xa5a5
+00007e  2002              MOVS     r0,#2
+000080  f7fffffe          BL       RTC_WriteBackupRegister
 ;;;337    		
-;;;338    		// Allow access to BKP Domain 
-;;;339    //PWR_BackupAccessCmd(ENABLE);
-;;;340    
-;;;341    // Write to the first RTC Backup Data Register 
-;;;342    RTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
-00009a  f24a51a5          MOV      r1,#0xa5a5
-00009e  2002              MOVS     r0,#2
-0000a0  f7fffffe          BL       RTC_WriteBackupRegister
-;;;343    		
-;;;344    		// Backup SRAM **************************************************************
-;;;345    //Enable BKPRAM Clock 
-;;;346    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
-0000a4  2101              MOVS     r1,#1
-0000a6  048e              LSLS     r6,r1,#18
-0000a8  4630              MOV      r0,r6
-0000aa  f7fffffe          BL       RCC_AHB1PeriphClockCmd
-;;;347    
-;;;348    //Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
-;;;349    //PWR_BackupRegulatorCmd(ENABLE);
-;;;350    
-;;;351    // Wait until the Backup SRAM low power Regulator is ready 
-;;;352    //while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
-;;;353    {
-;;;354    }
-;;;355    
-;;;356     {
-;;;357    	 
-;;;358    	 extern st_conf conf;
-;;;359    	 u32 i=0,i1=0, errorindex=0;
-0000ae  2400              MOVS     r4,#0
-;;;360    	 
-;;;361       bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
-0000b0  2002              MOVS     r0,#2
-0000b2  f7fffffe          BL       RTC_ReadBackupRegister
-0000b6  4d45              LDR      r5,|L2.460|
-;;;362    
-;;;363    
-;;;364    //  Backup SRAM ************************************************************
-;;;365      // Enable BKPRAM Clock 
-;;;366      RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
-0000b8  2101              MOVS     r1,#1
-0000ba  8028              STRH     r0,[r5,#0]            ;361
-0000bc  4630              MOV      r0,r6
-0000be  f7fffffe          BL       RCC_AHB1PeriphClockCmd
-;;;367    
-;;;368    /*
-;;;369      // Write to Backup SRAM with 32-Bit Data 
-;;;370      for (i = 0; i < 0x1000; i += 4)
-;;;371      {
-;;;372        *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
-;;;373      }
-;;;374    */
-;;;375    //	sizeof
-;;;376      // read config rrom backup SRAM
-;;;377    	 
-;;;378    	 
-;;;379    
-;;;380    	/*
-;;;381      for (i = 0; i < size; i += 2)
-;;;382      {
-;;;383    		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
-;;;384    	}	
-;;;385    */
-;;;386    /*
-;;;387    	conf.address=1;
-;;;388    	conf.ver_po_st=2;
-;;;389    	conf.ver_po_ml=3;
-;;;390    	conf.tek_gr_kal=4;
-;;;391    	conf.tm_antidreb=5;
-;;;392    	conf.revers_group_select=6;
-;;;393    	conf.revers_peredacha_select=7;
-;;;394    	conf.rez8=8;
-;;;395    	
-;;;396    	conf.per_usr=9;
-;;;397    	conf.time_max=10;
-;;;398    	conf.por_rele=11;
-;;;399    	conf.tm_rele_on=12;
-;;;400    	conf.tm_rele_off=13;
-;;;401    	conf.rez16=14;
-;;;402    	
-;;;403    	conf.indicators[0].numb=15;
-;;;404    	conf.indicators[0].kol_cifr=16;
-;;;405    	conf.indicators[1].numb=17;
-;;;406    	conf.indicators[1].kol_cifr=18;
-;;;407    	conf.indicators[2].numb=19;
-;;;408    	conf.indicators[2].kol_cifr=20;
-;;;409    	conf.indicators[3].numb=21;
-;;;410    	conf.indicators[3].kol_cifr=2;
-;;;411    	conf.gr_kal1.tabl1.kod[0]=23;
-;;;412    	conf.gr_kal1.tabl1.fz[0]=24;
-;;;413    	conf.gr_kal1.tabl2.kod[0]=25;
-;;;414    	conf.gr_kal1.tabl2.fz[0]=26;
-;;;415    	conf.gr_kal2.tabl1.kod[0]=27;
-;;;416    	conf.gr_kal2.tabl1.fz[0]=28;
-;;;417    	conf.gr_kal2.tabl2.kod[0]=29;
-;;;418    	conf.gr_kal2.tabl2.fz[0]=30;
-;;;419    	conf.gr_kal2.tabl2.kod[9]=31;
-;;;420    	conf.gr_kal2.tabl2.fz[9]=32;
-;;;421    */
-;;;422    	size=sizeof(st_conf);
-0000c2  21be              MOVS     r1,#0xbe
-0000c4  8069              STRH     r1,[r5,#2]
-;;;423    	
-;;;424    	for (i = 0; i < size; i += 1)
-;;;425      {
-;;;426    		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
-0000c6  4842              LDR      r0,|L2.464|
-0000c8  4d42              LDR      r5,|L2.468|
-                  |L2.202|
-0000ca  5c22              LDRB     r2,[r4,r0]
-0000cc  552a              STRB     r2,[r5,r4]
-0000ce  1c64              ADDS     r4,r4,#1              ;424
-0000d0  428c              CMP      r4,r1                 ;424
-0000d2  d3fa              BCC      |L2.202|
-;;;427    	}	
-;;;428    	
-;;;429    		kol_usr=conf.per_usr;
-0000d4  4940              LDR      r1,|L2.472|
-0000d6  8928              LDRH     r0,[r5,#8]  ; conf
-0000d8  f04f0401          MOV      r4,#1                 ;346
-0000dc  8008              STRH     r0,[r1,#0]
-;;;430    		conf.tm_antidreb=conf.tm_antidreb*10;
-0000de  7928              LDRB     r0,[r5,#4]  ; conf
-0000e0  eb000080          ADD      r0,r0,r0,LSL #2
-0000e4  0640              LSLS     r0,r0,#25
-0000e6  0e00              LSRS     r0,r0,#24
-0000e8  7128              STRB     r0,[r5,#4]
-;;;431    	
-;;;432    		if (conf.tm_antidreb==0)
-0000ea  d100              BNE      |L2.238|
-;;;433    				conf.tm_antidreb=1;
-0000ec  712c              STRB     r4,[r5,#4]
-                  |L2.238|
-;;;434    
-;;;435    //	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
-;;;436    	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
-0000ee  2010              MOVS     r0,#0x10
+;;;338    		// Backup SRAM **************************************************************
+;;;339    //Enable BKPRAM Clock 
+;;;340    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+000084  2101              MOVS     r1,#1
+000086  048e              LSLS     r6,r1,#18
+000088  4630              MOV      r0,r6
+00008a  f7fffffe          BL       RCC_AHB1PeriphClockCmd
+;;;341    
+;;;342    //Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
+;;;343    //PWR_BackupRegulatorCmd(ENABLE);
+;;;344    
+;;;345    // Wait until the Backup SRAM low power Regulator is ready 
+;;;346    //while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
+;;;347    {
+;;;348    }
+;;;349    
+;;;350     {
+;;;351    	 
+;;;352    	 extern st_conf conf;
+;;;353    	 u32 i=0,i1=0, errorindex=0;
+00008e  2400              MOVS     r4,#0
+;;;354    	 
+;;;355       bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
+000090  2002              MOVS     r0,#2
+000092  f7fffffe          BL       RTC_ReadBackupRegister
+000096  4d45              LDR      r5,|L2.428|
+;;;356    
+;;;357    
+;;;358    //  Backup SRAM ************************************************************
+;;;359      // Enable BKPRAM Clock 
+;;;360      RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+000098  2101              MOVS     r1,#1
+00009a  8028              STRH     r0,[r5,#0]            ;355
+00009c  4630              MOV      r0,r6
+00009e  f7fffffe          BL       RCC_AHB1PeriphClockCmd
+;;;361    
+;;;362    /*
+;;;363      // Write to Backup SRAM with 32-Bit Data 
+;;;364      for (i = 0; i < 0x1000; i += 4)
+;;;365      {
+;;;366        *(__IO uint32_t *) (BKPSRAM_BASE + i) = i;
+;;;367      }
+;;;368    */
+;;;369    //	sizeof
+;;;370      // read config rrom backup SRAM
+;;;371    	 
+;;;372    	 
+;;;373    
+;;;374    	/*
+;;;375      for (i = 0; i < size; i += 2)
+;;;376      {
+;;;377    		(*(__IO uint16_t *) ((__IO uint16_t *) (&conf) + i))=(u16)i; //(*(__IO uint32_t *) (BKPSRAM_BASE + i));
+;;;378    	}	
+;;;379    */
+;;;380    /*
+;;;381    	conf.address=1;
+;;;382    	conf.ver_po_st=2;
+;;;383    	conf.ver_po_ml=3;
+;;;384    	conf.tek_gr_kal=4;
+;;;385    	conf.tm_antidreb=5;
+;;;386    	conf.revers_group_select=6;
+;;;387    	conf.revers_peredacha_select=7;
+;;;388    	conf.rez8=8;
+;;;389    	
+;;;390    	conf.per_usr=9;
+;;;391    	conf.time_max=10;
+;;;392    	conf.por_rele=11;
+;;;393    	conf.tm_rele_on=12;
+;;;394    	conf.tm_rele_off=13;
+;;;395    	conf.rez16=14;
+;;;396    	
+;;;397    	conf.indicators[0].numb=15;
+;;;398    	conf.indicators[0].kol_cifr=16;
+;;;399    	conf.indicators[1].numb=17;
+;;;400    	conf.indicators[1].kol_cifr=18;
+;;;401    	conf.indicators[2].numb=19;
+;;;402    	conf.indicators[2].kol_cifr=20;
+;;;403    	conf.indicators[3].numb=21;
+;;;404    	conf.indicators[3].kol_cifr=2;
+;;;405    	conf.gr_kal1.tabl1.kod[0]=23;
+;;;406    	conf.gr_kal1.tabl1.fz[0]=24;
+;;;407    	conf.gr_kal1.tabl2.kod[0]=25;
+;;;408    	conf.gr_kal1.tabl2.fz[0]=26;
+;;;409    	conf.gr_kal2.tabl1.kod[0]=27;
+;;;410    	conf.gr_kal2.tabl1.fz[0]=28;
+;;;411    	conf.gr_kal2.tabl2.kod[0]=29;
+;;;412    	conf.gr_kal2.tabl2.fz[0]=30;
+;;;413    	conf.gr_kal2.tabl2.kod[9]=31;
+;;;414    	conf.gr_kal2.tabl2.fz[9]=32;
+;;;415    */
+;;;416    	size=sizeof(st_conf);
+0000a2  21be              MOVS     r1,#0xbe
+0000a4  8069              STRH     r1,[r5,#2]
+;;;417    	
+;;;418    	for (i = 0; i < size; i += 1)
+;;;419      {
+;;;420    		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+0000a6  4842              LDR      r0,|L2.432|
+0000a8  4d42              LDR      r5,|L2.436|
+                  |L2.170|
+0000aa  5c22              LDRB     r2,[r4,r0]
+0000ac  552a              STRB     r2,[r5,r4]
+0000ae  1c64              ADDS     r4,r4,#1              ;418
+0000b0  428c              CMP      r4,r1                 ;418
+0000b2  d3fa              BCC      |L2.170|
+;;;421    	}	
+;;;422    	
+;;;423    		kol_usr=conf.per_usr;
+0000b4  4940              LDR      r1,|L2.440|
+0000b6  8928              LDRH     r0,[r5,#8]  ; conf
+0000b8  f04f0401          MOV      r4,#1                 ;340
+0000bc  8008              STRH     r0,[r1,#0]
+;;;424    		conf.tm_antidreb=conf.tm_antidreb*10;
+0000be  7928              LDRB     r0,[r5,#4]  ; conf
+0000c0  eb000080          ADD      r0,r0,r0,LSL #2
+0000c4  0640              LSLS     r0,r0,#25
+0000c6  0e00              LSRS     r0,r0,#24
+0000c8  7128              STRB     r0,[r5,#4]
+;;;425    	
+;;;426    		if (conf.tm_antidreb==0)
+0000ca  d100              BNE      |L2.206|
+;;;427    				conf.tm_antidreb=1;
+0000cc  712c              STRB     r4,[r5,#4]
+                  |L2.206|
+;;;428    
+;;;429    //	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
+;;;430    	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
+;;;431    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+0000ce  f88d4004          STRB     r4,[sp,#4]
+;;;432    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+;;;433    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+;;;434    	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+0000d2  f8dfb0e8          LDR      r11,|L2.444|
+0000d6  f04f0a10          MOV      r10,#0x10             ;430
+0000da  f88d4006          STRB     r4,[sp,#6]            ;432
+0000de  2602              MOVS     r6,#2                 ;433
+0000e0  f8cda000          STR      r10,[sp,#0]           ;431
+0000e4  f88d6005          STRB     r6,[sp,#5]            ;433
+0000e8  4669              MOV      r1,sp
+0000ea  4658              MOV      r0,r11
+0000ec  f7fffffe          BL       GPIO_Init
+;;;435    
+;;;436    	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
 ;;;437    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
 0000f0  f88d4004          STRB     r4,[sp,#4]
+0000f4  2740              MOVS     r7,#0x40              ;436
 ;;;438    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-0000f4  f88d4006          STRB     r4,[sp,#6]
+0000f6  f88d4006          STRB     r4,[sp,#6]
+0000fa  9700              STR      r7,[sp,#0]            ;437
 ;;;439    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-0000f8  2602              MOVS     r6,#2
-0000fa  9000              STR      r0,[sp,#0]            ;437
 0000fc  f88d6005          STRB     r6,[sp,#5]
-;;;440    	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+;;;440    	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
 000100  4669              MOV      r1,sp
-000102  f8dfa0d8          LDR      r10,|L2.476|
-000106  e000              B        |L2.266|
+000102  482f              LDR      r0,|L2.448|
+000104  e000              B        |L2.264|
+                  |L2.262|
+000106  e045              B        |L2.404|
                   |L2.264|
-000108  e052              B        |L2.432|
-                  |L2.266|
-00010a  4650              MOV      r0,r10
-00010c  f7fffffe          BL       GPIO_Init
-;;;441    
-;;;442    	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
+000108  f7fffffe          BL       GPIO_Init
+;;;441    	
+;;;442    	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
 ;;;443    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-000110  f88d4004          STRB     r4,[sp,#4]
+00010c  f88d4004          STRB     r4,[sp,#4]
+000110  f44f7880          MOV      r8,#0x100             ;442
 ;;;444    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+000114  f88d4006          STRB     r4,[sp,#6]
+000118  f8cd8000          STR      r8,[sp,#0]            ;443
 ;;;445    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-;;;446    	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
-000114  f8dfb0c8          LDR      r11,|L2.480|
-000118  2740              MOVS     r7,#0x40              ;442
-00011a  f88d4006          STRB     r4,[sp,#6]            ;444
-00011e  9700              STR      r7,[sp,#0]            ;443
-000120  f88d6005          STRB     r6,[sp,#5]            ;445
-000124  4669              MOV      r1,sp
-000126  4658              MOV      r0,r11
-000128  f7fffffe          BL       GPIO_Init
-;;;447    	
-;;;448    	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
-;;;449    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-00012c  f88d4004          STRB     r4,[sp,#4]
-000130  f44f7880          MOV      r8,#0x100             ;448
+00011c  f88d6005          STRB     r6,[sp,#5]
+;;;446    	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
+000120  4669              MOV      r1,sp
+000122  4827              LDR      r0,|L2.448|
+000124  f7fffffe          BL       GPIO_Init
+;;;447    
+;;;448    	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
+;;;449    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
+000128  f04f0900          MOV      r9,#0
+00012c  2080              MOVS     r0,#0x80              ;448
+00012e  f88d9004          STRB     r9,[sp,#4]
+000132  9000              STR      r0,[sp,#0]
 ;;;450    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
 000134  f88d4006          STRB     r4,[sp,#6]
-000138  f8cd8000          STR      r8,[sp,#0]            ;449
-;;;451    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-00013c  f88d6005          STRB     r6,[sp,#5]
-;;;452    	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
-000140  4669              MOV      r1,sp
-000142  4658              MOV      r0,r11
-000144  f7fffffe          BL       GPIO_Init
-;;;453    
-;;;454    	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
+;;;451    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+000138  f88d6005          STRB     r6,[sp,#5]
+;;;452    	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
+00013c  4669              MOV      r1,sp
+00013e  4820              LDR      r0,|L2.448|
+000140  f7fffffe          BL       GPIO_Init
+;;;453    	
+;;;454    	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
+000144  0230              LSLS     r0,r6,#8
 ;;;455    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-000148  f04f0900          MOV      r9,#0
-00014c  2080              MOVS     r0,#0x80              ;454
-00014e  f88d9004          STRB     r9,[sp,#4]
-000152  9000              STR      r0,[sp,#0]
+000146  f88d9004          STRB     r9,[sp,#4]
+00014a  9000              STR      r0,[sp,#0]
 ;;;456    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-000154  f88d4006          STRB     r4,[sp,#6]
+00014c  f88d4006          STRB     r4,[sp,#6]
 ;;;457    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
-000158  f88d6005          STRB     r6,[sp,#5]
-;;;458    	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
-00015c  4669              MOV      r1,sp
-00015e  4658              MOV      r0,r11
-000160  f7fffffe          BL       GPIO_Init
+000150  f88d6005          STRB     r6,[sp,#5]
+;;;458    	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
+000154  4669              MOV      r1,sp
+000156  481a              LDR      r0,|L2.448|
+000158  f7fffffe          BL       GPIO_Init
 ;;;459    	
-;;;460    	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
-000164  0230              LSLS     r0,r6,#8
-;;;461    	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-000166  f88d9004          STRB     r9,[sp,#4]
-00016a  9000              STR      r0,[sp,#0]
-;;;462    	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-00016c  f88d4006          STRB     r4,[sp,#6]
-;;;463    	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
-000170  f88d6005          STRB     r6,[sp,#5]
-;;;464    	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
-000174  4669              MOV      r1,sp
-000176  4658              MOV      r0,r11
-000178  f7fffffe          BL       GPIO_Init
-;;;465    	
-;;;466    	if (conf.tek_gr_kal==0)
+;;;460    	if (conf.tek_gr_kal==0)
+;;;461    	{
+;;;462    		//  dr kal ==0 - pervaya
+;;;463    		PORT_L1->BSRRL = PIN_L1;  // on  PIN_L1
+00015c  4818              LDR      r0,|L2.448|
+00015e  78ea              LDRB     r2,[r5,#3]            ;460  ; conf
+000160  3018              ADDS     r0,r0,#0x18
+;;;464    	  PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+000162  1c81              ADDS     r1,r0,#2
+000164  b1c2              CBZ      r2,|L2.408|
+;;;465    	}
+;;;466    	else
 ;;;467    	{
-;;;468    		//  dr kal ==0 - pervaya
-;;;469    		PORT_L1->BSRRL = PIN_L1;  // on  PIN_L1
-00017c  4818              LDR      r0,|L2.480|
-00017e  78ea              LDRB     r2,[r5,#3]            ;466  ; conf
-000180  3018              ADDS     r0,r0,#0x18
-;;;470    	  PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
-000182  1c81              ADDS     r1,r0,#2
-000184  b1b2              CBZ      r2,|L2.436|
+;;;468    		//  dr kal ==1 - vtoraya
+;;;469    		PORT_L1->BSRRH = PIN_L1;  // off  PIN_L1
+000166  800f              STRH     r7,[r1,#0]
+;;;470    	  PORT_L2->BSRRL = PIN_L2;	// on   PIN_L2
+000168  f8a08000          STRH     r8,[r0,#0]
+                  |L2.364|
 ;;;471    	}
-;;;472    	else
-;;;473    	{
-;;;474    		//  dr kal ==1 - vtoraya
-;;;475    		PORT_L1->BSRRH = PIN_L1;  // off  PIN_L1
-000186  800f              STRH     r7,[r1,#0]
-;;;476    	  PORT_L2->BSRRL = PIN_L2;	// on   PIN_L2
-000188  f8a08000          STRH     r8,[r0,#0]
-                  |L2.396|
-;;;477    	}
-;;;478          
-;;;479    		sost_flesh=0;	
-00018c  4815              LDR      r0,|L2.484|
-;;;480    		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-00018e  f44f5200          MOV      r2,#0x2000
-000192  f8809000          STRB     r9,[r0,#0]            ;479
-000196  f8aa201a          STRH     r2,[r10,#0x1a]
-;;;481    		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-00019a  0052              LSLS     r2,r2,#1
-00019c  f8aa2018          STRH     r2,[r10,#0x18]
-;;;482    		
-;;;483    		avariya=0;
-0001a0  4a11              LDR      r2,|L2.488|
-;;;484    		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
-0001a2  f44f4100          MOV      r1,#0x8000
-0001a6  f8829000          STRB     r9,[r2,#0]            ;483
-0001aa  f8aa101a          STRH     r1,[r10,#0x1a]
-;;;485    	
-;;;486    	/*
-;;;487    		conf.por_rele
-;;;488    	  conf.time_max
-;;;489    	  conf.tm_antidreb
-;;;490    		conf.tm_rele_off
-;;;491    		conf.tm_rele_on
-;;;492    		conf.
-;;;493    	*/	
-;;;494    	
-;;;495    	/*
-;;;496    	for (i = 0; i < size; i += 1)
-;;;497      {
-;;;498        *(__IO uint8_t *) (BKPSRAM_BASE + i) = 0;
-;;;499      }
-;;;500    	*/
-;;;501    	
-;;;502    	/*
-;;;503    	for (i = 0; i < size; i += 1)
-;;;504      {
-;;;505        *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
-;;;506      }
-;;;507    	*/
-;;;508    	
-;;;509    	
-;;;510    /*
-;;;511    	conf.address=255;
-;;;512    	conf.ver_po_st=255;
-;;;513    	conf.ver_po_ml=255;
-;;;514    	conf.per_usr=255;
-;;;515    	conf.time_max=255;
-;;;516    	conf.tek_gr_kal=255;
-;;;517    	conf.gr_kal1.tabl1.fz[0]=255;
-;;;518    	conf.gr_kal1.tabl1.kod[0]=255;
-;;;519    	conf.gr_kal1.tabl2.fz[0]=255;
-;;;520    	conf.gr_kal1.tabl2.kod[0]=255;
-;;;521    	
-;;;522    	conf.gr_kal2.tabl1.fz[0]=255;
-;;;523    	conf.gr_kal2.tabl1.kod[0]=255;
-;;;524    	conf.gr_kal2.tabl2.fz[0]=255;
-;;;525    	conf.gr_kal2.tabl2.kod[0]=255;
-;;;526    	conf.revers_group_select=255;
-;;;527    	conf.revers_peredacha_select=255;
-;;;528    	conf.tm_antidreb=255;
-;;;529    	conf.por_rele=255;
-;;;530    	conf.tm_rele_on=255;
-;;;531    	conf.tm_rele_off=255;
-;;;532    	conf.indicators[0].numb=255;
-;;;533    	conf.indicators[0].kol_cifr=255;
-;;;534    	conf.indicators[1].numb=255;
-;;;535    	conf.indicators[1].kol_cifr=255;
-;;;536    	conf.indicators[2].numb=255;
-;;;537    	conf.indicators[2].kol_cifr=255;
-;;;538    	conf.indicators[3].numb=255;
-;;;539    	conf.indicators[3].kol_cifr=255;
-;;;540    	*/
-;;;541    	/*
-;;;542    	// test read config to comp
-;;;543    	conf.address=1;
-;;;544    	conf.ver_po_st=2;
-;;;545    	conf.ver_po_ml=3;
-;;;546    	conf.tek_gr_kal=4;
-;;;547    	conf.tm_antidreb=5;
-;;;548    	conf.revers_group_select=6;
-;;;549    	conf.revers_peredacha_select=7;
-;;;550    	conf.rez8=8;
-;;;551    	
-;;;552    	conf.per_usr=9;
-;;;553    	conf.time_max=10;
-;;;554    	conf.por_rele=11;
-;;;555    	conf.tm_rele_on=12;
-;;;556    	conf.tm_rele_off=13;
-;;;557    	conf.rez16=14;
-;;;558    	
-;;;559    	conf.indicators[0].numb=15;
-;;;560    	conf.indicators[0].kol_cifr=16;
-;;;561    	conf.indicators[1].numb=17;
-;;;562    	conf.indicators[1].kol_cifr=18;
-;;;563    	conf.indicators[2].numb=19;
-;;;564    	conf.indicators[2].kol_cifr=20;
-;;;565    	conf.indicators[3].numb=21;
-;;;566    	conf.indicators[3].kol_cifr=2;
-;;;567    	conf.gr_kal1.tabl1.kod[0]=23;
-;;;568    	conf.gr_kal1.tabl1.fz[0]=24;
-;;;569    	conf.gr_kal1.tabl2.kod[0]=25;
-;;;570    	conf.gr_kal1.tabl2.fz[0]=26;
-;;;571    	conf.gr_kal2.tabl1.kod[0]=27;
-;;;572    	conf.gr_kal2.tabl1.fz[0]=28;
-;;;573    	conf.gr_kal2.tabl2.kod[0]=29;
-;;;574    	conf.gr_kal2.tabl2.fz[0]=30;
-;;;575    	conf.gr_kal2.tabl2.kod[9]=31;
-;;;576    	conf.gr_kal2.tabl2.fz[9]=32;
+;;;472          
+;;;473    		sost_flesh=0;	
+00016c  4815              LDR      r0,|L2.452|
+;;;474    		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
+00016e  f44f5200          MOV      r2,#0x2000
+000172  f8809000          STRB     r9,[r0,#0]            ;473
+000176  f8ab201a          STRH     r2,[r11,#0x1a]
+;;;475    		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
+00017a  0052              LSLS     r2,r2,#1
+00017c  f8ab2018          STRH     r2,[r11,#0x18]
+;;;476    		
+;;;477    		avariya=0;
+000180  4a11              LDR      r2,|L2.456|
+;;;478    		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
+000182  f44f4100          MOV      r1,#0x8000
+000186  f8829000          STRB     r9,[r2,#0]            ;477
+00018a  f8ab101a          STRH     r1,[r11,#0x1a]
+;;;479    	
+;;;480    		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
+00018e  f8aba01a          STRH     r10,[r11,#0x1a]
+;;;481    	
+;;;482    	/*
+;;;483    		conf.por_rele
+;;;484    	  conf.time_max
+;;;485    	  conf.tm_antidreb
+;;;486    		conf.tm_rele_off
+;;;487    		conf.tm_rele_on
+;;;488    		conf.
+;;;489    	*/	
+;;;490    	
+;;;491    	/*
+;;;492    	for (i = 0; i < size; i += 1)
+;;;493      {
+;;;494        *(__IO uint8_t *) (BKPSRAM_BASE + i) = 0;
+;;;495      }
+;;;496    	*/
+;;;497    	
+;;;498    	/*
+;;;499    	for (i = 0; i < size; i += 1)
+;;;500      {
+;;;501        *(__IO uint8_t *) (BKPSRAM_BASE + i) = *(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
+;;;502      }
+;;;503    	*/
+;;;504    	
+;;;505    	
+;;;506    /*
+;;;507    	conf.address=255;
+;;;508    	conf.ver_po_st=255;
+;;;509    	conf.ver_po_ml=255;
+;;;510    	conf.per_usr=255;
+;;;511    	conf.time_max=255;
+;;;512    	conf.tek_gr_kal=255;
+;;;513    	conf.gr_kal1.tabl1.fz[0]=255;
+;;;514    	conf.gr_kal1.tabl1.kod[0]=255;
+;;;515    	conf.gr_kal1.tabl2.fz[0]=255;
+;;;516    	conf.gr_kal1.tabl2.kod[0]=255;
+;;;517    	
+;;;518    	conf.gr_kal2.tabl1.fz[0]=255;
+;;;519    	conf.gr_kal2.tabl1.kod[0]=255;
+;;;520    	conf.gr_kal2.tabl2.fz[0]=255;
+;;;521    	conf.gr_kal2.tabl2.kod[0]=255;
+;;;522    	conf.revers_group_select=255;
+;;;523    	conf.revers_peredacha_select=255;
+;;;524    	conf.tm_antidreb=255;
+;;;525    	conf.por_rele=255;
+;;;526    	conf.tm_rele_on=255;
+;;;527    	conf.tm_rele_off=255;
+;;;528    	conf.indicators[0].numb=255;
+;;;529    	conf.indicators[0].kol_cifr=255;
+;;;530    	conf.indicators[1].numb=255;
+;;;531    	conf.indicators[1].kol_cifr=255;
+;;;532    	conf.indicators[2].numb=255;
+;;;533    	conf.indicators[2].kol_cifr=255;
+;;;534    	conf.indicators[3].numb=255;
+;;;535    	conf.indicators[3].kol_cifr=255;
+;;;536    	*/
+;;;537    	/*
+;;;538    	// test read config to comp
+;;;539    	conf.address=1;
+;;;540    	conf.ver_po_st=2;
+;;;541    	conf.ver_po_ml=3;
+;;;542    	conf.tek_gr_kal=4;
+;;;543    	conf.tm_antidreb=5;
+;;;544    	conf.revers_group_select=6;
+;;;545    	conf.revers_peredacha_select=7;
+;;;546    	conf.rez8=8;
+;;;547    	
+;;;548    	conf.per_usr=9;
+;;;549    	conf.time_max=10;
+;;;550    	conf.por_rele=11;
+;;;551    	conf.tm_rele_on=12;
+;;;552    	conf.tm_rele_off=13;
+;;;553    	conf.rez16=14;
+;;;554    	
+;;;555    	conf.indicators[0].numb=15;
+;;;556    	conf.indicators[0].kol_cifr=16;
+;;;557    	conf.indicators[1].numb=17;
+;;;558    	conf.indicators[1].kol_cifr=18;
+;;;559    	conf.indicators[2].numb=19;
+;;;560    	conf.indicators[2].kol_cifr=20;
+;;;561    	conf.indicators[3].numb=21;
+;;;562    	conf.indicators[3].kol_cifr=2;
+;;;563    	conf.gr_kal1.tabl1.kod[0]=23;
+;;;564    	conf.gr_kal1.tabl1.fz[0]=24;
+;;;565    	conf.gr_kal1.tabl2.kod[0]=25;
+;;;566    	conf.gr_kal1.tabl2.fz[0]=26;
+;;;567    	conf.gr_kal2.tabl1.kod[0]=27;
+;;;568    	conf.gr_kal2.tabl1.fz[0]=28;
+;;;569    	conf.gr_kal2.tabl2.kod[0]=29;
+;;;570    	conf.gr_kal2.tabl2.fz[0]=30;
+;;;571    	conf.gr_kal2.tabl2.kod[9]=31;
+;;;572    	conf.gr_kal2.tabl2.fz[9]=32;
+;;;573    	
+;;;574    */
+;;;575    	
+;;;576    }
 ;;;577    	
-;;;578    */
-;;;579    	
-;;;580    }
-;;;581    	
-;;;582    __ASM volatile ("nop");
-0001ae  bf00              NOP      
-                  |L2.432|
-;;;583    
-;;;584        
-;;;585        // Всё, часы запустились и считают время.
-;;;586    		/*
-;;;587    		
-;;;588    		/разрешить тактирование модулей управления питанием и управлением резервной областью
-;;;589      RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
-;;;590      //разрешить доступ к области резервных данных
-;;;591      PWR->CR |= PWR_CR_DBP;
-;;;592      //если часы выключены - инициализировать их
-;;;593      if ((RCC->BDCR & RCC_BDCR_RTCEN) != RCC_BDCR_RTCEN)
-;;;594      {
-;;;595        //выполнить сброс области резервных данных
-;;;596        RCC->BDCR |=  RCC_BDCR_BDRST;
-;;;597        RCC->BDCR &= ~RCC_BDCR_BDRST;
-;;;598     
-;;;599        //выбрать источником тактовых импульсов внешний кварц 32768 и подать тактирование
-;;;600        RCC->BDCR |=  RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE;
+;;;578    __ASM volatile ("nop");
+000192  bf00              NOP      
+                  |L2.404|
+;;;579    
+;;;580        
+;;;581        // Всё, часы запустились и считают время.
+;;;582    		/*
+;;;583    		
+;;;584    		/разрешить тактирование модулей управления питанием и управлением резервной областью
+;;;585      RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
+;;;586      //разрешить доступ к области резервных данных
+;;;587      PWR->CR |= PWR_CR_DBP;
+;;;588      //если часы выключены - инициализировать их
+;;;589      if ((RCC->BDCR & RCC_BDCR_RTCEN) != RCC_BDCR_RTCEN)
+;;;590      {
+;;;591        //выполнить сброс области резервных данных
+;;;592        RCC->BDCR |=  RCC_BDCR_BDRST;
+;;;593        RCC->BDCR &= ~RCC_BDCR_BDRST;
+;;;594     
+;;;595        //выбрать источником тактовых импульсов внешний кварц 32768 и подать тактирование
+;;;596        RCC->BDCR |=  RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE;
+;;;597     
+;;;598        RTC->CRL  |=  RTC_CRL_CNF;
+;;;599        RTC->PRLL  = 0x7FFF;         //регистр деления на 32768
+;;;600        RTC->CRL  &=  ~RTC_CRL_CNF;
 ;;;601     
-;;;602        RTC->CRL  |=  RTC_CRL_CNF;
-;;;603        RTC->PRLL  = 0x7FFF;         //регистр деления на 32768
-;;;604        RTC->CRL  &=  ~RTC_CRL_CNF;
+;;;602        //установить бит разрешения работы и дождаться установки бита готовности
+;;;603        RCC->BDCR |= RCC_BDCR_LSEON;
+;;;604        while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON){}
 ;;;605     
-;;;606        //установить бит разрешения работы и дождаться установки бита готовности
-;;;607        RCC->BDCR |= RCC_BDCR_LSEON;
-;;;608        while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON){}
-;;;609     
-;;;610        RTC->CRL &= (uint16_t)~RTC_CRL_RSF;
-;;;611        while((RTC->CRL & RTC_CRL_RSF) != RTC_CRL_RSF){}
-;;;612     
-;;;613        return 1;
-;;;614      }
-;;;615      return 0;
-;;;616    	*/
-;;;617    	
+;;;606        RTC->CRL &= (uint16_t)~RTC_CRL_RSF;
+;;;607        while((RTC->CRL & RTC_CRL_RSF) != RTC_CRL_RSF){}
+;;;608     
+;;;609        return 1;
+;;;610      }
+;;;611      return 0;
+;;;612    	*/
+;;;613    	
+;;;614    	
+;;;615    	/*
+;;;616    	
+;;;617    	// one more init кес
 ;;;618    	
-;;;619    	/*
-;;;620    	
-;;;621    	// one more init кес
-;;;622    	
-;;;623    	RTC_InitTypeDef RTC_InitStructure;
-;;;624    RTC_TimeTypeDef RTC_TimeStructure;
-;;;625    RTC_DateTypeDef RTC_DateStructure;
-;;;626    __IO uint32_t AsynchPrediv = 0, SynchPrediv = 0;
-;;;627    __IO uint32_t TimeDisplay = 0;
+;;;619    	RTC_InitTypeDef RTC_InitStructure;
+;;;620    RTC_TimeTypeDef RTC_TimeStructure;
+;;;621    RTC_DateTypeDef RTC_DateStructure;
+;;;622    __IO uint32_t AsynchPrediv = 0, SynchPrediv = 0;
+;;;623    __IO uint32_t TimeDisplay = 0;
+;;;624    
+;;;625    
+;;;626    		// Enable the PWR APB1 Clock Interface 
+;;;627    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 ;;;628    
-;;;629    
-;;;630    		// Enable the PWR APB1 Clock Interface 
-;;;631    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-;;;632    
-;;;633    //Allow access to BKP Domain 
-;;;634    PWR_BackupAccessCmd(ENABLE);
-;;;635      
-;;;636    if (RTC_ReadBackupRegister(RTC_BKP_DR2) != 0xA5A5) {
-;;;637    
-;;;638    //Enable the PWR clock 
-;;;639    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-;;;640    
-;;;641    // Allow access to RTC 
-;;;642    PWR_BackupAccessCmd(ENABLE);
-;;;643    
-;;;644    #if defined (RTC_CLOCK_SOURCE_LSI) // LSI used as RTC source clock
-;;;645    // The RTC Clock may varies due to LSI frequency dispersion. 
-;;;646    // Enable the LSI OSC 
-;;;647    RCC_LSICmd(ENABLE);
-;;;648    
-;;;649    // Wait till LSI is ready 
-;;;650    while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET)
-;;;651    {
-;;;652    }
-;;;653    
-;;;654    // Select the RTC Clock Source 
-;;;655    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
-;;;656    
-;;;657    SynchPrediv = 0xFF;
-;;;658    AsynchPrediv = 0x7F;
+;;;629    //Allow access to BKP Domain 
+;;;630    PWR_BackupAccessCmd(ENABLE);
+;;;631      
+;;;632    if (RTC_ReadBackupRegister(RTC_BKP_DR2) != 0xA5A5) {
+;;;633    
+;;;634    //Enable the PWR clock 
+;;;635    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+;;;636    
+;;;637    // Allow access to RTC 
+;;;638    PWR_BackupAccessCmd(ENABLE);
+;;;639    
+;;;640    #if defined (RTC_CLOCK_SOURCE_LSI) // LSI used as RTC source clock
+;;;641    // The RTC Clock may varies due to LSI frequency dispersion. 
+;;;642    // Enable the LSI OSC 
+;;;643    RCC_LSICmd(ENABLE);
+;;;644    
+;;;645    // Wait till LSI is ready 
+;;;646    while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET)
+;;;647    {
+;;;648    }
+;;;649    
+;;;650    // Select the RTC Clock Source 
+;;;651    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+;;;652    
+;;;653    SynchPrediv = 0xFF;
+;;;654    AsynchPrediv = 0x7F;
+;;;655    
+;;;656    #elif defined (RTC_CLOCK_SOURCE_LSE) // LSE used as RTC source clock 
+;;;657    // Enable the LSE OSC 
+;;;658    RCC_LSEConfig(RCC_LSE_ON);
 ;;;659    
-;;;660    #elif defined (RTC_CLOCK_SOURCE_LSE) // LSE used as RTC source clock 
-;;;661    // Enable the LSE OSC 
-;;;662    RCC_LSEConfig(RCC_LSE_ON);
-;;;663    
-;;;664    // Wait till LSE is ready 
-;;;665    while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
-;;;666    {
-;;;667    }
-;;;668    
-;;;669    // Select the RTC Clock Source 
-;;;670    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-;;;671    
-;;;672    SynchPrediv = 0xFF;
-;;;673    AsynchPrediv = 0x7F;
+;;;660    // Wait till LSE is ready 
+;;;661    while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+;;;662    {
+;;;663    }
+;;;664    
+;;;665    // Select the RTC Clock Source 
+;;;666    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+;;;667    
+;;;668    SynchPrediv = 0xFF;
+;;;669    AsynchPrediv = 0x7F;
+;;;670    
+;;;671    #else
+;;;672    #error Please select the RTC Clock source inside the main.c file
+;;;673    #endif // RTC_CLOCK_SOURCE_LSI 
 ;;;674    
-;;;675    #else
-;;;676    #error Please select the RTC Clock source inside the main.c file
-;;;677    #endif // RTC_CLOCK_SOURCE_LSI 
-;;;678    
-;;;679    // Enable the RTC Clock 
-;;;680    RCC_RTCCLKCmd(ENABLE);
-;;;681    
-;;;682    // Wait for RTC APB registers synchronisation 
-;;;683    RTC_WaitForSynchro();
-;;;684    
-;;;685    // Allow access to BKP Domain 
-;;;686    PWR_BackupAccessCmd(ENABLE);
-;;;687    
-;;;688    // Write to the first RTC Backup Data Register 
-;;;689    RTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
-;;;690    
-;;;691    //Set the Time 
-;;;692    RTC_TimeStructure.RTC_Hours = 22;
-;;;693    RTC_TimeStructure.RTC_Minutes = 11;
-;;;694    RTC_TimeStructure.RTC_Seconds = 00;
-;;;695    
-;;;696    // Set the Date 
-;;;697    RTC_DateStructure.RTC_Month = 4;
-;;;698    RTC_DateStructure.RTC_Date = 29;
-;;;699    RTC_DateStructure.RTC_Year = 11;
-;;;700    RTC_DateStructure.RTC_WeekDay = RTC_Weekday_Friday;
-;;;701    
-;;;702    //Calendar Configuration 
-;;;703    RTC_InitStructure.RTC_AsynchPrediv = AsynchPrediv;
-;;;704    RTC_InitStructure.RTC_SynchPrediv = SynchPrediv;
-;;;705    RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
-;;;706    RTC_Init(&RTC_InitStructure);
-;;;707    
-;;;708    // Set Current Time and Date 
-;;;709    RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
-;;;710    RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
-;;;711    #if 0
-;;;712    //Configure the RTC Wakeup Clock source and Counter (Wakeup event each 1 second) 
-;;;713    RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);
-;;;714    RTC_SetWakeUpCounter(0x7FF);
-;;;715    
-;;;716    // Enable the Wakeup Interrupt 
-;;;717    RTC_ITConfig(RTC_IT_WUT, ENABLE);
-;;;718    
-;;;719    //Enable Wakeup Counter 
-;;;720    RTC_WakeUpCmd(ENABLE);
-;;;721    #endif
-;;;722    // Backup SRAM **************************************************************
-;;;723    //Enable BKPRAM Clock 
-;;;724    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
-;;;725    
-;;;726    //Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
-;;;727    PWR_BackupRegulatorCmd(ENABLE);
-;;;728    
-;;;729    // Wait until the Backup SRAM low power Regulator is ready 
-;;;730    while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
-;;;731    {
-;;;732    }
-;;;733    
-;;;734    }
-;;;735    else{
-;;;736    
-;;;737    // Enable the PWR clock 
-;;;738    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-;;;739    
-;;;740    // Allow access to RTC 
-;;;741    PWR_BackupAccessCmd(ENABLE);
-;;;742    
-;;;743    // Wait for RTC APB registers synchronisation 
-;;;744    RTC_WaitForSynchro();
-;;;745    // Clear the Wakeup Interrupt 
-;;;746    RTC_ClearITPendingBit(RTC_IT_WUT);
-;;;747    
-;;;748    // Backup SRAM **************************************************************
-;;;749    // Enable BKPSRAM Clock 
-;;;750    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
-;;;751    }
-;;;752    
-;;;753    
-;;;754    	
-;;;755    	*/
-;;;756    	
-;;;757    }
-0001b0  e8bd9ffc          POP      {r2-r12,pc}
-                  |L2.436|
-0001b4  8007              STRH     r7,[r0,#0]            ;469
-0001b6  f8a18000          STRH     r8,[r1,#0]            ;470
-0001ba  e7e7              B        |L2.396|
-;;;758    
+;;;675    // Enable the RTC Clock 
+;;;676    RCC_RTCCLKCmd(ENABLE);
+;;;677    
+;;;678    // Wait for RTC APB registers synchronisation 
+;;;679    RTC_WaitForSynchro();
+;;;680    
+;;;681    // Allow access to BKP Domain 
+;;;682    PWR_BackupAccessCmd(ENABLE);
+;;;683    
+;;;684    // Write to the first RTC Backup Data Register 
+;;;685    RTC_WriteBackupRegister(RTC_BKP_DR2,0xA5A5);
+;;;686    
+;;;687    //Set the Time 
+;;;688    RTC_TimeStructure.RTC_Hours = 22;
+;;;689    RTC_TimeStructure.RTC_Minutes = 11;
+;;;690    RTC_TimeStructure.RTC_Seconds = 00;
+;;;691    
+;;;692    // Set the Date 
+;;;693    RTC_DateStructure.RTC_Month = 4;
+;;;694    RTC_DateStructure.RTC_Date = 29;
+;;;695    RTC_DateStructure.RTC_Year = 11;
+;;;696    RTC_DateStructure.RTC_WeekDay = RTC_Weekday_Friday;
+;;;697    
+;;;698    //Calendar Configuration 
+;;;699    RTC_InitStructure.RTC_AsynchPrediv = AsynchPrediv;
+;;;700    RTC_InitStructure.RTC_SynchPrediv = SynchPrediv;
+;;;701    RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
+;;;702    RTC_Init(&RTC_InitStructure);
+;;;703    
+;;;704    // Set Current Time and Date 
+;;;705    RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
+;;;706    RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
+;;;707    #if 0
+;;;708    //Configure the RTC Wakeup Clock source and Counter (Wakeup event each 1 second) 
+;;;709    RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);
+;;;710    RTC_SetWakeUpCounter(0x7FF);
+;;;711    
+;;;712    // Enable the Wakeup Interrupt 
+;;;713    RTC_ITConfig(RTC_IT_WUT, ENABLE);
+;;;714    
+;;;715    //Enable Wakeup Counter 
+;;;716    RTC_WakeUpCmd(ENABLE);
+;;;717    #endif
+;;;718    // Backup SRAM **************************************************************
+;;;719    //Enable BKPRAM Clock 
+;;;720    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+;;;721    
+;;;722    //Enable the Backup SRAM low power Regulator to retain it's content in VBAT mode 
+;;;723    PWR_BackupRegulatorCmd(ENABLE);
+;;;724    
+;;;725    // Wait until the Backup SRAM low power Regulator is ready 
+;;;726    while(PWR_GetFlagStatus(PWR_FLAG_BRR) == RESET)
+;;;727    {
+;;;728    }
+;;;729    
+;;;730    }
+;;;731    else{
+;;;732    
+;;;733    // Enable the PWR clock 
+;;;734    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+;;;735    
+;;;736    // Allow access to RTC 
+;;;737    PWR_BackupAccessCmd(ENABLE);
+;;;738    
+;;;739    // Wait for RTC APB registers synchronisation 
+;;;740    RTC_WaitForSynchro();
+;;;741    // Clear the Wakeup Interrupt 
+;;;742    RTC_ClearITPendingBit(RTC_IT_WUT);
+;;;743    
+;;;744    // Backup SRAM **************************************************************
+;;;745    // Enable BKPSRAM Clock 
+;;;746    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
+;;;747    }
+;;;748    
+;;;749    
+;;;750    	
+;;;751    	*/
+;;;752    	
+;;;753    }
+000194  e8bd9ffc          POP      {r2-r12,pc}
+                  |L2.408|
+000198  8007              STRH     r7,[r0,#0]            ;463
+00019a  f8a18000          STRH     r8,[r1,#0]            ;464
+00019e  e7e5              B        |L2.364|
+;;;754    
                           ENDP
 
-                  |L2.444|
+                  |L2.416|
                           DCD      0x4000280c
-                  |L2.448|
+                  |L2.420|
                           DCD      0x40023840
-                  |L2.452|
+                  |L2.424|
                           DCD      0x40007000
-                  |L2.456|
-                          DCD      0x007f0107
-                  |L2.460|
+                  |L2.428|
                           DCD      ||.data||
-                  |L2.464|
+                  |L2.432|
                           DCD      0x40024000
-                  |L2.468|
+                  |L2.436|
                           DCD      conf
-                  |L2.472|
+                  |L2.440|
                           DCD      kol_usr
-                  |L2.476|
+                  |L2.444|
                           DCD      0x40020000
-                  |L2.480|
+                  |L2.448|
                           DCD      0x40020800
-                  |L2.484|
+                  |L2.452|
                           DCD      sost_flesh
-                  |L2.488|
+                  |L2.456|
                           DCD      avariya
 
                           AREA ||i.rtc_Lock||, CODE, READONLY, ALIGN=2
