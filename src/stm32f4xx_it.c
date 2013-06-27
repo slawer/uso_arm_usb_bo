@@ -302,7 +302,8 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_on=0;
 		kol_rele_off=0;
 		avariya=1;
-		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA
+		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
+		PORT_RELE->BSRRL = PIN_RELE;	// on PIN_RELE		
 	}
 	
 	if (kol_rele_off>=conf.tm_rele_off)
@@ -311,6 +312,7 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_off=0;
 		avariya=0;
 		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+		PORT_RELE->BSRRH = PIN_RELE;  	// off  PIN_RELE		
 	}
 }
 
@@ -332,6 +334,7 @@ void SysTick_Handler(void)
 	else
 		kol_pribl_vkl++;
 	
+	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
@@ -788,7 +791,7 @@ if (1)
 			
 			
 			// zn from adc with calibr and averaging
-			tmp=ADC3ConvertedValue%1000;
+			tmp=ADC3ConvertedValue%10000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;

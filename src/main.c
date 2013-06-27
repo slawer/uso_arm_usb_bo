@@ -26,6 +26,7 @@ u8 in=0, poz=0;
 		u8 kol=0;
 		float fl_tmp=0;
 		
+//u32  zad_spi=10000,zad_spi2=100000;
 u32  zad_spi=10000,zad_spi2=100000;
 
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
@@ -169,7 +170,7 @@ void ADC3_CH12_DMA_Config(void)
  // Configure ADC3 Channel12 pin as analog input ****************************
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOC, &GPIO_InitStructure);
 
   // ADC Common Init *********************************************************
@@ -367,14 +368,14 @@ void spi_init(){
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1
 
     GPIO_StructInit(&gpio);
-
+/*
      gpio.GPIO_Pin   = GPIO_Pin_4;   // NSS
      gpio.GPIO_Mode  = GPIO_Mode_OUT;
      gpio.GPIO_Speed = GPIO_Speed_50MHz;
      gpio.GPIO_OType = GPIO_OType_PP;
      gpio.GPIO_PuPd  = GPIO_PuPd_NOPULL;
      GPIO_Init(GPIOA, &GPIO_InitStructure);
-
+*/
     gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
     gpio.GPIO_Mode = GPIO_Mode_AF;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
@@ -1575,13 +1576,64 @@ SPI 2:
 		
 	
 		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
-		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
 		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+		
+		
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD;          //  PP GPIO_OType_PP
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+	
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; //GPIO_Mode_OUT; //GPIO_Mode_IN;     			// 	rezim vivoda
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+//		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
+	
+/*
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN; //GPIO_Mode_IN;     			// 	rezim vivoda
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+		GPIO_Init(GPIOC, &GPIO_InitStructure); 
+	*/	
+		/*
+	  GPIO_PuPd_NOPULL = 0x00,
+  GPIO_PuPd_UP     = 0x01,
+  GPIO_PuPd_DOWN   = 0x02
+*/
 
+//		PIN_PRIBL
+//		Port_PRIBL
+		
+/*
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod and RELE
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_OType = GPIO_PuPd_DOWN;          //  PP GPIO_OType_PP
+		
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+*/
 /*
 	conf.indicators[0].numb=1;
 	conf.indicators[0].kol_cifr=8;

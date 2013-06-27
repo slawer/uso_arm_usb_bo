@@ -37155,6 +37155,7 @@ N		u32 tmp=0;
 N		u8 kol=0;
 N		float fl_tmp=0;
 N		
+N//u32  zad_spi=10000,zad_spi2=100000;
 Nu32  zad_spi=10000,zad_spi2=100000;
 N
 N/** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
@@ -37388,7 +37389,7 @@ Nextern u16 tek_kol;
 Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
-N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PIN_PRIBL                         GPIO_Pin_1
 N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
@@ -37430,7 +37431,7 @@ Nextern u8 sost_flesh;
 N
 N
 N
-L 59 "src\main.c" 2
+L 60 "src\main.c" 2
 N#include "my_def_ext.h"
 L 1 ".\inc\my_def_ext.h" 1
 N
@@ -37560,7 +37561,7 @@ Nu16 kol_usr=0;
 Nu32 buf_sum=0;
 N
 N
-N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PIN_PRIBL                         GPIO_Pin_1
 N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
@@ -37612,7 +37613,7 @@ N
 N
 N
 N
-L 60 "src\main.c" 2
+L 61 "src\main.c" 2
 N
 N
 N// rcc
@@ -37658,7 +37659,7 @@ S		 void rtc_Unlock(void);
 S		 void rtc_Lock(void);
 S
 N#endif
-L 64 "src\main.c" 2
+L 65 "src\main.c" 2
 N//#include "gpio.h"
 N
 N
@@ -37795,7 +37796,7 @@ N // Configure ADC3 Channel12 pin as analog input ****************************
 N  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
 X  GPIO_InitStructure.GPIO_Pin = ((uint16_t)0x0004);
 N  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
-N  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+N  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 N  GPIO_Init(GPIOC, &GPIO_InitStructure);
 X  GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure);
 N
@@ -38030,16 +38031,14 @@ N    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1
 X    RCC_APB2PeriphClockCmd(((uint32_t)0x00001000),ENABLE);  
 N
 N    GPIO_StructInit(&gpio);
-N
+N/*
 N     gpio.GPIO_Pin   = GPIO_Pin_4;   // NSS
-X     gpio.GPIO_Pin   = ((uint16_t)0x0010);   
 N     gpio.GPIO_Mode  = GPIO_Mode_OUT;
 N     gpio.GPIO_Speed = GPIO_Speed_50MHz;
 N     gpio.GPIO_OType = GPIO_OType_PP;
 N     gpio.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 N     GPIO_Init(GPIOA, &GPIO_InitStructure);
-X     GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure);
-N
+N*/
 N    gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
 X    gpio.GPIO_Pin = ((uint16_t)0x0020) | ((uint16_t)0x0040) | ((uint16_t)0x0080);
 N    gpio.GPIO_Mode = GPIO_Mode_AF;
@@ -38068,6 +38067,7 @@ N    SPI_Init(SPI1,&spi1);
 X    SPI_Init(((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x00010000) + 0x3000)),&spi1);
 N    SPI_Cmd(SPI1,ENABLE);
 X    SPI_Cmd(((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x00010000) + 0x3000)),ENABLE);
+W "src\main.c" 363 20 variable "GPIO_InitStructure" was declared but never referenced
 N}
 N
 Nvoid spi1_init() {
@@ -38718,7 +38718,7 @@ N				GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
 X				GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);      		delay_spi(zad_spi2);
 N			}
 N		
-W "src\main.c" 964 10 variable "ind" was declared but never referenced
+W "src\main.c" 965 10 variable "ind" was declared but never referenced
 N}
 Nvoid init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 N{
@@ -39038,7 +39038,7 @@ N			switch (kol_cifr)
 N			{
 N				case 0x00:  // CS0
 N					return;
-W "src\main.c" 1289 6 statement is unreachable
+W "src\main.c" 1290 6 statement is unreachable
 N					break;
 N				case 0x01:  // CS0
 N					maximum=10;
@@ -39222,7 +39222,7 @@ N			spi_send(4);															delay_spi(zad_spi);
 N			spi_send(symb_code_min[mm%10]); 					delay_spi(zad_spi);
 N			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
 X			GPIO_WriteBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), pin, Bit_SET);       delay_spi(zad_spi2);
-W "src\main.c" 1387 7 variable "i" was declared but never referenced
+W "src\main.c" 1388 7 variable "i" was declared but never referenced
 N}
 N
 N
@@ -39352,7 +39352,7 @@ N
 N	
 N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
 X		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
-N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
 X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0001)|((uint16_t)0x0002)|((uint16_t)0x0004)|((uint16_t)0x0008);  
 N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
@@ -39360,7 +39360,64 @@ N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 N		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+N		
+N		
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+X		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
+X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010)|((uint16_t)0x0100)|((uint16_t)0x0200)|((uint16_t)0x2000)|((uint16_t)0x4000)|((uint16_t)0x8000);  
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+N		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+N	
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+X		RCC_APB2PeriphClockCmd(((uint32_t)0x00000004), ENABLE); 	
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
+X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0002);  						
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; //GPIO_Mode_OUT; //GPIO_Mode_IN;     			// 	rezim vivoda
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+N//		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+N		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
+X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
+N	
+N/*
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN; //GPIO_Mode_IN;     			// 	rezim vivoda
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+N		GPIO_Init(GPIOC, &GPIO_InitStructure); 
+N	*/	
+N		/*
+N	  GPIO_PuPd_NOPULL = 0x00,
+N  GPIO_PuPd_UP     = 0x01,
+N  GPIO_PuPd_DOWN   = 0x02
+N*/
 N
+N//		PIN_PRIBL
+N//		Port_PRIBL
+N		
+N/*
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod and RELE
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		GPIO_InitStructure.GPIO_OType = GPIO_PuPd_DOWN;          //  PP GPIO_OType_PP
+N		
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+N		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+N*/
 N/*
 N	conf.indicators[0].numb=1;
 N	conf.indicators[0].kol_cifr=8;
@@ -39411,7 +39468,7 @@ N  init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicator
 N	*/
 N	test_ind_all(1);
 N	
-N	for (i = 0; i < 100; i ++)
+N	for (i = 0; i < 50; i ++)
 N		delay_spi(1000000);
 N	test_ind_all(0);
 N	init_ind(1, 8, 0);
@@ -39506,8 +39563,8 @@ N#endif
 N	
 N
 N  
-W "src\main.c" 1471 11 variable "data" was declared but never referenced
-W "src\main.c" 1473 12 variable "DT" was declared but never referenced
+W "src\main.c" 1472 11 variable "data" was declared but never referenced
+W "src\main.c" 1474 12 variable "DT" was declared but never referenced
 N}
 N
 N/**

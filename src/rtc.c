@@ -475,7 +475,9 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 		
 		avariya=0;
-		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
+		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
+	
+		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
 	
 	/*
 		conf.por_rele

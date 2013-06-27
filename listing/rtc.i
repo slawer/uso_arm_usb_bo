@@ -15524,7 +15524,9 @@ RCC_AHB1PeriphClockCmd(((uint32_t)0x00040000), ENABLE);
 		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
 		
 		avariya=0;
-		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);               			
+		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);   
+	
+		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0010);	
 	
 	
 

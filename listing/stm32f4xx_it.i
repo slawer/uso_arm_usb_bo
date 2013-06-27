@@ -21860,6 +21860,7 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_off=0;
 		avariya=1;
 		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x8000);	
+		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0010);	
 	}
 	
 	if (kol_rele_off>=conf.tm_rele_off)
@@ -21868,6 +21869,7 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_off=0;
 		avariya=0;
 		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);  	
+		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0010);  	
 	}
 }
 
@@ -21884,11 +21886,12 @@ void SysTick_Handler(void)
 	
  
 	
-	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0001))==0)
+	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0002))==0)
 		kol_pribl_vikl++;
 	else
 		kol_pribl_vkl++;
 	
+	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
@@ -22345,7 +22348,7 @@ rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(
 			
 			
 			
-			tmp=ADC3ConvertedValue%1000;
+			tmp=ADC3ConvertedValue%10000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;

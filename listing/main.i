@@ -21341,6 +21341,7 @@ u8 in=0, poz=0;
 		u8 kol=0;
 		float fl_tmp=0;
 		
+
 u32  zad_spi=10000,zad_spi2=100000;
 
 
@@ -21604,7 +21605,7 @@ extern u8 sost_flesh;
 
 
 
-#line 59 "src\\main.c"
+#line 60 "src\\main.c"
 #line 1 ".\\inc\\my_def_ext.h"
 
 
@@ -21748,7 +21749,7 @@ u8 sost_flesh=0;
 
 
 
-#line 60 "src\\main.c"
+#line 61 "src\\main.c"
 
 
 
@@ -21760,7 +21761,7 @@ u8 sost_flesh=0;
 #line 6 "src\\rtc.h"
 #line 7 "src\\rtc.h"
 
-#line 64 "src\\main.c"
+#line 65 "src\\main.c"
 
 
 
@@ -21869,7 +21870,7 @@ void ADC3_CH12_DMA_Config(void)
  
   GPIO_InitStructure.GPIO_Pin = ((uint16_t)0x0004);
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure);
 
   
@@ -22068,13 +22069,13 @@ void spi_init(){
 
     GPIO_StructInit(&gpio);
 
-     gpio.GPIO_Pin   = ((uint16_t)0x0010);   
-     gpio.GPIO_Mode  = GPIO_Mode_OUT;
-     gpio.GPIO_Speed = GPIO_Speed_50MHz;
-     gpio.GPIO_OType = GPIO_OType_PP;
-     gpio.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-     GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure);
 
+
+
+
+
+
+ 
     gpio.GPIO_Pin = ((uint16_t)0x0020) | ((uint16_t)0x0040) | ((uint16_t)0x0080);
     gpio.GPIO_Mode = GPIO_Mode_AF;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
@@ -23281,7 +23282,58 @@ int main(void)
 		
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+		
+		
+		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010)|((uint16_t)0x0100)|((uint16_t)0x0200)|((uint16_t)0x2000)|((uint16_t)0x4000)|((uint16_t)0x8000);  
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 
+		
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+	
+		RCC_APB2PeriphClockCmd(((uint32_t)0x00000004), ENABLE); 	
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0002);  						
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 
+	
 
+	
+		
+
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
+	
+
+
+
+
+
+
+
+
+
+ 	
+		
+
+
+
+ 
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -23332,7 +23384,7 @@ int main(void)
  
 	test_ind_all(1);
 	
-	for (i = 0; i < 100; i ++)
+	for (i = 0; i < 50; i ++)
 		delay_spi(1000000);
 	test_ind_all(0);
 	init_ind(1, 8, 0);
@@ -23479,7 +23531,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1802 "src\\main.c"
+#line 1854 "src\\main.c"
 
   
  

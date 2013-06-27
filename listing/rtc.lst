@@ -29893,7 +29893,7 @@ Nextern u16 tek_kol;
 Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
-N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PIN_PRIBL                         GPIO_Pin_1
 N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
@@ -30445,8 +30445,11 @@ N		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
 N		
 N		avariya=0;
-N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);               			
+N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);   
+N	
+N		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0010);	
 N	
 N	/*
 N		conf.por_rele

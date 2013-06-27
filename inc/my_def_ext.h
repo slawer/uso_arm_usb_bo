@@ -80,7 +80,7 @@ u16 kol_usr=0;
 u32 buf_sum=0;
 
 
-#define PIN_PRIBL                         GPIO_Pin_0
+#define PIN_PRIBL                         GPIO_Pin_1
 #define PORT_PRIBL                    		GPIOC
 
 #define PIN_RELE                         	GPIO_Pin_4

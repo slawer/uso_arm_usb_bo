@@ -35699,7 +35699,7 @@ Nextern u16 tek_kol;
 Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
-N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PIN_PRIBL                         GPIO_Pin_1
 N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
