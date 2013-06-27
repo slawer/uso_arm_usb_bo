@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\MEDIA_USB_KEY\uso_arm_usb_bo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\MEDIA_USB_KEY\uso_arm_usb_bo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Thu Jun 20 22:33:35 2013
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 24]: Last Updated: Thu Jun 27 20:50:09 2013
 <BR><P>
 <H3>Maximum Stack Usage =        416 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2104,7 +2104,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 532 bytes, Stack size 32 bytes, main.o(i.main))
+<P><STRONG><a name="[74]"></a>main</STRONG> (Thumb, 604 bytes, Stack size 32 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = main &rArr; USBH_Process &rArr; USBH_HandleEnum &rArr; HCD_ResetPort &rArr; USB_OTG_ResetPort &rArr; USB_OTG_BSP_mDelay &rArr; BSP_Delay &rArr; BSP_SetTime &rArr; TIM_TimeBaseInit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_Process
@@ -2172,14 +2172,13 @@ Global Symbols
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;COMMAND_AudioExecuteApplication
 </UL>
 
-<P><STRONG><a name="[157]"></a>rtc_Init</STRONG> (Thumb, 424 bytes, Stack size 48 bytes, rtc.o(i.rtc_Init))
+<P><STRONG><a name="[157]"></a>rtc_Init</STRONG> (Thumb, 416 bytes, Stack size 48 bytes, rtc.o(i.rtc_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = rtc_Init &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_WriteBackupRegister
 <LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_ReadBackupRegister
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHB1PeriphClockCmd
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rtc_Unlock
 </UL>
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -2205,8 +2204,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[d2]"></a>rtc_Unlock</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, rtc.o(i.rtc_Unlock))
-<BR><BR>[Called By]<UL><LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rtc_Init
-<LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
+<BR><BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
 </UL>
 
 <P><STRONG><a name="[159]"></a>spi1_init</STRONG> (Thumb, 152 bytes, Stack size 40 bytes, main.o(i.spi1_init))
@@ -2266,7 +2264,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[c7]"></a>test_rele</STRONG> (Thumb, 72 bytes, Stack size 20 bytes, stm32f4xx_it.o(i.test_rele))
+<P><STRONG><a name="[c7]"></a>test_rele</STRONG> (Thumb, 80 bytes, Stack size 20 bytes, stm32f4xx_it.o(i.test_rele))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = test_rele
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler

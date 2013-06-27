@@ -281,18 +281,8 @@ peripheral clock register (RCC_AHB1ENR)
 uint8_t *BKPRam = (uint8_t *)0x40024000;
 
 
-*/
+*/	
 
-if (LSE==0) 
-{
-	        // Настроим предделитель для получения частоты 1 Гц.
-        
-        // LSI: 
-        // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-            uint32_t Sync = 249;   // 15 бит
-            uint32_t Async = 127;  // 7 бит
-	
-	
    // Запускаем LSI:
     RCC->CSR |= RCC_CSR_LSION;
     
@@ -311,26 +301,8 @@ if (LSE==0)
       
     // Включим тактирование RTC
     RCC->BDCR |= RCC_BDCR_RTCEN;
-    
-    // Снимем защиту от записи с регистров RTC
-    rtc_Unlock();
-
-        // Здесь можем менять регистры RTC
-
-        // Войдём в режим инициализации:
-        RTC->ISR |= RTC_ISR_INIT;
-        
-        // Ждём, когда это произойдёт
-        while(!(RTC->ISR & RTC_ISR_INITF)) {}
-        
-        // Часы остановлены. Режим инициализации            
-            // Сначала записываем величину для синхронного предделителя
-            RTC->PRER = Sync;
-            
-            // Теперь добавим для асинхронного предделителя
-            RTC->PRER = Sync | (Async << 16);		
-				}
-else {	
+			
+/*
 		 //  start LSE
 		 RCC->BDCR |= RCC_BDCR_LSEON;
 		 while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}			
@@ -346,9 +318,7 @@ else {
 					RTC->PRER = 0x00000000; // RESET PRER register
 					RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
 					RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-			}
-
-				
+     */          
         // Устанавливаем дату: 30.05.13, пятница
 				//       rtc_SetDate(2, 6, 13, 7);       
         // Устанавливаем время: 15:00:00
@@ -505,7 +475,9 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 		
 		avariya=0;
-		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
+		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
+	
+		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
 	
 	/*
 		conf.por_rele

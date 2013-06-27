@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29152,7 +29152,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29893,7 +29893,7 @@ Nextern u16 tek_kol;
 Nextern u16 kol_usr;
 Nextern u32 buf_sum;
 N
-N#define PIN_PRIBL                         GPIO_Pin_0
+N#define PIN_PRIBL                         GPIO_Pin_1
 N#define PORT_PRIBL                    		GPIOC
 N
 N#define PIN_RELE                         	GPIO_Pin_4
@@ -29934,7 +29934,7 @@ Nextern u8 avariya;
 Nextern u8 sost_flesh;
 N
 N
-N#define LSE 1
+N
 L 11 "src\rtc.c" 2
 N
 N
@@ -30221,19 +30221,8 @@ N
 Nuint8_t *BKPRam = (uint8_t *)0x40024000;
 N
 N
-N*/
+N*/	
 N
-Nif (LSE==0) 
-Xif (1==0) 
-N{
-N	        // Настроим предделитель для получения частоты 1 Гц.
-N        
-N        // LSI: 
-N        // LSE: нужно разделить на 0x7fff (кварцы так точно рассчитаны на это)
-N            uint32_t Sync = 249;   // 15 бит
-N            uint32_t Async = 127;  // 7 бит
-N	
-N	
 N   // Запускаем LSI:
 N    RCC->CSR |= RCC_CSR_LSION;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->CSR |= ((uint32_t)0x00000001);
@@ -30259,57 +30248,24 @@ N
 N    // Включим тактирование RTC
 N    RCC->BDCR |= RCC_BDCR_RTCEN;
 X    ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00008000);
-N    
-N    // Снимем защиту от записи с регистров RTC
-N    rtc_Unlock();
-N
-N        // Здесь можем менять регистры RTC
-N
-N        // Войдём в режим инициализации:
-N        RTC->ISR |= RTC_ISR_INIT;
-X        ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= ((uint32_t)0x00000080);
-N        
-N        // Ждём, когда это произойдёт
-N        while(!(RTC->ISR & RTC_ISR_INITF)) {}
-X        while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
-N        
-N        // Часы остановлены. Режим инициализации            
-N            // Сначала записываем величину для синхронного предделителя
-N            RTC->PRER = Sync;
-X            ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = Sync;
-N            
-N            // Теперь добавим для асинхронного предделителя
-N            RTC->PRER = Sync | (Async << 16);		
-X            ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = Sync | (Async << 16);		
-N				}
-Nelse {	
+N			
+N/*
 N		 //  start LSE
 N		 RCC->BDCR |= RCC_BDCR_LSEON;
-X		 ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00000001);
 N		 while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON) {}			
-X		 while ((((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR & ((uint32_t)0x00000001)) != ((uint32_t)0x00000001)) {}			
 N		 while (!(RCC->BDCR & RCC_BDCR_LSERDY)) {}			
-X		 while (!(((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR & ((uint32_t)0x00000002))) {}			
 N		 RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
-X		 ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x3800))->BDCR |= ((uint32_t)0x00008000) | ((uint32_t)0x00000100);
 N			
 N      // Снимем защиту от записи с регистров RTC
 N      rtc_Unlock();
 N        // Войдём в режим инициализации:
 N      RTC->ISR |= RTC_ISR_INIT;
-X      ((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR |= ((uint32_t)0x00000080);
 N			while(!(RTC->ISR & RTC_ISR_INITF)) {}
-X			while(!(((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->ISR & ((uint32_t)0x00000040))) {}
 N
 N					RTC->PRER = 0x00000000; // RESET PRER register
-X					((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER = 0x00000000; 
 N					RTC->PRER |= (0xFF<<0); // 255 + 1 Synchronous prescaler factor set
-X					((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0xFF<<0); 
 N					RTC->PRER |= (0x7F<<16); // 127 + 1 Asynchronous prescaler factor set
-X					((RTC_TypeDef *) (((uint32_t)0x40000000) + 0x2800))->PRER |= (0x7F<<16); 
-N			}
-N
-N				
+N     */          
 N        // Устанавливаем дату: 30.05.13, пятница
 N				//       rtc_SetDate(2, 6, 13, 7);       
 N        // Устанавливаем время: 15:00:00
@@ -30489,8 +30445,11 @@ N		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
 N		
 N		avariya=0;
-N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;               			
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);               			
+N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x8000);   
+N	
+N		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0010);	
 N	
 N	/*
 N		conf.por_rele
@@ -30586,8 +30545,8 @@ N	conf.gr_kal2.tabl2.fz[9]=32;
 N	
 N*/
 N	
-W "src\rtc.c" 383 11 variable "i1" was declared but never referenced
-W "src\rtc.c" 383 17 variable "errorindex" was declared but never referenced
+W "src\rtc.c" 353 11 variable "i1" was declared but never referenced
+W "src\rtc.c" 353 17 variable "errorindex" was declared but never referenced
 N}
 N	
 N__ASM volatile ("nop");
