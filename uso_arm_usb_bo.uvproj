@@ -163,9 +163,9 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4104</DriverSelection>
+            <DriverSelection>4100</DriverSelection>
           </Flash1>
-          <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
+          <Flash2>STLink\ST-LINKIII-KEIL.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
         </Utilities>
@@ -450,11 +450,6 @@
               <FileName>stm32f4_discovery.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Utilities\STM32F4-Discovery\stm32f4_discovery.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4_discovery_lis302dl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1104,11 +1099,6 @@
               <FileName>stm32f4_discovery.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Utilities\STM32F4-Discovery\stm32f4_discovery.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4_discovery_lis302dl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.c</FilePath>
             </File>
           </Files>
         </Group>

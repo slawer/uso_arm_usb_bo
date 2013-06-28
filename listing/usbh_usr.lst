@@ -516,7 +516,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -29430,7 +29430,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -33160,7 +33160,7 @@ N
 N
 L 34 ".\inc\usbh_usr.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -35715,19 +35715,19 @@ N#define PORT_K2                 					GPIOC
 N#define PIN_L2                         		GPIO_Pin_8
 N#define PORT_L2                 					GPIOC
 N
-N#define PIN_PER_NIZ                       GPIO_Pin_8
-N#define PORT_PER_NIZ                			GPIOA
+N#define PIN_PER_NIZ                       GPIO_Pin_3		//  L3
+N#define PORT_PER_NIZ                			GPIOE
 N
-N#define PIN_PER_VERH                      GPIO_Pin_9
+N#define PIN_PER_VERH                      GPIO_Pin_8		//	L4
 N#define PORT_PER_VERH                			GPIOA
 N
-N#define PIN_ZAP_EN                      	GPIO_Pin_13
-N#define PORT_ZAP_EN              				  GPIOA
+N#define PIN_ZAP_EN                      	GPIO_Pin_4		//	L5
+N#define PORT_ZAP_EN              				  GPIOE
 N
-N#define PIN_ZAP_DIS                      	GPIO_Pin_14
-N#define PORT_ZAP_DIS              				GPIOA
+N#define PIN_ZAP_DIS                      	GPIO_Pin_5  	//	L6
+N#define PORT_ZAP_DIS              				GPIOE
 N
-N#define PIN_AVARIYA                      	GPIO_Pin_15
+N#define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 N#define PORT_AVARIYA                			GPIOA	
 N
 Nextern u16 kol_pribl_vikl;
@@ -35917,9 +35917,9 @@ N	file_name[9]=0x76;
 N
 N	sost_flesh=1;
 N	PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
-X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x2000);  
+X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0010);  
 N	PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
-X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x4000);  
+X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0020);  
 N	
 N
 N/* Red LED off when device attached */
@@ -35952,9 +35952,9 @@ N{
 N	
 N		sost_flesh=0;	
 N		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N	
 N  /* Red Led on if the USB Key is removed */
 N  STM_EVAL_LEDOff(LED6);
@@ -36074,9 +36074,9 @@ Nvoid USBH_USR_DeviceNotSupported(void)
 N{
 N		sost_flesh=0;	
 N		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N}
 N
 N
@@ -36121,9 +36121,9 @@ N      {
 N        // efs initialisation fails
 N				sost_flesh=0;	
 N				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N        return(-1);
 N      }
 N      
@@ -36133,9 +36133,9 @@ X      if (USBH_MSC_Param.MSWriteProtect == 0x01)
 N      {
 N				sost_flesh=0;	
 N				PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N				PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X				((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N        while(1)
 N        {
 N          // Red LED On //
@@ -36374,9 +36374,9 @@ N						STM_EVAL_LEDOff(LED4);
 N						file_cr=1;
 N						sost_flesh=1;	
 N						PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
-X						((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x2000);  
+X						((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0010);  
 N						PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
-X						((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x4000);  
+X						((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0020);  
 N						}
 N						else
 N						{
@@ -36406,18 +36406,18 @@ N
 N								STM_EVAL_LEDOff(LED4);
 N								sost_flesh=1;	
 N								PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;  // on  PORT_ZAP_EN
-X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x2000);  
+X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0010);  
 N								PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  // off  PORT_ZAP_DIS
-X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x4000);  
+X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0020);  
 N							}
 N							else
 N							{
 N								STM_EVAL_LEDOn(LED5);
 N								sost_flesh=0;	
 N								PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N								PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X								((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N							}
 N									
 N						}							
@@ -36428,9 +36428,9 @@ N				{
 N					file_cr=0;
 N					sost_flesh=0;	
 N					PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X					((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X					((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N					PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X					((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X					((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N				}
 N				
 N			buffering=0;

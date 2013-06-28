@@ -431,7 +431,7 @@ void spi2_init() {
 	SPI_InitTypeDef spi2;
 	 GPIO_InitTypeDef gpio;
 	
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
+ //   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE);
    
     GPIO_StructInit(&gpio);
@@ -1503,10 +1503,34 @@ int main(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
+
+ // RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+	delay_spi(10000);
+	/*
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//	port A
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 	//	port B
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C		
+	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+  RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+*/
+  
+
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//	port A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 	//	port B
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C		
+//	RCC_AHB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+ // RCC_AHB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+	
   /* Output clock on MCO2 pin(PC9) ****************************************/ 
   /* Enable the GPIOC peripheral */ 
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-  
+//  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	
+	
+
   /* Configure MCO2 pin(PC9) in alternate function */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -1546,7 +1570,7 @@ int main(void)
 #if defined MEDIA_USB_KEY
   
   /* Initialize User Button */
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
+//  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
    
   /* Init Host Library */
   USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
@@ -1575,7 +1599,7 @@ SPI 2:
  
 		
 	
-		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+//		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
@@ -1583,27 +1607,80 @@ SPI 2:
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 		
+
 		
-		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
-		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
+		/*
+	//	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
+
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD;          //  PP GPIO_OType_PP
 		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+*/
+
+		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+		
+		
+		GPIO_InitStructure.GPIO_Pin   = PIN_PER_NIZ;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(GPIOE, &GPIO_InitStructure); 		
+
+		GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_PER_VERH, &GPIO_InitStructure); 
+		
+		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_EN;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(GPIOE, &GPIO_InitStructure); 
 	
-		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(GPIOE, &GPIO_InitStructure);	
+
+		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_ZAP_DIS, &GPIO_InitStructure);	
+
+		GPIO_InitStructure.GPIO_Pin   = PIN_AVARIYA;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_AVARIYA, &GPIO_InitStructure);
+
+
+
+
+		GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
+		GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
+	
+
+		
+/*
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; //GPIO_Mode_OUT; //GPIO_Mode_IN;     			// 	rezim vivoda
-	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-//		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
-//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//GPIO_Mode_OUT; //GPIO_Mode_IN;     			// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		//	speed
 		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
-
+*/
 /*
 		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
@@ -1685,10 +1762,10 @@ SPI 2:
 	test_ind_all(1);
 	
 	for (i = 0; i < 50; i ++)
-		delay_spi(1000000);
+		delay_spi(500000);
 	test_ind_all(0);
-	init_ind(1, 8, 0);
-  init_ind(2, 4, 0);   // lineika
+	init_ind(1, 4, 0);		// lineika
+  init_ind(2, 8, 0);   
 	init_ind(3, 8, 0);
   init_ind(4, 4, 0);   // time
 	
@@ -1697,7 +1774,7 @@ SPI 2:
 // nastroika gpio
 
 //	GPIO_InitTypeDef  GPIO_InitStructure;                 
-	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
+//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
 	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
