@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29152,7 +29152,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29909,19 +29909,19 @@ N#define PORT_K2                 					GPIOC
 N#define PIN_L2                         		GPIO_Pin_8
 N#define PORT_L2                 					GPIOC
 N
-N#define PIN_PER_NIZ                       GPIO_Pin_8
-N#define PORT_PER_NIZ                			GPIOA
+N#define PIN_PER_NIZ                       GPIO_Pin_3		//  L3
+N#define PORT_PER_NIZ                			GPIOE
 N
-N#define PIN_PER_VERH                      GPIO_Pin_9
+N#define PIN_PER_VERH                      GPIO_Pin_8		//	L4
 N#define PORT_PER_VERH                			GPIOA
 N
-N#define PIN_ZAP_EN                      	GPIO_Pin_13
-N#define PORT_ZAP_EN              				  GPIOA
+N#define PIN_ZAP_EN                      	GPIO_Pin_4		//	L5
+N#define PORT_ZAP_EN              				  GPIOE
 N
-N#define PIN_ZAP_DIS                      	GPIO_Pin_14
-N#define PORT_ZAP_DIS              				GPIOA
+N#define PIN_ZAP_DIS                      	GPIO_Pin_5  	//	L6
+N#define PORT_ZAP_DIS              				GPIOE
 N
-N#define PIN_AVARIYA                      	GPIO_Pin_15
+N#define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 N#define PORT_AVARIYA                			GPIOA	
 N
 Nextern u16 kol_pribl_vikl;
@@ -30440,9 +30440,9 @@ N	}
 N      
 N		sost_flesh=0;	
 N		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x2000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0010);  
 N		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x4000);  
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0020);  
 N		
 N		avariya=0;
 N		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   

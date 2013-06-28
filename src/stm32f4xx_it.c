@@ -317,7 +317,7 @@ u8 test_rele(u16 fz, u8 numb)
 }
 
 /**
-  * @brief  This function handles SysTick Handler.
+  * @brief  This function handles SysTick Handler.  10ms
   * @param  None
   * @retval None
   */
@@ -337,17 +337,13 @@ void SysTick_Handler(void)
 	else
 	{
 		kol_pribl_vkl++;
-<<<<<<< HEAD
-	
-=======
 //		STM_EVAL_LEDOff(LED6);	
 	}
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
-		STM_EVAL_LEDOn(LED6);	
+//		STM_EVAL_LEDOn(LED6);	
 			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -357,7 +353,7 @@ void SysTick_Handler(void)
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
 			sost_pribl=0;
-		STM_EVAL_LEDOff(LED6);	
+//		STM_EVAL_LEDOff(LED6);	
 			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -454,7 +450,8 @@ void SysTick_Handler(void)
 			
 	
 	// находим среднее значение по скользящей средней
-		fz_average[0]=moving_average(fz[0],0);
+//		fz_average[0]=moving_average(fz[0],0);
+				fz_average[0]++;
 
 		// time max
 		if (time_max>=conf.time_max) {
@@ -477,6 +474,8 @@ void SysTick_Handler(void)
 	del++;
 	if (del==10)
 	{		
+		// раз в секунду
+		
 		del=0;
 		tick++;
 		time_label=tick;
@@ -495,15 +494,23 @@ void SysTick_Handler(void)
 	 if (tick%2==0)
 	 {
 		 STM_EVAL_LEDOn(LED3);		 
-		 STM_EVAL_LEDOn(LED5);		
+//		 STM_EVAL_LEDOn(LED5);		
 	 }
 	 else
 	 {
 		 STM_EVAL_LEDOff(LED3);	 
-		 STM_EVAL_LEDOff(LED5);		
+//		 STM_EVAL_LEDOff(LED5);		
 	 }
 	 
-// indicate_lin(0,(u16)fz_average[0], 4096);
+		
+	if ((tick%60)==0)
+	{
+		minute++;
+	}
+	
+	// конец раз секунду
+	 }	
+	// indicate_lin(0,(u16)fz_average[0], 4096);
 // indicate(1,(u16)(fz_average[0]/10));
 	 if (tk_null==1)
 	 {
@@ -524,33 +531,27 @@ void SysTick_Handler(void)
 		else
 		{
 		 // dop usrednenie na vivod indicatorov???
-		 indicate(1,(u16)(u16)(fz_average[0]),3);   																// tek
+		 indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
 
 			if (conf.tek_gr_kal==0)
 					if (sost_pribl==0)
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 					else
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
 			else
 					if (sost_pribl==0)
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
 					else
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
 		 
 		 indicate(3,(u16)(max[0]),3);														// maximum
-		
-			if ((tick%2)==0)
-				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
-			else
-				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	
-		}
 	 }	
- }	 
-		
-	if ((tick%60)==0)
-	{
-		minute++;
 	}
+	if ((tick%2)==0)
+			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+	else
+			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+ // конец раз в 100 мс
 	}	
 	
 	if (new_komand)

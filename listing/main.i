@@ -372,7 +372,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -391,7 +391,7 @@ typedef enum IRQn
 
 
 
-#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -556,7 +556,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -589,7 +589,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15597,7 +15597,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15627,7 +15627,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15694,7 +15694,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16443,7 +16443,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -18999,7 +18999,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19013,7 +19013,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -22131,7 +22131,7 @@ void spi2_init() {
 	SPI_InitTypeDef spi2;
 	 GPIO_InitTypeDef gpio;
 	
-    RCC_AHB1PeriphClockCmd(((uint32_t)0x00000002),ENABLE);
+ 
     RCC_APB1PeriphClockCmd(((uint32_t)0x00004000),ENABLE);
    
     GPIO_StructInit(&gpio);
@@ -23203,10 +23203,34 @@ int main(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-    
-    
-  RCC_AHB1PeriphClockCmd(((uint32_t)0x00000004), ENABLE);
+
+ 
+	
+  RCC_APB2PeriphClockCmd(((uint32_t)0x00004000), ENABLE);
+	delay_spi(10000);
+	
+
+
+
+
+
+
+ 
   
+
+  RCC_AHB1PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
+	RCC_AHB1PeriphClockCmd(((uint32_t)0x00000002), ENABLE); 	
+	RCC_AHB1PeriphClockCmd(((uint32_t)0x00000004), ENABLE); 	
+
+	RCC_AHB1PeriphClockCmd(((uint32_t)0x00000010), ENABLE); 	
+ 
+	
+    
+    
+
+	
+	
+
    
   GPIO_InitStructure.GPIO_Pin = ((uint16_t)0x0200);
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -23246,7 +23270,7 @@ int main(void)
 
   
    
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
+
    
    
   USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
@@ -23275,7 +23299,7 @@ int main(void)
  
 		
 	
-		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
+
 		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0001)|((uint16_t)0x0002)|((uint16_t)0x0004)|((uint16_t)0x0008);  
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          
@@ -23283,33 +23307,80 @@ int main(void)
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
 		
+
 		
-		RCC_APB2PeriphClockCmd(((uint32_t)0x00000001), ENABLE); 	
-		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010)|((uint16_t)0x0100)|((uint16_t)0x0200)|((uint16_t)0x2000)|((uint16_t)0x4000)|((uint16_t)0x8000);  
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 
 		
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     
+
+
+
+
+
+
+
+
+ 
+
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+		
+		
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0008);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure); 		
+
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0100);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure); 
+		
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure); 
 	
-		RCC_APB2PeriphClockCmd(((uint32_t)0x00000004), ENABLE); 	
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure);	
+
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure);	
+
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x8000);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000)), &GPIO_InitStructure);
+
+
+
+
 		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0002);  						
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
 	
 
-	
 		
 
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
-<<<<<<< HEAD
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		
-		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
-	
-=======
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		
-		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
 
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+
+
+
+
+ 
 
 
 
@@ -23391,10 +23462,10 @@ int main(void)
 	test_ind_all(1);
 	
 	for (i = 0; i < 50; i ++)
-		delay_spi(1000000);
+		delay_spi(500000);
 	test_ind_all(0);
-	init_ind(1, 8, 0);
-  init_ind(2, 4, 0);   
+	init_ind(1, 4, 0);		
+  init_ind(2, 8, 0);   
 	init_ind(3, 8, 0);
   init_ind(4, 4, 0);   
 	
@@ -23403,7 +23474,7 @@ int main(void)
 
 
 
-	RCC_APB2PeriphClockCmd(((uint32_t)0x00000008), ENABLE); 
+
 	GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010)|((uint16_t)0x0008);      
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
@@ -23537,7 +23608,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1854 "src\\main.c"
+#line 1931 "src\\main.c"
 
   
  

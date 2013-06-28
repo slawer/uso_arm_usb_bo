@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -37368,19 +37368,19 @@ N#define PORT_K2                 					GPIOC
 N#define PIN_L2                         		GPIO_Pin_8
 N#define PORT_L2                 					GPIOC
 N
-N#define PIN_PER_NIZ                       GPIO_Pin_8
-N#define PORT_PER_NIZ                			GPIOA
+N#define PIN_PER_NIZ                       GPIO_Pin_3		//  L3
+N#define PORT_PER_NIZ                			GPIOE
 N
-N#define PIN_PER_VERH                      GPIO_Pin_9
+N#define PIN_PER_VERH                      GPIO_Pin_8		//	L4
 N#define PORT_PER_VERH                			GPIOA
 N
-N#define PIN_ZAP_EN                      	GPIO_Pin_13
-N#define PORT_ZAP_EN              				  GPIOA
+N#define PIN_ZAP_EN                      	GPIO_Pin_4		//	L5
+N#define PORT_ZAP_EN              				  GPIOE
 N
-N#define PIN_ZAP_DIS                      	GPIO_Pin_14
-N#define PORT_ZAP_DIS              				GPIOA
+N#define PIN_ZAP_DIS                      	GPIO_Pin_5  	//	L6
+N#define PORT_ZAP_DIS              				GPIOE
 N
-N#define PIN_AVARIYA                      	GPIO_Pin_15
+N#define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 N#define PORT_AVARIYA                			GPIOA	
 N
 Nextern u16 kol_pribl_vikl;
@@ -37746,7 +37746,7 @@ W "src\stm32f4xx_it.c" 317 1 missing return statement at end of non-void functio
 N}
 N
 N/**
-N  * @brief  This function handles SysTick Handler.
+N  * @brief  This function handles SysTick Handler.  10ms
 N  * @param  None
 N  * @retval None
 N  */
@@ -37761,31 +37761,24 @@ N //  проверка состояния датчика приближений -
 N	
 N	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
 X	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0002))==0)
-<<<<<<< HEAD
-=======
 N	{
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 N		kol_pribl_vikl++;
 N//		STM_EVAL_LEDOn(LED6);	
 N	}
 N	else
 N	{
 N		kol_pribl_vkl++;
-<<<<<<< HEAD
-N	
-=======
 N//		STM_EVAL_LEDOff(LED6);	
 N	}
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 N	conf.tm_antidreb=2;
 N	if (kol_pribl_vkl>=conf.tm_antidreb)
 N	{
 N			sost_pribl=1;
-N		STM_EVAL_LEDOn(LED6);	
+N//		STM_EVAL_LEDOn(LED6);	
 N			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
-X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0100);  	
+X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0008);  	
 N			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
-X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0200);	
+X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0100);	
 N			kol_pribl_vkl=0;
 N		  kol_pribl_vikl=0;
 N	} 
@@ -37793,11 +37786,11 @@ N
 N	if (kol_pribl_vikl>=conf.tm_antidreb)
 N	{
 N			sost_pribl=0;
-N		STM_EVAL_LEDOff(LED6);	
+N//		STM_EVAL_LEDOff(LED6);	
 N			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
-X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0100);  	
+X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0008);  	
 N			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
-X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0200);	
+X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0100);	
 N			kol_pribl_vkl=0;
 N			kol_pribl_vikl=0;
 N	}
@@ -37898,7 +37891,8 @@ N					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 N			
 N	
 N	// находим среднее значение по скользящей средней
-N		fz_average[0]=moving_average(fz[0],0);
+N//		fz_average[0]=moving_average(fz[0],0);
+N				fz_average[0]++;
 N
 N		// time max
 N		if (time_max>=conf.time_max) {
@@ -37921,6 +37915,8 @@ N
 N	del++;
 N	if (del==10)
 N	{		
+N		// раз в секунду
+N		
 N		del=0;
 N		tick++;
 N		time_label=tick;
@@ -37939,23 +37935,27 @@ N
 N	 if (tick%2==0)
 N	 {
 N		 STM_EVAL_LEDOn(LED3);		 
-N		 STM_EVAL_LEDOn(LED5);		
+N//		 STM_EVAL_LEDOn(LED5);		
 N	 }
 N	 else
 N	 {
 N		 STM_EVAL_LEDOff(LED3);	 
-N		 STM_EVAL_LEDOff(LED5);		
+N//		 STM_EVAL_LEDOff(LED5);		
 N	 }
 N	 
-N// indicate_lin(0,(u16)fz_average[0], 4096);
+N		
+N	if ((tick%60)==0)
+N	{
+N		minute++;
+N	}
+N	
+N	// конец раз секунду
+N	 }	
+N	// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 if (tk_null==1)
 N	 {
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 487 4 function "indicate_err" declared implicitly
-=======
-W "src\stm32f4xx_it.c" 506 4 function "indicate_err" declared implicitly
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+W "src\stm32f4xx_it.c" 517 4 function "indicate_err" declared implicitly
 N		 indicate_err(1);   	// tek
 N		 indicate_err(2);			// lineika 
 N		 indicate_err(3);			// maximum
@@ -37965,11 +37965,7 @@ N	 else
 N	 {		
 N	 if ((avariya==1)&((tick%2)==0))
 N	 {
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 496 4 function "ind_blank_all" declared implicitly
-=======
-W "src\stm32f4xx_it.c" 515 4 function "ind_blank_all" declared implicitly
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+W "src\stm32f4xx_it.c" 526 4 function "ind_blank_all" declared implicitly
 N			ind_blank_all(1); 
 N			ind_blank_all(2); 
 N			ind_blank_all(3); 
@@ -37978,48 +37974,30 @@ N		}
 N		else
 N		{
 N		 // dop usrednenie na vivod indicatorov???
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 504 4 function "indicate" declared implicitly
-=======
-W "src\stm32f4xx_it.c" 523 4 function "indicate" declared implicitly
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
-N		 indicate(1,(u16)(u16)(fz_average[0]),3);   																// tek
+W "src\stm32f4xx_it.c" 534 4 function "indicate" declared implicitly
+N		 indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
 N
 N			if (conf.tek_gr_kal==0)
 N					if (sost_pribl==0)
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 508 7 function "indicate_lin" declared implicitly
-=======
-W "src\stm32f4xx_it.c" 527 7 function "indicate_lin" declared implicitly
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
-N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+W "src\stm32f4xx_it.c" 538 7 function "indicate_lin" declared implicitly
+N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N					else
-N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
 N			else
 N					if (sost_pribl==0)
-N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
+N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
 N					else
-N						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
+N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
 N		 
 N		 indicate(3,(u16)(max[0]),3);														// maximum
-N		
-N			if ((tick%2)==0)
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 520 5 function "indicate_time" declared implicitly
-=======
-W "src\stm32f4xx_it.c" 539 5 function "indicate_time" declared implicitly
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
-N				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
-N			else
-N				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	
-N		}
 N	 }	
-N }	 
-N		
-N	if ((tick%60)==0)
-N	{
-N		minute++;
 N	}
+N	if ((tick%2)==0)
+W "src\stm32f4xx_it.c" 551 4 function "indicate_time" declared implicitly
+N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+N	else
+N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+N // конец раз в 100 мс
 N	}	
 N	
 N	if (new_komand)
@@ -38262,17 +38240,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 664 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 664 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 665 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 666 7 variable "i" was declared but never referenced
-=======
-W "src\stm32f4xx_it.c" 683 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 683 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 684 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 685 7 variable "i" was declared but never referenced
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+W "src\stm32f4xx_it.c" 688 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 688 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 689 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 690 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38694,11 +38665,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-<<<<<<< HEAD
-W "src\stm32f4xx_it.c" 1106 12 variable "clickreg" was declared but never referenced
-=======
-W "src\stm32f4xx_it.c" 1125 12 variable "clickreg" was declared but never referenced
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+W "src\stm32f4xx_it.c" 1130 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

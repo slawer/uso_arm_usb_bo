@@ -1,7 +1,7 @@
 .\MEDIA_USB_KEY\gpio.o: src\gpio.c
 .\MEDIA_USB_KEY\gpio.o: src\gpio.h
-.\MEDIA_USB_KEY\gpio.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
-.\MEDIA_USB_KEY\gpio.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
+.\MEDIA_USB_KEY\gpio.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\gpio.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h
 .\MEDIA_USB_KEY\gpio.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\gpio.o: .\Libraries\CMSIS\core_cm4.h
 .\MEDIA_USB_KEY\gpio.o: .\Libraries\CMSIS\core_cmInstr.h

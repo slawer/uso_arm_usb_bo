@@ -375,7 +375,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -394,7 +394,7 @@ typedef enum IRQn
 
 
 
-#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -559,7 +559,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -592,7 +592,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15600,7 +15600,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15630,7 +15630,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15697,7 +15697,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16446,7 +16446,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -19002,7 +19002,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19016,7 +19016,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -21887,29 +21887,22 @@ void SysTick_Handler(void)
  
 	
 	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0002))==0)
-<<<<<<< HEAD
-=======
 	{
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 		kol_pribl_vikl++;
 
 	}
 	else
 	{
 		kol_pribl_vkl++;
-<<<<<<< HEAD
-	
-=======
 
 	}
->>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
-		STM_EVAL_LEDOn(LED6);	
-			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0100);  	
-			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0200);	
+
+			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0008);  	
+			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0100);	
 			kol_pribl_vkl=0;
 		  kol_pribl_vikl=0;
 	} 
@@ -21917,9 +21910,9 @@ void SysTick_Handler(void)
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
 			sost_pribl=0;
-		STM_EVAL_LEDOff(LED6);	
-			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0100);  	
-			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0200);	
+
+			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0008);  	
+			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0100);	
 			kol_pribl_vkl=0;
 			kol_pribl_vikl=0;
 	}
@@ -22014,7 +22007,8 @@ void SysTick_Handler(void)
 			
 	
 	
-		fz_average[0]=moving_average(fz[0],0);
+
+				fz_average[0]++;
 
 		
 		if (time_max>=conf.time_max) {
@@ -22037,6 +22031,8 @@ void SysTick_Handler(void)
 	del++;
 	if (del==10)
 	{		
+		
+		
 		del=0;
 		tick++;
 		time_label=tick;
@@ -22055,15 +22051,23 @@ void SysTick_Handler(void)
 	 if (tick%2==0)
 	 {
 		 STM_EVAL_LEDOn(LED3);		 
-		 STM_EVAL_LEDOn(LED5);		
+
 	 }
 	 else
 	 {
 		 STM_EVAL_LEDOff(LED3);	 
-		 STM_EVAL_LEDOff(LED5);		
+
 	 }
 	 
-
+		
+	if ((tick%60)==0)
+	{
+		minute++;
+	}
+	
+	
+	 }	
+	
 
 	 if (tk_null==1)
 	 {
@@ -22084,33 +22088,27 @@ void SysTick_Handler(void)
 		else
 		{
 		 
-		 indicate(1,(u16)(u16)(fz_average[0]),3);   																
+		 indicate(2,(u16)(u16)(fz_average[0]),3);   																
 
 			if (conf.tek_gr_kal==0)
 					if (sost_pribl==0)
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			
 					else
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			
 			else
 					if (sost_pribl==0)
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			
 					else
-						indicate_lin(2,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			
+						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			
 		 
 		 indicate(3,(u16)(max[0]),3);														
-		
-			if ((tick%2)==0)
-				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				
-			else
-				indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				
-		}
 	 }	
- }	 
-		
-	if ((tick%60)==0)
-	{
-		minute++;
 	}
+	if ((tick%2)==0)
+			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				
+	else
+			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				
+ 
 	}	
 	
 	if (new_komand)

@@ -2,7 +2,7 @@
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: Utilities\STM32F4-Discovery\stm32f4_discovery_lis302dl.h
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: .\src\stm32f4xx.h
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cm4.h
-.\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
+.\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cmInstr.h
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cmFunc.h
 .\MEDIA_USB_KEY\stm32f4_discovery_lis302dl.o: .\Libraries\CMSIS\core_cm4_simd.h
