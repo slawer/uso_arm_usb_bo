@@ -372,7 +372,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -391,7 +391,7 @@ typedef enum IRQn
 
 
 
-#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -556,7 +556,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -589,7 +589,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15597,7 +15597,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15627,7 +15627,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15694,7 +15694,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16443,7 +16443,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -18999,7 +18999,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19013,7 +19013,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -23301,9 +23301,15 @@ int main(void)
 		
 
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+<<<<<<< HEAD
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
 	
+=======
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
+
+>>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 
 
 

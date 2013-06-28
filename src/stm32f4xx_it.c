@@ -330,14 +330,24 @@ void SysTick_Handler(void)
  //  проверка состояния датчика приближений - 
 	
 	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
+	{
 		kol_pribl_vikl++;
+//		STM_EVAL_LEDOn(LED6);	
+	}
 	else
+	{
 		kol_pribl_vkl++;
+<<<<<<< HEAD
 	
+=======
+//		STM_EVAL_LEDOff(LED6);	
+	}
+>>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;
+		STM_EVAL_LEDOn(LED6);	
 			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -347,6 +357,7 @@ void SysTick_Handler(void)
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
 			sost_pribl=0;
+		STM_EVAL_LEDOff(LED6);	
 			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -360,10 +371,20 @@ void SysTick_Handler(void)
 //	conf.tek_gr_kal
 
 		if ((PORT_K1->IDR & PIN_K1)==0)
+		{
 			kol_gr1_vkl++;
+	//		STM_EVAL_LEDOn(LED6);	
+		}
+//		else
+	//		STM_EVAL_LEDOff(LED6);	
 
 		if ((PORT_K2->IDR & PIN_K2)==0)
+		{
 			kol_gr2_vkl++;
+//			STM_EVAL_LEDOn(LED6);	
+		}
+//		else
+//			STM_EVAL_LEDOff(LED6);	
 
 		if (kol_gr1_vkl>=conf.tm_antidreb)
 		{
@@ -474,10 +495,12 @@ void SysTick_Handler(void)
 	 if (tick%2==0)
 	 {
 		 STM_EVAL_LEDOn(LED3);		 
+		 STM_EVAL_LEDOn(LED5);		
 	 }
 	 else
 	 {
 		 STM_EVAL_LEDOff(LED3);	 
+		 STM_EVAL_LEDOff(LED5);		
 	 }
 	 
 // indicate_lin(0,(u16)fz_average[0], 4096);

@@ -46,7 +46,11 @@
 ### ADS-LD Output File: '.\MEDIA_USB_KEY\uso_arm_usb_bo.axf'
 ### ADS-LD Command File: '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp'
 ### Checking for dirty Components...
+<<<<<<< HEAD
 ### Creating CmdFile '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp', Handle=0x000003F8
+=======
+### Creating CmdFile '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp', Handle=0x000005D0
+>>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\MEDIA_USB_KEY\uso_arm_usb_bo.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -39384,10 +39384,46 @@ N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPI
 N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 N//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+<<<<<<< HEAD
 N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
 N		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
 X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
 N	
+N/*
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN; //GPIO_Mode_IN;     			// 	rezim vivoda
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+N		GPIO_Init(GPIOC, &GPIO_InitStructure); 
+N	*/	
+N		/*
+N	  GPIO_PuPd_NOPULL = 0x00,
+N  GPIO_PuPd_UP     = 0x01,
+N  GPIO_PuPd_DOWN   = 0x02
+N*/
+=======
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		//	speed
+N		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
+X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800)), &GPIO_InitStructure); 	
+>>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+N
+N//		PIN_PRIBL
+N//		Port_PRIBL
+N		
+N/*
+N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod and RELE
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+N	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		GPIO_InitStructure.GPIO_OType = GPIO_PuPd_DOWN;          //  PP GPIO_OType_PP
+N		
+N		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+N		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+N*/
 N/*
 N		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
 N		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka

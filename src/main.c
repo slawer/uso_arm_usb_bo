@@ -1601,9 +1601,44 @@ SPI 2:
 		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
 //		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+<<<<<<< HEAD
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
 		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
 	
+/*
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN; //GPIO_Mode_IN;     			// 	rezim vivoda
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //GPIO_OType_PP; 					//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+//		GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL; //GPIO_PuPd_UP; //GPIO_PuPd_DOWN;  //GPIO_PuPd_NOPULL;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     		//	speed
+		GPIO_Init(GPIOC, &GPIO_InitStructure); 
+	*/	
+		/*
+	  GPIO_PuPd_NOPULL = 0x00,
+  GPIO_PuPd_UP     = 0x01,
+  GPIO_PuPd_DOWN   = 0x02
+*/
+=======
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     		//	speed
+		GPIO_Init(GPIOC, &GPIO_InitStructure); 	
+>>>>>>> 6e5f5de14941d3922513438046203bdbee3e9c1e
+
+//		PIN_PRIBL
+//		Port_PRIBL
+		
+/*
+		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod and RELE
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+	//	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_OType = GPIO_PuPd_DOWN;          //  PP GPIO_OType_PP
+		
+		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+*/
 /*
 		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;  						// 	vvod for knopka
