@@ -1547,6 +1547,8 @@ int main(void)
     // ???????? RTC
     rtc_Reset();
     rtc_Init();
+		
+		init_dc();
  		
 		
 //	ADC_InitTypeDef  ADC_InitStructure;
@@ -1631,7 +1633,7 @@ SPI 2:
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(GPIOE, &GPIO_InitStructure); 		
+		GPIO_Init(PORT_PER_NIZ, &GPIO_InitStructure); 		
 
 		GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
@@ -1643,14 +1645,8 @@ SPI 2:
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(GPIOE, &GPIO_InitStructure); 
+		GPIO_Init(PORT_ZAP_EN, &GPIO_InitStructure); 
 	
-		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(GPIOE, &GPIO_InitStructure);	
-
 		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
@@ -1667,7 +1663,7 @@ SPI 2:
 
 
 		GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vivoda
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
 		GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
@@ -1837,7 +1833,11 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
-    while (1)
+	
+	write_dat_clock();
+	
+			
+  while (1)
   {
     /* Host Task handler */
     USBH_Process(&USB_OTG_Core, &USB_Host);

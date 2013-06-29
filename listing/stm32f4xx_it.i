@@ -21889,18 +21889,15 @@ void SysTick_Handler(void)
 	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0002))==0)
 	{
 		kol_pribl_vikl++;
-
 	}
 	else
 	{
 		kol_pribl_vkl++;
-
 	}
 	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
-			sost_pribl=1;
-
+			sost_pribl=1;	
 			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0008);  	
 			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRL = ((uint16_t)0x0100);	
 			kol_pribl_vkl=0;
@@ -21909,8 +21906,7 @@ void SysTick_Handler(void)
 	
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
-			sost_pribl=0;
-
+			sost_pribl=0;	
 			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0008);  	
 			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0100);	
 			kol_pribl_vkl=0;
@@ -21926,17 +21922,13 @@ void SysTick_Handler(void)
 		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0080))==0)
 		{
 			kol_gr1_vkl++;
-	
 		}
-
-	
 
 		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0200))==0)
 		{
 			kol_gr2_vkl++;
 
 		}
-
 
 
 		if (kol_gr1_vkl>=conf.tm_antidreb)
@@ -21986,11 +21978,13 @@ void SysTick_Handler(void)
 	if (kol_average==10)
 	{			
 	
+		
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
 		
 		
+		read_dat_clock();
 		
 		
 		

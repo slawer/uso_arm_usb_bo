@@ -37763,18 +37763,15 @@ N	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
 X	if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0002))==0)
 N	{
 N		kol_pribl_vikl++;
-N//		STM_EVAL_LEDOn(LED6);	
 N	}
 N	else
 N	{
 N		kol_pribl_vkl++;
-N//		STM_EVAL_LEDOff(LED6);	
 N	}
 N	conf.tm_antidreb=2;
 N	if (kol_pribl_vkl>=conf.tm_antidreb)
 N	{
-N			sost_pribl=1;
-N//		STM_EVAL_LEDOn(LED6);	
+N			sost_pribl=1;	
 N			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
 X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRH = ((uint16_t)0x0008);  	
 N			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
@@ -37785,8 +37782,7 @@ N	}
 N	
 N	if (kol_pribl_vikl>=conf.tm_antidreb)
 N	{
-N			sost_pribl=0;
-N//		STM_EVAL_LEDOff(LED6);	
+N			sost_pribl=0;	
 N			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
 X			((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000))->BSRRL = ((uint16_t)0x0008);  	
 N			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
@@ -37805,19 +37801,15 @@ N		if ((PORT_K1->IDR & PIN_K1)==0)
 X		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0080))==0)
 N		{
 N			kol_gr1_vkl++;
-N	//		STM_EVAL_LEDOn(LED6);	
 N		}
-N//		else
-N	//		STM_EVAL_LEDOff(LED6);	
 N
 N		if ((PORT_K2->IDR & PIN_K2)==0)
 X		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0800))->IDR & ((uint16_t)0x0200))==0)
 N		{
 N			kol_gr2_vkl++;
-N//			STM_EVAL_LEDOn(LED6);	
+N
 N		}
-N//		else
-N//			STM_EVAL_LEDOff(LED6);	
+N
 N
 N		if (kol_gr1_vkl>=conf.tm_antidreb)
 N		{
@@ -37870,11 +37862,14 @@ N
 N	if (kol_average==10)
 N	{			
 N	
+N		
 N		average[0]=summa[0]/kol_average;
 N		kol_average=0;
 N		summa[0]=0;
 N		
 N		
+W "src\stm32f4xx_it.c" 430 3 function "read_dat_clock" declared implicitly
+N		read_dat_clock();
 N		// раз в 100 мс
 N		// вычисляем физическую величину
 N		
@@ -37955,7 +37950,7 @@ N	// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 if (tk_null==1)
 N	 {
-W "src\stm32f4xx_it.c" 517 4 function "indicate_err" declared implicitly
+W "src\stm32f4xx_it.c" 511 4 function "indicate_err" declared implicitly
 N		 indicate_err(1);   	// tek
 N		 indicate_err(2);			// lineika 
 N		 indicate_err(3);			// maximum
@@ -37965,7 +37960,7 @@ N	 else
 N	 {		
 N	 if ((avariya==1)&((tick%2)==0))
 N	 {
-W "src\stm32f4xx_it.c" 526 4 function "ind_blank_all" declared implicitly
+W "src\stm32f4xx_it.c" 520 4 function "ind_blank_all" declared implicitly
 N			ind_blank_all(1); 
 N			ind_blank_all(2); 
 N			ind_blank_all(3); 
@@ -37974,12 +37969,12 @@ N		}
 N		else
 N		{
 N		 // dop usrednenie na vivod indicatorov???
-W "src\stm32f4xx_it.c" 534 4 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 528 4 function "indicate" declared implicitly
 N		 indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
 N
 N			if (conf.tek_gr_kal==0)
 N					if (sost_pribl==0)
-W "src\stm32f4xx_it.c" 538 7 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 532 7 function "indicate_lin" declared implicitly
 N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N					else
 N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
@@ -37993,7 +37988,7 @@ N		 indicate(3,(u16)(max[0]),3);														// maximum
 N	 }	
 N	}
 N	if ((tick%2)==0)
-W "src\stm32f4xx_it.c" 551 4 function "indicate_time" declared implicitly
+W "src\stm32f4xx_it.c" 545 4 function "indicate_time" declared implicitly
 N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
 N	else
 N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
@@ -38240,10 +38235,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 688 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 688 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 689 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 690 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 682 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 682 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 683 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 684 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38665,7 +38660,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 1130 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 1124 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

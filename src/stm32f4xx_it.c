@@ -332,18 +332,15 @@ void SysTick_Handler(void)
 	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
 	{
 		kol_pribl_vikl++;
-//		STM_EVAL_LEDOn(LED6);	
 	}
 	else
 	{
 		kol_pribl_vkl++;
-//		STM_EVAL_LEDOff(LED6);	
 	}
 	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
-			sost_pribl=1;
-//		STM_EVAL_LEDOn(LED6);	
+			sost_pribl=1;	
 			PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -352,8 +349,7 @@ void SysTick_Handler(void)
 	
 	if (kol_pribl_vikl>=conf.tm_antidreb)
 	{
-			sost_pribl=0;
-//		STM_EVAL_LEDOff(LED6);	
+			sost_pribl=0;	
 			PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
 			PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// off PIN_PER_VERH
 			kol_pribl_vkl=0;
@@ -369,18 +365,14 @@ void SysTick_Handler(void)
 		if ((PORT_K1->IDR & PIN_K1)==0)
 		{
 			kol_gr1_vkl++;
-	//		STM_EVAL_LEDOn(LED6);	
 		}
-//		else
-	//		STM_EVAL_LEDOff(LED6);	
 
 		if ((PORT_K2->IDR & PIN_K2)==0)
 		{
 			kol_gr2_vkl++;
-//			STM_EVAL_LEDOn(LED6);	
+
 		}
-//		else
-//			STM_EVAL_LEDOff(LED6);	
+
 
 		if (kol_gr1_vkl>=conf.tm_antidreb)
 		{
@@ -429,11 +421,13 @@ void SysTick_Handler(void)
 	if (kol_average==10)
 	{			
 	
+		
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
 		
 		
+		read_dat_clock();
 		// раз в 100 мс
 		// вычисляем физическую величину
 		

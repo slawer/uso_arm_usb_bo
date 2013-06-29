@@ -21744,6 +21744,235 @@ u8 sost_flesh=0;
 
 
 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+void init_dc()
+{
+	GPIO_InitTypeDef      GPIO_InitStructure;
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 	
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0100);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; 
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 
+
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400)), &GPIO_InitStructure); 
+	
+		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0080);  							
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; 
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 
+
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
+		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400)), &GPIO_InitStructure); 
+	
+}
+
+void MDO(u8 sost)
+{	u32 i=0;
+	if (sost==1)
+	
+	    ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRL = ((uint16_t)0x0080);
+	else
+	
+    ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRH = ((uint16_t)0x0080) ;	
+	
+			for (i=0;i<10000;i++)
+				__asm volatile ("nop");
+}
+
+void MCO(u8 sost)
+{	u32 i=0;
+	if (sost==1)
+	
+		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRL = ((uint16_t)0x0100);
+	else
+
+	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRH = ((uint16_t)0x0100);	
+	
+		for (i=0;i<10000;i++)
+				__asm volatile ("nop");
+}
+
+u8 r_MCO(void)
+{
+		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->IDR & ((uint16_t)0x0100))==0)
+			return 0;
+		else
+			return 1;
+}
+
+u8 r_MDI(void)
+{
+		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->IDR & ((uint16_t)0x0080))==0)
+			return 0;
+		else
+			return 1;
+}
+
+   
+
+
+
+u8 b_err_cl=0, bufout[50], zbuf[50];
+
+void read_dat_clock(void)
+{		u8 tmp_rw=0, DL=0, j=0,i1=0;
+		
+		for(i1=0;i1<10;i1++) 
+			zbuf[i1]=0;
+
+		for(i1=0;i1<10;i1++) 
+			bufout[i1]=0;
+	
+		tmp_rw=0xD0;MDO(0);DL=2;while (1){DL--;if(DL==0)break;} 
+		MCO(0);  
+		for(j=0;j<2;j++)  
+		{	
+				for(i1=0;i1<8;i1++)  
+				{
+					if((tmp_rw&0x80)==0)   
+					{MDO(0);} else {MDO(1);} 	 
+					DL=2;while (1){DL--;if(DL==0)break;}MCO(1); 	 
+					while (1) {if (r_MCO()==1) break;}				 
+					DL=2;while (1){DL--;if(DL==0)break;}MCO(0);
+					MDO(0); tmp_rw = tmp_rw<<1; 
+				}                                         
+				DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  
+				MDO(1);  while (1) {if (r_MCO()==1) break;}                   
+				DL=200; while (1){DL--; if (DL==0) break;} if (DL==0) b_err_cl++; 
+				MCO(0); 	tmp_rw = 0x00;		
+		}                                                                             
+		DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  						    
+		while (1) {if (r_MCO()==1) break;}											 
+		DL=2;while (1){DL--;if(DL==0)break;} 									  
+		MDO(1);DL=2;while (1){DL--;if(DL==0)break;}        						   
+		tmp_rw=0xD1; DL=2;while (1){DL--;if(DL==0)break;} 						    
+		MDO(0); DL=2;while (1){DL--;if(DL==0)break;} 					 
+		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}                        	 
+		for(i1=0;i1<8;i1++) 												  
+		{ if((tmp_rw&0x80)==0){MDO(0);}else { MDO(1);} 					  
+		DL=2;while (1){DL--;if(DL==0)break;}							   
+		MCO(1);DL=2;while (1) {if (r_MCO()==1) break;}while (1){DL--;if(DL==0)break;}MCO(0);MDO(0);                                                      
+		tmp_rw= tmp_rw<<1; } 																    
+										 DL=2;while (1){DL--;if(DL==0)break;}    							    
+										
+										 MDO(1); MCO(1);       DL=2;while (1) {if (r_MCO()==1) break;}  while (1){DL--;if(DL==0)break;}                 
+					 DL=200; while (1){DL--; if (DL==0) break;}  
+							 if (DL==0) b_err_cl++;			  
+						
+					 MCO(0); 	DL=2;while (1){DL--;if(DL==0)break;}  											 
+		for(j=0;j<8;j++)																									 
+		{for(i1=0;i1<8;i1++){ MDO(1);  MCO(1); while (1){if (r_MCO()==1) break;} DL=2;while (1){DL--;if(DL==0)break;}		    
+		if (r_MDI() ==0) 																									    
+		{bufout[9+j] = bufout[9+j]<<1;bufout[9+j] = bufout[9+j]&0xFE;} 															    
+		else 																											    
+		{bufout[9+j] = bufout[9+j]<<1;   																					   
+		bufout[9+j] = bufout[9+j]|0x01; }                          					 
+		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}}  							  
+		MDO(0);																	   
+		if (j==(8-1)) {MDO(1);}												    
+	
+		MCO(1);  while (1) {if (r_MCO()==1) break;}										  
+		DL=2;while (1){DL--;if(DL==0)break;} 										   
+		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}} 							    
+
+		MDO(0);DL=2;while (1){DL--;if(DL==0)break;}     									  
+		MCO(1);while (1) {if (r_MCO()==1) break;}DL=2;while (1){DL--;if(DL==0)break;} MDO(1);       
+
+		bufout[6]=zbuf[6];
+		bufout[7]=zbuf[7]; 
+		bufout[8]=zbuf[8];
+		bufout[5]=17;  
+		zbuf[5]=10;
+	}					
+	
+	
+void write_dat_clock(void)
+{
+		u8 i1=0, j=0, DL=0;
+
+		for(i1=0;i1<8;i1++) 
+			zbuf[i1]=i1; 
+				
+	
+		zbuf[7]=0xD0;
+		zbuf[8]=0x00;
+	
+		MDO(0); 
+		DL=2;while (1){DL--;if (DL==0) break;} 
+		MCO(0); 
+		for(j=7;j<17;j++) 
+		{   
+			for(i1=0;i1<8;i1++) 
+			{ 
+				if((zbuf[j]&0x80)==0) 				
+					 MDO(0);  
+				else  
+  					MDO(1);  
+				DL=2;while (1){DL--;if(DL==0)break;} 
+				MCO(1); while (1) {if (r_MCO()==1)break;}  
+				DL=2;while (1){DL--;if(DL==0)break;} 
+				MCO(0);                        
+				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} 
+				MDO(0);  
+								 }                                   
+										 DL=2;while (1){DL--;if(DL==0)break;}     
+										 MDO(1);   MCO(1); while (1)  {if (r_MCO()==1) break;}       
+									 DL=200; while (1){DL--; if (DL==0) break;} 		 
+						 if (DL==0) b_err_cl++;
+					  MCO(0);  
+								 }                          
+										DL=2;while (1){DL--;if(DL==0)break;}  
+										MCO(1); while (1) {if (r_MCO()==1)break;}
+										DL=2;while (1){DL--;if(DL==0)break;} 
+										MDO(1);   
+									  
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -23247,6 +23476,8 @@ int main(void)
     
     rtc_Reset();
     rtc_Init();
+		
+		init_dc();
  		
 		
 
@@ -23345,12 +23576,6 @@ int main(void)
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
 		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure); 
 	
-		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			
-		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure);	
-
 		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						
@@ -23537,7 +23762,11 @@ USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
-    while (1)
+	
+	write_dat_clock();
+	
+			
+  while (1)
   {
      
     USBH_Process(&USB_OTG_Core, &USB_Host);

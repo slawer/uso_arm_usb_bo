@@ -37605,6 +37605,247 @@ N
 N
 N
 N
+N/*------------------------------------------------------------------
+Nћакрос   FUM_RD_DAT_CLOCK прочитать значение RAM часов 
+Nlen-3;adcbuf[12]
+N------------------------------------------------------------------*/
+N/*
+NI2CM=1;
+NMCO=1; 
+NMDE=1;
+NMDO=1; //мастер I2c
+N
+Nscl		pb8
+Nsda  pb7
+N
+NI2CM=1;
+NMCO=1; 
+NMDE=1;
+NMDO=1; //мастер I2c
+N
+N*/
+N
+N#define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
+N#define PORT_DS_SCL               			  GPIOB	
+N
+N#define PIN_DS_SDA                      	GPIO_Pin_7		//	sda  pb7
+N#define PORT_DS_SDA                				GPIOB	
+N
+Nvoid init_dc()
+N{
+N	GPIO_InitTypeDef      GPIO_InitStructure;
+N	/*
+N		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+N		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+N	
+N		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+N		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+N
+N	  GPIO_PuPd_NOPULL = 0x00,
+N  GPIO_PuPd_UP     = 0x01,
+N  GPIO_PuPd_DOWN   = 0x02
+N*/	
+N		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SCL;  							//  vivod for RELE and svet AVARIYA 
+X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0100);  							
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N//		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;  
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+N		GPIO_Init(PORT_DS_SCL, &GPIO_InitStructure); 
+X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400)), &GPIO_InitStructure); 
+N	
+N		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SDA;  							//  vivod for RELE and svet AVARIYA 
+X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0080);  							
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; //GPIO_Mode_OUT;     				// 	rezim vivoda
+N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+N//		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;  
+N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+N		GPIO_Init(PORT_DS_SDA, &GPIO_InitStructure); 
+X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400)), &GPIO_InitStructure); 
+N	
+N}
+N
+Nvoid MDO(u8 sost)
+N{	u32 i=0;
+N	if (sost==1)
+N	//	GPIO_WriteBit(PORT_DS_SDA, PIN_DS_SDA, Bit_SET);
+N	    PORT_DS_SDA->BSRRL = PIN_DS_SDA;
+X	    ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRL = ((uint16_t)0x0080);
+N	else
+N	//	GPIO_WriteBit(PIN_DS_SDA, PIN_DS_SDA, Bit_RESET);
+N    PORT_DS_SDA->BSRRH = PIN_DS_SDA ;	
+X    ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRH = ((uint16_t)0x0080) ;	
+N	
+N			for (i=0;i<10000;i++)
+N				__ASM volatile ("nop");
+X				__asm volatile ("nop");
+N}
+N
+Nvoid MCO(u8 sost)
+N{	u32 i=0;
+N	if (sost==1)
+N	//	GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_SET);
+N		PORT_DS_SCL->BSRRL = PIN_DS_SCL;
+X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRL = ((uint16_t)0x0100);
+N	else
+N//		GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_RESET);	
+N	PORT_DS_SCL->BSRRH = PIN_DS_SCL;	
+X	((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->BSRRH = ((uint16_t)0x0100);	
+N	
+N		for (i=0;i<10000;i++)
+N				__ASM volatile ("nop");
+X				__asm volatile ("nop");
+N}
+N
+Nu8 r_MCO(void)
+N{
+N		if ((PORT_DS_SCL->IDR & PIN_DS_SCL)==0)
+X		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->IDR & ((uint16_t)0x0100))==0)
+N			return 0;
+N		else
+N			return 1;
+N}
+N
+Nu8 r_MDI(void)
+N{
+N		if ((PORT_DS_SDA->IDR & PIN_DS_SDA)==0)
+X		if ((((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0400))->IDR & ((uint16_t)0x0080))==0)
+N			return 0;
+N		else
+N			return 1;
+N}
+N
+N   // чтение сохраненных параметров из часов
+N//FUM_RD_DAT_CLOCK(0x1A,adcbuf,18,js) 
+N//ADP1:
+N
+Nu8 b_err_cl=0, bufout[50], zbuf[50];
+N
+Nvoid read_dat_clock(void)
+N{		u8 tmp_rw=0, DL=0, j=0,i1=0;
+N		
+N		for(i1=0;i1<10;i1++) 
+N			zbuf[i1]=0;
+N
+N		for(i1=0;i1<10;i1++) 
+N			bufout[i1]=0;
+N	
+N		tmp_rw=0xD0;MDO(0);DL=2;while (1){DL--;if(DL==0)break;} 
+N		MCO(0);  
+N		for(j=0;j<2;j++)  
+N		{	
+N				for(i1=0;i1<8;i1++)  
+N				{
+N					if((tmp_rw&0x80)==0)   
+N					{MDO(0);} else {MDO(1);} 	 
+N					DL=2;while (1){DL--;if(DL==0)break;}MCO(1); 	 
+N					while (1) {if (r_MCO()==1) break;}				 
+N					DL=2;while (1){DL--;if(DL==0)break;}MCO(0);
+N					MDO(0); tmp_rw = tmp_rw<<1; 
+N				}                                         
+N				DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  
+N				MDO(1);  while (1) {if (r_MCO()==1) break;}                   
+N				DL=200; while (1){DL--; if (DL==0) break;} if (DL==0) b_err_cl++; 
+N				MCO(0); 	tmp_rw = 0x00;		
+N		}                                                                             
+N		DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  						    
+N		while (1) {if (r_MCO()==1) break;}											 
+N		DL=2;while (1){DL--;if(DL==0)break;} 									  
+N		MDO(1);DL=2;while (1){DL--;if(DL==0)break;}        						   
+N		tmp_rw=0xD1; DL=2;while (1){DL--;if(DL==0)break;} 						    
+N		MDO(0); DL=2;while (1){DL--;if(DL==0)break;} 					 
+N		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}                        	 
+N		for(i1=0;i1<8;i1++) 												  
+N		{ if((tmp_rw&0x80)==0){MDO(0);}else { MDO(1);} 					  
+N		DL=2;while (1){DL--;if(DL==0)break;}							   
+N		MCO(1);DL=2;while (1) {if (r_MCO()==1) break;}while (1){DL--;if(DL==0)break;}MCO(0);MDO(0);                                                      
+N		tmp_rw= tmp_rw<<1; } 																    
+N										 DL=2;while (1){DL--;if(DL==0)break;}    							    
+N										//	 MDE=0; 
+N										 MDO(1); MCO(1);       DL=2;while (1) {if (r_MCO()==1) break;}  while (1){DL--;if(DL==0)break;}                 
+N					 DL=200; while (1){DL--; if (DL==0) break;}  // if ((MDI==0)|(DL==0)) break;} 
+N							 if (DL==0) b_err_cl++;			  
+N						//	 MDE=1;  
+N					 MCO(0); 	DL=2;while (1){DL--;if(DL==0)break;}  											 
+N		for(j=0;j<8;j++)																									 
+N		{for(i1=0;i1<8;i1++){ MDO(1);/*MDE=0;*/ MCO(1); while (1){if (r_MCO()==1) break;} DL=2;while (1){DL--;if(DL==0)break;}		    
+N		if (r_MDI() ==0) 																									    
+N		{bufout[9+j] = bufout[9+j]<<1;bufout[9+j] = bufout[9+j]&0xFE;} 															    
+N		else 																											    
+N		{bufout[9+j] = bufout[9+j]<<1;   																					   
+N		bufout[9+j] = bufout[9+j]|0x01; }                          					 
+N		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}}  							  
+N		MDO(0);																	   
+N		if (j==(8-1)) {MDO(1);}												    
+N	//	MDE=1;                            											 
+N		MCO(1);  while (1) {if (r_MCO()==1) break;}										  
+N		DL=2;while (1){DL--;if(DL==0)break;} 										   
+N		MCO(0);/*MDE=0;*/DL=2;while (1){DL--;if(DL==0)break;}} 							    
+N//		MDE=1;DL=2;while (1){DL--;if(DL==0)break;} 										 
+N		MDO(0);DL=2;while (1){DL--;if(DL==0)break;}     									  
+N		MCO(1);while (1) {if (r_MCO()==1) break;}DL=2;while (1){DL--;if(DL==0)break;} MDO(1);       
+N
+N		bufout[6]=zbuf[6];
+N		bufout[7]=zbuf[7]; 
+N		bufout[8]=zbuf[8];
+N		bufout[5]=17;  
+N		zbuf[5]=10;
+N	}					
+N	
+N	
+Nvoid write_dat_clock(void)
+N{
+N		u8 i1=0, j=0, DL=0;
+N
+N		for(i1=0;i1<8;i1++) 
+N			zbuf[i1]=i1; 
+N				
+N	
+N		zbuf[7]=0xD0;
+N		zbuf[8]=0x00;
+N	
+N		MDO(0); 
+N		DL=2;while (1){DL--;if (DL==0) break;} 
+N		MCO(0); 
+N		for(j=7;j<17;j++) 
+N		{   
+N			for(i1=0;i1<8;i1++) 
+N			{ 
+N				if((zbuf[j]&0x80)==0) 				
+N					 MDO(0);  
+N				else  
+N  					MDO(1);  
+N				DL=2;while (1){DL--;if(DL==0)break;} 
+N				MCO(1); while (1) {if (r_MCO()==1)break;}  //{if (MCO==1)break;} 
+N				DL=2;while (1){DL--;if(DL==0)break;} 
+N				MCO(0);                        
+N				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} //{ zbuf[j] = zbuf[j]<<1;} 
+N				MDO(0);  
+N								 }                                   
+N										 DL=2;while (1){DL--;if(DL==0)break;}     
+N										 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
+N									 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
+N						 if (DL==0) b_err_cl++;
+N					/*	 MDE=1; */ MCO(0);  
+N								 }                          
+N										DL=2;while (1){DL--;if(DL==0)break;}  
+N										MCO(1); while (1) {if (r_MCO()==1)break;}
+N										DL=2;while (1){DL--;if(DL==0)break;} 
+N										MDO(1);   
+N									  
+N}
+N
+N
+N
+N
+N
+N
 N
 N
 N
@@ -39323,6 +39564,8 @@ N
 N    // ???????? RTC
 N    rtc_Reset();
 N    rtc_Init();
+N		
+N		init_dc();
 N 		
 N		
 N//	ADC_InitTypeDef  ADC_InitStructure;
@@ -39414,7 +39657,7 @@ X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0008);
 N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-N		GPIO_Init(GPIOE, &GPIO_InitStructure); 		
+N		GPIO_Init(PORT_PER_NIZ, &GPIO_InitStructure); 		
 X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure); 		
 N
 N		GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
@@ -39430,17 +39673,9 @@ X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0010);
 N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-N		GPIO_Init(GPIOE, &GPIO_InitStructure); 
+N		GPIO_Init(PORT_ZAP_EN, &GPIO_InitStructure); 
 X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure); 
 N	
-N		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
-X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
-N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-N		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-N		GPIO_Init(GPIOE, &GPIO_InitStructure);	
-X		GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x1000)), &GPIO_InitStructure);	
-N
 N		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
 X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0020);  							
 N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
@@ -39462,7 +39697,7 @@ N
 N
 N		GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
 X		GPIO_InitStructure.GPIO_Pin   = ((uint16_t)0x0002);  						
-N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vivoda
+N		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
 N		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
 N		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
 N		GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
@@ -39641,7 +39876,11 @@ N  /* SysTick end of count event each 10ms */
 N  RCC_GetClocksFreq(&RCC_Clocks);
 N  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 N	
-N    while (1)
+N	
+N	write_dat_clock();
+N	
+N			
+N  while (1)
 N  {
 N    /* Host Task handler */
 N    USBH_Process(&USB_OTG_Core, &USB_Host);

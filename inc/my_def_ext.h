@@ -124,6 +124,235 @@ u8 sost_flesh=0;
 
 
 
+/*------------------------------------------------------------------
+Макрос   FUM_RD_DAT_CLOCK прочитать значение RAM часов 
+len-3;adcbuf[12]
+------------------------------------------------------------------*/
+/*
+I2CM=1;
+MCO=1; 
+MDE=1;
+MDO=1; //мастер I2c
+
+scl		pb8
+sda  pb7
+
+I2CM=1;
+MCO=1; 
+MDE=1;
+MDO=1; //мастер I2c
+
+*/
+
+#define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
+#define PORT_DS_SCL               			  GPIOB	
+
+#define PIN_DS_SDA                      	GPIO_Pin_7		//	sda  pb7
+#define PORT_DS_SDA                				GPIOB	
+
+void init_dc()
+{
+	GPIO_InitTypeDef      GPIO_InitStructure;
+	/*
+		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+	
+		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+
+	  GPIO_PuPd_NOPULL = 0x00,
+  GPIO_PuPd_UP     = 0x01,
+  GPIO_PuPd_DOWN   = 0x02
+*/	
+		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SCL;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+//		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;  
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_DS_SCL, &GPIO_InitStructure); 
+	
+		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SDA;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; //GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+//		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;  
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_DS_SDA, &GPIO_InitStructure); 
+	
+}
+
+void MDO(u8 sost)
+{	u32 i=0;
+	if (sost==1)
+	//	GPIO_WriteBit(PORT_DS_SDA, PIN_DS_SDA, Bit_SET);
+	    PORT_DS_SDA->BSRRL = PIN_DS_SDA;
+	else
+	//	GPIO_WriteBit(PIN_DS_SDA, PIN_DS_SDA, Bit_RESET);
+    PORT_DS_SDA->BSRRH = PIN_DS_SDA ;	
+	
+			for (i=0;i<10000;i++)
+				__ASM volatile ("nop");
+}
+
+void MCO(u8 sost)
+{	u32 i=0;
+	if (sost==1)
+	//	GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_SET);
+		PORT_DS_SCL->BSRRL = PIN_DS_SCL;
+	else
+//		GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_RESET);	
+	PORT_DS_SCL->BSRRH = PIN_DS_SCL;	
+	
+		for (i=0;i<10000;i++)
+				__ASM volatile ("nop");
+}
+
+u8 r_MCO(void)
+{
+		if ((PORT_DS_SCL->IDR & PIN_DS_SCL)==0)
+			return 0;
+		else
+			return 1;
+}
+
+u8 r_MDI(void)
+{
+		if ((PORT_DS_SDA->IDR & PIN_DS_SDA)==0)
+			return 0;
+		else
+			return 1;
+}
+
+   // чтение сохраненных параметров из часов
+//FUM_RD_DAT_CLOCK(0x1A,adcbuf,18,js) 
+//ADP1:
+
+u8 b_err_cl=0, bufout[50], zbuf[50];
+
+void read_dat_clock(void)
+{		u8 tmp_rw=0, DL=0, j=0,i1=0;
+		
+		for(i1=0;i1<10;i1++) 
+			zbuf[i1]=0;
+
+		for(i1=0;i1<10;i1++) 
+			bufout[i1]=0;
+	
+		tmp_rw=0xD0;MDO(0);DL=2;while (1){DL--;if(DL==0)break;} 
+		MCO(0);  
+		for(j=0;j<2;j++)  
+		{	
+				for(i1=0;i1<8;i1++)  
+				{
+					if((tmp_rw&0x80)==0)   
+					{MDO(0);} else {MDO(1);} 	 
+					DL=2;while (1){DL--;if(DL==0)break;}MCO(1); 	 
+					while (1) {if (r_MCO()==1) break;}				 
+					DL=2;while (1){DL--;if(DL==0)break;}MCO(0);
+					MDO(0); tmp_rw = tmp_rw<<1; 
+				}                                         
+				DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  
+				MDO(1);  while (1) {if (r_MCO()==1) break;}                   
+				DL=200; while (1){DL--; if (DL==0) break;} if (DL==0) b_err_cl++; 
+				MCO(0); 	tmp_rw = 0x00;		
+		}                                                                             
+		DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  						    
+		while (1) {if (r_MCO()==1) break;}											 
+		DL=2;while (1){DL--;if(DL==0)break;} 									  
+		MDO(1);DL=2;while (1){DL--;if(DL==0)break;}        						   
+		tmp_rw=0xD1; DL=2;while (1){DL--;if(DL==0)break;} 						    
+		MDO(0); DL=2;while (1){DL--;if(DL==0)break;} 					 
+		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}                        	 
+		for(i1=0;i1<8;i1++) 												  
+		{ if((tmp_rw&0x80)==0){MDO(0);}else { MDO(1);} 					  
+		DL=2;while (1){DL--;if(DL==0)break;}							   
+		MCO(1);DL=2;while (1) {if (r_MCO()==1) break;}while (1){DL--;if(DL==0)break;}MCO(0);MDO(0);                                                      
+		tmp_rw= tmp_rw<<1; } 																    
+										 DL=2;while (1){DL--;if(DL==0)break;}    							    
+										//	 MDE=0; 
+										 MDO(1); MCO(1);       DL=2;while (1) {if (r_MCO()==1) break;}  while (1){DL--;if(DL==0)break;}                 
+					 DL=200; while (1){DL--; if (DL==0) break;}  // if ((MDI==0)|(DL==0)) break;} 
+							 if (DL==0) b_err_cl++;			  
+						//	 MDE=1;  
+					 MCO(0); 	DL=2;while (1){DL--;if(DL==0)break;}  											 
+		for(j=0;j<8;j++)																									 
+		{for(i1=0;i1<8;i1++){ MDO(1);/*MDE=0;*/ MCO(1); while (1){if (r_MCO()==1) break;} DL=2;while (1){DL--;if(DL==0)break;}		    
+		if (r_MDI() ==0) 																									    
+		{bufout[9+j] = bufout[9+j]<<1;bufout[9+j] = bufout[9+j]&0xFE;} 															    
+		else 																											    
+		{bufout[9+j] = bufout[9+j]<<1;   																					   
+		bufout[9+j] = bufout[9+j]|0x01; }                          					 
+		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}}  							  
+		MDO(0);																	   
+		if (j==(8-1)) {MDO(1);}												    
+	//	MDE=1;                            											 
+		MCO(1);  while (1) {if (r_MCO()==1) break;}										  
+		DL=2;while (1){DL--;if(DL==0)break;} 										   
+		MCO(0);/*MDE=0;*/DL=2;while (1){DL--;if(DL==0)break;}} 							    
+//		MDE=1;DL=2;while (1){DL--;if(DL==0)break;} 										 
+		MDO(0);DL=2;while (1){DL--;if(DL==0)break;}     									  
+		MCO(1);while (1) {if (r_MCO()==1) break;}DL=2;while (1){DL--;if(DL==0)break;} MDO(1);       
+
+		bufout[6]=zbuf[6];
+		bufout[7]=zbuf[7]; 
+		bufout[8]=zbuf[8];
+		bufout[5]=17;  
+		zbuf[5]=10;
+	}					
+	
+	
+void write_dat_clock(void)
+{
+		u8 i1=0, j=0, DL=0;
+
+		for(i1=0;i1<8;i1++) 
+			zbuf[i1]=i1; 
+				
+	
+		zbuf[7]=0xD0;
+		zbuf[8]=0x00;
+	
+		MDO(0); 
+		DL=2;while (1){DL--;if (DL==0) break;} 
+		MCO(0); 
+		for(j=7;j<17;j++) 
+		{   
+			for(i1=0;i1<8;i1++) 
+			{ 
+				if((zbuf[j]&0x80)==0) 				
+					 MDO(0);  
+				else  
+  					MDO(1);  
+				DL=2;while (1){DL--;if(DL==0)break;} 
+				MCO(1); while (1) {if (r_MCO()==1)break;}  //{if (MCO==1)break;} 
+				DL=2;while (1){DL--;if(DL==0)break;} 
+				MCO(0);                        
+				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} //{ zbuf[j] = zbuf[j]<<1;} 
+				MDO(0);  
+								 }                                   
+										 DL=2;while (1){DL--;if(DL==0)break;}     
+										 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
+									 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
+						 if (DL==0) b_err_cl++;
+					/*	 MDE=1; */ MCO(0);  
+								 }                          
+										DL=2;while (1){DL--;if(DL==0)break;}  
+										MCO(1); while (1) {if (r_MCO()==1)break;}
+										DL=2;while (1){DL--;if(DL==0)break;} 
+										MDO(1);   
+									  
+}
+
+
+
+
+
+
 
 
 
