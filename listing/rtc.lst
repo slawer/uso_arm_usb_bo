@@ -10,7 +10,7 @@ N// rtc.h
 N//
 N
 N#include <stdint.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -22,7 +22,7 @@ N */
 N
 N#ifndef __stdint_h
 N#define __stdint_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __STDINT_DECLS
 N  #define __STDINT_DECLS
@@ -283,7 +283,7 @@ N
 N
 L 6 "src\rtc.h" 2
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -295,7 +295,7 @@ N */
 N
 N#ifndef __bool_true_false_are_defined
 N#define __bool_true_false_are_defined 1
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __cplusplus /* In C++, 'bool', 'true' and 'false' and keywords */
 N    #define bool _Bool
@@ -312,6 +312,10 @@ N
 N#endif /* __bool_true_false_are_defined */
 N
 L 7 "src\rtc.h" 2
+N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
 N
 N#ifndef _RTC_H
 N#define _RTC_H
@@ -790,7 +794,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -1385,7 +1389,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -29152,7 +29156,7 @@ N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****
 L 7 "src\rtc.c" 2
 N
 N#include <string.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
@@ -29174,7 +29178,7 @@ N */
 N
 N#ifndef __string_h
 N#define __string_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N#define _ARMABI __declspec(__nothrow)
 N
@@ -29706,6 +29710,10 @@ N
 N#include <stdint.h>
 N#include <stdbool.h>
 N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
+N
 N#ifndef _RTC_H
 S#define _RTC_H
 S
@@ -29932,7 +29940,6 @@ Nextern u16 kol_gr2_vkl;
 N
 Nextern u8 avariya;
 Nextern u8 sost_flesh;
-N
 N
 N
 L 11 "src\rtc.c" 2
@@ -30366,6 +30373,19 @@ N	conf.gr_kal2.tabl2.fz[0]=30;
 N	conf.gr_kal2.tabl2.kod[9]=31;
 N	conf.gr_kal2.tabl2.fz[9]=32;
 N*/
+N/*
+Nuint32_t flash_read(uint32_t address) {
+Nreturn (*(__IO uint32_t*) address);
+N}
+N*/
+N	size=sizeof(st_conf);
+N	
+N	for (i = 0; i < size; i += 1)
+N  {
+N		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (ADDR_FLASH + i));
+X		(*(volatile uint8_t *) ((volatile uint8_t *) (&conf) + i))=(*(volatile uint8_t *) (0x0800C000 + i));
+N	}	
+N	
 N	size=sizeof(st_conf);
 N	
 N	for (i = 0; i < size; i += 1)

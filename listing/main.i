@@ -372,7 +372,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -391,7 +391,7 @@ typedef enum IRQn
 
 
 
-#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -556,7 +556,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -589,7 +589,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15597,7 +15597,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15627,7 +15627,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15694,7 +15694,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16443,7 +16443,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -18999,7 +18999,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19013,7 +19013,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -21384,6 +21384,10 @@ volatile uint16_t ADC3ConvertedValue = 0;
 
 
 
+
+
+
+
     typedef struct
     {
         uint8_t Year;      
@@ -21604,7 +21608,6 @@ extern u8 avariya;
 extern u8 sost_flesh;
 
 
-
 #line 60 "src\\main.c"
 #line 1 ".\\inc\\my_def_ext.h"
 
@@ -21617,6 +21620,10 @@ extern u8 sost_flesh;
 
 #line 6 ".\\src\\rtc.h"
 #line 7 ".\\src\\rtc.h"
+
+
+
+
 
 #line 5 ".\\inc\\my_def_ext.h"
 
@@ -21948,27 +21955,21 @@ void write_dat_clock(void)
 				DL=2;while (1){DL--;if(DL==0)break;} 
 				MCO(1); while (1) {if (r_MCO()==1)break;}  
 				DL=2;while (1){DL--;if(DL==0)break;} 
-				MCO(0);                        
+				MCO(0);DL=2;while (1){DL--;if(DL==0)break;}                      
 				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} 
-				MDO(0);  
-								 }                                   
-										 DL=2;while (1){DL--;if(DL==0)break;}     
-										 MDO(1);   MCO(1); while (1)  {if (r_MCO()==1) break;}       
-									 DL=200; while (1){DL--; if (DL==0) break;} 		 
-						 if (DL==0) b_err_cl++;
+				MDO(0); DL=2;while (1){DL--;if(DL==0)break;}
+			}                                   
+			 DL=2;while (1){DL--;if(DL==0)break;}     
+			 MDO(1);   MCO(1); while (1)  {if (r_MCO()==1) break;}       
+			 DL=200; while (1){DL--; if (DL==0) break;} 		 
+				if (DL==0) b_err_cl++;
 					  MCO(0);  
-								 }                          
-										DL=2;while (1){DL--;if(DL==0)break;}  
-										MCO(1); while (1) {if (r_MCO()==1)break;}
-										DL=2;while (1){DL--;if(DL==0)break;} 
-										MDO(1);   
-									  
+		 }                          
+			DL=2;while (1){DL--;if(DL==0)break;}  
+			MCO(1); while (1) {if (r_MCO()==1)break;}
+			DL=2;while (1){DL--;if(DL==0)break;} 
+			MDO(1);   		
 }
-
-
-
-
-
 
 
 
@@ -21989,6 +21990,10 @@ void write_dat_clock(void)
 
 #line 6 "src\\rtc.h"
 #line 7 "src\\rtc.h"
+
+
+
+
 
 #line 65 "src\\main.c"
 
@@ -23762,8 +23767,10 @@ USART_ITConfig(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), ((uint16_t
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
-	
-	write_dat_clock();
+	MCO(1);
+	delay_spi(100);
+	MDO(1)
+
 	
 			
   while (1)
@@ -23837,7 +23844,7 @@ static void TIM_LED_Config(void)
   TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), ENABLE);
 }
 
-#line 1931 "src\\main.c"
+#line 1933 "src\\main.c"
 
   
  

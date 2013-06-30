@@ -144,6 +144,8 @@ MDO=1; //мастер I2c
 
 */
 
+#define ds_delay 1
+
 #define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
 #define PORT_DS_SCL               			  GPIOB	
 
@@ -195,8 +197,8 @@ void MDO(u8 sost)
 	//	GPIO_WriteBit(PIN_DS_SDA, PIN_DS_SDA, Bit_RESET);
     PORT_DS_SDA->BSRRH = PIN_DS_SDA ;	
 	
-			for (i=0;i<10000;i++)
-				__ASM volatile ("nop");
+	//		for (i=0;i<10000;i++)
+	//			__ASM volatile ("nop");
 }
 
 void MCO(u8 sost)
@@ -208,8 +210,8 @@ void MCO(u8 sost)
 //		GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_RESET);	
 	PORT_DS_SCL->BSRRH = PIN_DS_SCL;	
 	
-		for (i=0;i<10000;i++)
-				__ASM volatile ("nop");
+//		for (i=0;i<10000;i++)
+	//			__ASM volatile ("nop");
 }
 
 u8 r_MCO(void)
@@ -228,9 +230,12 @@ u8 r_MDI(void)
 			return 1;
 }
 
-   // чтение сохраненных параметров из часов
-//FUM_RD_DAT_CLOCK(0x1A,adcbuf,18,js) 
-//ADP1:
+void sleep(u16 dlit)
+{
+	u32 i=0;
+	for (i=0;i<dlit;i++)
+				__ASM volatile ("nop");
+}
 
 u8 b_err_cl=0, bufout[50], zbuf[50];
 
@@ -243,6 +248,8 @@ void read_dat_clock(void)
 		for(i1=0;i1<10;i1++) 
 			bufout[i1]=0;
 	
+	/*
+	// d0 00  zapis ==d0  read d1
 		tmp_rw=0xD0;MDO(0);DL=2;while (1){DL--;if(DL==0)break;} 
 		MCO(0);  
 		for(j=0;j<2;j++)  
@@ -258,46 +265,57 @@ void read_dat_clock(void)
 				}                                         
 				DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  
 				MDO(1);  while (1) {if (r_MCO()==1) break;}                   
-				DL=200; while (1){DL--; if (DL==0) break;} if (DL==0) b_err_cl++; 
+				DL=200; while (1){DL--; if ((r_MDI()==0)|(DL==0)) break;} if (DL==0) b_err_cl++; 
 				MCO(0); 	tmp_rw = 0x00;		
 		}                                                                             
 		DL=2;while (1){DL--;if(DL==0)break;} MCO(1);  						    
 		while (1) {if (r_MCO()==1) break;}											 
 		DL=2;while (1){DL--;if(DL==0)break;} 									  
-		MDO(1);DL=2;while (1){DL--;if(DL==0)break;}        						   
-		tmp_rw=0xD1; DL=2;while (1){DL--;if(DL==0)break;} 						    
-		MDO(0); DL=2;while (1){DL--;if(DL==0)break;} 					 
-		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}                        	 
+		MDO(1);DL=2;while (1){DL--;if(DL==0)break;}    
+*/
+// d1		
+		tmp_rw=0xD1; sleep(ds_delay);					    
+		MDO(0); sleep(ds_delay);					 
+		MCO(0); sleep(ds_delay);                     	 
 		for(i1=0;i1<8;i1++) 												  
-		{ if((tmp_rw&0x80)==0){MDO(0);}else { MDO(1);} 					  
-		DL=2;while (1){DL--;if(DL==0)break;}							   
-		MCO(1);DL=2;while (1) {if (r_MCO()==1) break;}while (1){DL--;if(DL==0)break;}MCO(0);MDO(0);                                                      
-		tmp_rw= tmp_rw<<1; } 																    
-										 DL=2;while (1){DL--;if(DL==0)break;}    							    
-										//	 MDE=0; 
-										 MDO(1); MCO(1);       DL=2;while (1) {if (r_MCO()==1) break;}  while (1){DL--;if(DL==0)break;}                 
-					 DL=200; while (1){DL--; if (DL==0) break;}  // if ((MDI==0)|(DL==0)) break;} 
-							 if (DL==0) b_err_cl++;			  
-						//	 MDE=1;  
-					 MCO(0); 	DL=2;while (1){DL--;if(DL==0)break;}  											 
+		{ 
+			if((tmp_rw&0x80)==0)	{MDO(0);}
+				else { MDO(1);} 					  
+			sleep(ds_delay);						   
+			MCO(1); sleep(ds_delay);
+			MCO(0);	sleep(ds_delay);
+	//		MDO(0); sleep(ds_delay);                                                  
+			tmp_rw= tmp_rw<<1; } 																    
+		
+		sleep(ds_delay);    							    
+		MDO(1); sleep(ds_delay);
+		MCO(1); sleep(ds_delay*10);                
+		if (r_MDI()==1) b_err_cl++;			   
+    MCO(0); 	sleep(ds_delay);
+		
+		MDO(1); sleep(ds_delay);
 		for(j=0;j<8;j++)																									 
-		{for(i1=0;i1<8;i1++){ MDO(1);/*MDE=0;*/ MCO(1); while (1){if (r_MCO()==1) break;} DL=2;while (1){DL--;if(DL==0)break;}		    
-		if (r_MDI() ==0) 																									    
-		{bufout[9+j] = bufout[9+j]<<1;bufout[9+j] = bufout[9+j]&0xFE;} 															    
-		else 																											    
-		{bufout[9+j] = bufout[9+j]<<1;   																					   
-		bufout[9+j] = bufout[9+j]|0x01; }                          					 
-		MCO(0); DL=2;while (1){DL--;if(DL==0)break;}}  							  
-		MDO(0);																	   
-		if (j==(8-1)) {MDO(1);}												    
-	//	MDE=1;                            											 
-		MCO(1);  while (1) {if (r_MCO()==1) break;}										  
-		DL=2;while (1){DL--;if(DL==0)break;} 										   
-		MCO(0);/*MDE=0;*/DL=2;while (1){DL--;if(DL==0)break;}} 							    
-//		MDE=1;DL=2;while (1){DL--;if(DL==0)break;} 										 
-		MDO(0);DL=2;while (1){DL--;if(DL==0)break;}     									  
-		MCO(1);while (1) {if (r_MCO()==1) break;}DL=2;while (1){DL--;if(DL==0)break;} MDO(1);       
-
+		{  
+			for(i1=0;i1<8;i1++)
+			{ 
+		//		MDO(1); sleep(ds_delay);
+				MCO(1); sleep(ds_delay*2);	    
+				if (r_MDI() ==0) 																									    
+				{bufout[9+j] = bufout[9+j]<<1;bufout[9+j] = bufout[9+j]&0xFE;} 															    
+				else 																											    
+				{bufout[9+j] = bufout[9+j]<<1; bufout[9+j] = bufout[9+j]|0x01;}                          					 
+				MCO(0); sleep(ds_delay);
+			}  							  
+			//	MDO(0);																	   
+				if (j!=7) 	{								                            											 
+				MCO(1); sleep(ds_delay);								  										   
+				if (r_MDI()==1) b_err_cl++;					
+				MCO(0); sleep(ds_delay);		}      
+		}
+		MCO(0);sleep(ds_delay);	
+		MDO(1); sleep(ds_delay);		
+		
+		// stop
 		bufout[6]=zbuf[6];
 		bufout[7]=zbuf[7]; 
 		bufout[8]=zbuf[8];
@@ -331,27 +349,21 @@ void write_dat_clock(void)
 				DL=2;while (1){DL--;if(DL==0)break;} 
 				MCO(1); while (1) {if (r_MCO()==1)break;}  //{if (MCO==1)break;} 
 				DL=2;while (1){DL--;if(DL==0)break;} 
-				MCO(0);                        
+				MCO(0);DL=2;while (1){DL--;if(DL==0)break;}                      
 				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} //{ zbuf[j] = zbuf[j]<<1;} 
-				MDO(0);  
-								 }                                   
-										 DL=2;while (1){DL--;if(DL==0)break;}     
-										 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
-									 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
-						 if (DL==0) b_err_cl++;
+				MDO(0); DL=2;while (1){DL--;if(DL==0)break;}
+			}                                   
+			 DL=2;while (1){DL--;if(DL==0)break;}     
+			 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
+			 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
+				if (DL==0) b_err_cl++;
 					/*	 MDE=1; */ MCO(0);  
-								 }                          
-										DL=2;while (1){DL--;if(DL==0)break;}  
-										MCO(1); while (1) {if (r_MCO()==1)break;}
-										DL=2;while (1){DL--;if(DL==0)break;} 
-										MDO(1);   
-									  
+		 }                          
+			DL=2;while (1){DL--;if(DL==0)break;}  
+			MCO(1); while (1) {if (r_MCO()==1)break;}
+			DL=2;while (1){DL--;if(DL==0)break;} 
+			MDO(1);   		
 }
-
-
-
-
-
 
 
 

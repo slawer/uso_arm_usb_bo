@@ -130,7 +130,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -161,10 +161,11 @@
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4100</DriverSelection>
           </Flash1>
+          <bUseTDR>1</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -184,20 +185,20 @@
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
             <AdsALst>1</AdsALst>
-            <AdsACrf>1</AdsACrf>
+            <AdsACrf>0</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
             <AdsLLst>1</AdsLLst>
-            <AdsLmap>1</AdsLmap>
-            <AdsLcgr>1</AdsLcgr>
-            <AdsLsym>1</AdsLsym>
-            <AdsLszi>1</AdsLszi>
-            <AdsLtoi>1</AdsLtoi>
-            <AdsLsun>1</AdsLsun>
-            <AdsLven>1</AdsLven>
-            <AdsLsxf>1</AdsLsxf>
-            <RvctClst>1</RvctClst>
-            <GenPPlst>1</GenPPlst>
+            <AdsLmap>0</AdsLmap>
+            <AdsLcgr>0</AdsLcgr>
+            <AdsLsym>0</AdsLsym>
+            <AdsLszi>0</AdsLszi>
+            <AdsLtoi>0</AdsLtoi>
+            <AdsLsun>0</AdsLsun>
+            <AdsLven>0</AdsLven>
+            <AdsLsxf>0</AdsLsxf>
+            <RvctClst>0</RvctClst>
+            <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M4"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
@@ -378,7 +379,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>.\MEDIA_USB_KEY\uso_arm_usb_bo.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -520,6 +521,11 @@
               <FileName>stm32f4xx_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Libraries\CMSIS\stm32f4xx_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Libraries\CMSIS\stm32f4xx_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -814,6 +820,7 @@
             <Capability>1</Capability>
             <DriverSelection>4100</DriverSelection>
           </Flash1>
+          <bUseTDR>0</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -1169,6 +1176,11 @@
               <FileName>stm32f4xx_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Libraries\CMSIS\stm32f4xx_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Libraries\CMSIS\stm32f4xx_flash.c</FilePath>
             </File>
           </Files>
         </Group>

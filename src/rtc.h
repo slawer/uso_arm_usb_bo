@@ -5,6 +5,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define ADDR_FLASH  	 0x080E0000 //0x08000000 //0x0800C000 //0x801FC00
+#define STR_FLASH  	   FLASH_Sector_11 //0x0800C000 //0x801FC00
+
+//		8000000									 0x100000
+
+
 #ifndef _RTC_H
 #define _RTC_H
 

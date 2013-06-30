@@ -434,7 +434,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -453,7 +453,7 @@ typedef enum IRQn
 
 
 
-#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -618,7 +618,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -651,7 +651,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -14659,7 +14659,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -14673,7 +14673,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -17820,7 +17820,7 @@ void USBH_ErrorHandle(USBH_HOST *phost,
 
 
 #line 34 ".\\inc\\usbh_usr.h"
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -17850,7 +17850,7 @@ void USBH_ErrorHandle(USBH_HOST *phost,
 
 
 
-#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -17917,7 +17917,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -18666,7 +18666,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -19871,6 +19871,10 @@ extern void USB_OTG_BSP_TimerIRQ(void);
 
 
 
+
+
+
+
     typedef struct
     {
         uint8_t Year;      
@@ -20091,7 +20095,6 @@ extern u8 avariya;
 extern u8 sost_flesh;
 
 
-
 #line 27 "src\\usbh_usr.c"
 #line 1 "src\\rtc.h"
 
@@ -20100,6 +20103,10 @@ extern u8 sost_flesh;
 
 #line 6 "src\\rtc.h"
 #line 7 "src\\rtc.h"
+
+
+
+
 
 #line 28 "src\\usbh_usr.c"
 

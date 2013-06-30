@@ -343,8 +343,8 @@
         <periodic>1</periodic>
         <aLwin>0</aLwin>
         <aCover>0</aCover>
-        <aSer1>0</aSer1>
-        <aSer2>0</aSer2>
+        <aSer1>1</aSer1>
+        <aSer2>1</aSer2>
         <aPa>0</aPa>
         <viewmode>1</viewmode>
         <vrSel>0</vrSel>
@@ -381,20 +381,6 @@
           <SecondString>008000000000000000A0AC400000000000A0AC400200000000000000000000000000000028284750494F5F54797065446566202A29202828282875696E7433325F74293078343030303030303029202B203078303030323030303029202B2030783034303029292D3E494452202620282875696E7431365F74293078303038302900000000000000000000000000000000000000000000000000000000000000000000004100000002000000000000000000E03F05000000000000000000000000000000000000009A760008</SecondString>
         </Wi>
       </LogicAnalyzers>
-      <SystemViewers>
-        <Entry>
-          <Name>System Viewer\GPIOB</Name>
-          <WinId>35902</WinId>
-        </Entry>
-        <Entry>
-          <Name>System Viewer\NVIC</Name>
-          <WinId>35903</WinId>
-        </Entry>
-        <Entry>
-          <Name>System Viewer\RCC</Name>
-          <WinId>35901</WinId>
-        </Entry>
-      </SystemViewers>
     </TargetOption>
   </Target>
 
@@ -620,12 +606,12 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>2</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>184</TopLine>
-      <CurrentLine>185</CurrentLine>
+      <TopLine>411</TopLine>
+      <CurrentLine>425</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\rtc.c</PathWithFileName>
       <FilenameWithoutPath>rtc.c</FilenameWithoutPath>
@@ -654,10 +640,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>29</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>13</CurrentLine>
+      <CurrentLine>10</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\rtc.h</PathWithFileName>
       <FilenameWithoutPath>rtc.h</FilenameWithoutPath>
@@ -672,8 +658,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>474</TopLine>
-      <CurrentLine>475</CurrentLine>
+      <TopLine>1455</TopLine>
+      <CurrentLine>1466</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -688,8 +674,8 @@
       <Focus>0</Focus>
       <ColumnNumber>55</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>485</TopLine>
-      <CurrentLine>486</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\system_stm32f4xx.c</PathWithFileName>
       <FilenameWithoutPath>system_stm32f4xx.c</FilenameWithoutPath>
@@ -702,10 +688,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>42</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>196</TopLine>
-      <CurrentLine>220</CurrentLine>
+      <TopLine>455</TopLine>
+      <CurrentLine>460</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\usb_bsp.c</PathWithFileName>
       <FilenameWithoutPath>usb_bsp.c</FilenameWithoutPath>
@@ -720,8 +706,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>591</TopLine>
-      <CurrentLine>612</CurrentLine>
+      <TopLine>541</TopLine>
+      <CurrentLine>542</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\usbh_usr.c</PathWithFileName>
       <FilenameWithoutPath>usbh_usr.c</FilenameWithoutPath>
@@ -734,10 +720,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>3</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>322</TopLine>
-      <CurrentLine>335</CurrentLine>
+      <TopLine>65</TopLine>
+      <CurrentLine>78</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\stm32f4xx_it.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_it.c</FilenameWithoutPath>
@@ -752,8 +738,8 @@
       <Focus>0</Focus>
       <ColumnNumber>18</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>11</TopLine>
-      <CurrentLine>12</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\readme.txt</PathWithFileName>
       <FilenameWithoutPath>readme.txt</FilenameWithoutPath>
@@ -776,8 +762,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>115</TopLine>
-      <CurrentLine>116</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Utilities\STM32F4-Discovery\stm32f4_discovery.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4_discovery.c</FilenameWithoutPath>
@@ -800,8 +786,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>162</TopLine>
+      <CurrentLine>163</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\misc.c</PathWithFileName>
       <FilenameWithoutPath>misc.c</FilenameWithoutPath>
@@ -816,8 +802,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>820</TopLine>
-      <CurrentLine>828</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_adc.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_adc.c</FilenameWithoutPath>
@@ -832,8 +818,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>81</TopLine>
-      <CurrentLine>96</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_dac.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_dac.c</FilenameWithoutPath>
@@ -848,8 +834,8 @@
       <Focus>0</Focus>
       <ColumnNumber>33</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>218</TopLine>
-      <CurrentLine>224</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_dma.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_dma.c</FilenameWithoutPath>
@@ -912,8 +898,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1234</TopLine>
-      <CurrentLine>1248</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_rcc.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_rcc.c</FilenameWithoutPath>
@@ -928,8 +914,8 @@
       <Focus>0</Focus>
       <ColumnNumber>31</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>2296</TopLine>
+      <CurrentLine>2297</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_rtc.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_rtc.c</FilenameWithoutPath>
@@ -944,8 +930,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1145</TopLine>
-      <CurrentLine>1146</CurrentLine>
+      <TopLine>1154</TopLine>
+      <CurrentLine>1155</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_spi.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_spi.c</FilenameWithoutPath>
@@ -992,8 +978,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1400</TopLine>
+      <CurrentLine>1401</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\CMSIS\stm32f4xx_usart.c</PathWithFileName>
       <FilenameWithoutPath>stm32f4xx_usart.c</FilenameWithoutPath>
@@ -1016,7 +1002,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>166</TopLine>
+      <TopLine>168</TopLine>
       <CurrentLine>175</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\src\startup_stm32f4xx.s</PathWithFileName>
@@ -1040,8 +1026,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>850</TopLine>
+      <CurrentLine>851</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_OTG_Driver\usb_core.c</PathWithFileName>
       <FilenameWithoutPath>usb_core.c</FilenameWithoutPath>
@@ -1054,10 +1040,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>25</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>159</TopLine>
-      <CurrentLine>163</CurrentLine>
+      <TopLine>157</TopLine>
+      <CurrentLine>158</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_OTG_Driver\usb_hcd.c</PathWithFileName>
       <FilenameWithoutPath>usb_hcd.c</FilenameWithoutPath>
@@ -1072,8 +1058,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>193</TopLine>
+      <CurrentLine>194</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_OTG_Driver\usb_hcd_int.c</PathWithFileName>
       <FilenameWithoutPath>usb_hcd_int.c</FilenameWithoutPath>
@@ -1096,8 +1082,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>350</TopLine>
-      <CurrentLine>354</CurrentLine>
+      <TopLine>211</TopLine>
+      <CurrentLine>212</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_HOST_Library\usbh_core.c</PathWithFileName>
       <FilenameWithoutPath>usbh_core.c</FilenameWithoutPath>
@@ -1160,8 +1146,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>279</TopLine>
+      <CurrentLine>280</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_HOST_Library\usbh_msc_core.c</PathWithFileName>
       <FilenameWithoutPath>usbh_msc_core.c</FilenameWithoutPath>
@@ -1208,8 +1194,8 @@
       <Focus>0</Focus>
       <ColumnNumber>6</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>300</TopLine>
-      <CurrentLine>301</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.c</PathWithFileName>
       <FilenameWithoutPath>usbh_msc_scsi.c</FilenameWithoutPath>
@@ -1248,8 +1234,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>2781</TopLine>
+      <CurrentLine>2784</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Utilities\Third_Party\fat_fs\ff.c</PathWithFileName>
       <FilenameWithoutPath>ff.c</FilenameWithoutPath>

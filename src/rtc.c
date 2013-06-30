@@ -413,6 +413,18 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
 	conf.gr_kal2.tabl2.kod[9]=31;
 	conf.gr_kal2.tabl2.fz[9]=32;
 */
+/*
+uint32_t flash_read(uint32_t address) {
+return (*(__IO uint32_t*) address);
+}
+*/
+	size=sizeof(st_conf);
+	
+	for (i = 0; i < size; i += 1)
+  {
+		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (ADDR_FLASH + i));
+	}	
+	
 	size=sizeof(st_conf);
 	
 	for (i = 0; i < size; i += 1)

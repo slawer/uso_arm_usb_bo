@@ -454,7 +454,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -466,7 +466,7 @@ N */
 N
 N#ifndef __stdint_h
 N#define __stdint_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __STDINT_DECLS
 N  #define __STDINT_DECLS
@@ -766,7 +766,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -1361,7 +1361,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -30374,7 +30374,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -30394,7 +30394,7 @@ N */
 N
 N#ifndef __stdio_h
 N#define __stdio_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N
 N
@@ -34271,7 +34271,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -34283,7 +34283,7 @@ N */
 N
 N#ifndef __bool_true_false_are_defined
 N#define __bool_true_false_are_defined 1
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __cplusplus /* In C++, 'bool', 'true' and 'false' and keywords */
 N    #define bool _Bool
@@ -37165,6 +37165,10 @@ N
 N#include <stdint.h>
 N#include <stdbool.h>
 N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
+N
 N#ifndef _RTC_H
 N#define _RTC_H
 N
@@ -37393,7 +37397,6 @@ Nextern u8 avariya;
 Nextern u8 sost_flesh;
 N
 N
-N
 L 28 "src\stm32f4xx_it.c" 2
 N#include "rtc.h"
 L 1 "src\rtc.h" 1
@@ -37403,6 +37406,10 @@ N//
 N
 N#include <stdint.h>
 N#include <stdbool.h>
+N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
 N
 N#ifndef _RTC_H
 S#define _RTC_H
@@ -37438,6 +37445,17 @@ S		 void rtc_Lock(void);
 S
 N#endif
 L 29 "src\stm32f4xx_it.c" 2
+N
+N#include "stm32f4xx_flash.h"
+N
+Nextern void FLASH_Unlock(void);
+Nextern void FLASH_Lock(void);
+Nextern FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange);
+Nextern FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange);
+Nextern FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data);
+Nextern FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data);
+Nextern FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data);
+Nextern FLASH_Status FLASH_ProgramByte(uint32_t Address, uint8_t Data);
 N
 N
 Nu16	kol_rele_on=0;
@@ -37485,8 +37503,60 @@ N extern __IO uint8_t Command_index;
 X extern volatile uint8_t Command_index;
 N#endif /* MEDIA_USB_KEY */
 N
+N
+N
+N
 N/* Private function prototypes -----------------------------------------------*/
 N/* Private functions ---------------------------------------------------------*/
+N
+N/*
+N//for zap vo flash
+N
+N#define FLASH_KEY1 ((uint32_t)0x45670123)
+N#define FLASH_KEY2 ((uint32_t)0xCDEF89AB)
+Nvoid flash_unlock(void) {
+N  FLASH->KEYR = FLASH_KEY1;
+N  FLASH->KEYR = FLASH_KEY2;
+N}
+N
+N
+Nvoid flash_lock() {
+N  FLASH->CR |= FLASH_CR_LOCK;
+N}
+N
+N
+N//when can write
+Nuint8_t flash_ready(void) {
+N  return !(FLASH->SR & FLASH_SR_BSY);
+N}
+N 
+N 
+N//  erase 1 page
+Nvoid flash_erase_page(uint32_t address) {
+N  FLASH->CR|= FLASH_CR_PER; //????????????? ??? ???????? ????? ????????
+N  FLASH->AR = address; // ?????? ?? ?????
+N  FLASH->CR|= FLASH_CR_STRT; // ????????? ???????? 
+N  while(!flash_ready())
+N    ;  //???? ???? ???????? ????????. 
+N  FLASH->CR&= ~FLASH_CR_PER; //?????????? ??? ???????
+N}
+N
+N// write 4 bait
+Nvoid flash_write(uint32_t address,uint32_t data) {
+N  FLASH->CR |= FLASH_CR_PG; //????????? ???????????????? ?????
+N  while(!flash_ready()) //??????? ?????????? ????? ? ??????
+N    ;
+N  *(__IO uint16_t*)address = (uint16_t)data; //????? ??????? 2 ????
+N  while(!flash_ready())
+N    ;
+N  address+=2;
+N  data>>=16;
+N  *(__IO uint16_t*)address = (uint16_t)data; //????? ??????? 2 ?????
+N  while(!flash_ready())
+N    ;
+N  FLASH->CR &= ~(FLASH_CR_PG); //????????? ???????????????? ?????
+N}
+N*/
 N
 N/******************************************************************************/
 N/*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -37680,7 +37750,7 @@ N					return tk->fz[i-1];
 N  	}	
 N    
 N		return tk->fz[9];		
-W "src\stm32f4xx_it.c" 189 14 variable "tab" was declared but never referenced
+W "src\stm32f4xx_it.c" 252 14 variable "tab" was declared but never referenced
 N}
 N
 N
@@ -37742,7 +37812,7 @@ X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = 
 N		PORT_RELE->BSRRH = PIN_RELE;  	// off  PIN_RELE		
 X		((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x00020000) + 0x0000))->BSRRH = ((uint16_t)0x0010);  	
 N	}
-W "src\stm32f4xx_it.c" 317 1 missing return statement at end of non-void function "test_rele"
+W "src\stm32f4xx_it.c" 380 1 missing return statement at end of non-void function "test_rele"
 N}
 N
 N/**
@@ -37868,7 +37938,7 @@ N		kol_average=0;
 N		summa[0]=0;
 N		
 N		
-W "src\stm32f4xx_it.c" 430 3 function "read_dat_clock" declared implicitly
+W "src\stm32f4xx_it.c" 493 3 function "read_dat_clock" declared implicitly
 N		read_dat_clock();
 N		// раз в 100 мс
 N		// вычисляем физическую величину
@@ -37950,7 +38020,7 @@ N	// indicate_lin(0,(u16)fz_average[0], 4096);
 N// indicate(1,(u16)(fz_average[0]/10));
 N	 if (tk_null==1)
 N	 {
-W "src\stm32f4xx_it.c" 511 4 function "indicate_err" declared implicitly
+W "src\stm32f4xx_it.c" 574 4 function "indicate_err" declared implicitly
 N		 indicate_err(1);   	// tek
 N		 indicate_err(2);			// lineika 
 N		 indicate_err(3);			// maximum
@@ -37960,7 +38030,7 @@ N	 else
 N	 {		
 N	 if ((avariya==1)&((tick%2)==0))
 N	 {
-W "src\stm32f4xx_it.c" 520 4 function "ind_blank_all" declared implicitly
+W "src\stm32f4xx_it.c" 583 4 function "ind_blank_all" declared implicitly
 N			ind_blank_all(1); 
 N			ind_blank_all(2); 
 N			ind_blank_all(3); 
@@ -37969,12 +38039,12 @@ N		}
 N		else
 N		{
 N		 // dop usrednenie na vivod indicatorov???
-W "src\stm32f4xx_it.c" 528 4 function "indicate" declared implicitly
+W "src\stm32f4xx_it.c" 591 4 function "indicate" declared implicitly
 N		 indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
 N
 N			if (conf.tek_gr_kal==0)
 N					if (sost_pribl==0)
-W "src\stm32f4xx_it.c" 532 7 function "indicate_lin" declared implicitly
+W "src\stm32f4xx_it.c" 595 7 function "indicate_lin" declared implicitly
 N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
 N					else
 N						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
@@ -37988,7 +38058,7 @@ N		 indicate(3,(u16)(max[0]),3);														// maximum
 N	 }	
 N	}
 N	if ((tick%2)==0)
-W "src\stm32f4xx_it.c" 545 4 function "indicate_time" declared implicitly
+W "src\stm32f4xx_it.c" 608 4 function "indicate_time" declared implicitly
 N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
 N	else
 N			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
@@ -38033,6 +38103,46 @@ N				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
 X				if (*(volatile uint8_t *) (((uint32_t)0x40024000) + (i>>1)) != tmp3)
 N						errors=1;
 N			}
+N			
+N		//	flash_unlock();
+N			FLASH_Unlock();
+N			FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+X			FLASH_ClearFlag(((uint32_t)0x00000001) | ((uint32_t)0x00000002) | ((uint32_t)0x00000010) |((uint32_t)0x00000020) | ((uint32_t)0x00000040)|((uint32_t)0x00000080));
+N			FLASH_EraseSector(ADDR_FLASH,VoltageRange_3);
+X			FLASH_EraseSector(0x0800C000,((uint8_t)0x02));
+N			
+N			
+N			// Program the user Flash area word by word
+N
+N
+N			
+N	//		flash_erase_page(ADDR_FLASH);
+N
+N			for (i = 0; i < rxsize-10; i += 2)
+N			{						
+N				u8 k1, k2, b;					
+N				
+N			  k1=RxBuffer[i+10];
+N				k2=RxBuffer[i+11];
+N				b=0;
+N				if (k1>'9')	
+N						b=(k1-0x37)<<4;
+N				else
+N						b=(k1-0x30)<<4;
+N	
+N				if (k1>'9')	
+N						b+=(k2-0x37);
+N				else
+N						b+=(k2-0x30);					
+N
+N				FLASH_ProgramByte(ADDR_FLASH+(i>>1),(uint8_t) b);
+X				FLASH_ProgramByte(0x0800C000+(i>>1),(uint8_t) b);
+N			}
+N			
+N//			flash_lock();
+N			  // Lock the Flash to disable the flash control register access
+N  //   (recommended to protect the FLASH memory against possible unwanted operation).
+N  FLASH_Lock();
 N
 N			if (errors==0)
 N			{
@@ -38235,10 +38345,10 @@ N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 N			
 N			// need restart
-W "src\stm32f4xx_it.c" 682 13 variable "Tens" was declared but never referenced
-W "src\stm32f4xx_it.c" 682 19 variable "Units" was declared but never referenced
-W "src\stm32f4xx_it.c" 683 16 variable "TempReg" was declared but never referenced
-W "src\stm32f4xx_it.c" 684 7 variable "i" was declared but never referenced
+W "src\stm32f4xx_it.c" 782 13 variable "Tens" was declared but never referenced
+W "src\stm32f4xx_it.c" 782 19 variable "Units" was declared but never referenced
+W "src\stm32f4xx_it.c" 783 16 variable "TempReg" was declared but never referenced
+W "src\stm32f4xx_it.c" 784 7 variable "i" was declared but never referenced
 N		}
 N		
 N		// read
@@ -38544,10 +38654,25 @@ N			txsize=sizeof(st_conf);  // dl = 228
 N	
 N			for (i = 0; i < (txsize); i += 1)
 N			{
-N		//		TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
 N				TxBuffer[i]=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
 X				TxBuffer[i]=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 N			}	
+N	
+N			for (i = 0; i < (txsize); i += 4)
+N			{
+N				uint32_t data;				
+N				data= *(__IO uint32_t*) (ADDR_FLASH+i);
+X				data= *(volatile uint32_t*) (0x0800C000+i);
+N				
+N				
+N				TxBuffer[i]=(u8) (data>>24);
+N				TxBuffer[i+1]=(u8) (data>>16);
+N				TxBuffer[i+2]=(u8) (data>>8);
+N				TxBuffer[i+3]=(u8) data;
+N			}	
+N
+N//}
+N
 N			tekper=0;
 N			USART_SendData(USART2, 0x3A);
 X			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
@@ -38660,7 +38785,7 @@ X    capture = TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800
 N    TIM_SetCompare1(TIM4, capture + CCR_Val);
 X    TIM_SetCompare1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0800)), capture + CCR_Val);
 N  }
-W "src\stm32f4xx_it.c" 1124 12 variable "clickreg" was declared but never referenced
+W "src\stm32f4xx_it.c" 1238 12 variable "clickreg" was declared but never referenced
 N}
 N
 N#if defined MEDIA_USB_KEY

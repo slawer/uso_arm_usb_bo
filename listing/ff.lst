@@ -540,7 +540,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -552,7 +552,7 @@ N */
 N
 N#ifndef __stdint_h
 N#define __stdint_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __STDINT_DECLS
 N  #define __STDINT_DECLS
@@ -852,7 +852,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -1447,7 +1447,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -29454,7 +29454,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -29466,7 +29466,7 @@ N */
 N
 N#ifndef __bool_true_false_are_defined
 N#define __bool_true_false_are_defined 1
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __cplusplus /* In C++, 'bool', 'true' and 'false' and keywords */
 N    #define bool _Bool
@@ -37853,7 +37853,7 @@ N
 N#if !_FS_READONLY
 X#if !0
 N#include <stdarg.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdarg.h" 1
 N/* stdarg.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.8 */
 N/* Copyright (C) Codemist Ltd., 1988                            */
 N/* Copyright (C) ARM Ltd., 1991-1999. All rights reserved */
@@ -37866,7 +37866,7 @@ N */
 N
 N#ifndef __stdarg_h
 N#define __stdarg_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __STDARG_DECLS
 N  #define __STDARG_DECLS

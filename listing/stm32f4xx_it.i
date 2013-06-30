@@ -375,7 +375,7 @@ typedef enum IRQn
 
 #line 142 ".\\Libraries\\CMSIS\\core_cm4.h"
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
  
  
 
@@ -394,7 +394,7 @@ typedef enum IRQn
 
 
 
-#line 26 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 26 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -559,7 +559,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 197 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 197 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
      
 
@@ -592,7 +592,7 @@ typedef unsigned       __int64 uintmax_t;
 
 
 
-#line 261 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
+#line 261 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdint.h"
 
 
 
@@ -15600,7 +15600,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
  
 #line 31 ".\\inc\\main.h"
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
  
  
  
@@ -15630,7 +15630,7 @@ void LIS302DL_TIMEOUT_UserCallback(void);
 
 
 
-#line 38 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 38 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
   
@@ -15697,7 +15697,7 @@ typedef struct __FILE FILE;
 extern FILE __stdin, __stdout, __stderr;
 extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
 
-#line 129 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 129 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
     
 
     
@@ -16446,7 +16446,7 @@ extern __declspec(__nothrow) void __use_no_semihosting(void);
 
 
 
-#line 948 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
+#line 948 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdio.h"
 
 
 
@@ -19002,7 +19002,7 @@ typedef unsigned long	DWORD;
 
  
 
-#line 1 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 1 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
  
 
 
@@ -19016,7 +19016,7 @@ typedef unsigned long	DWORD;
 
 
 
-#line 25 "d:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
+#line 25 "C:\\Keil4\\ARM\\ARMCC\\bin\\..\\include\\stdbool.h"
 
 
 
@@ -21352,6 +21352,10 @@ void TimingDelay_Decrement(void);
 
 
 
+
+
+
+
     typedef struct
     {
         uint8_t Year;      
@@ -21572,7 +21576,6 @@ extern u8 avariya;
 extern u8 sost_flesh;
 
 
-
 #line 28 "src\\stm32f4xx_it.c"
 #line 1 "src\\rtc.h"
 
@@ -21582,7 +21585,22 @@ extern u8 sost_flesh;
 #line 6 "src\\rtc.h"
 #line 7 "src\\rtc.h"
 
+
+
+
+
 #line 29 "src\\stm32f4xx_it.c"
+
+#line 31 "src\\stm32f4xx_it.c"
+
+extern void FLASH_Unlock(void);
+extern void FLASH_Lock(void);
+extern FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange);
+extern FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange);
+extern FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data);
+extern FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data);
+extern FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data);
+extern FLASH_Status FLASH_ProgramByte(uint32_t Address, uint8_t Data);
 
 
 u16	kol_rele_on=0;
@@ -21623,7 +21641,59 @@ volatile uint16_t Time_Rec_Base = 0;
  extern volatile uint8_t Command_index;
 
 
+
+
+
  
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
  
@@ -22138,6 +22208,43 @@ void SysTick_Handler(void)
 				if (*(volatile uint8_t *) (((uint32_t)0x40024000) + (i>>1)) != tmp3)
 						errors=1;
 			}
+			
+		
+			FLASH_Unlock();
+			FLASH_ClearFlag(((uint32_t)0x00000001) | ((uint32_t)0x00000002) | ((uint32_t)0x00000010) |((uint32_t)0x00000020) | ((uint32_t)0x00000040)|((uint32_t)0x00000080));
+			FLASH_EraseSector(0x0800C000,((uint8_t)0x02));
+			
+			
+			
+
+
+			
+	
+
+			for (i = 0; i < rxsize-10; i += 2)
+			{						
+				u8 k1, k2, b;					
+				
+			  k1=RxBuffer[i+10];
+				k2=RxBuffer[i+11];
+				b=0;
+				if (k1>'9')	
+						b=(k1-0x37)<<4;
+				else
+						b=(k1-0x30)<<4;
+	
+				if (k1>'9')	
+						b+=(k2-0x37);
+				else
+						b+=(k2-0x30);					
+
+				FLASH_ProgramByte(0x0800C000+(i>>1),(uint8_t) b);
+			}
+			
+
+			  
+  
+  FLASH_Lock();
 
 			if (errors==0)
 			{
@@ -22618,9 +22725,23 @@ rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(
 	
 			for (i = 0; i < (txsize); i += 1)
 			{
-		
 				TxBuffer[i]=(*(volatile uint8_t *) (((uint32_t)0x40024000) + i));
 			}	
+	
+			for (i = 0; i < (txsize); i += 4)
+			{
+				uint32_t data;				
+				data= *(volatile uint32_t*) (0x0800C000+i);
+				
+				
+				TxBuffer[i]=(u8) (data>>24);
+				TxBuffer[i+1]=(u8) (data>>16);
+				TxBuffer[i+2]=(u8) (data>>8);
+				TxBuffer[i+3]=(u8) data;
+			}	
+
+
+
 			tekper=0;
 			USART_SendData(((USART_TypeDef *) (((uint32_t)0x40000000) + 0x4400)), 0x3A);
 		}		

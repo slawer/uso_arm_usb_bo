@@ -451,7 +451,7 @@ S    #define __FPU_USED         0
 N#endif
 N
 N#include <stdint.h>                      /*!< standard types definitions                      */
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999 */
 N/* All rights reserved */
 N
@@ -463,7 +463,7 @@ N */
 N
 N#ifndef __stdint_h
 N#define __stdint_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __STDINT_DECLS
 N  #define __STDINT_DECLS
@@ -763,7 +763,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -1358,7 +1358,7 @@ X#if   1L
 N/* ARM armcc specific functions */
 N
 N#if (__ARMCC_VERSION < 400677)
-X#if (5030024 < 400677)
+X#if (5030076 < 400677)
 S  #error "Please use ARM Compiler Toolchain V4.0.677 or later!"
 N#endif
 N
@@ -30371,7 +30371,7 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 31 ".\inc\main.h" 2
 N#include <stdio.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
@@ -30391,7 +30391,7 @@ N */
 N
 N#ifndef __stdio_h
 N#define __stdio_h
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N
 N
@@ -34268,7 +34268,7 @@ N
 N/* Boolean type */
 N// typedef enum { FALSE = 0, TRUE } BOOL;
 N#include <stdbool.h>
-L 1 "d:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
+L 1 "C:\Keil4\ARM\ARMCC\bin\..\include\stdbool.h" 1
 N/* stdbool.h: ISO/IEC 9899:1999 (C99), section 7.16 */
 N
 N/* Copyright (C) ARM Ltd., 2002
@@ -34280,7 +34280,7 @@ N */
 N
 N#ifndef __bool_true_false_are_defined
 N#define __bool_true_false_are_defined 1
-N#define __ARMCLIB_VERSION 5030024
+N#define __ARMCLIB_VERSION 5030076
 N
 N  #ifndef __cplusplus /* In C++, 'bool', 'true' and 'false' and keywords */
 N    #define bool _Bool
@@ -37202,6 +37202,10 @@ N
 N#include <stdint.h>
 N#include <stdbool.h>
 N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
+N
 N#ifndef _RTC_H
 N#define _RTC_H
 N
@@ -37430,7 +37434,6 @@ Nextern u8 avariya;
 Nextern u8 sost_flesh;
 N
 N
-N
 L 60 "src\main.c" 2
 N#include "my_def_ext.h"
 L 1 ".\inc\my_def_ext.h" 1
@@ -37445,6 +37448,10 @@ N//
 N
 N#include <stdint.h>
 N#include <stdbool.h>
+N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
 N
 N#ifndef _RTC_H
 S#define _RTC_H
@@ -37824,27 +37831,21 @@ N  					MDO(1);
 N				DL=2;while (1){DL--;if(DL==0)break;} 
 N				MCO(1); while (1) {if (r_MCO()==1)break;}  //{if (MCO==1)break;} 
 N				DL=2;while (1){DL--;if(DL==0)break;} 
-N				MCO(0);                        
+N				MCO(0);DL=2;while (1){DL--;if(DL==0)break;}                      
 N				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} //{ zbuf[j] = zbuf[j]<<1;} 
-N				MDO(0);  
-N								 }                                   
-N										 DL=2;while (1){DL--;if(DL==0)break;}     
-N										 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
-N									 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
-N						 if (DL==0) b_err_cl++;
+N				MDO(0); DL=2;while (1){DL--;if(DL==0)break;}
+N			}                                   
+N			 DL=2;while (1){DL--;if(DL==0)break;}     
+N			 MDO(1); /*MDE=0; */ MCO(1); while (1)  {if (r_MCO()==1) break;}       // {if (MCO==1)break;}                   
+N			 DL=200; while (1){DL--; if (DL==0) break;} 		 //if ((MDI==0)|(DL==0)) break;} 					
+N				if (DL==0) b_err_cl++;
 N					/*	 MDE=1; */ MCO(0);  
-N								 }                          
-N										DL=2;while (1){DL--;if(DL==0)break;}  
-N										MCO(1); while (1) {if (r_MCO()==1)break;}
-N										DL=2;while (1){DL--;if(DL==0)break;} 
-N										MDO(1);   
-N									  
+N		 }                          
+N			DL=2;while (1){DL--;if(DL==0)break;}  
+N			MCO(1); while (1) {if (r_MCO()==1)break;}
+N			DL=2;while (1){DL--;if(DL==0)break;} 
+N			MDO(1);   		
 N}
-N
-N
-N
-N
-N
 N
 N
 N
@@ -37866,6 +37867,10 @@ N//
 N
 N#include <stdint.h>
 N#include <stdbool.h>
+N
+N#define ADDR_FLASH	0x0800C000 //0x801FC00
+N//		8000000									 0x100000
+N
 N
 N#ifndef _RTC_H
 S#define _RTC_H
@@ -39876,10 +39881,13 @@ N  /* SysTick end of count event each 10ms */
 N  RCC_GetClocksFreq(&RCC_Clocks);
 N  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 N	
-N	
-N	write_dat_clock();
+N	MCO(1);
+N	delay_spi(100);
+N	MDO(1)
+N//	write_dat_clock();
 N	
 N			
+E "src\main.c" 1842 3 expected a ";"
 N  while (1)
 N  {
 N    /* Host Task handler */
@@ -39890,6 +39898,7 @@ N#endif
 N	
 N
 N  
+W "src\main.c" 1852 1 parsing restarts here after previous syntax error
 W "src\main.c" 1472 11 variable "data" was declared but never referenced
 W "src\main.c" 1474 12 variable "DT" was declared but never referenced
 N}

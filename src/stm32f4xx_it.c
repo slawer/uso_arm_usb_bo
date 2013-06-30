@@ -27,6 +27,17 @@
 #include "my.h"
 #include "rtc.h"
 
+#include "stm32f4xx_flash.h"
+
+extern void FLASH_Unlock(void);
+extern void FLASH_Lock(void);
+extern FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange);
+extern FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange);
+extern FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data);
+extern FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data);
+extern FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data);
+extern FLASH_Status FLASH_ProgramByte(uint32_t Address, uint8_t Data);
+
 
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
@@ -66,8 +77,60 @@ __IO uint16_t Time_Rec_Base = 0;
  extern __IO uint8_t Command_index;
 #endif /* MEDIA_USB_KEY */
 
+
+
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+
+/*
+//for zap vo flash
+
+#define FLASH_KEY1 ((uint32_t)0x45670123)
+#define FLASH_KEY2 ((uint32_t)0xCDEF89AB)
+void flash_unlock(void) {
+  FLASH->KEYR = FLASH_KEY1;
+  FLASH->KEYR = FLASH_KEY2;
+}
+
+
+void flash_lock() {
+  FLASH->CR |= FLASH_CR_LOCK;
+}
+
+
+//when can write
+uint8_t flash_ready(void) {
+  return !(FLASH->SR & FLASH_SR_BSY);
+}
+ 
+ 
+//  erase 1 page
+void flash_erase_page(uint32_t address) {
+  FLASH->CR|= FLASH_CR_PER; //????????????? ??? ???????? ????? ????????
+  FLASH->AR = address; // ?????? ?? ?????
+  FLASH->CR|= FLASH_CR_STRT; // ????????? ???????? 
+  while(!flash_ready())
+    ;  //???? ???? ???????? ????????. 
+  FLASH->CR&= ~FLASH_CR_PER; //?????????? ??? ???????
+}
+
+// write 4 bait
+void flash_write(uint32_t address,uint32_t data) {
+  FLASH->CR |= FLASH_CR_PG; //????????? ???????????????? ?????
+  while(!flash_ready()) //??????? ?????????? ????? ? ??????
+    ;
+  *(__IO uint16_t*)address = (uint16_t)data; //????? ??????? 2 ????
+  while(!flash_ready())
+    ;
+  address+=2;
+  data>>=16;
+  *(__IO uint16_t*)address = (uint16_t)data; //????? ??????? 2 ?????
+  while(!flash_ready())
+    ;
+  FLASH->CR &= ~(FLASH_CR_PG); //????????? ???????????????? ?????
+}
+*/
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -316,6 +379,8 @@ u8 test_rele(u16 fz, u8 numb)
 	}
 }
 
+
+
 /**
   * @brief  This function handles SysTick Handler.  10ms
   * @param  None
@@ -557,12 +622,19 @@ void SysTick_Handler(void)
 		{
 			u16 i=0;
 			u8 errors=0;
+			    uint32_t Temp;
 			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 	
-		
+	
+			FLASH_Unlock();
+			FLASH_EraseSector(STR_FLASH,VoltageRange_3);
+
+			FLASH_Lock();
+			FLASH_Unlock();
+			
 			for (i = 0; i < rxsize-10; i += 2)
 			{
 			  tmp1=RxBuffer[i+10];
@@ -576,11 +648,40 @@ void SysTick_Handler(void)
 				if (tmp2>'9')	
 						tmp3+=(tmp2-0x37);
 				else
-						tmp3+=(tmp2-0x30);				
+						tmp3+=(tmp2-0x30);	
+				
+				FLASH_ProgramByte(ADDR_FLASH+(i>>1), tmp3);				
 				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
 				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
 						errors=1;
 			}
+			
+
+/*
+			for (i = 0; i < rxsize-10; i += 2)
+			{						
+				u8 k1, k2, b;			
+
+			  k1=RxBuffer[i+10];
+				k2=RxBuffer[i+11];
+				b=0;
+				if (k1>'9')	
+						b=(k1-0x37)<<4;
+				else
+						b=(k1-0x30)<<4;
+	
+				if (k1>'9')	
+						b+=(k2-0x37);
+				else
+						b+=(k2-0x30);					
+
+	//			FLASH_ProgramByte(ADDR_FLASH+(i>>1)+3-2*((i>>1)%4), b);
+				FLASH_ProgramByte(ADDR_FLASH+(i>>1), i>>1);
+			}
+			
+			*/
+			FLASH_Lock();
+
 
 			if (errors==0)
 			{
@@ -1061,9 +1162,22 @@ if (1)
 	
 			for (i = 0; i < (txsize); i += 1)
 			{
-		//		TxBuffer[i]=(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i));
 				TxBuffer[i]=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
 			}	
+	
+			for (i = 0; i < (txsize); i += 4)
+			{
+				uint32_t data;				
+				data= *(__IO uint32_t*) (ADDR_FLASH+i);
+			
+				TxBuffer[i+3]=(u8) (data>>24);
+				TxBuffer[i+2]=(u8) (data>>16);
+				TxBuffer[i+1]=(u8) (data>>8);
+				TxBuffer[i]=(u8) data;
+			}	
+
+//}
+
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 		}		

@@ -1833,8 +1833,10 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
-	
-	write_dat_clock();
+	MCO(1);
+	delay_spi(100);
+	MDO(1);
+//	write_dat_clock();
 	
 			
   while (1)
