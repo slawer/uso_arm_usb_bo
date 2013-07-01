@@ -145,6 +145,7 @@ MDO=1; //мастер I2c
 */
 
 #define ds_delay 100000
+#define ds_wait  1000
 
 #define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
 #define PORT_DS_SCL               			  GPIOB	
@@ -188,36 +189,11 @@ void init_dc()
 	
 }
 
-void MDO(u8 sost)
-{	u32 i=0;
-	if (sost==1)
-	    PORT_DS_SDA->BSRRL = PIN_DS_SDA;
-	else
-    PORT_DS_SDA->BSRRH = PIN_DS_SDA ;	
-	
-	//		for (i=0;i<10000;i++)
-	//			__ASM volatile ("nop");
-}
-
-void MCO(u8 sost)
-{	u32 i=0;
-	if (sost==1)
-	//	GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_SET);
-		PORT_DS_SCL->BSRRL = PIN_DS_SCL;
-	else
-//		GPIO_WriteBit(PORT_DS_SCL, PIN_DS_SCL, Bit_RESET);	
-	PORT_DS_SCL->BSRRH = PIN_DS_SCL;	
-	
-//		for (i=0;i<10000;i++)
-	//			__ASM volatile ("nop");
-}
-
-u8 r_MCO(void)
+void sleep(u32 dlit)
 {
-		if ((PORT_DS_SCL->IDR & PIN_DS_SCL)==0)
-			return 0;
-		else
-			return 1;
+	u32 i=0;
+	for (i=0;i<dlit;i++)
+				__ASM volatile ("nop");
 }
 
 u8 r_MDI(void)
@@ -228,31 +204,101 @@ u8 r_MDI(void)
 			return 1;
 }
 
-void sleep(u32 dlit)
+u8 r_MCO(void)
 {
-	u32 i=0;
-	for (i=0;i<dlit;i++)
-				__ASM volatile ("nop");
+		if ((PORT_DS_SCL->IDR & PIN_DS_SCL)==0)
+			return 0;
+		else
+			return 1;
 }
+
+void MDO(u8 sost)
+{	u32 i=0, kol_wait=0;;
+	if (sost==1)
+	{
+	    PORT_DS_SDA->BSRRL = PIN_DS_SDA;
+			sleep(ds_delay);
+			while ((kol_wait<ds_wait) &(r_MDI()==1))
+				kol_wait++;
+	}
+	else
+	{
+    PORT_DS_SDA->BSRRH = PIN_DS_SDA ;	
+		sleep(ds_delay);
+		while ((kol_wait<ds_wait) &(r_MDI()==1))
+			kol_wait++;
+	}
+}
+
+void MCO(u8 sost)
+{	u32 i=0, kol_wait=0;
+	if (sost==1)
+	{
+		PORT_DS_SCL->BSRRL = PIN_DS_SCL;
+		sleep(ds_delay);
+		while ((kol_wait<ds_wait) &(r_MCO()==1))
+			kol_wait++;
+	}
+	else
+	{
+		PORT_DS_SCL->BSRRH = PIN_DS_SCL;
+		sleep(ds_delay);		
+		while ((kol_wait<ds_wait) &(r_MCO()==0))
+			kol_wait++;
+	}
+}
+
 
 u8 b_err_cl=0, bufout[100], zbuf[100];
 
 
 void start_ds(void)
 {
-		MDO(0); sleep(ds_delay);					 
-		MCO(0); sleep(ds_delay); 
+		MDO(0); 					 
+		MCO(0); 
 }
 
 void stop_ds(void)
-{
-		MCO(1); sleep(ds_delay); 	
-		MDO(1); sleep(ds_delay);					 		
+{	
+		MDO(0);									  
+		MCO(1);	
+		MDO(1); 
 }
 
-void write_ds(u8 bait)
-{
+void write_bait_ds(u8 bait)
+{		u8 i1=0;                     	 
+		for(i1=0;i1<8;i1++) 												  
+		{ 
+			if((bait&0x80)==0)	
+				MDO(0);
+			else
+				MDO(1); 					  					   
+			MCO(1);
+			MCO(0);	                                                 
+			bait= bait<<1; 
+		} 		
+}
 
+u8 read_bait_ds()
+{
+			u8 tmp=0;
+				MDO(1); 
+				MCO(1);    
+				if (r_MDI() ==0) 																									    
+				{tmp = tmp<<1; tmp = tmp&0xFE;} 															    
+				else 																											    
+				{tmp = tmp<<1; tmp = tmp|0x01;}                          					 
+				MCO(0); 
+		return tmp;
+}
+
+u8 ack_ds()
+{		u8 ret=0;
+		MDO(1);
+		MCO(1);                
+		ret=r_MDI();			   
+    MCO(0);
+	return ret;
 }
 
 void read_dat_clock(void)
@@ -263,103 +309,18 @@ void read_dat_clock(void)
 
 		for(i1=0;i1<100;i1++) 
 			bufout[i1]=0;
-/*
-		zbuf[j]=0xD0;
-		zbuf[1]=0;
-		MDO(0); 	sleep(ds_delay);
-		MCO(0); 	sleep(ds_delay);
-		for(j=0;j<2;j++) 
-		{   
-			for(i1=0;i1<8;i1++) 
-			{ 
-				if((zbuf[j]&0x80)==0) 				
-					 MDO(0);  
-				else  
-  				 MDO(1);  
-				sleep(ds_delay); 
-				MCO(1);	sleep(ds_delay);
-				MCO(0);	sleep(ds_delay);                    
-				if (i1!=7) { zbuf[j] = zbuf[j]<<1;} 
-				MDO(0); 	sleep(ds_delay);
-			}                 
-			 if (j!=1)
-			 {
-			 sleep(ds_delay);     
-			 MDO(1); 	sleep(ds_delay);
-			 MCO(1); 	sleep(ds_delay);
-			 if (r_MCO()==1) b_err_cl++;                       
-			 MCO(0);  sleep(ds_delay);
-			 }
-		 }                          
-			sleep(ds_delay);
-			MCO(1);		sleep(ds_delay);
-			MDO(1);   sleep(ds_delay); 	
+	
+		start_ds();
+		write_bait_ds(0xD1);
+		ack_ds();
 
-		for(i1=0;i1<10;i1++) 												  
-		{  
-			sleep(ds_delay);
-		}			
-		 
-	*/	 
-		tmp_rw=0xD1; sleep(ds_delay);					    
-		MDO(0); sleep(ds_delay);					 
-		MCO(0); sleep(ds_delay);                     	 
-		for(i1=0;i1<8;i1++) 												  
-		{ 
-			if((tmp_rw&0x80)==0)	
-				{MDO(0);}
-			else
-				{ MDO(1);} 					  
-			sleep(ds_delay);						   
-			MCO(1); sleep(ds_delay);
-			MCO(0);	sleep(ds_delay);
-//			MDO(0); sleep(ds_delay);                                                  
-			tmp_rw= tmp_rw<<1; } 																    
-	// ack	
-		sleep(ds_delay);    							    
-		MDO(1); sleep(ds_delay);
-		MCO(1); sleep(ds_delay*2);                
-		if (r_MDI()==1) b_err_cl++;			   
-    MCO(0); 	sleep(ds_delay);
-		
-//		MDO(1); sleep(ds_delay);
 		for(j=0;j<50;j++)																									 
-		{  
-			for(i1=0;i1<8;i1++)
-			{ 
-				MDO(1); sleep(ds_delay);
-				MCO(1); sleep(ds_delay*2);	    
-				if (r_MDI() ==0) 																									    
-				{bufout[j] = bufout[j]<<1;bufout[j] = bufout[j]&0xFE;} 															    
-				else 																											    
-				{bufout[j] = bufout[j]<<1; bufout[j] = bufout[j]|0x01;}                          					 
-				MCO(0); sleep(ds_delay);
-			}  							  
-//			MDO(0);																	   
-		/*		if (j!=7) 	{								                            											 
-				MCO(1); sleep(ds_delay);								  										   
-				if (r_MDI()==1) b_err_cl++;					
-				MCO(0); sleep(ds_delay);		}  
-*/
-			if (j!=(50-1)) {MDO(1);sleep(ds_delay);}												                              											 
-				MCO(1);  	sleep(ds_delay);
-			if (r_MDI()==1) b_err_cl++;						
-				MCO(0);		sleep(ds_delay);					
+		{   							  
+			bufout[j]=read_bait_ds();			
+			if (j!=(50-1)) 
+				ack_ds();				
 		}
-		MDO(0);	 sleep(ds_delay);    									  
-		MCO(1);	 sleep(ds_delay);
-		MDO(1);  sleep(ds_delay);
-					
-		
-	//	MCO(1);sleep(ds_delay);	
-	//	MDO(1); sleep(ds_delay);		
-		
-		// stop
-		bufout[6]=zbuf[6];
-		bufout[7]=zbuf[7]; 
-		bufout[8]=zbuf[8];
-		bufout[5]=17;  
-		zbuf[5]=10;
+		stop_ds();
 	}					
 	
 	

@@ -1755,15 +1755,20 @@ SPI 2:
 	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 	*/
+		
+	test_ind_all(1);
 	
 	MCO(1);
 	delay_spi(100);
 	MDO(1);
 	
-	test_ind_all(1);
-	
-	for (i = 0; i < 50; i ++)
-		delay_spi(500000);
+	for (i = 0; i < 100; i ++)
+	{ //	delay_spi(500000);
+		MCO(0);
+		delay_spi(100000);
+		MCO(1);		
+	}
+		
 	test_ind_all(0);
 	init_ind(1, 4, 0);		// lineika
   init_ind(2, 8, 0);   
