@@ -483,6 +483,7 @@ void SysTick_Handler(void)
 //		summa[0]+=100;
 	kol_average++;
 	
+	// раз в 100 мс
 	if (kol_average==10)
 	{			
 	
@@ -491,7 +492,7 @@ void SysTick_Handler(void)
 		kol_average=0;
 		summa[0]=0;
 		
-		
+	//  write_dat_clock();	
 		read_dat_clock();
 		// раз в 100 мс
 		// вычисляем физическую величину

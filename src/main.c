@@ -190,7 +190,7 @@ void ADC3_CH12_DMA_Config(void)
   ADC_Init(ADC3, &ADC_InitStructure);
 
   // ADC3 regular channel12 configuration ***********************************
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
 
  // Enable DMA request after last transfer (Single-ADC mode)
   ADC_DMARequestAfterLastTransferCmd(ADC3, ENABLE);
@@ -1755,6 +1755,11 @@ SPI 2:
 	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 	*/
+	
+	MCO(1);
+	delay_spi(100);
+	MDO(1);
+	
 	test_ind_all(1);
 	
 	for (i = 0; i < 50; i ++)
@@ -1833,12 +1838,19 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
-	MCO(1);
-	delay_spi(100);
-	MDO(1);
+
 //	write_dat_clock();
 	
 			
+	/*		
+	while (1)
+	{
+		MCO(1);
+		sleep(10000);
+		MCO(0);
+		sleep(10000);
+	}		
+*/			
   while (1)
   {
     /* Host Task handler */
