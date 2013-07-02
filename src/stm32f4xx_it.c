@@ -391,6 +391,8 @@ void SysTick_Handler(void)
 	extern __IO uint16_t ADC3ConvertedValue;
 	extern u32 tick;
 	extern st_conf conf;
+
+	extern u8 b_err_cl, bufout[100], zbuf[100], error_ds;
 	
  //  проверка состояния датчика приближений - 
 	
@@ -529,7 +531,25 @@ void SysTick_Handler(void)
 		if (por==999)
 			por=999;
 		
-	read_dat_clock();
+		b_err_cl=0;
+		error_ds=0;
+		
+	start_ds();
+	write_bait_ds(0xD0);
+	write_bait_ds(0x00);
+	stop_ds();
+		
+	sleep(1000);
+		
+	start_ds();
+	write_bait_ds(0xD1);		
+	bufout[0]=read_bait_ds();		
+	wr_ack_ds(1);
+	bufout[1]=read_bait_ds();		
+	wr_ack_ds(0);		
+	stop_ds();
+		
+//	read_dat_clock();
 	del++;
 	if (del==10)
 	{		
@@ -881,7 +901,7 @@ if (1)
 		// read
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
 		{
-			extern u8 b_err_cl, bufout[100], zbuf[100], error_ds;
+
 			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);

@@ -148,7 +148,9 @@ MDO=1; //мастер I2c
 #define PORT_DS_SDA                				GPIOB	
 
 
-
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_NOPULL
 
 //	GPIO_Mode_IN; 		GPIO_Mode_OUT;   GPIO_Mode_AN
 // 	GPIO_OType_OD; 		GPIO_OType_PP;
@@ -450,6 +452,22 @@ void stop_ds(void)
 		MDO(1); 
 }
 
+u8 ack_ds(void)
+{		u8 ret=0;
+	
+		MDO(1);
+		MCO(1);                
+		ret=r_MDI();	
+		if (ret==1)
+		{
+			b_err_cl++;
+			if (error_ds==0)
+					error_ds=1;
+		}
+    MCO(0);
+	return ret;
+}
+
 void write_bait_ds(u8 bait)
 {		u8 i1=0;                     	 
 		for(i1=0;i1<8;i1++) 												  
@@ -462,7 +480,8 @@ void write_bait_ds(u8 bait)
 			MCO(0);	
 			MDO(0);			  // from bksd
 			bait= bait<<1; 
-		} 		
+		} 	
+		ack_ds();		
 }
 
 u8 read_bait_ds()
@@ -482,20 +501,15 @@ u8 read_bait_ds()
 		return tmp;
 }
 
-u8 ack_ds()
-{		u8 ret=0;
-	
-		MDO(1);
-		MCO(1);                
-		ret=r_MDI();	
-		if (ret==1)
-		{
-			b_err_cl++;
-			if (error_ds==0)
-					error_ds=1;
-		}
-    MCO(0);
-	return ret;
+
+u8 wr_ack_ds(u8 ac)
+{		
+		if (ac==1)
+			MDO(0);
+		else
+			MDO(1);
+    MCO(1); 
+		MCO(0);
 }
 
 void read_dat_clock(void)
@@ -551,7 +565,7 @@ void read_dat_clock(void)
 		}
 		stop_ds();	
 }		
-
+/*
 void write_dat_clock(void)
 {
 		u8 i1=0, j=0, DL=0;
@@ -568,6 +582,7 @@ void write_dat_clock(void)
                          
 		stop_ds();
 }
+*/
 	
 /*	
 
