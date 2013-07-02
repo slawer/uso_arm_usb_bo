@@ -441,21 +441,10 @@ return (*(__IO uint32_t*) address);
 //	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
 	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//  may be PP - ???
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
 	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
-	
-	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
 
 	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda

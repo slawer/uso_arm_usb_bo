@@ -1,5 +1,0 @@
---cpu Cortex-M4 ".\deb\gpio.o" ".\deb\rtc.o" ".\deb\main.o" ".\deb\system_stm32f4xx.o" ".\deb\usb_bsp.o" ".\deb\usbh_usr.o" ".\deb\stm32f4xx_it.o" ".\deb\stm32f4_discovery.o" ".\deb\stm32f4_discovery_lis302dl.o" ".\deb\misc.o" ".\deb\stm32f4xx_adc.o" ".\deb\stm32f4xx_dac.o" ".\deb\stm32f4xx_dma.o" ".\deb\stm32f4xx_exti.o" ".\deb\stm32f4xx_gpio.o" ".\deb\stm32f4xx_i2c.o" ".\deb\stm32f4xx_rcc.o" ".\deb\stm32f4xx_rtc.o" ".\deb\stm32f4xx_spi.o" ".\deb\stm32f4xx_syscfg.o" ".\deb\stm32f4xx_tim.o" ".\deb\stm32f4xx_usart.o" ".\deb\startup_stm32f4xx.o" ".\deb\usb_core.o" ".\deb\usb_hcd.o" ".\deb\usb_hcd_int.o" ".\deb\usbh_core.o" ".\deb\usbh_hcs.o" ".\deb\usbh_ioreq.o" ".\deb\usbh_msc_bot.o" ".\deb\usbh_msc_core.o" ".\deb\usbh_msc_fatfs.o" ".\deb\usbh_stdreq.o" ".\deb\usbh_msc_scsi.o" ".\deb\fattime.o" ".\deb\ff.o" 
---library_type=microlib --strict --scatter ".\deb\uso_arm_usb_bo.sct" 
---summary_stderr --info summarysizes --map --xref --callgraph --symbols 
---info sizes --info totals --info unused --info veneers 
- --list ".\uso_arm_usb_bo.map" -o .\deb\uso_arm_usb_bo.axf

@@ -56,15 +56,8 @@ u8 new_komand=0;
 
 u8 address=1;
 
-uint16_t SPI1_Buffer_Tx[32] = {0x0102, 0x0304, 0x0506, 0x0708, 0x090A, 0x0B0C,
-                                  0x0D0E, 0x0F10, 0x1112, 0x1314, 0x1516, 0x1718,
-                                  0x191A, 0x1B1C, 0x1D1E, 0x1F20, 0x2122, 0x2324,
-                                  0x2526, 0x2728, 0x292A, 0x2B2C, 0x2D2E, 0x2F30,
-                                  0x3132, 0x3334, 0x3536, 0x3738, 0x393A, 0x3B3C,
-                                  0x3D3E, 0x3F40};
-
-			u8 smes=0;
-			u32 pr_tick=0;
+u8 smes=0;
+u32 pr_tick=0;
 
 
 u8 symb_code[13]={0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x4F, 0x79,0x80};
@@ -120,6 +113,7 @@ u16 kol_gr2_vkl=0;
 u8 avariya=0;
 u8 sost_flesh=0;
 
+u8 error_ds=0;
 
 
 
@@ -144,14 +138,178 @@ MDO=1; //мастер I2c
 
 */
 
-#define ds_delay 100000
-#define ds_wait  1000
+#define ds_delay 10000
+#define ds_wait  100
 
 #define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
 #define PORT_DS_SCL               			  GPIOB	
 
 #define PIN_DS_SDA                      	GPIO_Pin_7		//	sda  pb7
 #define PORT_DS_SDA                				GPIOB	
+
+
+
+
+//	GPIO_Mode_IN; 		GPIO_Mode_OUT;   GPIO_Mode_AN
+// 	GPIO_OType_OD; 		GPIO_OType_PP;
+//  GPIO_PuPd_NOPULL	GPIO_PuPd_UP   	 GPIO_PuPd_DOWN   
+/*
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_NOPULL
+flwaus ff
+
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_UP
+alwaus ff
+
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_DOWN
+
+alwaus ff
+
+
+
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_NOPULL
+
+
+
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_UP
+alwaus ff
+4 V
+
+
+#define mode	GPIO_Mode_IN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_DOWN
+alwaus ff
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_NOPULL
+read alwaus differrent data 
+with errore
+5v
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_UP
+4v
+read alwaus differrent data 
+with errore
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_DOWN
+read alwaus differrent data 
+with errore 
+4v
+
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_NOPULL
+read alwaus differrent data      ??? only ff!!!
+with errore 
+but scl and data есть
+3v 
+
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_UP
+read alwaus differrent data   ?????  вроде нет!!!
+with errore 
+but scl and data есть
+3v
+
+
+#define mode	GPIO_Mode_OUT
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_DOWN
+read alwaus differrent data 
+with errore 
+but scl and data есть
+3v sda
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_NOPULL
+no error
+no read ff but only 00
+no data on sda only ff
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_UP
+no error
+no read ff but only 00
+no data on sda only ff
+5V on line
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_OD
+#define pull	GPIO_PuPd_DOWN
+no error
+no read ff but only 00
+no data on sda only ff
+5V on line
+
+
+
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_NOPULL
+no error
+no read ff but only 00
+no data on sda only ff
+5V on line
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_UP
+no error
+no read ff but only 00
+no data on sda only ff
+5V on line
+
+
+
+
+#define mode	GPIO_Mode_AN
+#define type	GPIO_OType_PP
+#define pull	GPIO_PuPd_DOWN
+no error
+no read ff but only 00
+no data on sda only ff
+5V on line
+*/
+
+
+/*
+*/
 
 void init_dc()
 {
@@ -173,6 +331,8 @@ void init_dc()
   GPIO_PuPd_UP     = 0x01,
   GPIO_PuPd_DOWN   = 0x02
 */	
+	
+	/*
 		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SCL;  							//  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
@@ -186,7 +346,28 @@ void init_dc()
 //		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;  
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 		GPIO_Init(PORT_DS_SDA, &GPIO_InitStructure); 
+*/
+		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SCL;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = mode; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = type; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_PuPd = pull;  
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_DS_SCL, &GPIO_InitStructure); 
 	
+		GPIO_InitStructure.GPIO_Pin   = PIN_DS_SDA;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = mode; //GPIO_Mode_IN; //GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = type; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_PuPd = pull;  
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_DS_SDA, &GPIO_InitStructure); 
+	
+	
+		/*
+		  GPIO_PuPd_NOPULL = 0x00,
+  GPIO_PuPd_UP     = 0x01,
+  GPIO_PuPd_DOWN   = 0x02
+		
+		*/
 }
 
 void sleep(u32 dlit)
@@ -249,7 +430,7 @@ void MCO(u8 sost)
 }
 
 
-u8 b_err_cl=0, bufout[100], zbuf[100];
+u8 b_err_cl, bufout[100], zbuf[100];
 
 
 void start_ds(void)
@@ -259,9 +440,13 @@ void start_ds(void)
 }
 
 void stop_ds(void)
-{	
-		MDO(0);									  
+{	u8 j=0;
+		MDO(0);			// from bksd						  
 		MCO(1);	
+		for(j=0;j<3;j++)																									 
+		{  	
+			sleep(ds_delay);
+		}
 		MDO(1); 
 }
 
@@ -274,57 +459,139 @@ void write_bait_ds(u8 bait)
 			else
 				MDO(1); 					  					   
 			MCO(1);
-			MCO(0);	                                                 
+			MCO(0);	
+			MDO(0);			  // from bksd
 			bait= bait<<1; 
 		} 		
 }
 
 u8 read_bait_ds()
 {
-			u8 tmp=0;
-				MDO(1); 
+		u8 tmp=0, j=0;
+		 
+		for(j=0;j<8;j++)																									 
+		{  	
+				MDO(1);   // from bksd 
 				MCO(1);    
 				if (r_MDI() ==0) 																									    
 				{tmp = tmp<<1; tmp = tmp&0xFE;} 															    
 				else 																											    
 				{tmp = tmp<<1; tmp = tmp|0x01;}                          					 
-				MCO(0); 
+				MCO(0);
+		}
 		return tmp;
 }
 
 u8 ack_ds()
 {		u8 ret=0;
+	
 		MDO(1);
 		MCO(1);                
-		ret=r_MDI();			   
+		ret=r_MDI();	
+		if (ret==1)
+		{
+			b_err_cl++;
+			if (error_ds==0)
+					error_ds=1;
+		}
     MCO(0);
 	return ret;
 }
 
 void read_dat_clock(void)
 {		u8 tmp_rw=0, DL=0, j=0,i1=0;
-		
-		for(i1=0;i1<100;i1++) 
-			zbuf[i1]=0;
+		u8 kol_bait=1;
 
-		for(i1=0;i1<100;i1++) 
-			bufout[i1]=0;
-	
+		error_ds=0;
+	/*
+	  start_ds();
+		write_bait_ds(0xD0);
+		ack_ds();
+		write_bait_ds(0x00);
+		ack_ds();
+		stop_ds();	
+
+		for(j=0;j<10;j++)																									 
+		{  	
+			sleep(ds_delay);
+		}
+	*/	
 		start_ds();
 		write_bait_ds(0xD1);
 		ack_ds();
 
-		for(j=0;j<50;j++)																									 
+		for(j=0;j<kol_bait;j++)																									 
 		{   							  
-			bufout[j]=read_bait_ds();			
-			if (j!=(50-1)) 
-				ack_ds();				
+			bufout[j]=read_bait_ds();	
+
+// my 
+	//		if (j!=(kol_bait-1)) 
+				ack_ds();							  			
+			tmp_rw=r_MDI();	
+			if (tmp_rw==1)
+			{
+				b_err_cl++;
+				if (error_ds==0)
+						error_ds=1;
+			}							
+			MCO(0);	
+// end my
+
+		/*	
+		// from bksd	
+		//		MDO(0);  
+			// from bksd
+			if (j==(10-1)) 
+				{MDO(1);}												    
+			MCO(1); 
+			MCO(0);
+		*/
+// end from bksd			
+			
 		}
-		stop_ds();
-	}					
-	
-	
+		stop_ds();	
+}		
+
 void write_dat_clock(void)
+{
+		u8 i1=0, j=0, DL=0;
+
+		error_ds=0;
+		start_ds();
+		write_bait_ds(0xD0);
+		ack_ds();
+		write_bait_ds(0x00);
+		ack_ds();
+  
+		write_bait_ds(0);
+		ack_ds();	
+                         
+		stop_ds();
+}
+	
+/*	
+
+void write_dat_clock(void)
+{
+		u8 i1=0, j=0, DL=0;
+
+		error_ds=0;
+		start_ds();
+		write_bait_ds(0xD0);
+		ack_ds();
+		write_bait_ds(0x00);
+		ack_ds();
+
+		for(j=0;j<10;j++) 
+		{   
+			write_bait_ds(0);
+			ack_ds();	
+		}                          
+		stop_ds();
+}
+
+
+void write_dat_clock1(void)
 {
 		u8 i1=0, j=0, DL=0;
 
@@ -366,7 +633,104 @@ void write_dat_clock(void)
 }
 
 
+void init_I2C1(void)
+{
+      GPIO_InitTypeDef      GPIO_InitStruct;
+			I2C_InitTypeDef I2C_InitStruct;
+ 
+    // enable APB1 peripheral clock for I2C1
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
+    // enable clock for SCL and SDA pins
+  //  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7; // we are going to use PB6 and PB7
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;           // set pins to alternate function
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;      // set GPIO speed
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;         // set output to open drain --> the line has to be only pulled low, not driven high
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;           // enable pull up resistors
+    GPIO_Init(GPIOB, &GPIO_InitStruct);                 // init GPIOB
+ 
+    // Connect I2C1 pins to AF
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_I2C1); // SCL
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_I2C1); // SDA
+ 
+    // configure I2C1
+    I2C_InitStruct.I2C_ClockSpeed = 100000;         // 100kHz
+    I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;         // I2C mode
+    I2C_InitStruct.I2C_DutyCycle = I2C_DutyCycle_2; // 50% duty cycle --> standard
+    I2C_InitStruct.I2C_OwnAddress1 = 0x00;          // own address, not relevant in master mode
+    I2C_InitStruct.I2C_Ack = I2C_Ack_Disable;       // disable acknowledge when reading (can be changed later on)
+    I2C_InitStruct.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit; // set address length to 7 bit addresses
+    I2C_Init(I2C1, &I2C_InitStruct);                // init I2C1
+ 
+    // enable I2C1
+    I2C_Cmd(I2C1, ENABLE);
+}
+
+void I2C_start(I2C_TypeDef* I2Cx, uint8_t address, uint8_t direction)
+{
+    // wait until I2C1 is not busy anymore
+    while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY));
+ 
+    // Send I2C1 START condition
+    I2C_GenerateSTART(I2Cx, ENABLE);
+ 
+    // wait for I2C1 EV5 --> Slave has acknowledged start condition
+    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
+ 
+    // Send slave Address for write
+    I2C_Send7bitAddress(I2Cx, address, direction);
+ 
+
+    if(direction == I2C_Direction_Transmitter){
+        while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+    }
+    else if(direction == I2C_Direction_Receiver){
+        while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
+    }
+}
+ 
+
+ 
+void I2C_write(I2C_TypeDef* I2Cx, uint8_t data)
+{
+    I2C_SendData(I2Cx, data);
+    // wait for I2C1 EV8_2 --> byte has been transmitted
+    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+}
+ 
+
+uint8_t I2C_read_ack(I2C_TypeDef* I2Cx)
+{
+    uint8_t data;
+    // enable acknowledge of recieved data
+    I2C_AcknowledgeConfig(I2Cx, ENABLE);
+    // wait until one byte has been received
+    while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+    // read data from I2C data register and return data byte
+    data = I2C_ReceiveData(I2Cx);
+    return data;
+}
+
+uint8_t I2C_read_nack(I2C_TypeDef* I2Cx)
+{
+    uint8_t data;
+    // disabe acknowledge of received data
+    I2C_AcknowledgeConfig(I2Cx, DISABLE);
+    // wait until one byte has been received
+    while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+    // read data from I2C data register and return data byte
+    data = I2C_ReceiveData(I2Cx);
+    return data;
+}
+
+void I2C_stop(I2C_TypeDef* I2Cx)
+{
+    // Send I2C1 STOP Condition
+    I2C_GenerateSTOP(I2Cx, ENABLE);
+}
+
+*/
 
 
 

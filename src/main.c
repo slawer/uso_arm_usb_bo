@@ -137,6 +137,7 @@ void USART2_IRQHandler(void)
 }
 
 
+
 void ADC3_CH12_DMA_Config(void)
 {
   ADC_InitTypeDef       ADC_InitStructure;
@@ -1547,9 +1548,9 @@ int main(void)
     // ???????? RTC
     rtc_Reset();
     rtc_Init();
-		
+			
 		init_dc();
- 		
+
 		
 //	ADC_InitTypeDef  ADC_InitStructure;
 	
@@ -1660,15 +1661,23 @@ SPI 2:
 		GPIO_Init(PORT_AVARIYA, &GPIO_InitStructure);
 
 
-
-
 		GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
 		GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
 	
-
+	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
 		
 /*
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
@@ -1775,6 +1784,10 @@ SPI 2:
 	init_ind(3, 8, 0);
   init_ind(4, 4, 0);   // time
 	
+//	init_I2C1(); // initialize I2C peripheral
+	
+//	write_dat_clock();	
+	
 
 
 // nastroika gpio
@@ -1844,10 +1857,12 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
 
-//	write_dat_clock();
+	write_dat_clock();
+	
+
 	
 			
-	/*		
+		
 	while (1)
 	{
 		MCO(1);
@@ -1855,7 +1870,7 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
 		MCO(0);
 		sleep(10000);
 	}		
-*/			
+			
   while (1)
   {
     /* Host Task handler */

@@ -355,7 +355,7 @@ u8 test_rele(u16 fz, u8 numb)
 {
 	extern st_conf conf;
 	
-	if (fz>conf.por_rele)
+	if (fz*10>conf.por_rele)
 			kol_rele_on++;			
 	else
 			kol_rele_off++;
@@ -438,7 +438,7 @@ void SysTick_Handler(void)
 
 		}
 
-
+		conf.tm_antidreb=2;
 		if (kol_gr1_vkl>=conf.tm_antidreb)
 		{
 				conf.tek_gr_kal=0;
@@ -450,7 +450,7 @@ void SysTick_Handler(void)
 				kol_gr2_vkl=0;
 		}		
 
-		if (kol_gr2_vkl>=conf.tm_antidreb)
+		if (kol_gr2_vkl>=conf.tm_antidreb>>1)
 		{
 				conf.tek_gr_kal=1;
 				 // gr 2
@@ -492,8 +492,6 @@ void SysTick_Handler(void)
 		kol_average=0;
 		summa[0]=0;
 		
-	//  write_dat_clock();	
-		read_dat_clock();
 		// раз в 100 мс
 		// вычисляем физическую величину
 		
@@ -510,8 +508,8 @@ void SysTick_Handler(void)
 			
 	
 	// находим среднее значение по скользящей средней
-//		fz_average[0]=moving_average(fz[0],0);
-				fz_average[0]++;
+		fz_average[0]=moving_average(fz[0],0);
+//				fz_average[0]++;
 
 		// time max
 		if (time_max>=conf.time_max) {
@@ -530,12 +528,21 @@ void SysTick_Handler(void)
 		
 		if (por==999)
 			por=999;
-	
+		
+	read_dat_clock();
 	del++;
 	if (del==10)
 	{		
 		// раз в секунду
+		//	  write_dat_clock();	
+
 		
+		/*
+		 I2C_start(I2C1, 0xD1, I2C_Direction_Transmitter); // start a transmission in Master transmitter mode
+     I2C_write(I2C1, 0x00); // write one byte to the slave
+ //    I2C_write(I2C1, 0x03); // write another byte to the slave
+     I2C_stop(I2C1); // stop the transmission
+	*/	
 		del=0;
 		tick++;
 		time_label=tick;
@@ -814,9 +821,13 @@ void SysTick_Handler(void)
 			
 
     // set time
-rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+		rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
+		rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
+	
+//		write_dat_clock();
 
-rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
+
+
 /*
 if (1)
 {
@@ -870,6 +881,7 @@ if (1)
 		// read
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='e')&(RxBuffer[4]=='a')&(RxBuffer[5]=='d'))
 		{
+			extern u8 b_err_cl, bufout[100], zbuf[100], error_ds;
 			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
@@ -886,7 +898,7 @@ if (1)
 			TxBuffer[3]=(uint8_t)(tmp)+(uint8_t)0x30;		
 				
 			TxBuffer[4]=0x20;	
-
+/*
 			// date
 			TxBuffer[5]=(uint8_t)(DT1.Year/10)+(uint8_t)0x30;	
 			TxBuffer[6]=(uint8_t)(DT1.Year%10)+(uint8_t)0x30;	
@@ -903,6 +915,34 @@ if (1)
 			TxBuffer[15]=(uint8_t)(DT1.Minutes%10)+(uint8_t)0x30;	
 			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
 			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
+			TxBuffer[18]=0x20;
+*/			
+			// date
+			tmp=bufout[6];
+			TxBuffer[5]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[6]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			
+			tmp=(bufout[5]&0x1F);
+			TxBuffer[7]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[8]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			
+			tmp=(bufout[4]&0x30);
+			TxBuffer[9]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[10]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			TxBuffer[11]=0x20;				
+			
+			// time
+			tmp=(bufout[2]&0x30);
+			TxBuffer[12]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[13]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			
+			tmp=(bufout[1]&0x70);
+			TxBuffer[14]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[15]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			
+			tmp=(bufout[0]&0x70);
+			TxBuffer[16]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
+			TxBuffer[17]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
 			
 			// dat pribl
@@ -948,13 +988,16 @@ if (1)
 			
 			TxBuffer[39]=0x20;
 			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
+			
+			TxBuffer[41]=0x20;
+			TxBuffer[42]=(uint8_t)(error_ds)+(uint8_t)0x30;
 		/*
      + need:
 			1 avariya   
 			2 zapis norm or error  
 			3 tek gr kal
 */
-			txsize=41;
+			txsize=43;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 		}		
