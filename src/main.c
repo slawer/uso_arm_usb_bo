@@ -26,8 +26,9 @@ u8 in=0, poz=0;
 		u8 kol=0;
 		float fl_tmp=0;
 		
-//u32  zad_spi=10000,zad_spi2=100000;
-u32  zad_spi=10000,zad_spi2=100000;
+// u32  zad_spi=10000,zad_spi2=100000;
+// u32  zad_spi=5000, zad_spi2=10000;
+u32  zad_spi=100, zad_spi2=10000;
 
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
   * @{
@@ -1465,7 +1466,7 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 */
 int main(void)
 { 
-	u8 i=0;
+	u16 i=0;
 	GPIO_InitTypeDef GPIO_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
   RCC_ClocksTypeDef RCC_ClockFreq;
@@ -1770,18 +1771,63 @@ SPI 2:
 	MCO(1);
 	delay_spi(100);
 	MDO(1);
+	delay_spi(100);
 	
 	for (i = 0; i < 100; i ++)
-	{ //	delay_spi(500000);
+	{ 
 		MCO(0);
-		delay_spi(100000);
+		delay_spi(100);
 		MCO(1);		
+		delay_spi(100);
+	}
+	
+	delay_spi(100000);
+
+	b_err_cl=0;
+	error_ds=1;
+	
+	for (i = 0; i < 1000; i ++)
+	{ // u8 j=0;
+		delay_spi(100000);	
+	
+		if (error_ds==1)
+		{
+
+			b_err_cl=0;
+			error_ds=0;
+
+			read_ds();
+			
+			if ((error_ds==0)&(b_err_cl==0))
+			{
+				/*
+				for (j = 0; j < 10; j ++)
+					bufout[j]=zbuf[j];
+				*/
+					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);
+					bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
+					bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
+					
+					bufout[4]=((zbuf[4]&0x30)>>4)*10+(zbuf[4]&0x0F);    // day
+					bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
+					bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
+					
+					bufout[7]=zbuf[7]&0x01;    // sec
+			}
+			else
+			{
+				error_ds=1;
+		//		i=0;
+			}
+		}
 	}
 		
 	test_ind_all(0);
 	init_ind(1, 4, 0);		// lineika
-  init_ind(2, 8, 0);   
-	init_ind(3, 8, 0);
+//  init_ind(2, 8, 0);   
+//	init_ind(3, 8, 0);
+	init_ind(2, 3, 0);   
+	init_ind(3, 3, 0);
   init_ind(4, 4, 0);   // time
 	
 //	init_I2C1(); // initialize I2C peripheral
@@ -1857,25 +1903,13 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 	
 
-			
-		
-	while (1)
-	{
-		MCO(1);
-		sleep(10000);
-		MCO(0);
-		sleep(10000);
-		MCO(1);		
-	}
-	sleep(10000);
-	sleep(10000);
-
+/*
 	start_ds();
 	write_bait_ds(0xD0);
 	write_bait_ds(0x00);
 	write_bait_ds(0x00);
 	stop_ds();	
-			
+*/			
   while (1)
   {
     /* Host Task handler */

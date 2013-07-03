@@ -39,6 +39,16 @@ extern FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data);
 extern FLASH_Status FLASH_ProgramByte(uint32_t Address, uint8_t Data);
 
 
+extern void start_ds();
+extern void write_bait_ds();
+extern void stop_ds();
+extern void sleep();
+extern void wr_ack_ds();
+extern void read_ds();
+extern u8 read_bait_ds();
+
+
+
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
 u16 time_max=0;
@@ -392,7 +402,7 @@ void SysTick_Handler(void)
 	extern u32 tick;
 	extern st_conf conf;
 
-	extern u8 b_err_cl, bufout[100], zbuf[100], error_ds;
+	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds;
 	
  //  проверка состояния датчика приближений - 
 	
@@ -487,9 +497,7 @@ void SysTick_Handler(void)
 	
 	// раз в 100 мс
 	if (kol_average==10)
-	{			
-	
-		
+	{					
 		average[0]=summa[0]/kol_average;
 		kol_average=0;
 		summa[0]=0;
@@ -530,46 +538,53 @@ void SysTick_Handler(void)
 		
 		if (por==999)
 			por=999;
-		
-		b_err_cl=0;
-		error_ds=0;
-		
-	start_ds();
-	write_bait_ds(0xD0);
-	write_bait_ds(0x00);
-	stop_ds();
-		
-	sleep(1000);
-		
-	start_ds();
-	write_bait_ds(0xD1);		
-	bufout[0]=read_bait_ds();		
-	wr_ack_ds(1);
-	bufout[1]=read_bait_ds();		
-	wr_ack_ds(0);		
-	stop_ds();
+
 		
 //	read_dat_clock();
 	del++;
 	if (del==10)
 	{		
 		// раз в секунду
-		//	  write_dat_clock();	
-
-		
-		/*
-		 I2C_start(I2C1, 0xD1, I2C_Direction_Transmitter); // start a transmission in Master transmitter mode
-     I2C_write(I2C1, 0x00); // write one byte to the slave
- //    I2C_write(I2C1, 0x03); // write another byte to the slave
-     I2C_stop(I2C1); // stop the transmission
-	*/	
+	
 		del=0;
 		tick++;
+		
+		if (tick==600000)
+			tick=0;
+		
 		time_label=tick;
 		
-		rtc_Get(&DT1);
+		bufout[0]++;
+		if 	(bufout[0]==60)
+		{		bufout[0]=0;
+				bufout[1]++;
+				
+				if 	(bufout[1]==60)
+				{
+						bufout[1]=0;
+						bufout[2]++;
+						if (bufout[2]==24)
+						{
+							bufout[2]=0;
+							bufout[4]++;
+							if (bufout[4]==32)
+							{
+								bufout[4]=1;
+								bufout[5]++;
+								if (bufout[5]==13)
+								{
+									bufout[5]=1;
+									bufout[6]++;
+								}
+							}
+						}
+						}
+		}
 		
-		if (DT1.Seconds==0)
+//		rtc_Get(&DT1);	
+		
+	//	if (DT1.Seconds==0)
+		if (bufout[0]==0)
 		{
 			number_buff^=1;
 			DT_zap=DT1;
@@ -578,66 +593,124 @@ void SysTick_Handler(void)
 			por=0;
 		}
 			
-	 if (tick%2==0)
-	 {
-		 STM_EVAL_LEDOn(LED3);		 
-//		 STM_EVAL_LEDOn(LED5);		
-	 }
-	 else
-	 {
-		 STM_EVAL_LEDOff(LED3);	 
-//		 STM_EVAL_LEDOff(LED5);		
-	 }
-	 
+		 if (tick%2==0)
+			 STM_EVAL_LEDOn(LED3);		 		
+		 else
+			 STM_EVAL_LEDOff(LED3);	 	
+
+		if ((bufout[0]%50)==0)
+				error_ds=1;
 		
-	if ((tick%60)==0)
-	{
-		minute++;
-	}
+		if (error_ds==1)
+			{
+				u16 i=0;
+				
+				b_err_cl=0;
+				error_ds=0;
+
+				read_ds();
+				
+				if ((error_ds==0)&(b_err_cl==0))
+				{
+			/*		for (i = 0; i < 10; i ++)
+						bufout[i]=zbuf[i];
+			*/	
+/*
+			tmp=bufout[6];			// year
+			TxBuffer[5]=(uint8_t)((tmp>>4)+(uint8_t)0x30);	
+			TxBuffer[6]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			
+			tmp=(bufout[5]);   // month
+			TxBuffer[7]=(uint8_t)(((tmp&0x10)>>4)+(uint8_t)0x30);	
+			TxBuffer[8]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			
+			tmp=(bufout[4]);		// date
+			TxBuffer[9]=(uint8_t)(((tmp&0x30)>>4)+(uint8_t)0x30);	
+			TxBuffer[10]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			TxBuffer[11]=0x20;				
+			
+			// time
+			tmp=(bufout[2]);		//	hours
+			TxBuffer[12]=(uint8_t)(((tmp&0x70)>>4)+(uint8_t)0x30);	
+			TxBuffer[13]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+				
+			//	minute
+			(uint8_t)(((bufout[1]	&0x70)>>4)+(uint8_t)0x30);	
+			(uint8_t)((bufout[1]	&0x0F)+(uint8_t)0x30);	
+			
+			//	seconds
+			((bufout[0]&0x70)>>4)	
+			(bufout[0]&0x0F)
+		*/
+
+
+			//		bufout[0]=zbuf[0];    // sec
+					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);
+					bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
+					bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
+					
+					bufout[4]=((zbuf[4]&0x30)>>4)*10+(zbuf[4]&0x0F);    // day
+					bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
+					bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
+					
+					bufout[7]=zbuf[7]&0x01;    // sec
+					
+					
+				}
+				else
+					error_ds=1;
+			}
+		
+		if ((tick%60)==0)
+		{
+			minute++;
+		}
 	
 	// конец раз секунду
+			
 	 }	
-	// indicate_lin(0,(u16)fz_average[0], 4096);
-// indicate(1,(u16)(fz_average[0]/10));
+	 	
+
 	 if (tk_null==1)
 	 {
 		 indicate_err(1);   	// tek
 		 indicate_err(2);			// lineika 
 		 indicate_err(3);			// maximum
-	//	 indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes);								//	time	
 	 }
 	 else
 	 {		
-	 if ((avariya==1)&((tick%2)==0))
-	 {
-			ind_blank_all(1); 
-			ind_blank_all(2); 
-			ind_blank_all(3); 
-	//		ind_blank_all(4); 		 
-		}
-		else
-		{
-		 // dop usrednenie na vivod indicatorov???
-		 indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
-
-			if (conf.tek_gr_kal==0)
-					if (sost_pribl==0)
-						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
-					else
-						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+		 if ((avariya==1)&((tick%2)==0))
+		 {
+				ind_blank_all(1); 
+				ind_blank_all(2); 
+				ind_blank_all(3); 	 
+			}
 			else
-					if (sost_pribl==0)
-						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
-					else
-						indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
-		 
-		 indicate(3,(u16)(max[0]),3);														// maximum
-	 }	
+			{
+			 // dop usrednenie na vivod indicatorov???
+				indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
+				
+				indicate(3,(u16)(max[0]),3);														// maximum
+				
+				if (conf.tek_gr_kal==0)
+						if (sost_pribl==0)
+							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+						else
+							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+				else
+						if (sost_pribl==0)
+							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
+						else
+							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 		 
+		 }	
 	}
 	if ((tick%2)==0)
-			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+	//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+			indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
 	else
-			indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+	//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+			indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
+			
  // конец раз в 100 мс
 	}	
 	
@@ -685,29 +758,6 @@ void SysTick_Handler(void)
 			}
 			
 
-/*
-			for (i = 0; i < rxsize-10; i += 2)
-			{						
-				u8 k1, k2, b;			
-
-			  k1=RxBuffer[i+10];
-				k2=RxBuffer[i+11];
-				b=0;
-				if (k1>'9')	
-						b=(k1-0x37)<<4;
-				else
-						b=(k1-0x30)<<4;
-	
-				if (k1>'9')	
-						b+=(k2-0x37);
-				else
-						b+=(k2-0x30);					
-
-	//			FLASH_ProgramByte(ADDR_FLASH+(i>>1)+3-2*((i>>1)%4), b);
-				FLASH_ProgramByte(ADDR_FLASH+(i>>1), i>>1);
-			}
-			
-			*/
 			FLASH_Lock();
 
 
@@ -845,7 +895,22 @@ void SysTick_Handler(void)
 		rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
 	
 //		write_dat_clock();
-
+			start_ds();
+			write_bait_ds(0xD0);
+			write_bait_ds(0x00);
+			
+			write_bait_ds(((RxBuffer[20]-0x30)<<4)+(RxBuffer[21]-0x30));
+			write_bait_ds(((RxBuffer[18]-0x30)<<4)+(RxBuffer[19]-0x30));
+			write_bait_ds(((RxBuffer[16]-0x30)<<4)+(RxBuffer[17]-0x30));
+			
+			write_bait_ds(1);
+			write_bait_ds(((RxBuffer[10]-0x30)<<4)+(RxBuffer[11]-0x30));
+			
+			write_bait_ds(((RxBuffer[12]-0x30)<<4)+(RxBuffer[13]-0x30));
+			write_bait_ds((((RxBuffer[14]-0x30)<<4))+(RxBuffer[15]-0x30));
+			
+			stop_ds();
+				
 
 
 /*
@@ -936,35 +1001,54 @@ if (1)
 			TxBuffer[16]=(uint8_t)(DT1.Seconds/10)+(uint8_t)0x30;	
 			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
-*/			
+*/
 			// date
-			tmp=bufout[6];
-			TxBuffer[5]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[6]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
-			
-			tmp=(bufout[5]&0x1F);
-			TxBuffer[7]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[8]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
-			
-			tmp=(bufout[4]&0x30);
-			TxBuffer[9]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[10]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			TxBuffer[5]=(uint8_t)(bufout[6]/10)+(uint8_t)0x30;	
+			TxBuffer[6]=(uint8_t)(bufout[6]%10)+(uint8_t)0x30;	
+			TxBuffer[7]=(uint8_t)(bufout[5]/10)+(uint8_t)0x30;	
+			TxBuffer[8]=(uint8_t)(bufout[5]%10)+(uint8_t)0x30;	
+			TxBuffer[9]=(uint8_t)(bufout[4]/10)+(uint8_t)0x30;	
+			TxBuffer[10]=(uint8_t)(bufout[4]%10)+(uint8_t)0x30;	
 			TxBuffer[11]=0x20;				
 			
 			// time
-			tmp=(bufout[2]&0x30);
-			TxBuffer[12]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[13]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
-			
-			tmp=(bufout[1]&0x70);
-			TxBuffer[14]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[15]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
-			
-			tmp=(bufout[0]&0x70);
-			TxBuffer[16]=(uint8_t)(tmp/10)+(uint8_t)0x30;	
-			TxBuffer[17]=(uint8_t)(tmp%10)+(uint8_t)0x30;	
+			TxBuffer[12]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;	
+			TxBuffer[13]=(uint8_t)(bufout[2]%10)+(uint8_t)0x30;			
+			TxBuffer[14]=(uint8_t)(bufout[1]/10)+(uint8_t)0x30;	
+			TxBuffer[15]=(uint8_t)(bufout[1]%10)+(uint8_t)0x30;	
+			TxBuffer[16]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;	
+			TxBuffer[17]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
 			
+/*
+			// date
+			tmp=bufout[6];			// year
+			TxBuffer[5]=(uint8_t)((tmp>>4)+(uint8_t)0x30);	
+			TxBuffer[6]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			
+			tmp=(bufout[5]);   // month
+			TxBuffer[7]=(uint8_t)(((tmp&0x10)>>4)+(uint8_t)0x30);	
+			TxBuffer[8]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			
+			tmp=(bufout[4]);		// date
+			TxBuffer[9]=(uint8_t)(((tmp&0x30)>>4)+(uint8_t)0x30);	
+			TxBuffer[10]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			TxBuffer[11]=0x20;				
+			
+			// time
+			tmp=(bufout[2]);		//	hours
+			TxBuffer[12]=(uint8_t)(((tmp&0x70)>>4)+(uint8_t)0x30);	
+			TxBuffer[13]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+				
+			tmp=(bufout[1]);		//	minute
+			TxBuffer[14]=(uint8_t)(((tmp&0x70)>>4)+(uint8_t)0x30);	
+			TxBuffer[15]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			
+			tmp=(bufout[0]);		//	seconds
+			TxBuffer[16]=(uint8_t)(((tmp&0x70)>>4)+(uint8_t)0x30);	
+			TxBuffer[17]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
+			TxBuffer[18]=0x20;
+*/			
 			// dat pribl
 			TxBuffer[19]=sost_pribl+0x30;
 			TxBuffer[20]=0x20;

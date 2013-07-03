@@ -165,6 +165,7 @@
             <Capability>1</Capability>
             <DriverSelection>4100</DriverSelection>
           </Flash1>
+          <bUseTDR>0</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -465,11 +466,6 @@
               <FileName>stm32f4xx_adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Libraries\CMSIS\stm32f4xx_adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Libraries\CMSIS\stm32f4xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma.c</FileName>
@@ -819,6 +815,7 @@
             <Capability>1</Capability>
             <DriverSelection>4100</DriverSelection>
           </Flash1>
+          <bUseTDR>0</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -1119,11 +1116,6 @@
               <FileName>stm32f4xx_adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Libraries\CMSIS\stm32f4xx_adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Libraries\CMSIS\stm32f4xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma.c</FileName>

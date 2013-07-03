@@ -138,8 +138,8 @@ MDO=1; //мастер I2c
 
 */
 
-#define ds_delay 10000
-#define ds_wait  100
+#define ds_delay 3
+#define ds_wait  2
 
 #define PIN_DS_SCL                      	GPIO_Pin_8		//	scl		pb8
 #define PORT_DS_SCL               			  GPIOB	
@@ -432,7 +432,7 @@ void MCO(u8 sost)
 }
 
 
-u8 b_err_cl, bufout[100], zbuf[100];
+u8 b_err_cl, bufout[20], zbuf[20];
 
 
 void start_ds(void)
@@ -478,7 +478,7 @@ void write_bait_ds(u8 bait)
 				MDO(1); 					  					   
 			MCO(1);
 			MCO(0);	
-			MDO(0);			  // from bksd
+	//		MDO(0);			  // from bksd
 			bait= bait<<1; 
 		} 	
 		ack_ds();		
@@ -511,25 +511,13 @@ u8 wr_ack_ds(u8 ac)
     MCO(1); 
 		MCO(0);
 }
-
+/*
 void read_dat_clock(void)
 {		u8 tmp_rw=0, DL=0, j=0,i1=0;
 		u8 kol_bait=1;
 
 		error_ds=0;
-	/*
-	  start_ds();
-		write_bait_ds(0xD0);
-		ack_ds();
-		write_bait_ds(0x00);
-		ack_ds();
-		stop_ds();	
 
-		for(j=0;j<10;j++)																									 
-		{  	
-			sleep(ds_delay);
-		}
-	*/	
 		start_ds();
 		write_bait_ds(0xD1);
 		ack_ds();
@@ -551,20 +539,38 @@ void read_dat_clock(void)
 			MCO(0);	
 // end my
 
-		/*	
-		// from bksd	
-		//		MDO(0);  
-			// from bksd
-			if (j==(10-1)) 
-				{MDO(1);}												    
-			MCO(1); 
-			MCO(0);
-		*/
+	
 // end from bksd			
 			
 		}
 		stop_ds();	
 }		
+
+*/
+
+void read_ds(void)
+{		u8 i=0;
+			
+		start_ds();
+		write_bait_ds(0xD0);
+		write_bait_ds(0x00);
+		stop_ds();
+			
+		sleep(100);
+			
+		start_ds();
+		write_bait_ds(0xD1);		
+
+		for (i = 0; i < 10; i ++)
+		{
+			zbuf[i]=read_bait_ds();	
+			if (i!=9)
+				wr_ack_ds(1);				
+		}
+		wr_ack_ds(0);		
+		stop_ds();
+			
+}
 /*
 void write_dat_clock(void)
 {

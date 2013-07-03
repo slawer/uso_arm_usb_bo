@@ -418,18 +418,20 @@ uint32_t flash_read(uint32_t address) {
 return (*(__IO uint32_t*) address);
 }
 */
-	size=sizeof(st_conf);
-	
-	for (i = 0; i < size; i += 1)
-  {
-		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (ADDR_FLASH + i));
-	}	
+
 	
 	size=sizeof(st_conf);
 	
 	for (i = 0; i < size; i += 1)
   {
 		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (BKPSRAM_BASE + i));
+	}	
+	
+	size=sizeof(st_conf);
+	
+	for (i = 0; i < size; i += 1)
+  {
+		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (ADDR_FLASH + i));
 	}	
 	
 		kol_usr=conf.per_usr;
