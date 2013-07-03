@@ -33,6 +33,8 @@
 
 //char fn[10]={0x30,0x3A,0x32,0x30,0x31,0x33,0x5F,0x30,0x35,0x5F};
 
+extern u8  bufout[20];
+
 char file_name[10]={0x20,0x65,0x72,0x72,0x6F,0x72,0x2E,0x63,0x73,0x76};
 
 BOOL new_name_file=0; 
@@ -110,7 +112,7 @@ void USBH_USR_DeviceAttached(void)
 {
 		TDateTime DT;
 		u8 tmp;
-    
+ /*   
 	  rtc_Get(&DT);    
   
 //	file_name[0]=0x32;
@@ -128,6 +130,7 @@ void USBH_USR_DeviceAttached(void)
 	
 	file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
 	file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+	*/
 /*
 	file_name[10]=95;
 	
@@ -143,6 +146,26 @@ void USBH_USR_DeviceAttached(void)
 	tmp%=10;
 	file_name[15]=(uint8_t)(tmp)+(uint8_t)0x30;
 */
+/*
+	file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
+	file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
+
+	file_name[2]=(uint8_t)(DT.Month/10)+(uint8_t)0x30;
+	file_name[3]=(uint8_t)(DT.Month%10)+(uint8_t)0x30;
+
+	file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
+	file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+	*/
+	
+	file_name[0]=(uint8_t)(bufout[6]/10)+(uint8_t)0x30;
+	file_name[1]=(uint8_t)(bufout[6]%10)+(uint8_t)0x30;
+
+	file_name[2]=(uint8_t)(bufout[5]/10)+(uint8_t)0x30;
+	file_name[3]=(uint8_t)(bufout[5]%10)+(uint8_t)0x30;
+
+	file_name[4]=(uint8_t)(bufout[4]/10)+(uint8_t)0x30;
+	file_name[5]=(uint8_t)(bufout[4]%10)+(uint8_t)0x30;
+	
 // .txt
 	file_name[6]=0x2E;
 	file_name[7]=0x63;
@@ -385,22 +408,39 @@ int USBH_USR_MSC_Application(void)
 void dec_to_chr(u16 chislo,uint8_t* buf)
 {
 	// BYTE *wbuff = buf;
-	u16 tmp=0;
+	u16 tmp=0, tk_n=0;
 		
-	tmp=chislo/10000;
-		  *buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
-			chislo%=10000;
-			buf++;
-		  *buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
+	if ((chislo&0x8000)==1)
+	{
+		tk_n=1;
+		chislo=chislo&0x7FFF;
+	}
+	
+	//tmp=chislo/10000;
+	if (tk_n==1)
+	{
+		*buf=(uint8_t)0x30;
+		buf++;
+	}
+		
+	*buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
+	chislo%=10000;
+	buf++;
+	*buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
 	chislo%=1000;
-			buf++;
-			*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
-chislo%=100;
-			buf++;
-			*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
-	chislo%=10;
-			buf++;
-			*buf=((uint8_t)(chislo)+(uint8_t)0x30);
+	buf++;
+	*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
+	chislo%=100;
+	buf++;
+	*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
+	buf++;
+	if (tk_n==0)
+	{
+		*buf=0x2C;
+		chislo%=10;
+		buf++;
+	}
+	*buf=((uint8_t)(chislo)+(uint8_t)0x30);
 			
 
 }
@@ -439,8 +479,8 @@ if (buffering)
 		TDateTime DT;
 		u8 tmp=0;
     
-	  rtc_Get(&DT);     	
-		pred_minute=minute;
+//	  rtc_Get(&DT);     	
+//		pred_minute=minute;
 //		minute=12345;
 		
 	//		dec_to_chr(minute,(uint8_t*) &Buf_zap[0]);
@@ -470,21 +510,26 @@ if (buffering)
 	Buf_zap[10]=95;
 	*/
 
+
 	Buf_zap[0]=(uint8_t)(DT_zap.Hours/10)+(uint8_t)0x30;
 	Buf_zap[1]=(uint8_t)(DT_zap.Hours%10)+(uint8_t)0x30;
-
 	Buf_zap[2]=0x3A; // :
-
-
 	Buf_zap[3]=(uint8_t)(DT_zap.Minutes/10)+(uint8_t)0x30;
 	Buf_zap[4]=(uint8_t)(DT_zap.Minutes%10)+(uint8_t)0x30;
-
 	Buf_zap[5]=0x3A;
-
-
 	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
-		Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
-		
+	Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
+	
+/*
+	Buf_zap[0]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;
+	Buf_zap[1]=(uint8_t)(bufout[2]%10)+(uint8_t)0x30;
+	Buf_zap[2]=0x3A; // :
+	Buf_zap[3]=(uint8_t)(bufout[1]/10)+(uint8_t)0x30;
+	Buf_zap[4]=(uint8_t)(bufout[1]%10)+(uint8_t)0x30;
+	Buf_zap[5]=0x3A;
+	Buf_zap[6]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;
+	Buf_zap[7]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
+	*/
 		//	Buf_zap[8]=0x3B; //	;
 		//	Buf_zap[9]=0x0D; //	enter
 			
@@ -511,22 +556,22 @@ if (buffering)
 			while (kol_zap<600)
       {			
 			//	Buf_adc_zap1[kol_zap]=kol_zap;
-				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
-			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
+				Buf_zap[sm+kol_simb_in_stroka*kol_zap]=0x3B; //	;
+			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);			
 				kol_zap++;			
-				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+				Buf_zap[sm+kol_simb_in_stroka*kol_zap-1]=0x0D;	// enter
 			}
 		else
 			while (kol_zap<600)
       {			
-			while (kol_zap<600)
-      {			
-			//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
-				Buf_zap[sm+kpl_simb_in_stroka*kol_zap]=0x3B; //	;
-			 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kpl_simb_in_stroka*kol_zap+1]);			
-				kol_zap++;			
-				Buf_zap[sm+kpl_simb_in_stroka*kol_zap-1]=0x0D;	// enter
-			}		  	
+				while (kol_zap<600)
+				{			
+				//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
+					Buf_zap[sm+kol_simb_in_stroka*kol_zap]=0x3B; //	;
+				 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);			
+					kol_zap++;			
+					Buf_zap[sm+kol_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+				}		  	
 			}		
 			
 //			Buf_zap[sm+6*kol_zap]=13;
@@ -554,6 +599,7 @@ if (buffering)
 			*/	
 				if (HCD_IsDeviceConnected(&USB_OTG_Core) == 1)
 				{
+					
 		//			if (!file_cr)
 					{
 					if (f_open(&file,  (const XCHAR *)&file_name, FA_WRITE)== FR_OK)	
@@ -561,13 +607,15 @@ if (buffering)
 						{
 							STM_EVAL_LEDOn(LED4);
 							f_lseek(&file, (DWORD)(file.fsize));
-							f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+							f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
 							f_close (&file);
 
 					//		if 	(DT.Minutes==0)
 					//			if (DT.Hours==0)
-									if (file_name[5]!=(DT.Day%10+0x30))
+							//		if (file_name[5]!=(DT.Day%10+0x30))
+									if (file_name[5]!=(bufout[4]%10+0x30))
 									{
+										/*
 										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
 										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
 									
@@ -576,6 +624,15 @@ if (buffering)
 
 										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
 										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+										*/
+										file_name[0]=(uint8_t)(bufout[6]/10)+(uint8_t)0x30;
+										file_name[1]=(uint8_t)(bufout[6]%10)+(uint8_t)0x30;
+									
+										file_name[2]=(uint8_t)(bufout[5]/10)+(uint8_t)0x30;
+										file_name[3]=(uint8_t)(bufout[5]%10)+(uint8_t)0x30;
+
+										file_name[4]=(uint8_t)(bufout[4]/10)+(uint8_t)0x30;
+										file_name[5]=(uint8_t)(bufout[4]%10)+(uint8_t)0x30;
 									}							
 						STM_EVAL_LEDOff(LED4);							
 						file_cr=1;
@@ -591,11 +648,21 @@ if (buffering)
 								
 								STM_EVAL_LEDOn(LED4);
 								f_lseek(&file,(DWORD) file.fsize);				
-								f_write (&file, (uint8_t*)Buf_zap, sm+kpl_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+								f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
 								f_close (&file);
 								
-										if (file_name[5]!=(DT.Day%10+0x30))
+								//		if (file_name[5]!=(DT.Day%10+0x30))
+										if (file_name[5]!=(bufout[4]%10+0x30))
 										{
+										file_name[0]=(uint8_t)(bufout[6]/10)+(uint8_t)0x30;
+										file_name[1]=(uint8_t)(bufout[6]%10)+(uint8_t)0x30;
+									
+										file_name[2]=(uint8_t)(bufout[5]/10)+(uint8_t)0x30;
+										file_name[3]=(uint8_t)(bufout[5]%10)+(uint8_t)0x30;
+
+										file_name[4]=(uint8_t)(bufout[4]/10)+(uint8_t)0x30;
+										file_name[5]=(uint8_t)(bufout[4]%10)+(uint8_t)0x30;
+											/*
 										file_name[0]=(uint8_t)(DT.Year/10)+(uint8_t)0x30;
 										file_name[1]=(uint8_t)(DT.Year%10)+(uint8_t)0x30;
 									
@@ -604,6 +671,7 @@ if (buffering)
 
 										file_name[4]=(uint8_t)(DT.Day/10)+(uint8_t)0x30;
 										file_name[5]=(uint8_t)(DT.Day%10)+(uint8_t)0x30;
+											*/
 										}
 								
 								STM_EVAL_LEDOff(LED4);
@@ -617,8 +685,7 @@ if (buffering)
 								sost_flesh=0;	
 								PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
 								PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-							}
-									
+							}								
 						}							
 					}
 				}

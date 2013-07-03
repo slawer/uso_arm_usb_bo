@@ -5,7 +5,7 @@
 #define numbkor 10
 #define vrem_tm 100
 
-#define	kpl_simb_in_stroka	7
+#define	kol_simb_in_stroka	8 // 7 - without point
 
 
 #define tx_pin_en	GPIO_Pin_4
@@ -13,7 +13,9 @@
 
 	#define RxBufferSize        ((u16)500)  // USART2 global Interrupt 
 	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
-		
+
+#define PIN_Conrtol		GPIO_Pin_4
+#define PORT_Conrtol	GPIOB
 	
 extern	u16 txsize, rxsize;
 	

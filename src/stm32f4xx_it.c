@@ -404,6 +404,9 @@ void SysTick_Handler(void)
 
 	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds;
 	
+	
+
+	PORT_Conrtol->BSRRL = PIN_Conrtol;
  //  проверка состояния датчика приближений - 
 	
 	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
@@ -414,7 +417,7 @@ void SysTick_Handler(void)
 	{
 		kol_pribl_vkl++;
 	}
-	conf.tm_antidreb=2;
+//	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;	
@@ -447,16 +450,15 @@ void SysTick_Handler(void)
 		if ((PORT_K2->IDR & PIN_K2)==0)
 		{
 			kol_gr2_vkl++;
-
 		}
 
-		conf.tm_antidreb=2;
+	//	conf.tm_antidreb=2;
 		if (kol_gr1_vkl>=conf.tm_antidreb)
 		{
 				conf.tek_gr_kal=0;
-	 // gr 1
-			PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
-			PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+		 // gr 1
+				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
+				PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
 
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
@@ -466,8 +468,8 @@ void SysTick_Handler(void)
 		{
 				conf.tek_gr_kal=1;
 				 // gr 2
-			PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
-			PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
+				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
+				PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
 		}				
@@ -532,9 +534,15 @@ void SysTick_Handler(void)
 
 		
 		if (number_buff)
-			Buf_adc_zap2[por++]=por; //fz_average[0];			
+			if (tk_null==1)
+				Buf_adc_zap2[por++]=fz_average[0]|0x8000;	
+			else
+				Buf_adc_zap2[por++]=fz_average[0]&0x7FFF;			
 		else
-			Buf_adc_zap1[por++]=por; //fz_average[0];
+			if (tk_null==1)
+				Buf_adc_zap1[por++]=fz_average[0]|0x8000;	
+			else
+				Buf_adc_zap1[por++]=fz_average[0]&0x7FFF;
 		
 		if (por==999)
 			por=999;
@@ -587,7 +595,21 @@ void SysTick_Handler(void)
 		if (bufout[0]==0)
 		{
 			number_buff^=1;
-			DT_zap=DT1;
+//		DT_zap=DT1;
+			
+			/*
+			Buf_zap[0]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;
+			Buf_zap[1]=(uint8_t)(bufout[2]%10)+(uint8_t)0x30;
+			Buf_zap[2]=0x3A; // :
+			Buf_zap[3]=(uint8_t)(bufout[1]/10)+(uint8_t)0x30;
+			Buf_zap[4]=(uint8_t)(bufout[1]%10)+(uint8_t)0x30;
+			Buf_zap[5]=0x3A;
+			Buf_zap[6]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;
+			Buf_zap[7]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
+			*/		
+			DT_zap.Hours=bufout[2];
+			DT_zap.Minutes=bufout[1];
+			DT_zap.Seconds=bufout[0];
 			
 			buffering=1;
 			por=0;
@@ -660,12 +682,12 @@ void SysTick_Handler(void)
 				else
 					error_ds=1;
 			}
-		
+/*		
 		if ((tick%60)==0)
 		{
 			minute++;
 		}
-	
+*/	
 	// конец раз секунду
 			
 	 }	
@@ -1339,7 +1361,8 @@ if (1)
 		//		indicators[1].chislo=1234;
 		//		indicate (0);
 		//		indicate (1);
-				
+			
+	PORT_Conrtol->BSRRH = PIN_Conrtol;  	// off  PIN_Control
 }
 
 	

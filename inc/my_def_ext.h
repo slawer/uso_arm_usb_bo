@@ -116,6 +116,23 @@ u8 sost_flesh=0;
 u8 error_ds=0;
 
 
+#define PIN_Conrtol		GPIO_Pin_4
+#define PORT_Conrtol	GPIOB
+
+void init_control(void)
+{
+		GPIO_InitTypeDef      GPIO_InitStructure;
+	
+		GPIO_InitStructure.GPIO_Pin   = PIN_Conrtol;  							//  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;  
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+		GPIO_Init(PORT_Conrtol, &GPIO_InitStructure); 
+	
+}
+
+
 
 
 /*------------------------------------------------------------------
@@ -151,6 +168,10 @@ MDO=1; //мастер I2c
 #define mode	GPIO_Mode_OUT
 #define type	GPIO_OType_OD
 #define pull	GPIO_PuPd_NOPULL
+
+
+
+
 
 //	GPIO_Mode_IN; 		GPIO_Mode_OUT;   GPIO_Mode_AN
 // 	GPIO_OType_OD; 		GPIO_OType_PP;
@@ -312,6 +333,8 @@ no data on sda only ff
 
 /*
 */
+
+
 
 void init_dc()
 {

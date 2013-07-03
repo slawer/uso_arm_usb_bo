@@ -1768,6 +1768,8 @@ SPI 2:
 		
 	test_ind_all(1);
 	
+	init_control();
+	
 	MCO(1);
 	delay_spi(100);
 	MDO(1);
