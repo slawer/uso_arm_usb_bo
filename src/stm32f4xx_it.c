@@ -390,6 +390,67 @@ u8 test_rele(u16 fz, u8 numb)
 }
 
 
+void update_indicators()
+{
+		extern st_conf conf;
+		extern u8 bufout[20];
+		// start indicators
+				 if (tk_null==1)
+				 {
+					 indicate_err(1);   	// tek
+					 indicate_err(2);			// lineika 
+					 indicate_err(3);			// maximum
+				 }
+				 else
+				 {		
+					 if ((avariya==1)&((tick%2)==0))
+					 {
+							ind_blank_all(1); 
+							ind_blank_all(2); 
+							ind_blank_all(3); 	 
+						}
+						else
+						{
+						 // dop usrednenie na vivod indicatorov???
+							indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
+							
+							indicate(3,(u16)(max[0]),3);														// maximum
+							
+							if (conf.tek_gr_kal==0)
+									if (sost_pribl==0)
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
+									else
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+							else
+									if (sost_pribl==0)
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
+									else
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 		 
+					 }	
+				}
+				if ((tick%2)==0)
+				//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+						indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
+				else
+				//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+						indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
+
+			// end indicators
+						
+}
+
+void TIM6_DAC_IRQHandler(){
+
+    if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET) {
+
+					
+	    update_indicators();
+			
+      TIM_ClearITPendingBit(TIM6, TIM_IT_Update);
+			TIM_Cmd(TIM6, DISABLE);  // stop timer
+    }
+}
+
 
 /**
   * @brief  This function handles SysTick Handler.  10ms
@@ -405,8 +466,8 @@ void SysTick_Handler(void)
 	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds;
 	
 	
-
 	PORT_Conrtol->BSRRL = PIN_Conrtol;
+	
  //  проверка состояния датчика приближений - 
 	
 	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
@@ -520,9 +581,9 @@ void SysTick_Handler(void)
 			
 	
 	// находим среднее значение по скользящей средней
-		fz_average[0]=moving_average(fz[0],0);
-//				fz_average[0]++;
-
+//		fz_average[0]=moving_average(fz[0],0);
+			fz_average[0]++;
+	 
 		// time max
 		if (time_max>=conf.time_max) {
 				max[0]=0;
@@ -562,31 +623,31 @@ void SysTick_Handler(void)
 		
 		time_label=tick;
 		
-		bufout[0]++;
-		if 	(bufout[0]==60)
+		bufout[0]++; 										// sec
+		if 	(bufout[0]>=60)
 		{		bufout[0]=0;
-				bufout[1]++;
+				bufout[1]++;								// min
 				
-				if 	(bufout[1]==60)
+				if 	(bufout[1]>=60)
 				{
 						bufout[1]=0;
-						bufout[2]++;
+						bufout[2]++;						// hour
 						if (bufout[2]==24)
 						{
 							bufout[2]=0;
-							bufout[4]++;
+							bufout[4]++;					// date
 							if (bufout[4]==32)
 							{
 								bufout[4]=1;
-								bufout[5]++;
+								bufout[5]++;				// month
 								if (bufout[5]==13)
 								{
 									bufout[5]=1;
-									bufout[6]++;
+									bufout[6]++;			// year
 								}
 							}
 						}
-						}
+				}
 		}
 		
 //		rtc_Get(&DT1);	
@@ -691,48 +752,10 @@ void SysTick_Handler(void)
 	// конец раз секунду
 			
 	 }	
-	 	
 
-	 if (tk_null==1)
-	 {
-		 indicate_err(1);   	// tek
-		 indicate_err(2);			// lineika 
-		 indicate_err(3);			// maximum
-	 }
-	 else
-	 {		
-		 if ((avariya==1)&((tick%2)==0))
-		 {
-				ind_blank_all(1); 
-				ind_blank_all(2); 
-				ind_blank_all(3); 	 
-			}
-			else
-			{
-			 // dop usrednenie na vivod indicatorov???
-				indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
-				
-				indicate(3,(u16)(max[0]),3);														// maximum
-				
-				if (conf.tek_gr_kal==0)
-						if (sost_pribl==0)
-							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
-						else
-							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
-				else
-						if (sost_pribl==0)
-							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
-						else
-							indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 		 
-		 }	
-	}
-	if ((tick%2)==0)
-	//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
-			indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
-	else
-	//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
-			indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
-			
+//		TIM_Cmd(TIM6, ENABLE);  // start timer for indicators
+	 update_indicators();
+	
  // конец раз в 100 мс
 	}	
 	
@@ -745,18 +768,23 @@ void SysTick_Handler(void)
 		{
 			u16 i=0;
 			u8 errors=0;
-			    uint32_t Temp;
+			uint32_t Temp;
 			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 	
-	
+			__disable_irq();
+	//		sleep(1000);
 			FLASH_Unlock();
+	//		sleep(1000);
 			FLASH_EraseSector(STR_FLASH,VoltageRange_3);
+	//		sleep(1000);
 
 			FLASH_Lock();
+	//		sleep(1000);
 			FLASH_Unlock();
+	//		sleep(1000);
 			
 			for (i = 0; i < rxsize-10; i += 2)
 			{
@@ -781,8 +809,9 @@ void SysTick_Handler(void)
 			
 
 			FLASH_Lock();
-
-
+	//		sleep(1000);
+			__enable_irq();
+			
 			if (errors==0)
 			{
 			TxBuffer[0]='w';
@@ -1355,9 +1384,7 @@ if (1)
 		new_komand=0;
 	}
 	
-
-	
-				//	indicators[0].chislo=1234;
+		//	indicators[0].chislo=1234;
 		//		indicators[1].chislo=1234;
 		//		indicate (0);
 		//		indicate (1);

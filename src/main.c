@@ -28,7 +28,7 @@ u8 in=0, poz=0;
 		
 // u32  zad_spi=10000,zad_spi2=100000;
 // u32  zad_spi=5000, zad_spi2=10000;
-u32  zad_spi=100, zad_spi2=10000;
+ u32  zad_spi=1000, zad_spi2=5000;
 
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
   * @{
@@ -80,30 +80,22 @@ void USART2_IRQHandler(void)
 					{		u8 tmp=0;
 						USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 				
+						if (new_komand!=0)
+							return;
+						
 						tmp=USART_ReceiveData (USART2);
 						if (tmp==0x3A)
 								tekpr=0;
-	/*
-						if (tekpr==1)
-								if (tmp!=address)
-								{
-									tekpr=0;
-									rxsize=0;
-								}
-		*/				
+				
 						if (tmp==0x0D)
 						{
 							rxsize=tekpr;
-				//			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
 							new_komand=1;
 						}
 						RxBuffer[tekpr]=tmp;
-						tekpr++;
-				//		GPIOD->ODR ^= tx_pin_en;
-				//		GPIOD->ODR ^= rx_pin_en;
-						
-
+						tekpr++;					
 					}
+					
 //Transmission complete interrupt								 // чтото передали
         if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
         {
@@ -398,18 +390,35 @@ void spi_init(){
 }
 
 void spi1_init() {
-	SPI_InitTypeDef spi1;
-	 GPIO_InitTypeDef gpio;
 	
+	  SPI_InitTypeDef spi1;
+	  GPIO_InitTypeDef gpio;
+	
+	
+	  #define mode  GPIO_Mode_OUT
+	  #define tupe	GPIO_OType_PP
+		#define pp		GPIO_PuPd_DOWN
+	
+
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);  // ???????????? ?????
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1 
    
     GPIO_StructInit(&gpio);
+	
+	//		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
+		gpio.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
+		gpio.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
+		gpio.GPIO_OType = tupe; //GPIO_OType_PP; //GPIO_OType_OD; // GPIO_OType_PP; 	//GPIO_OType_OD;          //  PP GPIO_OType_PP
+		gpio.GPIO_PuPd =  GPIO_PuPd_DOWN; //GPIO_PuPd_DOWN;
+		gpio.GPIO_Speed = GPIO_Speed_2MHz; 	//GPIO_Speed_2MHz;     //speed
+		GPIO_Init(GPIOA, &gpio); 
+			
+	
     gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
     gpio.GPIO_Mode = GPIO_Mode_AF;
     gpio.GPIO_Speed = GPIO_Speed_2MHz;
-    gpio.GPIO_OType = GPIO_OType_PP;
-    gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
+    gpio.GPIO_OType = tupe;//GPIO_OType_PP;	 // GPIO_OType_OD
+    gpio.GPIO_PuPd =  GPIO_PuPd_DOWN; //GPIO_PuPd_NOPULL; //GPIO_PuPd_DOWN; // 	GPIO_PuPd_DOWN;  // GPIO_PuPd_UP
     GPIO_Init(GPIOA,&gpio);
     GPIO_PinAFConfig(GPIOA,GPIO_PinSource5,GPIO_AF_SPI1);
     GPIO_PinAFConfig(GPIOA,GPIO_PinSource6,GPIO_AF_SPI1);
@@ -421,8 +430,8 @@ void spi1_init() {
     spi1.SPI_DataSize = SPI_DataSize_8b; //SPI_DataSize_16b;		
     spi1.SPI_NSS = SPI_NSS_Soft;
 
-  spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
-  spi1.SPI_FirstBit = SPI_FirstBit_MSB;
+    spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
+    spi1.SPI_FirstBit = SPI_FirstBit_MSB;
 	
     SPI_Init(SPI1,&spi1);
     SPI_Cmd(SPI1,ENABLE);
@@ -459,15 +468,23 @@ void spi2_init() {
 
 void spi_send(uint16_t data) {
 	SPI_I2S_SendData(SPI1,data);
-    while(SPI_I2S_GetFlagStatus(SPI1,SPI_I2S_FLAG_TXE) == RESET);  // ???? ???? ?????? ?????
+ //   while(SPI_I2S_GetFlagStatus(SPI1,SPI_I2S_FLAG_TXE) == RESET);  // ???? ???? ?????? ?????
+	//  if ((SPIx->SR & SPI_I2S_FLAG) != (uint16_t)RESET)
+//	SPI1->SR &= SPI_SR_TXE
+//	while ((SPI1->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);
+//	while ((SPI1->SR & SPI_SR_TXE) == (uint16_t)SET);
+	while ((SPI1->SR & SPI_SR_TXE) == SPI_SR_TXE);
+	
 }
+
+/*
 uint16_t spi_receve() {
 		uint16_t received;
     while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET);  // ???? ???? ?????? ???????
     received = SPI_I2S_ReceiveData(SPI2);
     return received;
 }
-
+*/
 
 void delay_spi(u32 kol)
 {
@@ -546,41 +563,17 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 		const u8 tabl[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
 		u8 viv=0;
 		
-//		u16  zad_spi=1000,zad_spi2=10000;
 
-	 tmp=(u32) (max_kol_st*zn);
-	fl_tmp=(float) ((float)zn/(float)maks*(float)max_kol_st);
-	fl_tmp+=0.5;
-	 kol=(u8) (fl_tmp);
+		tmp=(u32) (max_kol_st*zn);
+		fl_tmp=(float) ((float)zn/(float)maks*(float)max_kol_st);
+		fl_tmp+=0.5;
+		kol=(u8) (fl_tmp);
 
 	
-/*
-		  switch (numb_ind)
-			{
-				case 0x00:  // CS0
-					pin=GPIO_Pin_0;
-					break;
-
-				case 0x01:  // CS1
-					pin=GPIO_Pin_1;
-					break;
-
-				case 0x02:  // CS2
-					pin=GPIO_Pin_2;
-					break;
-
-				case 0x03:  // CS3
-					pin=GPIO_Pin_3;
-					break;
-
-				case 0x04:  // CS4
-					pin=GPIO_Pin_4;
-					break;								
-			}
-	*/
 	  pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
+		
 		if ((kol>max_kol_st)|(zn>=maks))
 		{
 			if (max_kol_st==28)
@@ -603,6 +596,28 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
 				spi_send((u8)0x04);											delay_spi(zad_spi);
 				spi_send((u8) 0x08); 										delay_spi(zad_spi);	
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+			 }
+			if (max_kol_st==32)
+			{
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+				spi_send((u8)0x01);											delay_spi(zad_spi);
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+				spi_send((u8)0x02);											delay_spi(zad_spi);
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+				spi_send((u8)0x03);											delay_spi(zad_spi);
+				spi_send((u8) 0); 											delay_spi(zad_spi);	
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);				
+				
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+				spi_send((u8)0x04);											delay_spi(zad_spi);
+				spi_send((u8) 0x80); 										delay_spi(zad_spi);	
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 			 }
 			return ;
@@ -645,8 +660,8 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 		}
 		
 		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
-		spi_send((u8)0x03);delay_spi(zad_spi);
-		spi_send((u8)viv); delay_spi(zad_spi);	
+		spi_send((u8)0x03);											delay_spi(zad_spi);
+		spi_send((u8)viv); 											delay_spi(zad_spi);	
 		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 
 		if (kol<8)
@@ -661,8 +676,8 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 		}
 		
 		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
-		spi_send((u8)0x04);delay_spi(zad_spi);
-		spi_send((u8)viv); delay_spi(zad_spi);	
+		spi_send((u8)0x04);											delay_spi(zad_spi);
+		spi_send((u8)viv); 											delay_spi(zad_spi);	
 		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
 	//	kol=kol%8;			
 
@@ -1092,12 +1107,10 @@ void test_ind(u8 numb_ind)
 		if (pin==0)
 				return ;			
 
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   GPIOB.2
-				delay_spi(100);
-				spi_send(0x0f);delay_spi(100);
-				spi_send(0x01); delay_spi(100);
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //   GPIOB.2
-				delay_spi(1000);
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+				spi_send(0x0f);														delay_spi(zad_spi);
+				spi_send(0x01); 													delay_spi(zad_spi);
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      	delay_spi(zad_spi2);
 }
 
 /*
@@ -1256,30 +1269,6 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 			u32   maximum=0;
 			
 
-			/*
-			switch (numb_ind)
-			{
-				case 0x00:  // CS0
-					pin=GPIO_Pin_0;
-					break;
-
-				case 0x01:  // CS1
-					pin=GPIO_Pin_1;
-					break;
-
-				case 0x02:  // CS2
-					pin=GPIO_Pin_2;
-					break;
-
-				case 0x03:  // CS3
-					pin=GPIO_Pin_3;
-					break;
-
-				case 0x04:  // CS4
-					pin=GPIO_Pin_4;
-					break;								
-			}
-			*/
 			pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
@@ -1321,39 +1310,29 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 	
 			if (chislo>=maximum)   // reflow
 			{			
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
-				delay_spi(zad_spi);
-				spi_send(1);delay_spi(zad_spi);
-				spi_send(0x4F); delay_spi(zad_spi);		
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
-			  delay_spi(zad_spi2);	
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+				spi_send(1);														delay_spi(zad_spi);
+				spi_send(0x4F);													delay_spi(zad_spi);		
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);	
 				
 		//		for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
-				for (i=2;i<kol_cifr+1;i++)  {
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      
-				delay_spi(zad_spi);
-				spi_send((u8) i);delay_spi(zad_spi);
-				spi_send(0); delay_spi(zad_spi);		
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      
-			  delay_spi(zad_spi2);			}					
+				for (i=2;i<kol_cifr+1;i++)  
+				{
+					GPIO_WriteBit(GPIOA, pin, Bit_RESET);  	delay_spi(zad_spi);
+					spi_send((u8) i);												delay_spi(zad_spi);
+					spi_send(0); 														delay_spi(zad_spi);		
+					GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);	
+				}					
 				return ;
 			}	
 
-			
-	//		for (i=conf.indicators[numb_ind-1].kol_cifr;i>0;i--)
+
 			for (i=kol_cifr;i>0;i--)
 			{	
 					zn[i]=(u8) (chislo%10);
 					chislo=chislo/10;
 			}
-			/*
-			zn[0]=0;
-			zn[1]=1;
-			zn[2]=2;
-			zn[3]=3;
-			zn[4]=4;
-			zn[5]=5;
-*/
+
 
 	//		for (i=1;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)
 			for (i=1;i<kol_cifr+1;i++)
@@ -1374,8 +1353,8 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 							simb&=0x7F;
 	
 						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
-						spi_send((u8) i);delay_spi(zad_spi);
-						spi_send(simb); delay_spi(zad_spi);			
+						spi_send((u8) i);														delay_spi(zad_spi);
+						spi_send(simb); 														delay_spi(zad_spi);			
 				//		spi_send(symb_code[i]); delay_spi(zad_spi);	
 								//  indicators
 								//   12.3
@@ -1388,42 +1367,17 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 {
 		 	uint16_t  pin=0;
 			u8 i=0;
-
-/*
-			switch (numb_ind)
-			{
-				case 0x00:  // CS0
-					pin=GPIO_Pin_0;
-					break;
-
-				case 0x01:  // CS1
-					pin=GPIO_Pin_1;
-					break;
-
-				case 0x02:  // CS2
-					pin=GPIO_Pin_2;
-					break;
-
-				case 0x03:  // CS3
-					pin=GPIO_Pin_3;
-					break;
-
-				case 0x04:  // CS4
-					pin=GPIO_Pin_4;
-					break;						
-			}
-	*/
 	
 			  pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
-				GPIO_WriteBit(GPIOA, pin, Bit_RESET);      //   
-				delay_spi(100);
-				spi_send(0x0f);delay_spi(100);
-				spi_send(0x00); delay_spi(100);
-				GPIO_WriteBit(GPIOA, pin, Bit_SET);      //  
-				delay_spi(1000);
 	/*	
+				GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+				spi_send(0x0f);														delay_spi(zad_spi);
+				spi_send(0x00); 													delay_spi(zad_spi);
+				GPIO_WriteBit(GPIOA, pin, Bit_SET);      	delay_spi(zad_spi2);
+		
+	
 			for (i=1;i<8;i++)
 			{		
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);   delay_spi(zad_spi);
@@ -1458,6 +1412,23 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
 }
 
+void init_timer(){	
+		TIM_TimeBaseInitTypeDef base_timer;
+	
+	
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE); 
+ 
+    TIM_TimeBaseStructInit(&base_timer);
+
+    base_timer.TIM_Prescaler = 1000 - 1; 
+    base_timer.TIM_Period = 100; 
+    TIM_TimeBaseInit(TIM6, &base_timer);
+
+    TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
+ //   TIM_Cmd(TIM6, ENABLE);  
+
+    NVIC_EnableIRQ(TIM6_DAC_IRQn);
+}
 
 /**
   * @brief  Main program.
@@ -1551,6 +1522,7 @@ int main(void)
     rtc_Init();
 			
 		init_dc();
+		
 
 		
 //	ADC_InitTypeDef  ADC_InitStructure;
@@ -1569,9 +1541,11 @@ int main(void)
   // Start ADC3 Software Conversion 
   ADC_SoftwareStartConv(ADC3);
 	
+	init_timer();
+	
 	
   
-#if defined MEDIA_USB_KEY
+//#if defined MEDIA_USB_KEY
   
   /* Initialize User Button */
 //  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
@@ -1599,20 +1573,8 @@ SPI 2:
  
 */
 		spi1_init();
-    spi2_init();
- 
-		
-	
-//		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
-		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;          //  PP GPIO_OType_PP
-		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
-		GPIO_Init(GPIOA, &GPIO_InitStructure); 
-		
-
-		
+//    spi2_init();
+ 		
 		/*
 	//	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
 
@@ -1624,49 +1586,49 @@ SPI 2:
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 */
 
-		GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
-		
-		
-		GPIO_InitStructure.GPIO_Pin   = PIN_PER_NIZ;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_PER_NIZ, &GPIO_InitStructure); 		
-
-		GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_PER_VERH, &GPIO_InitStructure); 
-		
-		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_EN;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_ZAP_EN, &GPIO_InitStructure); 
+	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 	
-		GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_ZAP_DIS, &GPIO_InitStructure);	
+	
+	GPIO_InitStructure.GPIO_Pin   = PIN_PER_NIZ;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_PER_NIZ, &GPIO_InitStructure); 		
 
-		GPIO_InitStructure.GPIO_Pin   = PIN_AVARIYA;  							//  vivod for RELE and svet AVARIYA 
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_AVARIYA, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_PER_VERH, &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_EN;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_ZAP_EN, &GPIO_InitStructure); 
+
+	GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_ZAP_DIS, &GPIO_InitStructure);	
+
+	GPIO_InitStructure.GPIO_Pin   = PIN_AVARIYA;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
+	GPIO_Init(PORT_AVARIYA, &GPIO_InitStructure);
 
 
-		GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
-		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
-		GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
+	GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
+	GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
 	
 	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
@@ -1768,7 +1730,6 @@ SPI 2:
 		
 	test_ind_all(1);
 	
-	init_control();
 	
 	MCO(1);
 	delay_spi(100);
@@ -1840,9 +1801,8 @@ SPI 2:
 
 // nastroika gpio
 
-//	GPIO_InitTypeDef  GPIO_InitStructure;                 
-//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //port D
-	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
+//	GPIO_InitStructure.GPIO_Pin   = tx_pin_en|rx_pin_en;      //  vivod for control mod-rs485
+	GPIO_InitStructure.GPIO_Pin   = rx_pin_en;      //  vivod for control mod-rs485
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     // rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //speed
@@ -1861,21 +1821,21 @@ SPI 2:
 	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET);    //   GPIOD 3
 	GPIOD->ODR ^= rx_pin_en;
 
-							GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
+	GPIO_WriteBit(GPIOD, rx_pin_en, Bit_RESET); 
 			//				USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 
-NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
-NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
-NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
-NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
-NVIC_Init(&NVIC_InitStructure); //??????????????
+	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //?????
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //?????????
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//????????? ?????????
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //???????? ?????
+	NVIC_Init(&NVIC_InitStructure); //??????????????
 
 
-// pd5 rxd  in wleif 3 contakt
-// pd6 txd           4
-// pd3 enabl         10
-USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
-USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+	// pd5 rxd  in wleif 3 contakt
+	// pd6 txd           4
+	// pd3 enabl         10
+	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
+	USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ??? ?????
 
 
 	NVIC_EnableIRQ (USART2_IRQn); // ????????? ?????????? ?? USART1
@@ -1903,8 +1863,15 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
   /* SysTick end of count event each 10ms */
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-	
 
+	init_control();
+
+	NVIC_SetPriority(USART2_IRQn, 3);
+	NVIC_SetPriority(ADC_IRQn, 5);
+	NVIC_SetPriority(OTG_FS_IRQn, 7);
+
+	NVIC_SetPriority(SPI1_IRQn, 14);		
+	NVIC_SetPriority(TIM6_DAC_IRQn, 15);
 /*
 	start_ds();
 	write_bait_ds(0xD0);
@@ -1918,7 +1885,7 @@ USART_ITConfig(USART2, USART_IT_TC, ENABLE);  //???????? ?????? ?????????? ??? ?
     USBH_Process(&USB_OTG_Core, &USB_Host);
   }
   
-#endif
+//#endif
 	
 
   

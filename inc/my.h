@@ -15,7 +15,7 @@
 	#define TxBufferSize        ((u16)500)  // USART2 global Interrupt 
 
 #define PIN_Conrtol		GPIO_Pin_4
-#define PORT_Conrtol	GPIOB
+#define PORT_Conrtol	GPIOD
 	
 extern	u16 txsize, rxsize;
 	

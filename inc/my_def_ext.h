@@ -117,7 +117,7 @@ u8 error_ds=0;
 
 
 #define PIN_Conrtol		GPIO_Pin_4
-#define PORT_Conrtol	GPIOB
+#define PORT_Conrtol	GPIOD
 
 void init_control(void)
 {
@@ -126,13 +126,15 @@ void init_control(void)
 		GPIO_InitStructure.GPIO_Pin   = PIN_Conrtol;  							//  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT; //GPIO_Mode_IN; // GPIO_Mode_OUT;     				// 	rezim vivoda
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD; //GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
-		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;  
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;  //GPIO_PuPd_UP; // GPIO_PuPd_DOWN  GPIO_PuPd_NOPULL
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
-		GPIO_Init(PORT_Conrtol, &GPIO_InitStructure); 
-	
+		GPIO_Init(PORT_Conrtol, &GPIO_InitStructure); 	
 }
 
-
+/*
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;         // set output to open drain --> the line has to be only pulled low, not driven high
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP; 
+*/
 
 
 /*------------------------------------------------------------------
