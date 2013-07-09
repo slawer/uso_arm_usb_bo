@@ -52,7 +52,7 @@ u8 sost_pribl=0;
 
 u8 kol_average=0;
 
-u8 new_komand=0;
+u8 new_komand=0, new_group=0;
 
 u8 address=1;
 
@@ -593,8 +593,7 @@ void read_ds(void)
 				wr_ack_ds(1);				
 		}
 		wr_ack_ds(0);		
-		stop_ds();
-			
+		stop_ds();			
 }
 /*
 void write_dat_clock(void)

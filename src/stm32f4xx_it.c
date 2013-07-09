@@ -48,6 +48,7 @@ extern void read_ds();
 extern u8 read_bait_ds();
 
 
+u32 pred_tick=0;
 
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
@@ -395,6 +396,20 @@ void update_indicators()
 		extern st_conf conf;
 		extern u8 bufout[20];
 		// start indicators
+	
+				if (tick!=pred_tick)
+				{
+					if ((tick%2)==0)
+				//	if ((kol_average%2)==0)
+					//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
+							indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
+					else
+					//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
+							indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
+					pred_tick=tick;
+				}
+
+	
 				 if (tk_null==1)
 				 {
 					 indicate_err(1);   	// tek
@@ -403,7 +418,7 @@ void update_indicators()
 				 }
 				 else
 				 {		
-					 if ((avariya==1)&((tick%2)==0))
+					 if ((avariya==1)&(del%5>3))
 					 {
 							ind_blank_all(1); 
 							ind_blank_all(2); 
@@ -411,11 +426,12 @@ void update_indicators()
 						}
 						else
 						{
+							indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);	
 						 // dop usrednenie na vivod indicatorov???
-							indicate(2,(u16)(u16)(fz_average[0]),3);   																// tek
+							indicate(2,(u16)(u16)(fz_average[0]),3);   							// tek
 							
 							indicate(3,(u16)(max[0]),3);														// maximum
-							
+				/*			
 							if (conf.tek_gr_kal==0)
 									if (sost_pribl==0)
 										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
@@ -425,15 +441,10 @@ void update_indicators()
 									if (sost_pribl==0)
 										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
 									else
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 		 
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
+		*/			
 					 }	
 				}
-				if ((tick%2)==0)
-				//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,1);				//	time	
-						indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
-				else
-				//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
-						indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
 
 			// end indicators
 						
@@ -445,6 +456,7 @@ void TIM6_DAC_IRQHandler(){
 
 					
 	    update_indicators();
+
 			
       TIM_ClearITPendingBit(TIM6, TIM_IT_Update);
 			TIM_Cmd(TIM6, DISABLE);  // stop timer
@@ -517,6 +529,7 @@ void SysTick_Handler(void)
 		if (kol_gr1_vkl>=conf.tm_antidreb)
 		{
 				conf.tek_gr_kal=0;
+				new_group=1;
 		 // gr 1
 				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
 				PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
@@ -528,6 +541,7 @@ void SysTick_Handler(void)
 		if (kol_gr2_vkl>=conf.tm_antidreb>>1)
 		{
 				conf.tek_gr_kal=1;
+				new_group=1;
 				 // gr 2
 				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
 				PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
@@ -728,7 +742,7 @@ void SysTick_Handler(void)
 
 
 			//		bufout[0]=zbuf[0];    // sec
-					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);
+					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);		// sec
 					bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
 					bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
 					
@@ -736,7 +750,7 @@ void SysTick_Handler(void)
 					bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
 					bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
 					
-					bufout[7]=zbuf[7]&0x01;    // sec
+	//				bufout[7]=zbuf[7]&0x01;    													// tek_gr
 					
 					
 				}
@@ -755,9 +769,32 @@ void SysTick_Handler(void)
 
 //		TIM_Cmd(TIM6, ENABLE);  // start timer for indicators
 	 update_indicators();
+//	 indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);	
+
 	
  // конец раз в 100 мс
 	}	
+	
+	if (new_group)
+	{
+
+			b_err_cl=0;
+			error_ds=0;
+
+	
+			//		write_dat_clock();
+			start_ds();
+			write_bait_ds(0xD0);
+			write_bait_ds(0x08);
+			
+			write_bait_ds(conf.tek_gr_kal&0x01);
+			
+			stop_ds();
+			
+			if ((error_ds==0)&(b_err_cl==0))
+					new_group=0;
+		
+	}
 	
 	if (new_komand)
 	{

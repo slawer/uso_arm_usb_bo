@@ -82,7 +82,7 @@ extern st_tab_kal tab_kal;
 
 extern u8 address;
 
-extern u8 new_komand;
+extern u8 new_komand, new_group;
 
 
 
