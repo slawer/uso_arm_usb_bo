@@ -50,6 +50,8 @@ extern u8 read_bait_ds();
 
 u32 pred_tick=0;
 
+u16 kol_cifr=0;
+
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
 u16 time_max=0;
@@ -395,6 +397,10 @@ void update_indicators()
 {
 		extern st_conf conf;
 		extern u8 bufout[20];
+//		u8 bufer[8]={0x40,0x60,0x70,0x78,0x7C,0x7E,0x7F,0xFF};
+	//	u8 bufer[8]={0x00,0xFF,0x00,0xFF,0x00,0xFF,0x00,0xFF};
+
+		u8 bufer[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
 		// start indicators
 	
 				if (tick!=pred_tick)
@@ -407,6 +413,19 @@ void update_indicators()
 					//		indicate_time(4,(u8)DT1.Hours,(u8) DT1.Minutes,0);				//	time	 
 							indicate_time(4,(u8) bufout[2],(u8) bufout[1],0);				//	time	 
 					pred_tick=tick;
+								
+			/*		
+				//				indicate(1,(u16)(u16)(kol_cifr*1111),4);
+								indicate_test	(1,(u16)(bufer[kol_cifr]),4);
+							
+								if ((tick%5==0))
+								{
+
+										kol_cifr++;
+									if  (kol_cifr>8)
+										kol_cifr=0;
+								}
+			*/
 				}
 
 	
@@ -426,12 +445,12 @@ void update_indicators()
 						}
 						else
 						{
-							indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);	
+								
 						 // dop usrednenie na vivod indicatorov???
 							indicate(2,(u16)(u16)(fz_average[0]),3);   							// tek
 							
 							indicate(3,(u16)(max[0]),3);														// maximum
-				/*			
+							
 							if (conf.tek_gr_kal==0)
 									if (sost_pribl==0)
 										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
@@ -442,7 +461,12 @@ void update_indicators()
 										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
 									else
 										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
-		*/			
+					
+						//	indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);
+						//		indicate_lin(1,(u16) kol_cifr*1111, (u16) 1000, (u16) conf.lin.kol_st);
+								
+
+							
 					 }	
 				}
 
@@ -597,6 +621,8 @@ void SysTick_Handler(void)
 	// находим среднее значение по скользящей средней
 //		fz_average[0]=moving_average(fz[0],0);
 			fz_average[0]++;
+			if (fz_average[0]>1050)
+				fz_average[0]=0;
 	 
 		// time max
 		if (time_max>=conf.time_max) {
@@ -764,13 +790,14 @@ void SysTick_Handler(void)
 		}
 */	
 	// конец раз секунду
+				
 			
 	 }	
 
 //		TIM_Cmd(TIM6, ENABLE);  // start timer for indicators
-	 update_indicators();
-//	 indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);	
 
+//	 indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);	
+ update_indicators();
 	
  // конец раз в 100 мс
 	}	
@@ -999,7 +1026,13 @@ void SysTick_Handler(void)
 			
 			stop_ds();
 				
-
+			bufout[0]=((RxBuffer[20]-0x30)*10)+(RxBuffer[21]-0x30);		// sec
+			bufout[1]=((RxBuffer[18]-0x30)*10)+(RxBuffer[19]-0x30);    // min
+			bufout[2]=((RxBuffer[16]-0x30)*10)+(RxBuffer[17]-0x30);    // hour
+			
+			bufout[4]=((RxBuffer[10]-0x30)*10)+(RxBuffer[11]-0x30);    // day
+			bufout[5]=((RxBuffer[12]-0x30)*10)+(RxBuffer[13]-0x30);    // month
+			bufout[6]=((RxBuffer[14]-0x30)*10)+(RxBuffer[15]-0x30);    // year
 
 /*
 if (1)

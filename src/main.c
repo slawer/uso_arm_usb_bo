@@ -805,13 +805,17 @@ void spi1_init() {
 	  #define mode  GPIO_Mode_OUT
 	  #define tupe	GPIO_OType_PP
 		#define pp		GPIO_PuPd_DOWN
-	
+/*	
+	#define mode	GPIO_Mode_OUT
+	#define type	GPIO_OType_OD
+	#define pull	GPIO_PuPd_NOPULL
+*/	
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);  // ???????????? ?????
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE);  // ???????????? SPI1 
    
     GPIO_StructInit(&gpio);
-	
+/*	
 	//		RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//port A
 		gpio.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;  //  vivod for CS 
 		gpio.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
@@ -819,11 +823,27 @@ void spi1_init() {
 		gpio.GPIO_PuPd =  GPIO_PuPd_DOWN; //GPIO_PuPd_DOWN;
 		gpio.GPIO_Speed = GPIO_Speed_100MHz; 	//GPIO_Speed_2MHz;     //speed
 		GPIO_Init(GPIOA, &gpio); 
-			
-	
+	*/
+
+
+		gpio.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3; 
+		gpio.GPIO_Mode  = GPIO_Mode_OUT;     			
+		gpio.GPIO_OType = GPIO_OType_PP; 
+		gpio.GPIO_PuPd =  GPIO_PuPd_UP; //GPIO_PuPd_DOWN; //GPIO_PuPd_NOPULL; 
+		gpio.GPIO_Speed = GPIO_Speed_100MHz; 	
+		GPIO_Init(GPIOA, &gpio); 
+/*
+		gpio.GPIO_Pin   = GPIO_Pin_0; 
+		gpio.GPIO_Mode  = mode;     			
+		gpio.GPIO_OType = GPIO_OType_OD; 
+		gpio.GPIO_PuPd =  GPIO_PuPd_NOPULL; //GPIO_PuPd_DOWN; //GPIO_PuPd_NOPULL; 
+		gpio.GPIO_Speed = GPIO_Speed_100MHz; 	
+		GPIO_Init(GPIOA, &gpio); 
+*/		
+		
     gpio.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
     gpio.GPIO_Mode = GPIO_Mode_AF;
-    gpio.GPIO_Speed = GPIO_Speed_2MHz;
+    gpio.GPIO_Speed = GPIO_Speed_100MHz;
     gpio.GPIO_OType = tupe;//GPIO_OType_PP;	 // GPIO_OType_OD
     gpio.GPIO_PuPd =  GPIO_PuPd_DOWN; //GPIO_PuPd_NOPULL; //GPIO_PuPd_DOWN; // 	GPIO_PuPd_DOWN;  // GPIO_PuPd_UP
     GPIO_Init(GPIOA,&gpio);
@@ -837,7 +857,8 @@ void spi1_init() {
     spi1.SPI_DataSize = SPI_DataSize_16b; //SPI_DataSize_8b; //SPI_DataSize_16b;		
     spi1.SPI_NSS = SPI_NSS_Soft;
 
-    spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
+  //  spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
+		spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
     spi1.SPI_FirstBit = SPI_FirstBit_MSB;  // SPI_FirstBit_LSB
 	
     SPI_Init(SPI1,&spi1);
@@ -984,6 +1005,7 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 }
 
 
+
 void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 {
 		 	uint16_t  pin=0;
@@ -1037,8 +1059,8 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 		fl_tmp+=0.5;
 		kol=(u8) (fl_tmp);
 
-		if (kol==pr_lin)
-			return;
+	//	if (kol==pr_lin)
+//			return;
 		
 		pr_lin=kol;
 
@@ -1168,6 +1190,93 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 }
 
 
+
+void indicate_test(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
+{
+		uint16_t  pin=0;
+		const u8 tabl[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
+		u8 viv=0;
+		
+
+		if (zn==pr_lin)
+			return;
+		
+		pr_lin=kol;
+
+	
+	  pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;
+
+		
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((1<<8)+(zn))); 				delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+		
+		
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((2<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+	
+		
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((3<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+
+			
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((4<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+		
+}
+
+
+
+/*
+void indicate_test(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
+{
+		uint16_t  pin=0;
+		const u8 tabl[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
+		u8 viv=0;
+		
+
+		if (zn==pr_lin)
+			return;
+		
+		pr_lin=kol;
+
+	
+	  pin=pin_ind(numb_ind);
+		if (pin==0)
+				return ;
+
+		
+//		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((1<<8)+(zn))); 				delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);delay_spi(10000);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+		
+		
+//		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((2<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);delay_spi(10000);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+	
+		
+//		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((3<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);delay_spi(10000);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+
+			
+	//	GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
+		spi_send((u16) ((4<<8)+(zn))); 											delay_spi(zad_spi);
+		GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);  delay_spi(10000);
+		GPIO_WriteBit(GPIOA, pin, Bit_SET);			delay_spi(zad_spi2);
+		
+}
+*/
+
 void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 {
 			uint16_t  pin=0;
@@ -1181,7 +1290,7 @@ void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);  			delay_spi(zad_spi);		
 			spi_send((u16) 0x0C01); 										delay_spi(zad_spi);			
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
-
+/*
 		for (i=1;i<9;i++)
 		{
 			// blank all
@@ -1189,10 +1298,10 @@ void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
 			spi_send((u16) ((i<<8)+0)); 							 delay_spi(zad_spi);
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);      	 delay_spi(zad_spi2);
 		}
-		
+*/		
 			// scan limit
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);   			delay_spi(zad_spi);
-			spi_send((u16) ((0x0B<<8)+(kol_ind-1))); 											delay_spi(zad_spi);
+			spi_send((u16) ((0x0B<<8)+(kol_ind-1))); 			delay_spi(zad_spi);
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);      			delay_spi(zad_spi2);
 			
 			// registr intensivnost
@@ -1933,7 +2042,7 @@ int main(void)
   // Start ADC3 Software Conversion 
   ADC_SoftwareStartConv(ADC3);
 	
-	init_timer();
+//	init_timer();
 	
 	
   
@@ -2194,7 +2303,7 @@ SPI 2:
 	}
 		
 	test_ind_all(0);
-	init_ind(1, 8, 0);		// lineika
+	init_ind(1, 4, 0);		// lineika
 //  init_ind(2, 8, 0);   
 //	init_ind(3, 8, 0);
 	init_ind(2, 3, 0);   
@@ -2279,13 +2388,16 @@ SPI 2:
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 
 	init_control();
-
+/*
 	NVIC_SetPriority(USART2_IRQn, 3);
 	NVIC_SetPriority(ADC_IRQn, 5);
 	NVIC_SetPriority(OTG_FS_IRQn, 7);
 
-	NVIC_SetPriority(SPI1_IRQn, 14);		
-	NVIC_SetPriority(TIM6_DAC_IRQn, 15);
+	NVIC_SetPriority(SPI1_IRQn, 14);	
+*/	
+//	NVIC_SetPriority(TIM6_DAC_IRQn, 15);
+	
+	
 /*
 	start_ds();
 	write_bait_ds(0xD0);
