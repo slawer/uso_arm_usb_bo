@@ -857,13 +857,48 @@ void spi1_init() {
     spi1.SPI_DataSize = SPI_DataSize_16b; //SPI_DataSize_8b; //SPI_DataSize_16b;		
     spi1.SPI_NSS = SPI_NSS_Soft;
 
-  //  spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
-		spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
+    spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
+//		spi1.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
     spi1.SPI_FirstBit = SPI_FirstBit_MSB;  // SPI_FirstBit_LSB
 	
     SPI_Init(SPI1,&spi1);
     SPI_Cmd(SPI1,ENABLE);
 		SPI_NSSInternalSoftwareConfig(SPI1, SPI_NSSInternalSoft_Set);
+}
+
+
+
+void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
+{
+			uint16_t  pin=0;
+			u8 i=0;
+
+			pin=pin_ind(numb_ind);
+			if (pin==0)
+				return;
+			
+			// shutdown off
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);  			delay_spi(zad_spi);		
+			spi_send((u16) 0x0C01); 										delay_spi(zad_spi);			
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
+/*
+		for (i=1;i<9;i++)
+		{
+			// blank all
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);		
+			spi_send((u16) ((i<<8)+0)); 							 delay_spi(zad_spi);
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      	 delay_spi(zad_spi2);
+		}
+*/		
+			// scan limit
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);   			delay_spi(zad_spi);
+			spi_send((u16) ((0x0B<<8)+(kol_ind-1))); 			delay_spi(zad_spi);
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);      			delay_spi(zad_spi2);
+			
+			// registr intensivnost
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);	
+			spi_send((u16) 0x0A0F); 											delay_spi(zad_spi);		
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
 }
 
 void indicate_err(u8 numb_ind)
@@ -914,7 +949,9 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 			pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
-		
+	
+			init_ind(numb_ind, 3, 0);   
+	
 	//		switch (conf.indicators[numb_ind-1].kol_cifr)
 			switch (kol_cifr)
 			{
@@ -1015,6 +1052,8 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 		if (pin==0)
 				return ;
 
+		
+  init_ind(4, 4, 0);   // time
 
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
 	//		spi_send(1);															delay_spi(zad_spi);
@@ -1068,6 +1107,9 @@ void indicate_lin(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 	  pin=pin_ind(numb_ind);
 		if (pin==0)
 				return ;
+
+	init_ind(1, 4, 0);		// lineika
+
 		
 		if ((kol>max_kol_st)|(zn>=maks))
 		{
@@ -1277,38 +1319,6 @@ void indicate_test(u8 numb_ind,u16 zn, u16 maks, u16 max_kol_st)
 }
 */
 
-void init_ind(u8 numb_ind, u8 kol_ind, u8 type_ind)
-{
-			uint16_t  pin=0;
-			u8 i=0;
-
-			pin=pin_ind(numb_ind);
-			if (pin==0)
-				return;
-			
-			// shutdown off
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);  			delay_spi(zad_spi);		
-			spi_send((u16) 0x0C01); 										delay_spi(zad_spi);			
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);      		delay_spi(zad_spi2);
-/*
-		for (i=1;i<9;i++)
-		{
-			// blank all
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);		
-			spi_send((u16) ((i<<8)+0)); 							 delay_spi(zad_spi);
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);      	 delay_spi(zad_spi2);
-		}
-*/		
-			// scan limit
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);   			delay_spi(zad_spi);
-			spi_send((u16) ((0x0B<<8)+(kol_ind-1))); 			delay_spi(zad_spi);
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);      			delay_spi(zad_spi2);
-			
-			// registr intensivnost
-			GPIO_WriteBit(GPIOA, pin, Bit_RESET);      delay_spi(zad_spi);	
-			spi_send((u16) 0x0A0F); 											delay_spi(zad_spi);		
-			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
-}
 
 
 /*
