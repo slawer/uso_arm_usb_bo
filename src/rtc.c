@@ -447,43 +447,12 @@ return (*(__IO uint32_t*) address);
 		}
 		
 		if (conf.tm_rele_on==0)
-			conf.tm_rele_on=5;
+			conf.tm_rele_on=10;
 		
 		if (conf.tm_rele_off==0)
-			conf.tm_rele_off=10;
+			conf.tm_rele_off=50;
 		
 
-
-//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
-	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//  may be PP - ???
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
-
-
-	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
-	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
-	
-	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
-	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
-	
-
-      
-		sost_flesh=0;	
-		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
-		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
-		
-		avariya=0;
-		PORT_AVARIYA->BSRRH = PIN_AVARIYA;   
-	
-		PORT_RELE->BSRRH = PIN_RELE;	// on PIN_RELE	
 	
 	/*
 		conf.por_rele

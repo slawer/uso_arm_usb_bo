@@ -48,7 +48,7 @@ extern void read_ds();
 extern u8 read_bait_ds();
 
 
-u32 pred_tick=0;
+u32 pred_tick=0, tek_max_min=0;
 
 u16 kol_cifr=0;
 
@@ -368,7 +368,7 @@ u8 test_rele(u16 fz, u8 numb)
 {
 	extern st_conf conf;
 	
-	if (fz*10>conf.por_rele)
+	if (fz>conf.por_rele)
 			kol_rele_on++;			
 	else
 			kol_rele_off++;
@@ -451,16 +451,16 @@ void update_indicators()
 							
 							indicate(3,(u16)(max[0]),3);														// maximum
 							
-							if (conf.tek_gr_kal==0)
-									if (sost_pribl==0)
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika 
-									else
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);			// lineika 
+							if (conf.tek_gr_kal==conf.revers_group_select)
+									if (sost_pribl==0)  {
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);		}	// lineika 
+									else {
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);		}	// lineika 
 							else
-									if (sost_pribl==0)
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);			// lineika 
-									else
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);			// lineika 
+									if (sost_pribl==0) {
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);		}	// lineika 
+									else {
+										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);		}	// lineika 
 					
 						//	indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);
 						//		indicate_lin(1,(u16) kol_cifr*1111, (u16) 1000, (u16) conf.lin.kol_st);
@@ -505,15 +505,27 @@ void SysTick_Handler(void)
 	PORT_Conrtol->BSRRL = PIN_Conrtol;
 	
  //  проверка состояния датчика приближений - 
-	
-	if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
-	{
-		kol_pribl_vikl++;
-	}
+	if (conf.revers_peredacha_select==0)
+		if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
+		{
+			kol_pribl_vikl++;
+		}
+		else
+		{
+			kol_pribl_vkl++;
+		}
 	else
 	{
-		kol_pribl_vkl++;
+		if ((PORT_PRIBL->IDR & PIN_PRIBL)!=0)
+			{
+				kol_pribl_vikl++;
+			}
+			else
+			{
+				kol_pribl_vkl++;
+			}
 	}
+	
 //	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
@@ -556,7 +568,7 @@ void SysTick_Handler(void)
 				new_group=1;
 		 // gr 1
 				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
-				PORT_L2->BSRRH = PIN_L2;	// off PIN_L2
+				PORT_L2->BSRRH = PIN_L2;	  // off PIN_L2
 
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
@@ -568,7 +580,7 @@ void SysTick_Handler(void)
 				new_group=1;
 				 // gr 2
 				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
-				PORT_L2->BSRRL = PIN_L2;	// on PIN_L2
+				PORT_L2->BSRRL = PIN_L2;	  // on PIN_L2
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
 		}				
@@ -586,7 +598,8 @@ void SysTick_Handler(void)
 	*/
 	
 			// проверяем реле на срабатывание
-	test_rele(fz[0], 0);	
+//	test_rele(fz[0], 0);	
+	test_rele(ADC3ConvertedValue, 0);	
 	
 	
 	// раз в 10 мс
@@ -606,7 +619,7 @@ void SysTick_Handler(void)
 		// раз в 100 мс
 		// вычисляем физическую величину
 		
-		if (conf.tek_gr_kal==0)
+		if (conf.tek_gr_kal==conf.revers_group_select)
 				if (sost_pribl==0)
 					fz[0]=fiz_vel(average[0],&conf.gr_kal1.tabl1);
 				else
@@ -629,7 +642,7 @@ void SysTick_Handler(void)
 		if (time_max>=conf.time_max) {
 				max[0]=0;
 				time_max=0;  }
-		time_max++;
+		
 		// detect max
 		if (fz_average[0]>max[0])
 			max[0]=fz_average[0];
@@ -655,6 +668,10 @@ void SysTick_Handler(void)
 	if (del==10)
 	{		
 		// раз в секунду
+		tek_max_min++;
+		if (tek_max_min==60) {
+			time_max++;
+			tek_max_min=0;     }
 	
 		del=0;
 		tick++;

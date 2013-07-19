@@ -950,7 +950,14 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 		if (pin==0)
 				return ;
 	
-			init_ind(numb_ind, 3, 0);   
+		if (numb_ind==2) {
+			init_ind(numb_ind, 5, 0);
+		
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);	
+			spi_send((u16) ((5<<8)+0xFF)); 							delay_spi(zad_spi);			
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);    			delay_spi(zad_spi2);  
+		} else
+			init_ind(numb_ind, 3, 0);
 	
 	//		switch (conf.indicators[numb_ind-1].kol_cifr)
 			switch (kol_cifr)
@@ -990,18 +997,16 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 			if (chislo>=maximum)   // reflow
 			{			
 				GPIO_WriteBit(GPIOA, pin, Bit_RESET); 	delay_spi(zad_spi);
-		//		spi_send(1);														delay_spi(zad_spi);
 				spi_send((u16) (1<<8)+0x4F);						delay_spi(zad_spi);		
 				GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);	
 				
-		//		for (i=2;i<conf.indicators[numb_ind-1].kol_cifr+1;i++)  {
 				for (i=2;i<kol_cifr+1;i++)  
 				{
 					GPIO_WriteBit(GPIOA, pin, Bit_RESET);  	delay_spi(zad_spi);
-			//		spi_send((u8) i);												delay_spi(zad_spi);
 					spi_send((u16) (i<<8)+0); 							delay_spi(zad_spi);		
 					GPIO_WriteBit(GPIOA, pin, Bit_SET);     delay_spi(zad_spi2);	
-				}					
+				}			
+			
 				return ;
 			}	
 
@@ -1027,18 +1032,15 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 						else
 							null=0;
 						
-	//					if (i==conf.indicators[numb_ind-1].kol_cifr)
 						if (i==kol_cifr)
 							simb&=0x7F;
 	
-						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);
-				//		spi_send((u8) i);													delay_spi(zad_spi);
+						GPIO_WriteBit(GPIOA, pin, Bit_RESET);     	delay_spi(zad_spi);												
 						spi_send((u16) (i<<8)+simb); 								delay_spi(zad_spi);			
-				//		spi_send(symb_code[i]); delay_spi(zad_spi);	
-								//  indicators
-								//   12.3
 						GPIO_WriteBit(GPIOA, pin, Bit_SET);    			delay_spi(zad_spi2);				
 			}
+			
+
 }
 
 
@@ -2031,6 +2033,27 @@ int main(void)
     // ???????? RTC
     rtc_Reset();
     rtc_Init();
+		
+		//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
+	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//  may be PP - ???
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
+
+
+	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
+	
 			
 		init_dc();
 		
@@ -2151,7 +2174,10 @@ SPI 2:
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
-	GPIO_Init(PORT_L2, &GPIO_InitStructure); 
+	GPIO_Init(PORT_L2, &GPIO_InitStructure);
+
+
+
 		
 /*
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
@@ -2238,10 +2264,23 @@ SPI 2:
 	init_ind(conf.indicators[2].numb, conf.indicators[2].kol_cifr, conf.indicators[2].type_ind);
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 	*/
+
 		
 
 
 	test_ind_all(1);
+	
+	PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;    	// on  PORT_ZAP_EN
+	PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  	// on  PORT_ZAP_DIS
+	
+	PORT_AVARIYA->BSRRL = PIN_AVARIYA;   	// on PIN_AVARIYA
+			
+	PORT_PER_NIZ->BSRRL = PIN_PER_NIZ;  	// on  PIN_PER_NIZ
+	PORT_PER_VERH->BSRRL = PIN_PER_VERH;	// on PIN_PER_VERH
+	
+	PORT_L1->BSRRL = PIN_L1;  						// on  PIN_L1
+	PORT_L2->BSRRL = PIN_L2;	  					// on PIN_L2
+
 	
 	
 	MCO(1);
@@ -2257,7 +2296,7 @@ SPI 2:
 		delay_spi(100);
 	}
 	
-	delay_spi(100000);
+	delay_spi(10000);
 
 	b_err_cl=0;
 	error_ds=1;
@@ -2298,6 +2337,24 @@ SPI 2:
 			}
 		}
 	}
+      
+
+	
+	PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  		// off  PORT_ZAP_EN
+	PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  	// off  PORT_ZAP_DIS
+	
+	PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  AVARIYA
+
+	PORT_RELE->BSRRH = PIN_RELE;					// off PIN_RELE		
+		
+	PORT_PER_NIZ->BSRRH = PIN_PER_NIZ;  	// off  PIN_PER_NIZ
+	PORT_PER_VERH->BSRRH = PIN_PER_VERH;	// on PIN_PER_VERH
+	
+	PORT_L1->BSRRH = PIN_L1;  						// off  PIN_L1
+	PORT_L2->BSRRH = PIN_L2;	  					// off PIN_L2
+
+	sost_flesh=0;	
+	avariya=0;	
 	
 	if (conf.tek_gr_kal==0)
 	{
@@ -2311,12 +2368,17 @@ SPI 2:
 		PORT_L1->BSRRH = PIN_L1;  // off  PIN_L1
 	  PORT_L2->BSRRL = PIN_L2;	// on   PIN_L2
 	}
+	
+	average[0]=0;
+	summa[0]=0;
+	kol_average=0;
 		
 	test_ind_all(0);
 	init_ind(1, 4, 0);		// lineika
 //  init_ind(2, 8, 0);   
 //	init_ind(3, 8, 0);
-	init_ind(2, 3, 0);   
+//	init_ind(2, 3, 0);   
+	init_ind(2, 5, 0); 
 	init_ind(3, 3, 0);
   init_ind(4, 4, 0);   // time
 
