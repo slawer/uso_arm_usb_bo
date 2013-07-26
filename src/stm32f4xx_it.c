@@ -726,12 +726,13 @@ void SysTick_Handler(void)
 			Buf_zap[6]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;
 			Buf_zap[7]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
 			*/		
-			DT_zap.Hours=bufout[2];
-			DT_zap.Minutes=bufout[1];
-			DT_zap.Seconds=bufout[0];
 			
 			buffering=1;
 			por=0;
+			
+			DT_zap.Hours=bufout[2];
+			DT_zap.Minutes=bufout[1];
+			DT_zap.Seconds=bufout[0];
 		}
 			
 		 if (tick%2==0)
