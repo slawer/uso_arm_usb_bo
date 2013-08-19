@@ -21,7 +21,7 @@ u32 tick=0;
 #define vrem_tm 100
 //zap kor[numbkor];
 
-TDateTime DT_zap; 
+TDateTime DT_zap, DT_zap_pr; 
 bool number_buff=0;
 
 uint16_t Buf_adc_zap1 [1000];
@@ -113,7 +113,7 @@ u16 kol_gr2_vkl=0;
 u8 avariya=0;
 u8 sost_flesh=0;
 
-u8 error_ds=0;
+u8 error_ds=0, fl_need_correct_ds=0;
 
 
 #define PIN_Conrtol		GPIO_Pin_4
@@ -573,7 +573,7 @@ void read_dat_clock(void)
 
 */
 
-void read_ds(void)
+void read_ds(u8 kol)
 {		u8 i=0;
 			
 		start_ds();
@@ -586,10 +586,10 @@ void read_ds(void)
 		start_ds();
 		write_bait_ds(0xD1);		
 
-		for (i = 0; i < 10; i ++)
+		for (i = 0; i < kol; i ++)
 		{
 			zbuf[i]=read_bait_ds();	
-			if (i!=9)
+			if (i!=kol-1)
 				wr_ack_ds(1);				
 		}
 		wr_ack_ds(0);		

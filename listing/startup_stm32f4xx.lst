@@ -841,8 +841,8 @@ ARM Macro Assembler    Page 13
   425 0000001C                 END
               00000000 
               00000000 
-Command Line: --debug --cpu=Cortex-M4 --apcs=interwork --depend=.\MEDIA_USB_KEY
-\startup_stm32f4xx.d -o.\MEDIA_USB_KEY\startup_stm32f4xx.o -Id:\Keil4\ARM\RV31\
+Command Line: --debug --cpu=Cortex-M4 --apcs=interwork --depend=.\media_usb_key
+\startup_stm32f4xx.d -o.\media_usb_key\startup_stm32f4xx.o -Id:\Keil4\ARM\RV31\
 
 
 
@@ -850,5 +850,5 @@ ARM Macro Assembler    Page 14
 
 
 INC -Id:\Keil4\ARM\CMSIS\Include -Id:\Keil4\ARM\Inc\ST\STM32F4xx --predefine="_
-_EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list=.\listing\startup_stm32f4x
-x.lst src\startup_stm32f4xx.s
+_MICROLIB SETA 1" --list=.\listing\startup_stm32f4xx.lst src\startup_stm32f4xx.
+s

@@ -207,6 +207,8 @@ void USBH_USR_DeviceDisconnected (void)
 		PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
 		PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 	
+	DT_zap.Hours=99;
+	
   /* Red Led on if the USB Key is removed */
   STM_EVAL_LEDOff(LED6);
 	STM_EVAL_LEDOff(LED5);
@@ -511,14 +513,18 @@ if (buffering)
 	*/
 
 
-	Buf_zap[0]=(uint8_t)(DT_zap.Hours/10)+(uint8_t)0x30;
-	Buf_zap[1]=(uint8_t)(DT_zap.Hours%10)+(uint8_t)0x30;
+	Buf_zap[0]=(uint8_t)(DT_zap_pr.Hours/10)+(uint8_t)0x30;
+	Buf_zap[1]=(uint8_t)(DT_zap_pr.Hours%10)+(uint8_t)0x30;
 	Buf_zap[2]=0x3A; // :
-	Buf_zap[3]=(uint8_t)(DT_zap.Minutes/10)+(uint8_t)0x30;
-	Buf_zap[4]=(uint8_t)(DT_zap.Minutes%10)+(uint8_t)0x30;
+	Buf_zap[3]=(uint8_t)(DT_zap_pr.Minutes/10)+(uint8_t)0x30;
+	Buf_zap[4]=(uint8_t)(DT_zap_pr.Minutes%10)+(uint8_t)0x30;
 	Buf_zap[5]=0x3A;
-	Buf_zap[6]=(uint8_t)(DT_zap.Seconds/10)+(uint8_t)0x30;
-	Buf_zap[7]=(uint8_t)(DT_zap.Seconds%10)+(uint8_t)0x30;
+	Buf_zap[6]=(uint8_t)(DT_zap_pr.Seconds/10)+(uint8_t)0x30;
+	Buf_zap[7]=(uint8_t)(DT_zap_pr.Seconds%10)+(uint8_t)0x30;
+	
+	DT_zap_pr.Hours=DT_zap.Hours;
+	DT_zap_pr.Minutes=DT_zap.Minutes;
+	DT_zap_pr.Seconds=DT_zap.Seconds;
 	
 /*
 	Buf_zap[0]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;

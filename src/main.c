@@ -21,6 +21,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+extern u16 time_max;
+extern u32 tek_max_min;
+
+u8  tmp_korr=0;
+u32 tmp_sec2=0, tmp_sec1=0;
+float tmp_float=0;
+
 u8 in=0, poz=0;
 		u32 tmp=0;
 		u8 kol=0;
@@ -1943,6 +1950,31 @@ void init_timer(){
     NVIC_EnableIRQ(TIM6_DAC_IRQn);
 }
 
+
+u32 date_to_day()
+{
+		extern u8 bufout[20];
+		u32 days=0;
+		
+		u8 i, mas[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+	
+		days=bufout[6] * 365;
+		if (bufout[6]%4==0)
+			days+=bufout[6]/4;
+		else
+			days+=bufout[6]/4+1;
+		
+		for (i=1; i<bufout[5]; i++)
+				days+=mas[i-1];
+		if ((bufout[5]>2) & (bufout[6]%4==0))
+				days+=1;
+		
+		days+=bufout[4];
+//		sec=days*86400+bufout[0]+bufout[1]*60+bufout[2]*3600;		
+	 
+	 return days;
+}
+
 /**
   * @brief  Main program.
   * @param  None
@@ -1995,21 +2027,21 @@ int main(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	delay_spi(10000);
 	/*
-	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//	port A
-	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 	//	port B
-	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C		
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 			//	port A
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 			//	port B
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 			//	port C		
 	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
-  RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 			//	port E
+  RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 			//	port E
 */
   
 
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 	//	port A
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 	//	port B
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 	//	port C		
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); 			//	port A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); 			//	port B
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); 			//	port C		
 //	RCC_AHB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
- // RCC_AHB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 	//	port E
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 			//	port E
+ // RCC_AHB2PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE); 		//	port E
 	
   /* Output clock on MCO2 pin(PC9) ****************************************/ 
   /* Enable the GPIOC peripheral */ 
@@ -2035,23 +2067,23 @@ int main(void)
     rtc_Init();
 		
 		//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
-	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      		//  vivod RELE
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//  may be PP - ???
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      						//  vivod RELE
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    				// rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//  may be PP - ???
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		  //  vvod  knopka 1
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		 				 	//  vvod  knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    					// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//	speed
 	GPIO_Init(PORT_K1, &GPIO_InitStructure); 
 	
-	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  //  vvod  knopka 2
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    // 	rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //	speed
+	GPIO_InitStructure.GPIO_Pin   = PIN_K2;      		  				//  vvod  knopka 2
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    					// 	rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//	speed
 	GPIO_Init(PORT_K2, &GPIO_InitStructure); 
 	
 			
@@ -2070,10 +2102,7 @@ int main(void)
   RepeatState = 0;
   LED_Toggle = 7;
   
-	// PC pin2
-  ADC3_CH12_DMA_Config();
-  // Start ADC3 Software Conversion 
-  ADC_SoftwareStartConv(ADC3);
+
 	
 //	init_timer();
 	
@@ -2112,28 +2141,28 @@ SPI 2:
 		/*
 	//	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;  //  vivod for RELE and svet AVARIYA 
 
-		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;  //  vivod for RELE and svet AVARIYA 
+		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;             //  vivod for RELE and svet AVARIYA 
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     			// rezim vivoda
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD;          //  PP GPIO_OType_PP
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;          //GPIO_OType_OD;          //  PP GPIO_OType_PP
 		// gpio.GPIO_PuPd = GPIO_PuPd_DOWN;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     //speed
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;        //speed
 		GPIO_Init(GPIOA, &GPIO_InitStructure); 
 */
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;  							  //  vivod for RELE and svet AVARIYA 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 	
 	
-	GPIO_InitStructure.GPIO_Pin   = PIN_PER_NIZ;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Pin   = PIN_PER_NIZ;  						//  vivod for RELE and svet AVARIYA 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 	GPIO_Init(PORT_PER_NIZ, &GPIO_InitStructure); 		
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Pin   = PIN_PER_VERH;  						//  vivod for RELE and svet AVARIYA 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
@@ -2145,35 +2174,35 @@ SPI 2:
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 	GPIO_Init(PORT_ZAP_EN, &GPIO_InitStructure); 
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Pin   = PIN_ZAP_DIS;  						//  vivod for RELE and svet AVARIYA 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 	GPIO_Init(PORT_ZAP_DIS, &GPIO_InitStructure);	
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_AVARIYA;  							//  vivod for RELE and svet AVARIYA 
+	GPIO_InitStructure.GPIO_Pin   = PIN_AVARIYA;  						//  vivod for RELE and svet AVARIYA 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;     				// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 						//	GPIO_OType_OD;          //  PP GPIO_OType_PP
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;     			//	speed
 	GPIO_Init(PORT_AVARIYA, &GPIO_InitStructure);
 
 
-	GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						// 	vvod for datchika pribl
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					//	rezim vvoda
+	GPIO_InitStructure.GPIO_Pin   = PIN_PRIBL;  						  // 	vvod for datchika pribl
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					  //	rezim vvoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	//	speed
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	  //	speed
 	GPIO_Init(PORT_PRIBL, &GPIO_InitStructure); 	
 	
-	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		//  vivod svetodiod knopka 1
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_InitStructure.GPIO_Pin   = PIN_L1;      		          //  vivod svetodiod knopka 1
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;            // rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		        //
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;         //speed
 	GPIO_Init(PORT_L1, &GPIO_InitStructure); 
 	
-	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  //  vivod svetodiod knopka 2
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    // rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		//
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; //speed
+	GPIO_InitStructure.GPIO_Pin   = PIN_L2;      		  				//  vivod svetodiod knopka 2
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    				// rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;						//
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_L2, &GPIO_InitStructure);
 
 
@@ -2265,9 +2294,9 @@ SPI 2:
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 	*/
 
-		
-
-
+	// PC pin2
+  ADC3_CH12_DMA_Config();
+	
 	test_ind_all(1);
 	
 	PORT_ZAP_EN->BSRRL = PIN_ZAP_EN;    	// on  PORT_ZAP_EN
@@ -2300,6 +2329,7 @@ SPI 2:
 
 	b_err_cl=0;
 	error_ds=1;
+	fl_need_correct_ds=0;
 	
 	for (i = 0; i < 1000; i ++)
 	{ // u8 j=0;
@@ -2311,14 +2341,43 @@ SPI 2:
 			b_err_cl=0;
 			error_ds=0;
 
-			read_ds();
+			read_ds(14);
 			
 			if ((error_ds==0)&(b_err_cl==0))
-			{
-				/*
-				for (j = 0; j < 10; j ++)
-					bufout[j]=zbuf[j];
-				*/
+			{				
+					// old time
+					bufout[9]=zbuf[9];     // hour
+					bufout[10]=zbuf[10];    // day
+					bufout[11]=zbuf[11];   // month
+					bufout[12]=zbuf[12];   // year
+
+					bufout[0]=0;		// sec
+					bufout[1]=0;    // min
+					bufout[2]=0;    // hour
+				
+					bufout[4]=bufout[10];    // day
+					bufout[5]=bufout[11];    // month
+					bufout[6]=bufout[12];    // year			
+	/*
+				// temp test 
+					bufout[0]=0;		// sec
+					bufout[1]=58;    // min
+					bufout[2]=23;    // hour
+							
+					bufout[4]=9;    // day
+					bufout[5]=10;    // month
+					bufout[6]=10;    // year	
+					
+			
+					bufout[9]=bufout[2];    // hour
+					bufout[10]=bufout[4];   // day
+					bufout[11]=bufout[5];   // month
+					bufout[12]=bufout[6];   // year
+	*/			
+			//		tmp_sec1=date_to_sec(bufout[11],bufout[10],bufout[9],0,0,0);
+					tmp_sec1=date_to_day();
+									
+				
 					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);		// sec
 					bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
 					bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
@@ -2326,9 +2385,111 @@ SPI 2:
 					bufout[4]=((zbuf[4]&0x30)>>4)*10+(zbuf[4]&0x0F);    // day
 					bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
 					bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
+
+/*
+// temp test 
+					conf.rez16=32768+600;
+					bufout[0]=00;		// sec
+					bufout[1]=1;    // min
+					bufout[2]=00;    // hour
 					
-			//		bufout[7]=zbuf[7]&0x01;    													// tek_gr
-				  conf.tek_gr_kal=zbuf[8]&0x01;
+					bufout[4]=10;    // day
+					bufout[5]=10;    // month
+					bufout[6]=10;    // year
+		*/			
+					
+				  conf.tek_gr_kal=zbuf[8]&0x01;			// tek_gr
+
+      // корректировать часы
+			//		if ((bufout[8]!=bufout[4])&(bufout[9]!=bufout[5])&(bufout[10]!=bufout[6])) 
+					if ((bufout[10]!=bufout[4])|(bufout[11]!=bufout[5])|(bufout[12]!=bufout[6])) 
+					{
+							tmp_sec2=date_to_sec(bufout[6],bufout[5],bufout[4],0,0,0);
+														
+						  tmp_float=(float)(date_to_day()-tmp_sec1);
+							tmp_korr=(int) (tmp_float);
+					   	tmp_float=0;
+						
+							if (bufout[9]!=24)
+							{
+								
+								if (conf.rez16>32760)
+								{
+									if (bufout[2]>bufout[9])
+								//		sec_to_date(tmp_sec2-(conf.rez16-32768)*tmp_korr-(conf.rez16-32768)*(bufout[2]-bufout[8])/24-1);
+										tmp_float=tmp_float-(conf.rez16-32768)*tmp_korr-(conf.rez16-32768)*(bufout[2]-bufout[9])/24+0.5;
+									else
+								//		sec_to_date(tmp_sec2-(conf.rez16-32768)*tmp_korr+(conf.rez16-32768)*(bufout[8]-bufout[2])/24-1);
+									tmp_float=tmp_float-(conf.rez16-32768)*tmp_korr+(conf.rez16-32768)*(bufout[9]-bufout[2])/24+0.5;
+								}
+								else
+								{
+									if (bufout[2]>bufout[9])
+								//		sec_to_date(tmp_sec2+conf.rez16*tmp_korr+(conf.rez16)*(bufout[2]-bufout[8])/24-1); 
+									tmp_float=tmp_float+conf.rez16*tmp_korr+(conf.rez16)*(bufout[2]-bufout[9])/24;
+									else
+									//	sec_to_date(tmp_sec2+conf.rez16*tmp_korr-(conf.rez16)*(bufout[8]-bufout[2])/24-1); 
+									tmp_float=tmp_float+conf.rez16*tmp_korr-(conf.rez16)*(bufout[9]-bufout[2])/24;
+								}
+						
+								/*
+							if (conf.rez16>32760)
+								{
+									if (bufout[2]>bufout[8])
+								//		sec_to_date(tmp_sec2-(conf.rez16-32768)*tmp_korr-(conf.rez16-32768)*(bufout[2]-bufout[8])/24-1);
+										tmp_float=tmp_float-(conf.rez16-32768)*tmp_korr-(conf.rez16-32768)*(bufout[2]-bufout[9])/24+0.5;
+									else
+								//		sec_to_date(tmp_sec2-(conf.rez16-32768)*tmp_korr+(conf.rez16-32768)*(bufout[8]-bufout[2])/24-1);
+									tmp_float=tmp_float-(conf.rez16-32768)*tmp_korr+(conf.rez16-32768)*(bufout[9]-bufout[2])/24+0.5;
+								}
+								else
+								{
+									if (bufout[2]>bufout[8])								
+										tmp_float=tmp_float+conf.rez16*tmp_korr;
+									else								
+										tmp_float=tmp_float+conf.rez16*tmp_korr;
+								}
+								*/
+							}
+							else
+								tmp_float=0;
+							
+							if ((tmp_float>=1)|(tmp_float<=-1))
+							{
+								sec_to_date(tmp_sec2+(int) tmp_float-1); 
+								
+								start_ds();
+								write_bait_ds(0xD0);
+								write_bait_ds(0x00);
+
+								write_bait_ds((((bufout[0]/10)<<4)+(bufout[0]%10))&0x7F);
+								write_bait_ds(((bufout[1]/10)<<4)+(bufout[1]%10));
+								write_bait_ds(((bufout[2]/10)<<4)+(bufout[2]%10));			
+								write_bait_ds(1);
+								write_bait_ds(((bufout[4]/10)<<4)+(bufout[4]%10));		
+								write_bait_ds(((bufout[5]/10)<<4)+(bufout[5]%10));
+								write_bait_ds(((bufout[6]/10)<<4)+(bufout[6]%10));
+								
+
+								write_bait_ds(0);  // байт управление
+								
+								write_bait_ds(conf.tek_gr_kal&0x01);  // группа калибровок
+								
+								//  врем€ корректировки часов
+
+								write_bait_ds(bufout[2]);	  // hour	
+								write_bait_ds(bufout[4]);		// день								
+								write_bait_ds(bufout[5]);   // мес€ц
+								write_bait_ds(bufout[6]);		// год 																
+								stop_ds();  
+							}					
+					}
+				
+					
+					if ((error_ds==0)&(b_err_cl==0))
+						error_ds=0;
+					else
+						error_ds=1;
 			}
 			else
 			{
@@ -2338,7 +2499,13 @@ SPI 2:
 		}
 	}
       
-
+	DT_zap.Hours=99; //bufout[2];
+	DT_zap.Minutes=bufout[1];
+	DT_zap.Seconds=bufout[0];
+	
+	DT_zap_pr.Hours=DT_zap.Hours;
+	DT_zap_pr.Minutes=DT_zap.Minutes;
+	DT_zap_pr.Seconds=DT_zap.Seconds;
 	
 	PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  		// off  PORT_ZAP_EN
 	PORT_ZAP_DIS->BSRRH = PIN_ZAP_DIS;  	// off  PORT_ZAP_DIS
@@ -2369,9 +2536,31 @@ SPI 2:
 	  PORT_L2->BSRRL = PIN_L2;	// on   PIN_L2
 	}
 	
+	
 	average[0]=0;
 	summa[0]=0;
 	kol_average=0;
+
+	fz[0]=0;
+	fz_average[0]=0;
+	max[0]=0;
+	ADC3ConvertedValue=0;
+	time_max=0;
+	tek_max_min=0;
+	del=0;
+	kol_usr=0;
+	tek_kol=0;
+	buf_sum=0;
+
+
+  // Start ADC3 Software Conversion 
+  ADC_SoftwareStartConv(ADC3);
+	
+  /* SysTick end of count event each 10ms */
+  RCC_GetClocksFreq(&RCC_Clocks);
+  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+
+
 		
 	test_ind_all(0);
 	init_ind(1, 4, 0);		// lineika
@@ -2455,10 +2644,7 @@ SPI 2:
 	STM_EVAL_LEDOff(LED5);
 	STM_EVAL_LEDOff(LED6);
 	
-  /* SysTick end of count event each 10ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-
+	
 	init_control();
 /*
 	NVIC_SetPriority(USART2_IRQn, 3);

@@ -44,9 +44,14 @@ extern void write_bait_ds();
 extern void stop_ds();
 extern void sleep();
 extern void wr_ack_ds();
-extern void read_ds();
+extern void read_ds(u8 kol);
 extern u8 read_bait_ds();
 
+
+u32 tmp_sec=0;
+u32 sec=0,  days=0;
+u8 kon_sut=0;
+u16 kol_time_korr=0;
 
 u32 pred_tick=0, tek_max_min=0;
 
@@ -447,7 +452,7 @@ void update_indicators()
 						{
 								
 						 // dop usrednenie na vivod indicatorov???
-							indicate(2,(u16)(u16)(fz_average[0]),3);   							// tek
+							indicate(2,(u16)(fz_average[0]),3);   							// tek
 							
 							indicate(3,(u16)(max[0]),3);														// maximum
 							
@@ -488,6 +493,165 @@ void TIM6_DAC_IRQHandler(){
 }
 
 
+u32 date_to_sec(u8 yy, u8 mm, u8 dd, u8 hh, u8 mn, u8 ss)
+{
+		extern u8 bufout[20];
+		
+		u8 i, mas[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+	
+//	sec=ss+mn*60+hh*3600+dd*86400;
+	
+//	31536000 - в обычном
+//	31104000 - в високосном
+	
+
+ /*
+		days=yy * 365;
+		if (yy%4==0)
+			days+=yy/4;
+		else
+			days+=yy/4+1;
+		
+		for (i=1; i<mn; i++)
+				days+=mas[i-1];
+		if ((mn>2) & (yy%4==0))
+				days+=1;
+		
+		days+=dd;
+		sec=days*86400+ss+mm*60+hh*3600;
+*/	
+		days=bufout[6] * 365;
+		if (bufout[6]%4==0)
+			days+=bufout[6]/4;
+		else
+			days+=bufout[6]/4+1;
+		
+		for (i=1; i<bufout[5]; i++)
+				days+=mas[i-1];
+		if ((bufout[5]>2) & (bufout[6]%4==0))
+				days+=1;
+		
+		days+=bufout[4];
+		sec=days*86400+bufout[0]+bufout[1]*60+bufout[2]*3600;		
+/*
+	 den = yy * 365 + god_l2;
+	 switch(mm)
+		{
+			case 1 : den +=31; break;
+			case 2 : den +=69; break;
+			case 3 : den +=90; break;
+			case 4 : den +=120; break;
+			case 5 : den +=151; break;
+			case 6 : den +=181; break;
+			case 7 : den +=212; break;
+			case 8 : den +=243; break;
+			case 9 : den +=273; break;
+			case 10 : den +=304; break;
+			case 11 : den +=334; break;
+			case 12 : den +=365; break;
+		 };
+	 if ((yy % 4)&(mm>2)) den++;
+	 den+=dd;
+	 sec = den * 86400;
+	 sec += hh * 3600;
+	 sec += mn * 60;
+	 sec += ss;
+	 */
+	 
+	 return sec;
+}
+
+
+void sec_to_date(u32 sec)
+{
+	u8  i=0, km=0;
+	int k=0;
+	extern u8  bufout[20];
+	u8 mas[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+	
+ 	bufout[0]=sec%60;	// sec
+	sec=sec/60;
+	bufout[1]=sec%60;   // min
+	sec=sec/60;
+	bufout[2]=sec%24;    // hour
+	sec=sec/24;
+
+	i=0;
+	while (1)
+	{
+			if (i%4==0)
+					k=366;
+			else
+					k=365;
+			if (sec>k)
+			{
+					sec-=k;
+					i+=1;
+			}
+			else
+					break;
+		}
+     
+		bufout[6]=i;		// year
+
+		km=1;
+		while (1)
+		{
+				i=mas[km-1];
+				if ((km==2)&(bufout[6]%4==0))
+						i+=1;
+				if (sec>i)
+				{
+						sec-=i;
+						km+=1;
+				}
+				else
+						break;
+		}
+		bufout[5]=km;
+		bufout[4]=sec;
+                        
+                      
+/*												
+	bufout[0]=sec%60;	// sec
+	sec=sec/60;
+	bufout[1]=sec%60;   // min
+	sec=sec/60;
+	bufout[2]=sec%24;    // hour
+	sec=sec/24;
+
+	
+	i=0;
+	while (1)  
+	{
+		if 	(i%4==0)
+			k=366;				
+		else 
+			k=365;
+		
+		if (sec>k)
+		{
+			sec-=k;
+			i+=1;
+		}
+		else
+			break;
+	}
+	bufout[6]=i;
+	
+	i=0;
+	if (bufout[6]%4==0)
+			mas[1]=29;
+	while (sec>mas[i])  {
+		sec-=mas[i];
+		i++;							}
+			 
+	bufout[4]=sec;   // day
+	bufout[5]=i;   // month
+		*/
+	
+}
+
 /**
   * @brief  This function handles SysTick Handler.  10ms
   * @param  None
@@ -499,7 +663,7 @@ void SysTick_Handler(void)
 	extern u32 tick;
 	extern st_conf conf;
 
-	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds;
+	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds, fl_need_correct_ds;
 	
 	
 	PORT_Conrtol->BSRRL = PIN_Conrtol;
@@ -694,6 +858,7 @@ void SysTick_Handler(void)
 						{
 							bufout[2]=0;
 							bufout[4]++;					// date
+
 							if (bufout[4]==32)
 							{
 								bufout[4]=1;
@@ -707,6 +872,8 @@ void SysTick_Handler(void)
 						}
 				}
 		}
+		
+
 		
 //		rtc_Get(&DT1);	
 		
@@ -726,91 +893,197 @@ void SysTick_Handler(void)
 			Buf_zap[6]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;
 			Buf_zap[7]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
 			*/		
-			
-			buffering=1;
+			if (DT_zap.Hours!=99)
+				buffering=1;
 			por=0;
-			
+									
 			DT_zap.Hours=bufout[2];
 			DT_zap.Minutes=bufout[1];
-			DT_zap.Seconds=bufout[0];
+			DT_zap.Seconds=bufout[0];			
 		}
-			
-		 if (tick%2==0)
-			 STM_EVAL_LEDOn(LED3);		 		
-		 else
-			 STM_EVAL_LEDOff(LED3);	 	
-
-		if ((bufout[0]%50)==0)
-				error_ds=1;
 		
-		if (error_ds==1)
-			{
-				u16 i=0;
-				
-				b_err_cl=0;
-				error_ds=0;
+		 if (tick%2!=0)
+			 STM_EVAL_LEDOn(LED3);		 		
+		 else	
+		 {
+			u8 need_read_ds=0;
+			 STM_EVAL_LEDOff(LED3);	 
+			
+			 if ((bufout[0]==50)|(bufout[0]==51))
+			//		error_ds=1; 
+					need_read_ds=1;
+			 
+			 if ((error_ds==1)|(need_read_ds==1))
+			 {
+					u16 i=0;
+				 
+					need_read_ds=0;
+					b_err_cl=0;
+					error_ds=0;
 
-				read_ds();
-				
-				if ((error_ds==0)&(b_err_cl==0))
-				{
-			/*		for (i = 0; i < 10; i ++)
-						bufout[i]=zbuf[i];
-			*/	
-/*
-			tmp=bufout[6];			// year
-			TxBuffer[5]=(uint8_t)((tmp>>4)+(uint8_t)0x30);	
-			TxBuffer[6]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
-			
-			tmp=(bufout[5]);   // month
-			TxBuffer[7]=(uint8_t)(((tmp&0x10)>>4)+(uint8_t)0x30);	
-			TxBuffer[8]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
-			
-			tmp=(bufout[4]);		// date
-			TxBuffer[9]=(uint8_t)(((tmp&0x30)>>4)+(uint8_t)0x30);	
-			TxBuffer[10]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
-			TxBuffer[11]=0x20;				
-			
-			// time
-			tmp=(bufout[2]);		//	hours
-			TxBuffer[12]=(uint8_t)(((tmp&0x70)>>4)+(uint8_t)0x30);	
-			TxBuffer[13]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
-				
-			//	minute
-			(uint8_t)(((bufout[1]	&0x70)>>4)+(uint8_t)0x30);	
-			(uint8_t)((bufout[1]	&0x0F)+(uint8_t)0x30);	
-			
-			//	seconds
-			((bufout[0]&0x70)>>4)	
-			(bufout[0]&0x0F)
-		*/
+					if ((bufout[2]==23)&(bufout[1]==59))
+						kon_sut=1;
+					
+					if (kon_sut==1)
+						read_ds(14);
+					else
+						read_ds(8);
+					
+					if ((error_ds==0)&(b_err_cl==0))
+					{
+						bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);		// sec
+						bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
+						bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
+						
+						bufout[4]=((zbuf[4]&0x30)>>4)*10+(zbuf[4]&0x0F);    // day
+						bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
+						bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
+						
+						
+						if (kon_sut==1)
+						{
+								need_read_ds=1;
+								bufout[8]=zbuf[9];     // hour
+								bufout[9]=zbuf[10];    // day
+								bufout[10]=zbuf[11];   // month
+								bufout[11]=zbuf[12];   // year
+							
+						  	// корректировка часов раз в сутки
+							  //(еще не корректировали в эти сутки)
+								if ((bufout[9]!=bufout[4])|(bufout[10]!=bufout[5])|(bufout[11]!=bufout[6])) 
+								{
+										if (fl_need_correct_ds==0)
+												fl_need_correct_ds=1;
+										
+										if (conf.rez16>32760)
+												kol_time_korr=(conf.rez16-32768);
+										else
+												kol_time_korr=conf.rez16;  										
+								}
+								else
+								{
+										if (bufout[8]!=24)
+										{  u32 tmp=0;
+											if (fl_need_correct_ds==0)
+													fl_need_correct_ds=1;	
+											
+											if (conf.rez16>32760)
+											{
+												tmp=(u32) (24-bufout[8])*(conf.rez16-32768)/24;
+												kol_time_korr=(u16) tmp;
+											}
+											else
+											{
+												tmp=(u32) (24-bufout[8])*conf.rez16/24; 
+												kol_time_korr=(u16) tmp; 
+											}
+										}
+										else
+										{
+											kon_sut=0;	
+											need_read_ds=0;	
+											/*
+											//  temporary
+											if (conf.rez16>32760)
+												kol_time_korr=(conf.rez16-32768);
+											else
+												kol_time_korr=conf.rez16; 
+											
+											if (fl_need_correct_ds==0)
+													fl_need_correct_ds=1;	
+											*/
+										}											
+								}
+								
+								if (fl_need_correct_ds==1) 
+								{	
+	//								if (((conf.rez16>32760)&(conf.rez16-32768>40))|((conf.rez16>8)&(conf.rez16<32767)))
+	//								{
+											tmp_sec=date_to_sec(bufout[6],bufout[5],bufout[4],bufout[2],bufout[1],bufout[0]);									
+											if (conf.rez16>32760)
+												sec_to_date(tmp_sec-kol_time_korr-1);
+											else
+												sec_to_date(tmp_sec+kol_time_korr-1); 
+/*											
+									}
+									else
+									{
+											if (conf.rez16>32760)
+									//			bufout[0]-=conf.rez16-32768+2;
+									//		bufout[0]-=conf.rez16-32768+1;
+										bufout[0]-=conf.rez16-32768-1;
+											else
+									//			bufout[0]+=conf.rez16-2;
+										//		bufout[0]+=conf.rez16-1;
+												bufout[0]+=conf.rez16+1;
+									}
+			*/														
+									
+							//		sec_to_date(tmp_sec-10);   
+									fl_need_correct_ds=2;
+								}
+									
+								if (fl_need_correct_ds==2) 
+								{
+									start_ds();
+									write_bait_ds(0xD0);
+									write_bait_ds(0x00);
+
+									write_bait_ds((((bufout[0]/10)<<4)+(bufout[0]%10))&0x7F);
+									write_bait_ds(((bufout[1]/10)<<4)+(bufout[1]%10));
+									write_bait_ds(((bufout[2]/10)<<4)+(bufout[2]%10));			
+									write_bait_ds(1);
+									write_bait_ds(((bufout[4]/10)<<4)+(bufout[4]%10));		
+									write_bait_ds(((bufout[5]/10)<<4)+(bufout[5]%10));
+									write_bait_ds(((bufout[6]/10)<<4)+(bufout[6]%10));
+									
+		
+									write_bait_ds(0);  // байт управление
+									
+									write_bait_ds(conf.tek_gr_kal&0x01);  // группа калибровок
+									
+									//  врем€ корректировки часов
+
+							 // 	write_bait_ds(bufout[2]);	  // hour	
+							//		write_bait_ds(16);		      // hour	
+									write_bait_ds(24);		      // hour	
+									write_bait_ds(bufout[4]);		// день								
+									write_bait_ds(bufout[5]);   // мес€ц
+									write_bait_ds(bufout[6]);		// год 																
+	/*
+									write_bait_ds(1);		// день								
+									write_bait_ds(8);   // мес€ц
+									write_bait_ds(13);		// год 
+	*/								
+									stop_ds();  
+									
+									if ((error_ds==0)&(b_err_cl==0))
+										fl_need_correct_ds=3;
+									else
+										error_ds=1;
+								}	
 
 
-			//		bufout[0]=zbuf[0];    // sec
-					bufout[0]=((zbuf[0]&0x70)>>4)*10+(zbuf[0]&0x0F);		// sec
-					bufout[1]=((zbuf[1]&0x70)>>4)*10+(zbuf[1]&0x0F);    // min
-					bufout[2]=((zbuf[2]&0x30)>>4)*10+(zbuf[2]&0x0F);    // hour
-					
-					bufout[4]=((zbuf[4]&0x30)>>4)*10+(zbuf[4]&0x0F);    // day
-					bufout[5]=((zbuf[5]&0x10)>>4)*10+(zbuf[5]&0x0F);    // month
-					bufout[6]=((zbuf[6]&0xF0)>>4)*10+(zbuf[6]&0x0F);    // year
-					
-	//				bufout[7]=zbuf[7]&0x01;    													// tek_gr
-					
-					
+								if (fl_need_correct_ds==3)
+								{
+									// записываем когда откорректировали
+									kon_sut=0;
+									if ((error_ds==0)&(b_err_cl==0))
+									{
+										fl_need_correct_ds=0;		
+										need_read_ds=0;
+									}
+									else
+										error_ds=1;
+								}	
+						}
+					}
+					else
+						error_ds=1;
 				}
-				else
-					error_ds=1;
-			}
-/*		
-		if ((tick%60)==0)
-		{
-			minute++;
-		}
-*/	
-	// конец раз секунду
-				
-			
+		} 
+
+	// конец раз секунду			
 	 }	
 
 //		TIM_Cmd(TIM6, ENABLE);  // start timer for indicators
@@ -1028,23 +1301,8 @@ void SysTick_Handler(void)
 		rtc_SetTime((RxBuffer[16]-0x30)*10+(RxBuffer[17]-0x30), (RxBuffer[18]-0x30)*10+(RxBuffer[19]-0x30), (RxBuffer[20]-0x30)*10+(RxBuffer[21]-0x30));
 		rtc_SetDate((RxBuffer[10]-0x30)*10+(RxBuffer[11]-0x30), (RxBuffer[12]-0x30)*10+(RxBuffer[13]-0x30), (RxBuffer[14]-0x30)*10+(RxBuffer[15]-0x30),1);
 	
-//		write_dat_clock();
-			start_ds();
-			write_bait_ds(0xD0);
-			write_bait_ds(0x00);
-			
-			write_bait_ds(((RxBuffer[20]-0x30)<<4)+(RxBuffer[21]-0x30));
-			write_bait_ds(((RxBuffer[18]-0x30)<<4)+(RxBuffer[19]-0x30));
-			write_bait_ds(((RxBuffer[16]-0x30)<<4)+(RxBuffer[17]-0x30));
-			
-			write_bait_ds(1);
-			write_bait_ds(((RxBuffer[10]-0x30)<<4)+(RxBuffer[11]-0x30));
-			
-			write_bait_ds(((RxBuffer[12]-0x30)<<4)+(RxBuffer[13]-0x30));
-			write_bait_ds((((RxBuffer[14]-0x30)<<4))+(RxBuffer[15]-0x30));
-			
-			stop_ds();
-				
+		// write_dat_clock();
+		
 			bufout[0]=((RxBuffer[20]-0x30)*10)+(RxBuffer[21]-0x30);		// sec
 			bufout[1]=((RxBuffer[18]-0x30)*10)+(RxBuffer[19]-0x30);    // min
 			bufout[2]=((RxBuffer[16]-0x30)*10)+(RxBuffer[17]-0x30);    // hour
@@ -1052,6 +1310,41 @@ void SysTick_Handler(void)
 			bufout[4]=((RxBuffer[10]-0x30)*10)+(RxBuffer[11]-0x30);    // day
 			bufout[5]=((RxBuffer[12]-0x30)*10)+(RxBuffer[13]-0x30);    // month
 			bufout[6]=((RxBuffer[14]-0x30)*10)+(RxBuffer[15]-0x30);    // year
+
+
+			start_ds();
+			write_bait_ds(0xD0);
+			write_bait_ds(0x00);
+			
+			write_bait_ds(((RxBuffer[20]-0x30)<<4)+(RxBuffer[21]-0x30));
+			write_bait_ds(((RxBuffer[18]-0x30)<<4)+(RxBuffer[19]-0x30));
+			write_bait_ds(((RxBuffer[16]-0x30)<<4)+(RxBuffer[17]-0x30));			
+			write_bait_ds(1);
+			write_bait_ds(((RxBuffer[10]-0x30)<<4)+(RxBuffer[11]-0x30));		
+			write_bait_ds(((RxBuffer[12]-0x30)<<4)+(RxBuffer[13]-0x30));
+			write_bait_ds((((RxBuffer[14]-0x30)<<4))+(RxBuffer[15]-0x30));
+				
+			
+			write_bait_ds(0);  // байт управление
+			
+			write_bait_ds(conf.tek_gr_kal&0x01);  // группа калибровок
+			
+			//  врем€ корректировки часов
+
+			write_bait_ds(bufout[2]);		// hour	
+			write_bait_ds(bufout[4]);		// день								
+			write_bait_ds(bufout[5]);   // мес€ц
+			write_bait_ds(bufout[6]);		// год 	
+	
+/*
+      // temporary
+			write_bait_ds(18);		// hour	
+			write_bait_ds(1);		// день								
+			write_bait_ds(8);   // мес€ц
+			write_bait_ds(13);		// год 
+	*/		
+			stop_ds();
+				
 
 /*
 if (1)

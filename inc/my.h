@@ -37,7 +37,7 @@ extern u32 tick;
 extern zap kor[numbkor];
 
 
-extern TDateTime DT_zap; 
+extern TDateTime DT_zap, DT_zap_pr; 
 extern bool number_buff;
 extern uint16_t Buf_adc_zap1 [1000];
 extern uint16_t Buf_adc_zap2 [1000];
