@@ -922,7 +922,8 @@ void SysTick_Handler(void)
 					error_ds=0;
 
 					if ((bufout[2]==23)&(bufout[1]==59))
-						kon_sut=1;
+						if ((conf.rez16!=0)&(conf.rez16!=32768))
+							kon_sut=1;
 					
 					if (kon_sut==1)
 						read_ds(14);

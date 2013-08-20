@@ -2401,7 +2401,9 @@ SPI 2:
 				  conf.tek_gr_kal=zbuf[8]&0x01;			// tek_gr
 
       // корректировать часы
-			//		if ((bufout[8]!=bufout[4])&(bufout[9]!=bufout[5])&(bufout[10]!=bufout[6])) 
+			//		if ((bufout[8]!=bufout[4])&(bufout[9]!=bufout[5])&(bufout[10]!=bufout[6]))
+
+				if ((conf.rez16!=0)&(conf.rez16!=32768))
 					if ((bufout[10]!=bufout[4])|(bufout[11]!=bufout[5])|(bufout[12]!=bufout[6])) 
 					{
 							tmp_sec2=date_to_sec(bufout[6],bufout[5],bufout[4],0,0,0);
