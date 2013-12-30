@@ -29,6 +29,9 @@
 
 #include "stm32f4xx_flash.h"
 
+
+extern __IO uint16_t sample[2];
+
 extern void FLASH_Unlock(void);
 extern void FLASH_Lock(void);
 extern FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange);
@@ -48,6 +51,16 @@ extern void read_ds(u8 kol);
 extern u8 read_bait_ds();
 
 
+// temp test button menu and switch key
+u8 timer_menu=0, sost_menu=0, butt_menu_on_pr=0, butt_menu_on=0, butt_menu_off=0,  switch_key_on=0, switch_key_off=0;
+
+u16 butt_menu_vkl=0, butt_menu_vikl=0,  switch_key_vkl=0, switch_key_vikl=0;
+	
+//u16 butt_menu_vkl=0, butt_menu_vikl=0,  switch_key_vkl=0, switch_key_vikl=0;
+
+
+u8 numb_key=0;
+
 u32 tmp_sec=0;
 u32 sec=0,  days=0;
 u8 kon_sut=0;
@@ -57,10 +70,15 @@ u32 pred_tick=0, tek_max_min=0;
 
 u16 kol_cifr=0;
 
+
+u16	kol_rele_on_dmk=0;
+u16	kol_rele_off_dmk=0;
+u16 time_max_dmk=0;
+
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
 u16 time_max=0;
-u8 tk_null=0;
+u8 tk_null=0, tk_null_pt=0, tk_dmk_null=0;
 
 TDateTime DT1;
 		
@@ -369,9 +387,38 @@ u16 moving_average(u16 kod, u8 numb)
 	}
 }
 
+u16 moving_average_dmk(u16 kod, u8 numb)
+{
+	extern u16 tek_kol_dmk;
+	extern u16 kol_usr_dmk;
+	extern u32 buf_sum_dmk;
+	u16 tmp=0;
+	
+	if (kol_usr_dmk==0)
+		return kod;
+
+	if (kol_usr_dmk==1)
+		return kod;
+	
+	if (tek_kol_dmk<kol_usr_dmk)
+	{
+		buf_sum_dmk+=kod;
+		tek_kol_dmk++;
+		return (u16)((buf_sum_dmk/tek_kol_dmk)+0.5);
+	}
+	else
+	{
+		buf_sum_dmk+=kod;
+		tmp=(u16) ((buf_sum_dmk/tek_kol_dmk)+0.5);
+		buf_sum_dmk-=tmp;
+		return  tmp;
+	}
+}
+
 u8 test_rele(u16 fz, u8 numb)
 {
 	extern st_conf conf;
+	extern st_conf_dmk conf_dmk;
 	
 	if (fz>conf.por_rele)
 			kol_rele_on++;			
@@ -397,10 +444,39 @@ u8 test_rele(u16 fz, u8 numb)
 	}
 }
 
+u8 test_rele_dmk(u16 fz, u8 numb)
+{
+//	extern st_conf conf;
+	extern st_conf_dmk conf_dmk;
+	
+	if (fz>conf_dmk.por_rele)
+			kol_rele_on_dmk++;			
+	else
+			kol_rele_off_dmk++;
+		
+	if (kol_rele_on_dmk>=conf_dmk.tm_rele_on)
+	{
+		kol_rele_on_dmk=0;
+		kol_rele_off_dmk=0;
+		avariya_dmk=1;
+		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
+		PORT_RELE_DMK->BSRRL = PIN_RELE_DMK;	// on PIN_RELE		
+	}
+	
+	if (kol_rele_off_dmk>=conf_dmk.tm_rele_off)
+	{
+		kol_rele_on_dmk=0;
+		kol_rele_off_dmk=0;
+		avariya_dmk=0;
+		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+		PORT_RELE_DMK->BSRRH = PIN_RELE_DMK;  	// off  PIN_RELE		
+	}
+}
 
 void update_indicators()
 {
 		extern st_conf conf;
+	  extern st_conf_dmk conf_dmk;
 		extern u8 bufout[20];
 //		u8 bufer[8]={0x40,0x60,0x70,0x78,0x7C,0x7E,0x7F,0xFF};
 	//	u8 bufer[8]={0x00,0xFF,0x00,0xFF,0x00,0xFF,0x00,0xFF};
@@ -432,8 +508,12 @@ void update_indicators()
 								}
 			*/
 				}
+				else
+				if ((sost_menu==1) | (sost_menu==2))
+					indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
 
 	
+		//		numb_key
 				 if (tk_null==1)
 				 {
 					 indicate_err(1);   	// tek
@@ -452,26 +532,32 @@ void update_indicators()
 						{
 								
 						 // dop usrednenie na vivod indicatorov???
-							indicate(2,(u16)(fz_average[0]),3);   							// tek
-							
-							indicate(3,(u16)(max[0]),3);														// maximum
-							
-							if (conf.tek_gr_kal==conf.revers_group_select)
-									if (sost_pribl==0)  {
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);		}	// lineika 
-									else {
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);		}	// lineika 
-							else
-									if (sost_pribl==0) {
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);		}	// lineika 
-									else {
-										indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);		}	// lineika 
-					
-						//	indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);
-						//		indicate_lin(1,(u16) kol_cifr*1111, (u16) 1000, (u16) conf.lin.kol_st);
-								
+					//		indicate(2,(u16)(fz_average[0]),3);   							// tek							
+					//		indicate(3,(u16)(max[0]),3);												// maximum
 
+							indicate(2,(u16)(fz_average[numb_key]),3);   							// tek							
+							indicate(3,(u16)(max[numb_key]),3);												// maximum
 							
+							if (numb_key==1)
+							{
+								indicate_lin(1,(u16) fz_average[1], (u16) conf_dmk.lin_max, (u16) conf.lin.kol_st);			// lineika 							
+							}
+							else
+							{
+								if (conf.tek_gr_kal==conf.revers_group_select)
+										if (sost_pribl==0)  {
+											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);		}	// lineika 
+										else {
+											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);		}	// lineika 
+								else
+										if (sost_pribl==0) {
+											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);		}	// lineika 
+										else {
+											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);		}	// lineika 
+						
+							//	indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);
+							//		indicate_lin(1,(u16) kol_cifr*1111, (u16) 1000, (u16) conf.lin.kol_st);
+							 }	
 					 }	
 				}
 
@@ -659,17 +745,50 @@ void sec_to_date(u32 sec)
   */
 void SysTick_Handler(void)
 {
-	extern __IO uint16_t ADC3ConvertedValue;
 	extern u32 tick;
 	extern st_conf conf;
+	extern st_conf_dmk conf_dmk;
 
 	extern u8 b_err_cl, bufout[20], zbuf[20], error_ds, fl_need_correct_ds;
-	
+	/*
+	butt_menu_on=0;
+	butt_menu_off=0;
+  switch_key_on=0;
+	switch_key_off=0;
+	*/
+/*	
+	if ((PORT_BUTTON_MENU->IDR & PIN_BUTTON_MENU)==0)
+		{	butt_menu_on=1;
+			butt_menu_off=0;}
+	else
+		{	butt_menu_on=0;
+			butt_menu_off=1;}
+
+	if ((PORT_SW_KEY->IDR & PIN_SW_KEY)==0)
+		{  switch_key_on=0;
+			 switch_key_off=1;}
+	else
+		{  switch_key_on=1;
+			 switch_key_off=0;}		
+*/
+
+	if ((PORT_BUTTON_MENU->IDR & PIN_BUTTON_MENU)==0)
+		{	butt_menu_vkl++;}
+	else
+		{	butt_menu_vikl++;}
+
+	if ((PORT_SW_KEY->IDR & PIN_SW_KEY)==0)
+		{  switch_key_vkl++;}
+	else
+		{  switch_key_vikl++;}
+
+
 	
 	PORT_Conrtol->BSRRL = PIN_Conrtol;
 	
  //  проверка состояния датчика приближений - 
 	if (conf.revers_peredacha_select==0)
+	{
 		if ((PORT_PRIBL->IDR & PIN_PRIBL)==0)
 		{
 			kol_pribl_vikl++;
@@ -678,6 +797,7 @@ void SysTick_Handler(void)
 		{
 			kol_pribl_vkl++;
 		}
+	}
 	else
 	{
 		if ((PORT_PRIBL->IDR & PIN_PRIBL)!=0)
@@ -690,7 +810,7 @@ void SysTick_Handler(void)
 			}
 	}
 	
-//	conf.tm_antidreb=2;
+	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;	
@@ -717,34 +837,88 @@ void SysTick_Handler(void)
 
 		if ((PORT_K1->IDR & PIN_K1)==0)
 		{
-			kol_gr1_vkl++;
+			if (kol_gr1_vkl<=conf.tm_antidreb)
+				kol_gr1_vkl++;
+			else
+				kol_gr1_vkl=0;
 		}
+		else
+			if (kol_gr1_vkl>0)
+				kol_gr1_vkl--;		
 
 		if ((PORT_K2->IDR & PIN_K2)==0)
 		{
-			kol_gr2_vkl++;
+			if (kol_gr2_vkl<=conf.tm_antidreb)
+				kol_gr2_vkl++;
+			else
+				kol_gr2_vkl=0;
 		}
-
-	//	conf.tm_antidreb=2;
-		if (kol_gr1_vkl>=conf.tm_antidreb)
+		else
+			if (kol_gr2_vkl>0)
+				kol_gr2_vkl--;	
+			
+			
+			//	conf.tm_antidreb=2;
+		if (kol_gr1_vkl==conf.tm_antidreb)
 		{
+			
+			if (sost_menu==0)
+			{
 				conf.tek_gr_kal=0;
 				new_group=1;
 		 // gr 1
 				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
 				PORT_L2->BSRRH = PIN_L2;	  // off PIN_L2
-
+			}
+			
+			if (sost_menu==1)   //  ust avariinogo zna4eniya
+			{
+				if (conf.por_rele==100)
+					conf.por_rele=10;
+				else
+					conf.por_rele+=10;
+			}
+			
+			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
+			{
+				if (conf.time_max==60)
+					conf.time_max=0;
+				else
+					conf.time_max+=1;
+			}			
+			
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
 		}		
 
-		if (kol_gr2_vkl>=conf.tm_antidreb>>1)
+		if (kol_gr2_vkl==conf.tm_antidreb)
 		{
+			if (sost_menu==0)
+			{
 				conf.tek_gr_kal=1;
 				new_group=1;
 				 // gr 2
 				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
 				PORT_L2->BSRRL = PIN_L2;	  // on PIN_L2
+			}
+			
+			if (sost_menu==1)   //  ust avariinogo zna4eniya momenta
+			{
+				if (conf.por_rele==0)
+					conf.por_rele=100;
+				else
+					conf.por_rele-=10;
+				
+			}
+			
+			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
+			{
+				if (conf.time_max==0)
+					conf.time_max=60;
+				else
+					conf.time_max-=1;
+			}
+			
 				kol_gr1_vkl=0;
 				kol_gr2_vkl=0;
 		}				
@@ -761,24 +935,29 @@ void SysTick_Handler(void)
   GPIO_Init(GPIO_PORT[Led], &GPIO_InitStructure);
 	*/
 	
-			// проверяем реле на срабатывание
-//	test_rele(fz[0], 0);	
-	test_rele(ADC3ConvertedValue, 0);	
-	
-	
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
 	// раз в 10 мс
 	// находим среднее значение
-	summa[0]+=ADC3ConvertedValue;
+	summa[1]+=sample[0];		// pc1 - dat4ik momenta na klu4e - DMK
+	summa[0]+=sample[1];		// pc2 - dat4ik davleniya - AKB
 	 
 //		summa[0]+=100;
 	kol_average++;
 	
+		
+		
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// раз в 100 мс
 	if (kol_average==10)
 	{					
 		average[0]=summa[0]/kol_average;
+		average[1]=summa[1]/kol_average;
+		
 		kol_average=0;
 		summa[0]=0;
+		summa[1]=0;
 		
 		// раз в 100 мс
 		// вычисляем физическую величину
@@ -794,34 +973,172 @@ void SysTick_Handler(void)
 				else
 					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 			
-	
+
+	//	tk_null_pt=tk_null;
+		fz[1]=fiz_vel(average[1],&conf_dmk.kal);
+//		tk_dmk_null=tk_null;
+//		tk_null=tk_null_pt;
+		
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			// проверяем реле на срабатывание
+			
+		// select source for rele: moment or davlenie
+		if (conf_dmk.revers_switch==0)
+		{
+			if (switch_key_on==0)
+			{
+				test_rele(fz[0], 0);	   // moment
+				PORT_RELE_DMK->BSRRH = PIN_RELE_DMK;  	// off  PIN_RELE	
+			}
+			else
+			{
+				test_rele_dmk(fz[1], 0);	   // moment
+				PORT_RELE->BSRRH = PIN_RELE;  	// off  PIN_RELE	
+			}
+		}
+		else
+		{
+			if (switch_key_on==0)
+			{
+				test_rele(fz[1], 0);	   // moment
+				PORT_RELE->BSRRH = PIN_RELE;  	// off  PIN_RELE	
+			}
+			else
+			{
+				test_rele_dmk(fz[0], 0);	   // moment
+				PORT_RELE_DMK->BSRRH = PIN_RELE_DMK;  	// off  PIN_RELE	
+			}
+		}
+		
+	// test_rele(ADC3ConvertedValue, 0);	  // davlenie
+
+		
+		
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+		// time max
+		if (time_max>=conf.time_max) {
+				max[0]=0;
+				time_max=0;
+				max[1]=0; 
+		}
+		
+		// detect max 
+		// select averaging max or not averaging
+/*		if (fz_average[0]>max[0])   // 
+			max[0]=fz_average[0];
+*/
+		if (fz[0]>max[0])
+			max[0]=fz[0];
+
+
+		if (fz[1]>max[1])
+			max[1]=fz[1];
+
+		
 	// находим среднее значение по скользящей средней
-		fz_average[0]=moving_average(fz[0],0);
+		fz_average[0]=moving_average(fz[0],0);		
+		fz_average[1]=moving_average_dmk(fz[1],0);
+						
 				/*
 			fz_average[0]++;
 			if (fz_average[0]>1050)
 				fz_average[0]=0;
 	 */
-		// time max
-		if (time_max>=conf.time_max) {
-				max[0]=0;
-				time_max=0;  }
+	
 		
-		// detect max
-		if (fz_average[0]>max[0])
-			max[0]=fz_average[0];
+		
+		
+
+		if (butt_menu_vkl>=conf.tm_antidreb)
+		{
+				butt_menu_on_pr=butt_menu_on;
+				butt_menu_on=1;
+				butt_menu_off=0;
+				
+				butt_menu_vkl=0;
+				butt_menu_vikl=0;
+		} 	
+		
+		if (butt_menu_vikl>=conf.tm_antidreb)
+		{
+				butt_menu_on_pr=butt_menu_on;
+				butt_menu_on=0;
+				butt_menu_off=1;
+				
+				butt_menu_vkl=0;
+				butt_menu_vikl=0;
+		} 	
+		
+		if (switch_key_vkl>=conf.tm_antidreb)
+		{
+				switch_key_on=1;
+				switch_key_off=0;
+				
+				switch_key_vkl=0;
+				switch_key_vikl=0;
+		} 
 
 		
+		if (switch_key_vikl>=conf.tm_antidreb)
+		{
+				switch_key_on=0;
+				switch_key_off=1;
+				
+				switch_key_vkl=0;
+				switch_key_vikl=0;
+		} 
+		
+			
+		 
+		 
+		 if ((butt_menu_on==1)&(butt_menu_on_pr==0))
+		 {
+				sost_menu++;
+				// 0 - norm rab rezim
+				// 1 - ust avariinogo zna4eniya
+				// 2 - ust vremya indikacii max zhaceniya momenta
+				if (sost_menu==3)
+					sost_menu=0;
+				
+				timer_menu=0;
+		 }
+/*
+		 if (timer_menu==10)
+		 {
+				timer_menu=0;
+				sost_menu=0;
+		 }
+	*/	 
+		 	
+		if (conf_dmk.revers_switch==0)
+		{
+			if (switch_key_on==0)
+				numb_key=0;
+			else
+				numb_key=1;
+		}
+		else
+		{
+			if (switch_key_on==0)
+				numb_key=1;
+			else
+				numb_key=0;
+		}			
+				
 		if (number_buff)
 			if (tk_null==1)
-				Buf_adc_zap2[por++]=fz_average[0]|0x8000;	
+				Buf_adc_zap2[por++]=fz_average[numb_key]|0x8000;	
 			else
-				Buf_adc_zap2[por++]=fz_average[0]&0x7FFF;			
+				Buf_adc_zap2[por++]=fz_average[numb_key]&0x7FFF;			
 		else
 			if (tk_null==1)
-				Buf_adc_zap1[por++]=fz_average[0]|0x8000;	
+				Buf_adc_zap1[por++]=fz_average[numb_key]|0x8000;	
 			else
-				Buf_adc_zap1[por++]=fz_average[0]&0x7FFF;
+				Buf_adc_zap1[por++]=fz_average[numb_key]&0x7FFF;
+		
+		
 		
 		if (por==999)
 			por=999;
@@ -833,13 +1150,14 @@ void SysTick_Handler(void)
 	{		
 		// раз в секунду
 		tek_max_min++;
-		if (tek_max_min==60) {
+	//	if (tek_max_min==60) 
+		{   // vremya nakopleniya maximuma v minutah
 			time_max++;
 			tek_max_min=0;     }
 	
 		del=0;
 		tick++;
-		
+		timer_menu++;
 		if (tick==600000)
 			tick=0;
 		
@@ -1083,7 +1401,7 @@ void SysTick_Handler(void)
 						error_ds=1;
 				}
 		} 
-
+	 
 	// конец раз секунду			
 	 }	
 
@@ -1489,7 +1807,7 @@ if (1)
 			
 			
 			// zn from adc with calibr and averaging
-			tmp=ADC3ConvertedValue%10000;
+			tmp=fz_average[0]%10000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;
@@ -1544,7 +1862,8 @@ if (1)
 		if ((RxBuffer[2]=='r')&(RxBuffer[3]=='d')&(RxBuffer[4]=='_')&(RxBuffer[5]=='c')&(RxBuffer[6]=='o')&(RxBuffer[7]=='n')&(RxBuffer[8]=='f'))
 		{
 			u16 i=0;
-			extern st_conf conf;		
+			extern st_conf conf;	
+	    extern st_conf_dmk conf_dmk;			
 			
 			USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);		
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
@@ -1727,7 +2046,7 @@ if (1)
 			conf.gr_kal2.tabl2.kod[8]=133;
 			conf.gr_kal2.tabl2.kod[9]=134;	
 */		
-		/*
+		/*  67474;,l;H;@;>jikh
 			txsize=sizeof(st_conf)<<1;
 	
 			for (i = 0; i < (txsize); i += 1)

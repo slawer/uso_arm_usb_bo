@@ -46,7 +46,7 @@ extern uint16_t time_label;
 extern u16 por;
 
 
-extern 	 uint8_t counter;
+extern 	uint8_t counter;
 extern 	uint16_t bytesWritten;
 	
 extern 	u8 tmp1, tmp2,tmp3,tmp4, sm;
@@ -143,27 +143,72 @@ typedef struct
 	
 		gr_kal gr_kal1;
 		gr_kal gr_kal2;
+	
+	/*
+		u16	per_usr_dmk;
+		u16	time_max_dmk;
+		u16 por_rele_dmk;
+		u16 tm_rele_on_dmk;
+		u16 tm_rele_off_dmk;
+		
+		u8 revers_switch;
+		u8 revers_menu;
+		u16 lin_max_dmk;
+		
+		st_tab_kal kal_dmk;
+		*/
 
 } st_conf;
+
+
+typedef struct 
+{
+	  u8 tm_antidreb;
+		u8 rez8;
+	
+		u16	per_usr;
+		u16	time_max;
+		u16 por_rele;
+		u16 tm_rele_on;
+		u16 tm_rele_off;
+		u16 rez16;
+
+		
+		u8 revers_switch;
+		u8 revers_menu;
+		u16 lin_max;
+		
+		st_tab_kal kal;
+
+} st_conf_dmk;
 
 
 extern u16 tek_kol;
 extern u16 kol_usr;
 extern u32 buf_sum;
 
-#define PIN_PRIBL                         GPIO_Pin_1
+extern u16 tek_kol_dmk;
+extern u16 kol_usr_dmk;
+extern u32 buf_sum_dmk;
+
+#define PIN_PRIBL                         GPIO_Pin_5
 #define PORT_PRIBL                    		GPIOC
 
 #define PIN_RELE                         	GPIO_Pin_4
 #define PORT_RELE                    			GPIOA
 
+#define PIN_RELE_DMK                      GPIO_Pin_6
+#define PORT_RELE_DMK                    	GPIOE
+
 #define PIN_K1                         		GPIO_Pin_7
 #define PORT_K1                 					GPIOC
+
 #define PIN_L1                         		GPIO_Pin_6
 #define PORT_L1                 					GPIOC
 
 #define PIN_K2                         		GPIO_Pin_9
 #define PORT_K2                 					GPIOC
+
 #define PIN_L2                         		GPIO_Pin_8
 #define PORT_L2                 					GPIOC
 
@@ -182,6 +227,12 @@ extern u32 buf_sum;
 #define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 #define PORT_AVARIYA                			GPIOA	
 
+#define PIN_BUTTON_MENU                  	GPIO_Pin_7		//	BTN3
+#define PORT_BUTTON_MENU             			GPIOE	
+
+#define PIN_SW_KEY        	             	GPIO_Pin_11		//	SW1
+#define PORT_SW_KEY         	       			GPIOC	
+
 extern u16 kol_pribl_vikl;
 extern u16 kol_pribl_vkl;
 
@@ -189,6 +240,7 @@ extern u16 kol_gr1_vkl;
 extern u16 kol_gr2_vkl;
 
 extern u8 avariya;
+extern u8 avariya_dmk;
 extern u8 sost_flesh;
 
 

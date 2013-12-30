@@ -1,0 +1,145 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+D:\keil_project\all_project\arm\uso_arm_usb_bo\uso_arm_usb_bo.uvproj
+Project File Date:  10/22/2013
+
+<h2>Output:</h2>
+Rebuild target 'deb'
+compiling gpio.c...
+compiling rtc.c...
+src\rtc.c(353): warning:  #177-D: variable "i1" was declared but never referenced
+         u32 i=0,i1=0, errorindex=0;
+src\rtc.c(353): warning:  #177-D: variable "errorindex" was declared but never referenced
+         u32 i=0,i1=0, errorindex=0;
+src\rtc.c(129): warning:  #177-D: variable "tmp" was declared but never referenced
+                u32 tmp=0;
+src\rtc.c(131): warning:  #177-D: variable "GPIO_InitStructure" was declared but never referenced
+          GPIO_InitTypeDef      GPIO_InitStructure;
+src\rtc.c: 4 warnings, 0 errors
+compiling main.c...
+.\inc\my_def_ext.h(431): warning:  #177-D: variable "i" was declared but never referenced
+  {     u32 i=0, kol_wait=0;;
+.\inc\my_def_ext.h(449): warning:  #177-D: variable "i" was declared but never referenced
+  {     u32 i=0, kol_wait=0;
+.\inc\my_def_ext.h(545): warning:  #940-D: missing return statement at end of non-void function "wr_ack_ds"
+  }
+src\main.c(881): warning:  #177-D: variable "i" was declared but never referenced
+                        u8 i=0;
+src\main.c(931): warning:  #177-D: variable "ind" was declared but never referenced
+                u8 i=0,ind=0;
+src\main.c(974): warning:  #111-D: statement is unreachable
+                                        break;
+src\main.c(1058): warning:  #177-D: variable "i" was declared but never referenced
+                        u8 i=0;
+src\main.c(1248): warning:  #177-D: variable "tabl" was declared but never referenced
+                const u8 tabl[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
+src\main.c(1249): warning:  #177-D: variable "viv" was declared but never referenced
+                u8 viv=0;
+src\main.c(2418): warning:  #223-D: function "date_to_sec" declared implicitly
+                                                        tmp_sec2=date_to_sec(bufout[6],bufout[5],bufout[4],0,0,0);
+src\main.c(2470): warning:  #223-D: function "sec_to_date" declared implicitly
+                                                                sec_to_date(tmp_sec2+(int) tmp_float-1); 
+src\main.c(1990): warning:  #177-D: variable "data" was declared but never referenced
+        uint16_t data[32];
+src\main.c(1992): warning:  #177-D: variable "DT" was declared but never referenced
+        TDateTime DT;
+src\main.c: 13 warnings, 0 errors
+compiling system_stm32f4xx.c...
+compiling usb_bsp.c...
+compiling usbh_usr.c...
+src\usbh_usr.c(113): warning:  #177-D: variable "DT" was declared but never referenced
+                TDateTime DT;
+src\usbh_usr.c(114): warning:  #177-D: variable "tmp" was declared but never referenced
+                u8 tmp;
+src\usbh_usr.c(413): warning:  #177-D: variable "tmp" was declared but never referenced
+        u16 tmp=0, tk_n=0;
+src\usbh_usr.c(481): warning:  #177-D: variable "DT" was declared but never referenced
+                TDateTime DT;
+src\usbh_usr.c(482): warning:  #177-D: variable "tmp" was declared but never referenced
+                u8 tmp=0;
+src\usbh_usr.c: 5 warnings, 0 errors
+compiling stm32f4xx_it.c...
+src\stm32f4xx_it.c(43): warning:  #1295-D: Deprecated declaration start_ds - give arg types
+  extern void start_ds();
+src\stm32f4xx_it.c(44): warning:  #1295-D: Deprecated declaration write_bait_ds - give arg types
+  extern void write_bait_ds();
+src\stm32f4xx_it.c(45): warning:  #1295-D: Deprecated declaration stop_ds - give arg types
+  extern void stop_ds();
+src\stm32f4xx_it.c(46): warning:  #1295-D: Deprecated declaration sleep - give arg types
+  extern void sleep();
+src\stm32f4xx_it.c(47): warning:  #1295-D: Deprecated declaration wr_ack_ds - give arg types
+  extern void wr_ack_ds();
+src\stm32f4xx_it.c(49): warning:  #1295-D: Deprecated declaration read_bait_ds - give arg types
+  extern u8 read_bait_ds();
+src\stm32f4xx_it.c(275): warning:  #177-D: variable "tab" was declared but never referenced
+        st_tab_kal *tab = tk;
+src\stm32f4xx_it.c(403): warning:  #940-D: missing return statement at end of non-void function "test_rele"
+  }
+src\stm32f4xx_it.c(421): warning:  #223-D: function "indicate_time" declared implicitly
+                                                        indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);                               //      time    
+src\stm32f4xx_it.c(444): warning:  #223-D: function "indicate_err" declared implicitly
+                                         indicate_err(1);       // tek
+src\stm32f4xx_it.c(452): warning:  #223-D: function "ind_blank_all" declared implicitly
+                                                        ind_blank_all(1); 
+src\stm32f4xx_it.c(460): warning:  #223-D: function "indicate" declared implicitly
+                                                        indicate(2,(u16)(fz_average[0]),3);                                                     // tek
+src\stm32f4xx_it.c(466): warning:  #223-D: function "indicate_lin" declared implicitly
+                                                                                indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);                }       // lineika 
+src\stm32f4xx_it.c(468): warning:  #223-D: function "indicate_lin" declared implicitly
+                                                                                indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);                }       // lineika 
+src\stm32f4xx_it.c(471): warning:  #223-D: function "indicate_lin" declared implicitly
+                                                                                indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);                }       // lineika 
+src\stm32f4xx_it.c(473): warning:  #223-D: function "indicate_lin" declared implicitly
+                                                                                indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);                }       // lineika 
+src\stm32f4xx_it.c(413): warning:  #177-D: variable "bufer" was declared but never referenced
+                u8 bufer[9]={0,1,3,7,0xf,0x1f,0x3f,0x7f,0xff};
+src\stm32f4xx_it.c(962): warning:  #177-D: variable "i" was declared but never referenced
+                                        u16 i=0;
+src\stm32f4xx_it.c(1172): warning:  #177-D: variable "Temp" was declared but never referenced
+                        uint32_t Temp;
+src\stm32f4xx_it.c(1313): warning:  #177-D: variable "Tens" was declared but never referenced
+                        uint32_t Tens, Units;
+src\stm32f4xx_it.c(1313): warning:  #177-D: variable "Units" was declared but never referenced
+                        uint32_t Tens, Units;
+src\stm32f4xx_it.c(1314): warning:  #177-D: variable "TempReg" was declared but never referenced
+        uint32_t TempReg = 0;
+src\stm32f4xx_it.c(1315): warning:  #177-D: variable "i" was declared but never referenced
+                        u8 i=0;
+src\stm32f4xx_it.c(1863): warning:  #177-D: variable "clickreg" was declared but never referenced
+     uint8_t clickreg = 0;
+src\stm32f4xx_it.c: 24 warnings, 0 errors
+compiling stm32f4_discovery.c...
+compiling misc.c...
+compiling stm32f4xx_adc.c...
+compiling stm32f4xx_dma.c...
+compiling stm32f4xx_exti.c...
+compiling stm32f4xx_gpio.c...
+compiling stm32f4xx_i2c.c...
+compiling stm32f4xx_rcc.c...
+compiling stm32f4xx_rtc.c...
+compiling stm32f4xx_spi.c...
+compiling stm32f4xx_syscfg.c...
+compiling stm32f4xx_tim.c...
+compiling stm32f4xx_usart.c...
+compiling stm32f4xx_flash.c...
+assembling startup_stm32f4xx.s...
+compiling usb_core.c...
+compiling usb_hcd.c...
+compiling usb_hcd_int.c...
+compiling usbh_core.c...
+compiling usbh_hcs.c...
+compiling usbh_ioreq.c...
+compiling usbh_msc_bot.c...
+compiling usbh_msc_core.c...
+compiling usbh_msc_fatfs.c...
+compiling usbh_stdreq.c...
+compiling usbh_msc_scsi.c...
+compiling fattime.c...
+compiling ff.c...
+linking...
+Program Size: Code=60200 RO-data=660 RW-data=464 ZI-data=18128  
+FromELF: creating hex file...
+".\deb\uso_arm_usb_bo.axf" - 0 Error(s), 46 Warning(s).

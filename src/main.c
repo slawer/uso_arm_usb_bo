@@ -63,9 +63,7 @@ static void TIM_LED_Config(void);
 /* Private functions ---------------------------------------------------------*/
 
 
-#define ADC3_DR_ADDRESS     ((uint32_t)0x4001224C)
-__IO uint16_t ADC3ConvertedValue = 0;
-
+__IO uint16_t sample[2];
 
 
 #include "my.h"
@@ -154,14 +152,15 @@ void ADC3_CH12_DMA_Config(void)
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
 
+	
   // DMA2 Stream0 channel0 configuration ************************************
   DMA_InitStructure.DMA_Channel = DMA_Channel_2;  
-  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)ADC3_DR_ADDRESS;
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&ADC3ConvertedValue;
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC3->DR; //ADC3_PC1;  //  ADC3->DR; //
+  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)& sample[0]; //   (uint32_t)&AKB;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-  DMA_InitStructure.DMA_BufferSize = 1;
+  DMA_InitStructure.DMA_BufferSize = 2;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;
+  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable; //DMA_MemoryInc_Enable; //DMA_MemoryInc_Disable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
   DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
@@ -178,6 +177,12 @@ void ADC3_CH12_DMA_Config(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOC, &GPIO_InitStructure);
+	
+	 // Configure ADC3 Channel15 pin as analog input ****************************
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
 
   // ADC Common Init *********************************************************
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
@@ -188,15 +193,16 @@ void ADC3_CH12_DMA_Config(void)
 
  // ADC3 Init ***************************************************************
   ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-  ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+  ADC_InitStructure.ADC_ScanConvMode = ENABLE; //ENABLE; //DISABLE;
   ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
   ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-  ADC_InitStructure.ADC_NbrOfConversion = 1;
+  ADC_InitStructure.ADC_NbrOfConversion = 2;
   ADC_Init(ADC3, &ADC_InitStructure);
 
   // ADC3 regular channel12 configuration ***********************************
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_11, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 2, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
 
  // Enable DMA request after last transfer (Single-ADC mode)
   ADC_DMARequestAfterLastTransferCmd(ADC3, ENABLE);
@@ -1054,6 +1060,7 @@ void indicate(u8 numb_ind,u16 chislo_new, u8 kol_cifr)
 
 void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 {
+		extern u8 sost_menu;
 		 	uint16_t  pin=0;
 			u8 i=0;
 	
@@ -1064,6 +1071,9 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 		
   init_ind(4, 4, 0);   // time
 
+// 0 - norm rab rezim
+	if (sost_menu==0)
+	{
 			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
 	//		spi_send(1);															delay_spi(zad_spi);
 			if (hh/10==0)
@@ -1092,6 +1102,59 @@ void indicate_time(u8 numb_ind, u8 hh, u8 mm, u8 en)
 		//	spi_send(symb_code_min[mm%10]); 					delay_spi(zad_spi);
 			spi_send((u16) (4<<8)+symb_code_min[mm%10]); 			delay_spi(zad_spi);	
 			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+		}
+		
+		// 1 - ind avariinogo zna4eniya momenta   conf.por_rele
+		if (sost_menu==1)
+		{
+		//	u16 tmp=conf.por_rele;
+			
+			
+			u16 tmp=conf.por_rele%1000;
+	//		conf.por_rele++;
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (1<<8)+0x67); 							delay_spi(zad_spi);
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+	
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (2<<8)+symb_code[(tmp/100)&0x0F]); 			delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     	delay_spi(zad_spi2);
+			tmp%=100;
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (3<<8)+symb_code_min[(tmp/10)&0x0F]); 			delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);    	  delay_spi(zad_spi2);
+			tmp%=10;
+
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (4<<8)+symb_code_min[(tmp%10)&0x0F]); 			delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+		}
+
+// 2 - ind vremya indikacii max zhaceniya momenta
+		if (sost_menu==2)
+		{
+			u16 tmp=conf.time_max%1000;
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (1<<8)+0x0F); 							delay_spi(zad_spi);
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+	
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (2<<8)+symb_code[(tmp/100)&0x0F]); 			delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);     	delay_spi(zad_spi2);
+			tmp%=100;
+			
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (3<<8)+symb_code_min[(tmp/10)&0x0F]);		delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);    	  delay_spi(zad_spi2);
+			tmp%=10;
+
+			GPIO_WriteBit(GPIOA, pin, Bit_RESET);     delay_spi(zad_spi);
+			spi_send((u16) (4<<8)+symb_code_min[(tmp%10)&0x0F]); 			delay_spi(zad_spi);	
+			GPIO_WriteBit(GPIOA, pin, Bit_SET);       delay_spi(zad_spi2);
+		}	
 }
 
 
@@ -2073,7 +2136,13 @@ int main(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 
-
+	GPIO_InitStructure.GPIO_Pin   = PIN_RELE_DMK;      						//  vivod RELE DMK
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    				// rezim vivoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//  may be PP - ???
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
+	GPIO_Init(PORT_RELE_DMK, &GPIO_InitStructure); 
+	
+	
 	GPIO_InitStructure.GPIO_Pin   = PIN_K1;      		 				 	//  vvod  knopka 1
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;    					// 	rezim vivoda
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//
@@ -2205,8 +2274,17 @@ SPI 2:
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_L2, &GPIO_InitStructure);
 
+	GPIO_InitStructure.GPIO_Pin   = PIN_SW_KEY;  						  // 	vvod for switch key (AKB or ru4noi)
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					  //	rezim vvoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	  //	speed
+	GPIO_Init(PORT_SW_KEY, &GPIO_InitStructure); 
 
-
+	GPIO_InitStructure.GPIO_Pin   = PIN_BUTTON_MENU;  				 // 	vvod for button menu
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN; 					  //	rezim vvoda
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;	
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     	  //	speed
+	GPIO_Init(PORT_BUTTON_MENU, &GPIO_InitStructure); 
 		
 /*
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;  						// 	vvod for knopka
@@ -2294,7 +2372,8 @@ SPI 2:
   init_ind(conf.indicators[3].numb, conf.indicators[3].kol_cifr, conf.indicators[3].type_ind);
 	*/
 
-	// PC pin2
+	// PC2   	dat4ik davleniya
+	// PC1		dat4ik mashinnogo klucha
   ADC3_CH12_DMA_Config();
 	
 	test_ind_all(1);
@@ -2311,6 +2390,8 @@ SPI 2:
 	PORT_L2->BSRRL = PIN_L2;	  					// on PIN_L2
 
 	
+	
+	conf.por_rele=10;
 	
 	MCO(1);
 	delay_spi(100);
@@ -2540,20 +2621,36 @@ SPI 2:
 	
 	
 	average[0]=0;
+	average[1]=0;
+	
 	summa[0]=0;
+	summa[1]=0;
+	
 	kol_average=0;
 
 	fz[0]=0;
+	fz[1]=0;
+	
 	fz_average[0]=0;
+	fz_average[1]=0;
+	
 	max[0]=0;
-	ADC3ConvertedValue=0;
+	max[1]=0;
+	
+	sample[0]=0;
+	sample[1]=0;
+				
 	time_max=0;
 	tek_max_min=0;
 	del=0;
-	kol_usr=0;
+	
+	kol_usr=conf.per_usr;;
 	tek_kol=0;
 	buf_sum=0;
 
+	tek_kol_dmk=0;
+	kol_usr_dmk=0;
+	buf_sum_dmk=0;
 
   // Start ADC3 Software Conversion 
   ADC_SoftwareStartConv(ADC3);
@@ -2672,9 +2769,6 @@ SPI 2:
   }
   
 //#endif
-	
-
-  
 }
 
 /**

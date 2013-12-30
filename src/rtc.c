@@ -350,6 +350,8 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_BKPSRAM, ENABLE);
  {
 	 
 	 extern st_conf conf;
+	 extern st_conf_dmk conf_dmk;
+	 
 	 u32 i=0,i1=0, errorindex=0;
 	 
    bkp=RTC_ReadBackupRegister(RTC_BKP_DR2);
@@ -451,7 +453,52 @@ return (*(__IO uint32_t*) address);
 		
 		if (conf.tm_rele_off==0)
 			conf.tm_rele_off=50;
-		
+
+
+	size=sizeof(st_conf_dmk);
+	
+	for (i = 0; i < size; i += 1)
+  {
+		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf_dmk) + i))=(*(__IO uint8_t *) (ADDR_FLASH+ sizeof(st_conf)+ i));
+	}	
+
+	conf_dmk.tm_antidreb=1;
+	conf_dmk.rez8=2;
+	conf_dmk.per_usr=3;
+	conf_dmk.time_max=4;
+	conf_dmk.por_rele=5;
+	conf_dmk.tm_rele_on=6;
+	conf_dmk.tm_rele_off=7;
+	conf_dmk.rez16=8;
+	conf_dmk.revers_switch=9;
+	conf_dmk.revers_menu=16;
+	conf_dmk.lin_max=17;
+	
+	conf_dmk.kal.kod[0]=18;
+	conf_dmk.kal.kod[1]=19;
+	conf_dmk.kal.kod[2]=20;
+	conf_dmk.kal.kod[3]=21;
+	conf_dmk.kal.kod[4]=22;
+	conf_dmk.kal.kod[5]=23;
+	conf_dmk.kal.kod[6]=24;
+	conf_dmk.kal.kod[7]=25;	
+	conf_dmk.kal.kod[8]=32;
+	conf_dmk.kal.kod[9]=33;	
+
+	conf_dmk.kal.fz[0]=34;
+	conf_dmk.kal.fz[1]=35;
+	conf_dmk.kal.fz[2]=36;
+	conf_dmk.kal.fz[3]=37;
+	conf_dmk.kal.fz[4]=38;
+	conf_dmk.kal.fz[5]=39;
+	conf_dmk.kal.fz[6]=40;
+	conf_dmk.kal.fz[7]=41;	
+	conf_dmk.kal.fz[8]=48;
+	conf_dmk.kal.fz[9]=49;	
+
+
+
+	
 
 	
 	/*

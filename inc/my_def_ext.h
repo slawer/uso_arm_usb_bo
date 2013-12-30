@@ -67,20 +67,28 @@ u8 symb_code_min[13]={0x7E,0x30,0xEC,0xf8,0xB2,0xDA,0xDE,0x70,0xFE,0xFA,0xCE, 0x
 
 
 st_conf conf;
+st_conf_dmk conf_dmk;
 
 u16 tek_kol=0;
 u16 kol_usr=0;
 u32 buf_sum=0;
 
+u16 tek_kol_dmk=0;
+u16 kol_usr_dmk=0;
+u32 buf_sum_dmk=0;
 
-#define PIN_PRIBL                         GPIO_Pin_1
+#define PIN_PRIBL                         GPIO_Pin_5
 #define PORT_PRIBL                    		GPIOC
 
 #define PIN_RELE                         	GPIO_Pin_4
 #define PORT_RELE                    			GPIOA
 
+#define PIN_RELE_DMK                      GPIO_Pin_6
+#define PORT_RELE_DMK                    	GPIOE
+
 #define PIN_K1                         		GPIO_Pin_7
 #define PORT_K1                 					GPIOC
+
 #define PIN_L1                         		GPIO_Pin_6
 #define PORT_L1                 					GPIOC
 
@@ -104,6 +112,13 @@ u32 buf_sum=0;
 #define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 #define PORT_AVARIYA                			GPIOA	
 
+#define PIN_BUTTON_MENU                  	GPIO_Pin_7		//	BTN3
+#define PORT_BUTTON_MENU             			GPIOE	
+
+#define PIN_SW_KEY        	             	GPIO_Pin_11		//	SW1
+#define PORT_SW_KEY         	       			GPIOC	
+
+
 u16 kol_pribl_vikl=0;
 u16 kol_pribl_vkl=0;
 
@@ -111,6 +126,7 @@ u16 kol_gr1_vkl=0;
 u16 kol_gr2_vkl=0;
 
 u8 avariya=0;
+u8 avariya_dmk=0;
 u8 sost_flesh=0;
 
 u8 error_ds=0, fl_need_correct_ds=0;
