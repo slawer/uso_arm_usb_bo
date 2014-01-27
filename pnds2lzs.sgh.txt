@@ -1,0 +1,78 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch momentomer_2
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   DM00039084.pdf
+#	new file:   DM00046982.pdf
+#	modified:   MEDIA_USB_KEY/fattime.o
+#	modified:   MEDIA_USB_KEY/ff.o
+#	modified:   MEDIA_USB_KEY/main.crf
+#	modified:   MEDIA_USB_KEY/main.o
+#	modified:   MEDIA_USB_KEY/misc.o
+#	modified:   MEDIA_USB_KEY/rtc.crf
+#	modified:   MEDIA_USB_KEY/rtc.o
+#	modified:   MEDIA_USB_KEY/startup_stm32f4xx.o
+#	modified:   MEDIA_USB_KEY/stm32f4_discovery.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_adc.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_dma.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_exti.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_flash.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_gpio.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_it.crf
+#	modified:   MEDIA_USB_KEY/stm32f4xx_it.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_rcc.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_rtc.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_spi.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_syscfg.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_tim.o
+#	modified:   MEDIA_USB_KEY/stm32f4xx_usart.o
+#	modified:   MEDIA_USB_KEY/system_stm32f4xx.o
+#	modified:   MEDIA_USB_KEY/usb_bsp.o
+#	modified:   MEDIA_USB_KEY/usb_core.o
+#	modified:   MEDIA_USB_KEY/usb_hcd.o
+#	modified:   MEDIA_USB_KEY/usb_hcd_int.o
+#	modified:   MEDIA_USB_KEY/usbh_core.o
+#	modified:   MEDIA_USB_KEY/usbh_hcs.o
+#	modified:   MEDIA_USB_KEY/usbh_ioreq.o
+#	modified:   MEDIA_USB_KEY/usbh_msc_bot.o
+#	modified:   MEDIA_USB_KEY/usbh_msc_core.crf
+#	modified:   MEDIA_USB_KEY/usbh_msc_core.o
+#	modified:   MEDIA_USB_KEY/usbh_msc_fatfs.o
+#	modified:   MEDIA_USB_KEY/usbh_msc_scsi.o
+#	modified:   MEDIA_USB_KEY/usbh_stdreq.o
+#	modified:   MEDIA_USB_KEY/usbh_usr.crf
+#	modified:   MEDIA_USB_KEY/usbh_usr.o
+#	modified:   MEDIA_USB_KEY/uso_arm_usb_bo.axf
+#	modified:   MEDIA_USB_KEY/uso_arm_usb_bo.build_log.htm
+#	modified:   MEDIA_USB_KEY/uso_arm_usb_bo.hex
+#	modified:   MEDIA_USB_KEY/uso_arm_usb_bo.plg
+#	modified:   inc/my.h
+#	modified:   inc/my_def_ext.h
+#	modified:   listing/startup_stm32f4xx.lst
+#	modified:   listing/uso_arm_usb_bo.map
+#	new file:   mc250_STM32F407VG.pdf
+#	modified:   readme.txt
+#	modified:   src/main.c
+#	modified:   src/rtc.c
+#	modified:   src/stm32f4xx_it.c
+#	modified:   src/usbh_usr.c
+#	new file:   startup_stm32f4xx.lst
+#	new file:   uso_arm_usb_bo.map
+#	modified:   uso_arm_usb_bo.uvgui.supra_pk
+#	modified:   uso_arm_usb_bo.uvgui_supra_pk.bak
+#	modified:   uso_arm_usb_bo.uvopt
+#	modified:   uso_arm_usb_bo_MEDIA_USB_KEY.dep
+#	new file:   uso_arm_usb_bo_deb.dep
+#
+# Changes not staged for commit:
+#   (use "git add/rm <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	deleted:    MEDIA_USB_KEY/gpio.d
+#	deleted:    MEDIA_USB_KEY/gpio.o
+#	deleted:    uso_arm_usb_bo.rar
+#
+
