@@ -1,4 +1,69 @@
 
+
+если нет таблицы калибровки пишетс€ на флешку 3276,8 почему то
+
+
+прибавл€ютс€ по 100 раз в секунду:
+
+butt_menu_vkl	-	conf.tm_antidreb   сравниваетс€ 10 раз в секунду
+butt_menu_vikl	-	conf.tm_antidreb   сравниваетс€ 10 раз в секунду
+
+switch_key_vkl	-	conf.tm_antidreb   сравниваетс€ 10 раз в секунду
+switch_key_vikl	-	conf.tm_antidreb   сравниваетс€ 10 раз в секунду
+
+kol_pribl_vikl	-	conf.tm_antidreb
+kol_pribl_vkl	-	conf.tm_antidreb
+
+kol_gr1_vkl		-	conf.tm_antidreb
+kol_gr2_vkl		-	conf.tm_antidreb
+
+
+10 раз в секунду
+tek_kol_dmk
+tek_kol
+это переменные дл€ усреднени€
+
+kol_rele_on
+kol_rele_off
+
+
+раз в секунду
+time_max		-	conf.time_max
+
+значени€ моментов в программе как бы умножено на 10 потому что в дес€тых
+
+
+основной конфиг						мак значение в программе 
+	u8 address;
+	u8 ver_po_st;
+	u8 ver_po_ml;
+	u8 tek_gr_kal; 
+	u8 tm_antidreb;					1..255  0,01-
+	u8 revers_group_select;
+	u8 revers_peredacha_select;
+	u16	per_usr;
+	u16	time_max;
+	u16 por_rele;
+	u16 tm_rele_on;
+	u16 tm_rele_off;
+	u16 rez16;
+
+конфиг дмк
+	u8 tm_antidreb;
+	u16	per_usr;
+	u16	time_max;
+	u16 por_rele;
+	u16 tm_rele_on;
+	u16 tm_rele_off;
+	u16 rez16;
+	u8 revers_switch;
+	u8 revers_menu;
+	u16 lin_max;
+
+
+
+
+
 i2c
 
 ѕодтверждение

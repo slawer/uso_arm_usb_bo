@@ -26,7 +26,19 @@ bool number_buff=0;
 
 uint16_t Buf_adc_zap1 [1000];
 uint16_t Buf_adc_zap2 [1000];
-uint8_t Buf_zap [6000];
+
+uint16_t Buf_adc_zap1_dmk [700];
+uint16_t Buf_adc_zap2_dmk [700];
+
+uint16_t Buf_max_zap1 [700];
+uint16_t Buf_max_zap2 [700];
+
+uint16_t Buf_max_zap1_dmk [700];
+uint16_t Buf_max_zap2_dmk [700];
+
+
+
+uint8_t Buf_zap [20000];
 uint16_t time_label=0;
 u16 por=0;
 
@@ -127,9 +139,12 @@ u16 kol_gr2_vkl=0;
 
 u8 avariya=0;
 u8 avariya_dmk=0;
+u8 avariya_both=0;
 u8 sost_flesh=0;
 
 u8 error_ds=0, fl_need_correct_ds=0;
+
+u8 tek=1,lin=2;
 
 
 #define PIN_Conrtol		GPIO_Pin_4

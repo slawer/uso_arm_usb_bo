@@ -436,32 +436,79 @@ return (*(__IO uint32_t*) address);
 		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i))=(*(__IO uint8_t *) (ADDR_FLASH + i));
 	}	
 	
+		if (conf.per_usr>9999)
+			conf.per_usr=3;	
+		
 		kol_usr=conf.per_usr;
-		conf.tm_antidreb=conf.tm_antidreb*10;
+//		conf.tm_antidreb=conf.tm_antidreb*10;
 	
 		if (conf.tm_antidreb==0)
 				conf.tm_antidreb=1;
 
+		if (conf.time_max>99)
+			conf.time_max=3;
+			
 		if (conf.tm_rele_on==conf.tm_rele_off)
 		{
 			conf.tm_rele_on=0;
 			conf.tm_rele_off=0;
 		}
-		
+
+		if (conf.tm_rele_on>999)
+			conf.tm_rele_on=20;
+				
+		if (conf.tm_rele_off>999)
+			conf.tm_rele_off=50;
+	
 		if (conf.tm_rele_on==0)
-			conf.tm_rele_on=10;
+			conf.tm_rele_on=20;
 		
 		if (conf.tm_rele_off==0)
 			conf.tm_rele_off=50;
 
 
+		
 	size=sizeof(st_conf_dmk);
 	
 	for (i = 0; i < size; i += 1)
   {
 		(*(__IO uint8_t *) ((__IO uint8_t *) (&conf_dmk) + i))=(*(__IO uint8_t *) (ADDR_FLASH+ sizeof(st_conf)+ i));
 	}	
+	
+	if ((conf_dmk.tm_antidreb=0)|(conf_dmk.tm_antidreb>100))
+		conf_dmk.tm_antidreb=1;
+	
+	if (conf_dmk.per_usr>9999)
+		conf_dmk.per_usr=0;
 
+	
+	kol_usr_dmk=conf_dmk.per_usr;
+	
+	if (conf_dmk.time_max>99)
+		conf_dmk.time_max=3;
+	
+	if (conf_dmk.tm_rele_on>999)
+		conf_dmk.tm_rele_on=20;
+	
+	if (conf_dmk.tm_rele_on==0)
+		conf_dmk.tm_rele_on=20;
+	
+	if (conf_dmk.tm_rele_off>999)
+		conf_dmk.tm_rele_off=50;
+	
+	if (conf_dmk.tm_rele_off==0)
+		conf_dmk.tm_rele_off=50;
+	
+	if (conf_dmk.revers_switch>1)
+		conf_dmk.revers_switch=1;
+	
+	if (conf_dmk.revers_menu>1)
+		conf_dmk.revers_menu=1;
+	
+	if ((conf_dmk.lin_max>2000)|(conf_dmk.lin_max==0))
+		conf_dmk.lin_max=1000;
+	
+/*
 	conf_dmk.tm_antidreb=1;
 	conf_dmk.rez8=2;
 	conf_dmk.per_usr=3;
@@ -495,7 +542,7 @@ return (*(__IO uint32_t*) address);
 	conf_dmk.kal.fz[7]=41;	
 	conf_dmk.kal.fz[8]=48;
 	conf_dmk.kal.fz[9]=49;	
-
+*/
 
 
 	

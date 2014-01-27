@@ -375,6 +375,7 @@ int USBH_USR_MSC_Application(void)
       }
       
       // Flash Disk is write protected //
+
       if (USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED)
       {
 				sost_flesh=0;	
@@ -407,12 +408,12 @@ int USBH_USR_MSC_Application(void)
 
 
 
-void dec_to_chr(u16 chislo,uint8_t* buf)
+void dec_to_chr(u16 chislo, uint8_t* buf)
 {
 	// BYTE *wbuff = buf;
 	u16 tmp=0, tk_n=0;
 		
-	if ((chislo&0x8000)==1)
+	if ((chislo&0x8000)==0x8000)
 	{
 		tk_n=1;
 		chislo=chislo&0x7FFF;
@@ -512,6 +513,15 @@ if (buffering)
 	Buf_zap[10]=95;
 	*/
 
+	if (DT_zap_pr.Hours==99)
+	{
+		DT_zap_pr.Hours=DT_zap.Hours;
+		DT_zap_pr.Minutes=DT_zap.Minutes;
+		DT_zap_pr.Seconds=DT_zap.Seconds;		
+		
+	}
+	else
+	{
 
 	Buf_zap[0]=(uint8_t)(DT_zap_pr.Hours/10)+(uint8_t)0x30;
 	Buf_zap[1]=(uint8_t)(DT_zap_pr.Hours%10)+(uint8_t)0x30;
@@ -525,6 +535,8 @@ if (buffering)
 	DT_zap_pr.Hours=DT_zap.Hours;
 	DT_zap_pr.Minutes=DT_zap.Minutes;
 	DT_zap_pr.Seconds=DT_zap.Seconds;
+	
+
 	
 /*
 	Buf_zap[0]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;
@@ -562,22 +574,65 @@ if (buffering)
 			while (kol_zap<600)
       {			
 			//	Buf_adc_zap1[kol_zap]=kol_zap;
-				Buf_zap[sm+kol_simb_in_stroka*kol_zap]=0x3B; //	;
-			 dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);			
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+1]);	
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+9]);	
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+16]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+17]);	
+				
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+24]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+25]);	
+				
+				
 				kol_zap++;			
-				Buf_zap[sm+kol_simb_in_stroka*kol_zap-1]=0x0D;	// enter
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap-1]=0x0D;	// enter
 			}
 		else
 			while (kol_zap<600)
       {			
-				while (kol_zap<600)
-				{			
+	
+/*					
 				//	Buf_adc_zap2[kol_zap]=kol_zap+50000;
 					Buf_zap[sm+kol_simb_in_stroka*kol_zap]=0x3B; //	;
-				 dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);			
+				  dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);
+					
+
+					// запись нового столбца 		
+		//			dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka*kol_zap+1]);
+					 
 					kol_zap++;			
 					Buf_zap[sm+kol_simb_in_stroka*kol_zap-1]=0x0D;	// enter
-				}		  	
+					*/
+					
+					
+								//	Buf_adc_zap1[kol_zap]=kol_zap;
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+1]);	
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+9]);	
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+16]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+17]);	
+				
+				
+			// запись нового столбца 
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+24]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+25]);	
+				
+				
+				kol_zap++;			
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap-1]=0x0D;	// enter
+				  	
 			}		
 			
 //			Buf_zap[sm+6*kol_zap]=13;
@@ -613,7 +668,7 @@ if (buffering)
 						{
 							STM_EVAL_LEDOn(LED4);
 							f_lseek(&file, (DWORD)(file.fsize));
-							f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+							f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka_new*kol_zap, (void *)&bytesWritten); 				
 							f_close (&file);
 
 					//		if 	(DT.Minutes==0)
@@ -654,7 +709,7 @@ if (buffering)
 								
 								STM_EVAL_LEDOn(LED4);
 								f_lseek(&file,(DWORD) file.fsize);				
-								f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka*kol_zap, (void *)&bytesWritten); 				
+								f_write (&file, (uint8_t*)Buf_zap, sm+kol_simb_in_stroka_new*kol_zap, (void *)&bytesWritten); 				
 								f_close (&file);
 								
 								//		if (file_name[5]!=(DT.Day%10+0x30))
@@ -702,7 +757,7 @@ if (buffering)
 					PORT_ZAP_EN->BSRRH = PIN_ZAP_EN;  // off  PORT_ZAP_EN
 					PORT_ZAP_DIS->BSRRL = PIN_ZAP_DIS;  // on  PORT_ZAP_DIS
 				}
-				
+			}
 			buffering=0;
 		}
 }

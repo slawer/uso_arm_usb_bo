@@ -30,6 +30,8 @@
 #include "stm32f4xx_flash.h"
 
 
+u16 kol_fz=0;
+
 extern __IO uint16_t sample[2];
 
 extern void FLASH_Unlock(void);
@@ -78,7 +80,7 @@ u16 time_max_dmk=0;
 u16	kol_rele_on=0;
 u16	kol_rele_off=0;
 u16 time_max=0;
-u8 tk_null=0, tk_null_pt=0, tk_dmk_null=0;
+u8 tk_null=0, tk_null_akb=0, tk_null_dmk=0;
 
 TDateTime DT1;
 		
@@ -413,6 +415,7 @@ u16 moving_average_dmk(u16 kod, u8 numb)
 		buf_sum_dmk-=tmp;
 		return  tmp;
 	}
+	
 }
 
 u8 test_rele(u16 fz, u8 numb)
@@ -430,7 +433,7 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_on=0;
 		kol_rele_off=0;
 		avariya=1;
-		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
+	//	PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
 		PORT_RELE->BSRRL = PIN_RELE;	// on PIN_RELE		
 	}
 	
@@ -439,7 +442,7 @@ u8 test_rele(u16 fz, u8 numb)
 		kol_rele_on=0;
 		kol_rele_off=0;
 		avariya=0;
-		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+	//	PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
 		PORT_RELE->BSRRH = PIN_RELE;  	// off  PIN_RELE		
 	}
 }
@@ -459,7 +462,7 @@ u8 test_rele_dmk(u16 fz, u8 numb)
 		kol_rele_on_dmk=0;
 		kol_rele_off_dmk=0;
 		avariya_dmk=1;
-		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
+//		PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA		
 		PORT_RELE_DMK->BSRRL = PIN_RELE_DMK;	// on PIN_RELE		
 	}
 	
@@ -468,7 +471,7 @@ u8 test_rele_dmk(u16 fz, u8 numb)
 		kol_rele_on_dmk=0;
 		kol_rele_off_dmk=0;
 		avariya_dmk=0;
-		PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
+	//	PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA
 		PORT_RELE_DMK->BSRRH = PIN_RELE_DMK;  	// off  PIN_RELE		
 	}
 }
@@ -478,6 +481,8 @@ void update_indicators()
 		extern st_conf conf;
 	  extern st_conf_dmk conf_dmk;
 		extern u8 bufout[20];
+	
+
 //		u8 bufer[8]={0x40,0x60,0x70,0x78,0x7C,0x7E,0x7F,0xFF};
 	//	u8 bufer[8]={0x00,0xFF,0x00,0xFF,0x00,0xFF,0x00,0xFF};
 
@@ -509,23 +514,26 @@ void update_indicators()
 			*/
 				}
 				else
-				if ((sost_menu==1) | (sost_menu==2))
-					indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
+					if ((sost_menu==1) | (sost_menu==2))
+						indicate_time(4,(u8) bufout[2],(u8) bufout[1],1);				//	time	
 
 	
 		//		numb_key
-				 if (tk_null==1)
+		//		 if (tk_null==1)
+				if (((tk_null_akb)&(numb_key==0))|((tk_null_dmk)&(numb_key==1)))
 				 {
-					 indicate_err(1);   	// tek
-					 indicate_err(2);			// lineika 
+					 
+					 indicate_err(tek);   	// tek
+					 indicate_err(lin);			// lineika 
 					 indicate_err(3);			// maximum
 				 }
 				 else
 				 {		
-					 if ((avariya==1)&(del%5>3))
+				//	 if ((avariya_both==1)&(del%5>3))
+					 if ((((avariya_dmk==1)&(numb_key==1))|((avariya==1)&(numb_key==0)))&(del%5>3))
 					 {
-							ind_blank_all(1); 
-							ind_blank_all(2); 
+							ind_blank_all(tek); 
+							ind_blank_all(lin); 
 							ind_blank_all(3); 	 
 						}
 						else
@@ -535,25 +543,28 @@ void update_indicators()
 					//		indicate(2,(u16)(fz_average[0]),3);   							// tek							
 					//		indicate(3,(u16)(max[0]),3);												// maximum
 
-							indicate(2,(u16)(fz_average[numb_key]),3);   							// tek							
+					//		indicate(2,(u16)(fz_average[numb_key]),3);   							// tek							
+							indicate(tek,(u16)(fz_average[numb_key]),3);   							// tek							
+												
 							indicate(3,(u16)(max[numb_key]),3);												// maximum
 							
 							if (numb_key==1)
 							{
-								indicate_lin(1,(u16) fz_average[1], (u16) conf_dmk.lin_max, (u16) conf.lin.kol_st);			// lineika 							
+								indicate_lin(lin,(u16) fz_average[1], (u16) conf_dmk.lin_max, (u16) conf.lin.kol_st);			// lineika 				
+					//			indicate_lin(lin,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);			// lineika								
 							}
 							else
 							{
 								if (conf.tek_gr_kal==conf.revers_group_select)
 										if (sost_pribl==0)  {
-											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);		}	// lineika 
+											indicate_lin(lin,(u16) fz_average[0], (u16) conf.lin.max1, (u16) conf.lin.kol_st);		}	// lineika 
 										else {
-											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);		}	// lineika 
+											indicate_lin(lin,(u16) fz_average[0], (u16) conf.lin.max2, (u16) conf.lin.kol_st);		}	// lineika 
 								else
 										if (sost_pribl==0) {
-											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);		}	// lineika 
+											indicate_lin(lin,(u16) fz_average[0], (u16) conf.lin.max3, (u16) conf.lin.kol_st);		}	// lineika 
 										else {
-											indicate_lin(1,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);		}	// lineika 
+											indicate_lin(lin,(u16) fz_average[0], (u16) conf.lin.max4, (u16) conf.lin.kol_st);		}	// lineika 
 						
 							//	indicate_lin(1,(u16) fz_average[0], (u16) 1000, (u16) conf.lin.kol_st);
 							//		indicate_lin(1,(u16) kol_cifr*1111, (u16) 1000, (u16) conf.lin.kol_st);
@@ -810,7 +821,7 @@ void SysTick_Handler(void)
 			}
 	}
 	
-	conf.tm_antidreb=2;
+//	conf.tm_antidreb=2;
 	if (kol_pribl_vkl>=conf.tm_antidreb)
 	{
 			sost_pribl=1;	
@@ -856,72 +867,6 @@ void SysTick_Handler(void)
 		else
 			if (kol_gr2_vkl>0)
 				kol_gr2_vkl--;	
-			
-			
-			//	conf.tm_antidreb=2;
-		if (kol_gr1_vkl==conf.tm_antidreb)
-		{
-			
-			if (sost_menu==0)
-			{
-				conf.tek_gr_kal=0;
-				new_group=1;
-		 // gr 1
-				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
-				PORT_L2->BSRRH = PIN_L2;	  // off PIN_L2
-			}
-			
-			if (sost_menu==1)   //  ust avariinogo zna4eniya
-			{
-				if (conf.por_rele==100)
-					conf.por_rele=10;
-				else
-					conf.por_rele+=10;
-			}
-			
-			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
-			{
-				if (conf.time_max==60)
-					conf.time_max=0;
-				else
-					conf.time_max+=1;
-			}			
-			
-				kol_gr1_vkl=0;
-				kol_gr2_vkl=0;
-		}		
-
-		if (kol_gr2_vkl==conf.tm_antidreb)
-		{
-			if (sost_menu==0)
-			{
-				conf.tek_gr_kal=1;
-				new_group=1;
-				 // gr 2
-				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
-				PORT_L2->BSRRL = PIN_L2;	  // on PIN_L2
-			}
-			
-			if (sost_menu==1)   //  ust avariinogo zna4eniya momenta
-			{
-				if (conf.por_rele==0)
-					conf.por_rele=100;
-				else
-					conf.por_rele-=10;
-				
-			}
-			
-			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
-			{
-				if (conf.time_max==0)
-					conf.time_max=60;
-				else
-					conf.time_max-=1;
-			}
-			
-				kol_gr1_vkl=0;
-				kol_gr2_vkl=0;
-		}				
 	
 	/*
 	  RCC_AHB1PeriphClockCmd(GPIO_CLK[Led], ENABLE);
@@ -952,12 +897,15 @@ void SysTick_Handler(void)
 	// раз в 100 мс
 	if (kol_average==10)
 	{					
-		average[0]=summa[0]/kol_average;
-		average[1]=summa[1]/kol_average;
+		average[0]=summa[0]/kol_average;		// AKB
+		average[1]=summa[1]/kol_average;		// DMK
 		
 		kol_average=0;
 		summa[0]=0;
 		summa[1]=0;
+		
+		average[0]=sample[0];		// AKB
+		average[1]=sample[1];		// DMK	
 		
 		// раз в 100 мс
 		// вычисляем физическую величину
@@ -973,17 +921,20 @@ void SysTick_Handler(void)
 				else
 					fz[0]=fiz_vel(average[0],&conf.gr_kal2.tabl2);
 			
+		tk_null_akb=tk_null;
+				
 
-	//	tk_null_pt=tk_null;
 		fz[1]=fiz_vel(average[1],&conf_dmk.kal);
-//		tk_dmk_null=tk_null;
-//		tk_null=tk_null_pt;
+				
+		tk_null_dmk=tk_null;
 		
 
+				// test stupenka
+		//		fz[1]=kol_fz;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			// проверяем реле на срабатывание
-			
+/*			
 		// select source for rele: moment or davlenie
 		if (conf_dmk.revers_switch==0)
 		{
@@ -1011,7 +962,13 @@ void SysTick_Handler(void)
 				PORT_RELE_DMK->BSRRH = PIN_RELE_DMK;  	// off  PIN_RELE	
 			}
 		}
-		
+*/	
+
+				test_rele(fz[0], 0);	   			// akb
+				test_rele_dmk(fz[1], 0);	    // dmk
+						
+				
+				
 	// test_rele(ADC3ConvertedValue, 0);	  // davlenie
 
 		
@@ -1048,6 +1005,118 @@ void SysTick_Handler(void)
 	 */
 	
 		
+		//  кнопки нажатия режимов	
+			
+			//	conf.tm_antidreb=2;
+		if (kol_gr1_vkl>=conf.tm_antidreb)
+		{
+			
+			if (sost_menu==0)
+			{
+				conf.tek_gr_kal=0;
+				new_group=1;
+		 // gr 1
+				PORT_L1->BSRRL = PIN_L1;  	// on  PIN_L1
+				PORT_L2->BSRRH = PIN_L2;	  // off PIN_L2
+			}
+			else						
+				timer_menu=0;
+			
+			if (sost_menu==1)   //  ust avariinogo zna4eniya
+			{
+		//		extern u8 numb_key;
+							
+				if (numb_key==1)
+				{
+					if (conf_dmk.por_rele==990)
+						conf_dmk.por_rele=0;
+					else
+						conf_dmk.por_rele+=10;
+
+				}	 
+				else
+				{
+					if (conf.por_rele==990)
+						conf.por_rele=0;
+					else
+						conf.por_rele+=10;
+				}
+			}
+			
+			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
+			{
+				if (numb_key==1)
+				{
+					if (conf_dmk.time_max==99)
+						conf_dmk.time_max=0;
+					else
+						conf_dmk.time_max+=1;
+
+				}
+				else
+				{
+					if (conf.time_max==99)
+						conf.time_max=0;
+					else
+						conf.time_max+=1;
+				}
+			}						
+				kol_gr1_vkl=0;
+				kol_gr2_vkl=0;
+		}		
+
+		if (kol_gr2_vkl>=conf.tm_antidreb)
+		{
+			if (sost_menu==0)
+			{
+				conf.tek_gr_kal=1;
+				new_group=1;
+				 // gr 2
+				PORT_L1->BSRRH = PIN_L1;  	// off  PIN_L1
+				PORT_L2->BSRRL = PIN_L2;	  // on PIN_L2
+			}
+			else
+				timer_menu=0;
+			
+			if (sost_menu==1)   //  ust avariinogo zna4eniya momenta
+			{
+				if (numb_key==1)
+				{
+					if (conf_dmk.por_rele==0)
+						conf_dmk.por_rele=990;
+					else
+						conf_dmk.por_rele-=10;
+				}
+				else
+				{
+					if (conf.por_rele==0)
+						conf.por_rele=990;
+					else
+						conf.por_rele-=10;
+				}				
+			}
+			
+			if (sost_menu==2)		//	ust vremya indikacii max zhaceniya momenta
+			{
+				if (numb_key==1)
+				{
+					if (conf_dmk.time_max==0)
+						conf_dmk.time_max=99;
+					else
+						conf_dmk.time_max-=1;					
+				}
+				else
+				{
+					if (conf.time_max==0)
+						conf.time_max=99;
+					else
+						conf.time_max-=1;
+				}
+			}
+			
+				kol_gr1_vkl=0;
+				kol_gr2_vkl=0;
+		}				
 		
 		
 
@@ -1090,8 +1159,7 @@ void SysTick_Handler(void)
 				switch_key_vikl=0;
 		} 
 		
-			
-		 
+ 
 		 
 		 if ((butt_menu_on==1)&(butt_menu_on_pr==0))
 		 {
@@ -1099,23 +1167,85 @@ void SysTick_Handler(void)
 				// 0 - norm rab rezim
 				// 1 - ust avariinogo zna4eniya
 				// 2 - ust vremya indikacii max zhaceniya momenta
+			 
+			  timer_menu=0;
 				if (sost_menu==3)
-					sost_menu=0;
+				//	sost_menu=0;
+					timer_menu=10;
 				
-				timer_menu=0;
+				
 		 }
-/*
+
 		 if (timer_menu==10)
 		 {
 				timer_menu=0;
 				sost_menu=0;
+			 // сохранить новые настройки времени накопления макс значения и порога реле
+			 
+			 
+	//	  b_err_cl=0;
+	//		error_ds=0;
+			 
+			start_ds();
+			write_bait_ds(0xD0);
+			write_bait_ds(0x0E);
+			
+			 
+			write_bait_ds(conf.por_rele/10);									
+			write_bait_ds(conf.time_max);   
+			 
+			write_bait_ds(conf_dmk.por_rele/10);									
+			write_bait_ds(conf_dmk.time_max);   
+			 
+			write_bait_ds(0x12);  
+			write_bait_ds(0x34); 
+			
+			stop_ds();			 			
+			
+				 /*
+				 
+				__disable_irq();
+
+				FLASH_Unlock();
+
+				FLASH_EraseSector(STR_FLASH,VoltageRange_3);
+
+				FLASH_Lock();
+				FLASH_Unlock();
+				
+				for (i = 0; i < rxsize-10; i += 2)
+				{
+					tmp1=RxBuffer[i+10];
+					tmp2=RxBuffer[i+11];
+					tmp3=0;
+					if (tmp1>'9')	
+							tmp3=(tmp1-0x37)<<4;
+					else
+							tmp3=(tmp1-0x30)<<4;
+		
+					if (tmp2>'9')	
+							tmp3+=(tmp2-0x37);
+					else
+							tmp3+=(tmp2-0x30);	
+					
+					FLASH_ProgramByte(ADDR_FLASH+(i>>1), tmp3);	
+				}
+
+				FLASH_Lock();
+				__enable_irq();
+				 
+				 */
+			 
 		 }
-	*/	 
+	 
 		 	
 		if (conf_dmk.revers_switch==0)
 		{
 			if (switch_key_on==0)
+			{
 				numb_key=0;
+
+			}
 			else
 				numb_key=1;
 		}
@@ -1125,29 +1255,64 @@ void SysTick_Handler(void)
 				numb_key=1;
 			else
 				numb_key=0;
-		}			
+		}		
+
+
+		if (numb_key==1)
+			avariya_both=avariya_dmk;
+		else
+			avariya_both=avariya;
+
+		
+		if (avariya_both)
+			PORT_AVARIYA->BSRRL = PIN_AVARIYA;	// on PIN_AVARIYA
+		else
+			PORT_AVARIYA->BSRRH = PIN_AVARIYA;  	// off  PIN_AVARIYA	
 				
 		if (number_buff)
-			if (tk_null==1)
-				Buf_adc_zap2[por++]=fz_average[numb_key]|0x8000;	
+		{
+			if (tk_null_dmk==1)
+				Buf_adc_zap2_dmk[por]=fz_average[1]|0x8000;	
 			else
-				Buf_adc_zap2[por++]=fz_average[numb_key]&0x7FFF;			
+				Buf_adc_zap2_dmk[por]=fz_average[1]&0x7FFF;	
+			
+			Buf_max_zap2[por]=max[0];
+			Buf_max_zap2_dmk[por]=max[1];
+			
+			if (tk_null_akb==1)
+				Buf_adc_zap2[por++]=fz_average[0]|0x8000;	
+			else
+				Buf_adc_zap2[por++]=fz_average[0]&0x7FFF;			
+		}
 		else
-			if (tk_null==1)
-				Buf_adc_zap1[por++]=fz_average[numb_key]|0x8000;	
+		{
+			if (tk_null_dmk==1)
+				Buf_adc_zap1_dmk[por]=fz_average[1]|0x8000;		
 			else
-				Buf_adc_zap1[por++]=fz_average[numb_key]&0x7FFF;
-		
+				Buf_adc_zap1_dmk[por]=fz_average[1]&0x7FFF;	
+			
+			Buf_max_zap1[por]=max[0];
+			Buf_max_zap1_dmk[por]=max[1];
+						
+			if (tk_null_akb==1)
+				Buf_adc_zap1[por++]=fz_average[0]|0x8000;	
+			else
+				Buf_adc_zap1[por++]=fz_average[0]&0x7FFF;
+		}
 		
 		
 		if (por==999)
 			por=999;
 
+		kol_fz++;
+		if (kol_fz>1000)
+			kol_fz=0;
 		
 //	read_dat_clock();
 	del++;
 	if (del==10)
 	{		
+
 		// раз в секунду
 		tek_max_min++;
 	//	if (tek_max_min==60) 
@@ -1157,7 +1322,9 @@ void SysTick_Handler(void)
 	
 		del=0;
 		tick++;
-		timer_menu++;
+			
+		if (sost_menu!=0)
+			timer_menu++;
 		if (tick==600000)
 			tick=0;
 		
@@ -1192,7 +1359,7 @@ void SysTick_Handler(void)
 		}
 		
 
-		
+
 //		rtc_Get(&DT1);	
 		
 	//	if (DT1.Seconds==0)
@@ -1210,9 +1377,15 @@ void SysTick_Handler(void)
 			Buf_zap[5]=0x3A;
 			Buf_zap[6]=(uint8_t)(bufout[0]/10)+(uint8_t)0x30;
 			Buf_zap[7]=(uint8_t)(bufout[0]%10)+(uint8_t)0x30;	
-			*/		
+			*/	
+
+			/*			
 			if (DT_zap.Hours!=99)
 				buffering=1;
+			*/
+			
+			buffering=1;
+			
 			por=0;
 									
 			DT_zap.Hours=bufout[2];
@@ -1349,6 +1522,7 @@ void SysTick_Handler(void)
 									write_bait_ds(0x00);
 
 									write_bait_ds((((bufout[0]/10)<<4)+(bufout[0]%10))&0x7F);
+								//	write_bait_ds(0);
 									write_bait_ds(((bufout[1]/10)<<4)+(bufout[1]%10));
 									write_bait_ds(((bufout[2]/10)<<4)+(bufout[2]%10));			
 									write_bait_ds(1);
@@ -1476,14 +1650,32 @@ void SysTick_Handler(void)
 				else
 						tmp3+=(tmp2-0x30);	
 				
-				FLASH_ProgramByte(ADDR_FLASH+(i>>1), tmp3);				
+				FLASH_ProgramByte(ADDR_FLASH+(i>>1), tmp3);	
+/*				
 				*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) = tmp3;//*(__IO uint8_t *) ((__IO uint8_t *) (&conf) + i);
 				if (*(__IO uint8_t *) (BKPSRAM_BASE + (i>>1)) != tmp3)
 						errors=1;
+*/
 			}
+	
 			
-
 			FLASH_Lock();
+			
+			start_ds();
+			write_bait_ds(0xD0);
+			write_bait_ds(0x0E);
+						 
+			write_bait_ds(1);									
+			write_bait_ds(2);   
+			 
+			write_bait_ds(3);									
+			write_bait_ds(4);   
+			 
+			write_bait_ds(5);   // защита
+			write_bait_ds(6); 	// защита
+			
+			stop_ds();
+			
 	//		sleep(1000);
 			__enable_irq();
 			
@@ -1540,8 +1732,10 @@ void SysTick_Handler(void)
 			TxBuffer[8]='k';	
 			TxBuffer[9]='e';
 			TxBuffer[10]='y';	
+			TxBuffer[11]='_';	
+			TxBuffer[12]='2';	
 	
-			txsize=11;
+			txsize=13;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 		}
@@ -1635,7 +1829,8 @@ void SysTick_Handler(void)
 			write_bait_ds(0xD0);
 			write_bait_ds(0x00);
 			
-			write_bait_ds(((RxBuffer[20]-0x30)<<4)+(RxBuffer[21]-0x30));
+			write_bait_ds((((RxBuffer[20]-0x30)<<4)+(RxBuffer[21]-0x30))&0x7F);
+	//		write_bait_ds(0);
 			write_bait_ds(((RxBuffer[18]-0x30)<<4)+(RxBuffer[19]-0x30));
 			write_bait_ds(((RxBuffer[16]-0x30)<<4)+(RxBuffer[17]-0x30));			
 			write_bait_ds(1);
@@ -1724,7 +1919,7 @@ if (1)
 			USART_ITConfig(USART2, USART_IT_TC, ENABLE);
 			GPIO_WriteBit(GPIOD, rx_pin_en, Bit_SET); 
 			
-			// test zapis for controlling time on fleshka
+			// 1 test zapis for controlling time on fleshka
 			tmp=por;
 			TxBuffer[0]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
@@ -1754,7 +1949,7 @@ if (1)
 			TxBuffer[17]=(uint8_t)(DT1.Seconds%10)+(uint8_t)0x30;	
 			TxBuffer[18]=0x20;
 */
-			// date
+			// 2 date
 			TxBuffer[5]=(uint8_t)(bufout[6]/10)+(uint8_t)0x30;	
 			TxBuffer[6]=(uint8_t)(bufout[6]%10)+(uint8_t)0x30;	
 			TxBuffer[7]=(uint8_t)(bufout[5]/10)+(uint8_t)0x30;	
@@ -1763,7 +1958,7 @@ if (1)
 			TxBuffer[10]=(uint8_t)(bufout[4]%10)+(uint8_t)0x30;	
 			TxBuffer[11]=0x20;				
 			
-			// time
+			// 3 time
 			TxBuffer[12]=(uint8_t)(bufout[2]/10)+(uint8_t)0x30;	
 			TxBuffer[13]=(uint8_t)(bufout[2]%10)+(uint8_t)0x30;			
 			TxBuffer[14]=(uint8_t)(bufout[1]/10)+(uint8_t)0x30;	
@@ -1801,12 +1996,12 @@ if (1)
 			TxBuffer[17]=(uint8_t)((tmp&0x0F)+(uint8_t)0x30);	
 			TxBuffer[18]=0x20;
 */			
-			// dat pribl
+			// 4 dat pribl
 			TxBuffer[19]=sost_pribl+0x30;
 			TxBuffer[20]=0x20;
 			
 			
-			// zn from adc with calibr and averaging
+			// 5 zn from adc with calibr and averaging
 			tmp=fz_average[0]%10000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
@@ -1817,6 +2012,7 @@ if (1)
 			TxBuffer[24]=(uint8_t)(tmp)+(uint8_t)0x30;
 			TxBuffer[25]=0x20;		
 			
+			// 6 
 			tmp=fz_average[0]%10000;
 			TxBuffer[26]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
@@ -1827,6 +2023,7 @@ if (1)
 			TxBuffer[29]=(uint8_t)(tmp)+(uint8_t)0x30;		
 			TxBuffer[30]=0x20;
 			
+			// 7 
 			tmp=max[0]%10000;
 			TxBuffer[31]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
@@ -1835,25 +2032,125 @@ if (1)
 			TxBuffer[33]=(uint8_t)(tmp/10)+(uint8_t)0x30;
 			tmp%=10;	
 			TxBuffer[34]=(uint8_t)(tmp)+(uint8_t)0x30;		
-
 			TxBuffer[35]=0x20;
-			TxBuffer[36]=(uint8_t)(avariya)+(uint8_t)0x30;	
-
+			
+			// 8 avariya
+			TxBuffer[36]=(uint8_t)(avariya_both)+(uint8_t)0x30;	
 			TxBuffer[37]=0x20;
-			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;
 			
+			// 9 sost fleshki
+			TxBuffer[38]=(uint8_t)(sost_flesh)+(uint8_t)0x30;			
 			TxBuffer[39]=0x20;
-			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;
 			
+			// 10 tek gr kalibrovok
+			TxBuffer[40]=(uint8_t)(conf.tek_gr_kal)+(uint8_t)0x30;		
 			TxBuffer[41]=0x20;
+			
+			// 11 error clock
 			TxBuffer[42]=(uint8_t)(error_ds)+(uint8_t)0x30;
+			
+			
+			//  momentomer 2
+			TxBuffer[43]=0x20;
+			
+			// 12 adc akb
+			tmp=average[0]%10000;
+			TxBuffer[44]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[45]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[46]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[47]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[48]=0x20;				
+	
+			// 13 adc dmk
+			tmp=average[1]%10000;
+			TxBuffer[49]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[50]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[51]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[52]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[53]=0x20;		
+
+			// 14 tek zn akb
+			tmp=fz_average[0]%10000;
+			TxBuffer[54]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[55]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[56]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[57]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[58]=0x20;	
+			
+			
+			// 15 tek zn dmk
+			tmp=fz_average[1]%10000;
+			TxBuffer[59]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[60]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[61]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[62]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[63]=0x20;	
+	
+			// 16 max  akb
+			tmp=max[0]%10000;
+			TxBuffer[64]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[65]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[66]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[67]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[68]=0x20;		
+			
+			
+			// 17 max dmk
+			tmp=max[1]%10000;
+			TxBuffer[69]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
+			tmp%=1000;
+			TxBuffer[70]=(uint8_t)(tmp/100)+(uint8_t)0x30;
+			tmp%=100;		
+			TxBuffer[71]=(uint8_t)(tmp/10)+(uint8_t)0x30;
+			tmp%=10;	
+			TxBuffer[72]=(uint8_t)(tmp)+(uint8_t)0x30;
+			TxBuffer[73]=0x20;	
+	
+			// 18 avariya akb
+			TxBuffer[74]=(uint8_t)(avariya)+(uint8_t)0x30;	
+			TxBuffer[75]=0x20;
+			
+			// 19 avariya dmk
+			TxBuffer[76]=(uint8_t)(avariya_dmk)+(uint8_t)0x30;	
+			TxBuffer[77]=0x20;
+	
+			// 20 sost switch
+			TxBuffer[78]=(uint8_t)(switch_key_on)+(uint8_t)0x30;	
+	//		TxBuffer[37]=0x20;	
+	
+	
 		/*
+		
+		average[0]=summa[0]/kol_average;		// AKB
+		average[1]=summa[1]/kol_average;		// DMK
+		
      + need:
-			1 avariya   
-			2 zapis norm or error  
-			3 tek gr kal
+		  1   adc akb
+			2  	adc dmk
+			3   tek zn akb
+			4  	tek zn dmk
+			5 	max zn akb
+			6 	max zn dmk
+			7   avariya akb
+			8   avariya dmk
+			
 */
-			txsize=43;
+			txsize=79;//43;
 			tekper=0;
 			USART_SendData(USART2, 0x3A);
 		}		
@@ -2070,13 +2367,156 @@ if (1)
 			{
 				uint32_t data;				
 				data= *(__IO uint32_t*) (ADDR_FLASH+i);
+		//		data= *(__IO uint32_t*) (&conf+i);
 			
+				
 				TxBuffer[i+3]=(u8) (data>>24);
 				TxBuffer[i+2]=(u8) (data>>16);
 				TxBuffer[i+1]=(u8) (data>>8);
 				TxBuffer[i]=(u8) data;
 			}	
+			
+	
+				TxBuffer[12]=(u8) (conf.por_rele);
+				TxBuffer[13]=(u8) (conf.por_rele>>8);
+			
+				TxBuffer[10]=(u8) (conf.time_max);
+				TxBuffer[11]=(u8) (conf.time_max>>8);			
+			
+			
+			for (i = 0; i < (sizeof(st_conf_dmk)); i += 4)
+			{
+				uint32_t data;				
+				data= *(__IO uint32_t*) (ADDR_FLASH+txsize+i);
+			
+				TxBuffer[txsize+i+3]=(u8) (data>>24);
+				TxBuffer[txsize+i+2]=(u8) (data>>16);
+				TxBuffer[txsize+i+1]=(u8) (data>>8);
+				TxBuffer[txsize+i]=(u8) data;
+			}
+			
+				TxBuffer[txsize+6]=(u8) (conf_dmk.por_rele);
+				TxBuffer[txsize+7]=(u8) (conf_dmk.por_rele>>8);
+			
+				TxBuffer[txsize+4]=(u8) (conf_dmk.time_max);
+				TxBuffer[txsize+5]=(u8) (conf_dmk.time_max>>8);	
+			
+			/*
+		u8 tm_antidreb;
+		u8 rez8;
+	
+		u16	per_usr;
+		u16	time_max;
+		u16 por_rele;
+		u16 tm_rele_on;
+		u16 tm_rele_off;
+		u16 rez16;
+		
+		u8 revers_switch;
+		u8 revers_menu;
+		u16 lin_max;
+		
+		st_tab_kal kal;
+			*/
+			
+			/*
+			TxBuffer[txsize]=  (u8) 	1;	
+			
+			TxBuffer[txsize+1]=(u8) 	2;	
+			
+			TxBuffer[txsize+2]=(u8) 	3;	
+			TxBuffer[txsize+3]=(u8) 	0;
+			
+			TxBuffer[txsize+4]=(u8) 	4;	
+			TxBuffer[txsize+5]=(u8) 	0;
+			
+			TxBuffer[txsize+6]=(u8) 	5;	
+			TxBuffer[txsize+7]=(u8) 	0;	
+			
+			TxBuffer[txsize+8]=(u8) 	6;	
+			TxBuffer[txsize+9]=(u8) 	0;
+			
+			TxBuffer[txsize+10]=(u8) 	7;	
+			TxBuffer[txsize+11]=(u8) 	0;
 
+			TxBuffer[txsize+12]=(u8) 	8;	
+			TxBuffer[txsize+13]=(u8) 	0;
+
+			TxBuffer[txsize+14]=  (u8) 	9;	
+			
+			TxBuffer[txsize+15]=(u8) 	10;
+			
+			
+			TxBuffer[txsize+16]=(u8) 	11;	
+			TxBuffer[txsize+17]=(u8) 	0;
+			
+			// kal
+			TxBuffer[txsize+18]=(u8) 	12;	
+			TxBuffer[txsize+19]=(u8) 	0;
+			
+			TxBuffer[txsize+20]=(u8) 	13;	
+			TxBuffer[txsize+21]=(u8) 	0;	
+			
+			TxBuffer[txsize+22]=(u8) 	14;	
+			TxBuffer[txsize+23]=(u8) 	0;
+			
+			TxBuffer[txsize+24]=(u8) 	15;	
+			TxBuffer[txsize+25]=(u8) 	0;
+
+			TxBuffer[txsize+26]=(u8) 	16;	
+			TxBuffer[txsize+27]=(u8) 	0;			
+
+			TxBuffer[txsize+28]=(u8) 	17;	
+			TxBuffer[txsize+29]=(u8) 	0;
+			
+			TxBuffer[txsize+30]=(u8) 	18;	
+			TxBuffer[txsize+31]=(u8) 	0;	
+			
+			TxBuffer[txsize+32]=(u8) 	19;	
+			TxBuffer[txsize+33]=(u8) 	0;
+			
+			TxBuffer[txsize+34]=(u8) 	20;	
+			TxBuffer[txsize+35]=(u8) 	0;
+
+			TxBuffer[txsize+36]=(u8) 	21;	
+			TxBuffer[txsize+37]=(u8) 	0;
+			
+			// kal 2 stolb
+			TxBuffer[txsize+38]=(u8) 	22;	
+			TxBuffer[txsize+39]=(u8) 	0;
+			
+			TxBuffer[txsize+40]=(u8) 	23;	
+			TxBuffer[txsize+41]=(u8) 	0;	
+			
+			TxBuffer[txsize+42]=(u8) 	24;	
+			TxBuffer[txsize+43]=(u8) 	0;
+			
+			TxBuffer[txsize+44]=(u8) 	25;	
+			TxBuffer[txsize+45]=(u8) 	0;
+
+			TxBuffer[txsize+46]=(u8) 	26;	
+			TxBuffer[txsize+47]=(u8) 	0;			
+
+			TxBuffer[txsize+48]=(u8) 	27;	
+			TxBuffer[txsize+49]=(u8) 	0;
+			
+			TxBuffer[txsize+50]=(u8) 	28;	
+			TxBuffer[txsize+51]=(u8) 	0;	
+			
+			TxBuffer[txsize+52]=(u8) 	29;	
+			TxBuffer[txsize+53]=(u8) 	0;
+			
+			TxBuffer[txsize+54]=(u8) 	30;	
+			TxBuffer[txsize+55]=(u8) 	0;
+
+			TxBuffer[txsize+56]=(u8) 	31;	
+			TxBuffer[txsize+57]=(u8) 	0;			
+			*/
+			
+			
+			txsize+=sizeof(st_conf_dmk);
+			
+			
 //}
 
 			tekper=0;

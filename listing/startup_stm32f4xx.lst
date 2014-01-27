@@ -850,5 +850,5 @@ ARM Macro Assembler    Page 14
 
 
 INC -Id:\Keil4\ARM\CMSIS\Include -Id:\Keil4\ARM\Inc\ST\STM32F4xx --predefine="_
-_EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list=.\listing\startup_stm32f4x
-x.lst src\startup_stm32f4xx.s
+_MICROLIB SETA 1" --list=.\listing\startup_stm32f4xx.lst src\startup_stm32f4xx.
+s

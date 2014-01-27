@@ -7,6 +7,9 @@
 
 #define	kol_simb_in_stroka	8 // 7 - without point
 
+#define	kol_simb_in_stroka_new	32 // 7 - without point
+
+
 
 #define tx_pin_en	GPIO_Pin_4
 #define rx_pin_en	GPIO_Pin_3
@@ -39,9 +42,21 @@ extern zap kor[numbkor];
 
 extern TDateTime DT_zap, DT_zap_pr; 
 extern bool number_buff;
+
 extern uint16_t Buf_adc_zap1 [1000];
 extern uint16_t Buf_adc_zap2 [1000];
-extern uint8_t Buf_zap [6000];
+
+extern uint16_t Buf_adc_zap1_dmk [700];
+extern uint16_t Buf_adc_zap2_dmk [700];
+
+extern uint16_t Buf_max_zap1 [700];
+extern uint16_t Buf_max_zap2 [700];
+
+extern uint16_t Buf_max_zap1_dmk [700];
+extern uint16_t Buf_max_zap2_dmk [700];
+
+
+extern uint8_t Buf_zap [20000];
 extern uint16_t time_label;
 extern u16 por;
 
@@ -191,7 +206,7 @@ extern u16 tek_kol_dmk;
 extern u16 kol_usr_dmk;
 extern u32 buf_sum_dmk;
 
-#define PIN_PRIBL                         GPIO_Pin_5
+#define PIN_PRIBL                         GPIO_Pin_1
 #define PORT_PRIBL                    		GPIOC
 
 #define PIN_RELE                         	GPIO_Pin_4
@@ -200,16 +215,16 @@ extern u32 buf_sum_dmk;
 #define PIN_RELE_DMK                      GPIO_Pin_6
 #define PORT_RELE_DMK                    	GPIOE
 
-#define PIN_K1                         		GPIO_Pin_7
+#define PIN_K1                         		GPIO_Pin_7		// BTN1	rezim 1
 #define PORT_K1                 					GPIOC
 
-#define PIN_L1                         		GPIO_Pin_6
+#define PIN_L1                         		GPIO_Pin_6		// LED1   VD1    rezim 1
 #define PORT_L1                 					GPIOC
 
-#define PIN_K2                         		GPIO_Pin_9
+#define PIN_K2                         		GPIO_Pin_9		//BTN2   rezim 2
 #define PORT_K2                 					GPIOC
 
-#define PIN_L2                         		GPIO_Pin_8
+#define PIN_L2                         		GPIO_Pin_8		// LED2    VD2		rezim 2
 #define PORT_L2                 					GPIOC
 
 #define PIN_PER_NIZ                       GPIO_Pin_3		//  L3
@@ -226,8 +241,8 @@ extern u32 buf_sum_dmk;
 
 #define PIN_AVARIYA                      	GPIO_Pin_15		//	L7
 #define PORT_AVARIYA                			GPIOA	
-
-#define PIN_BUTTON_MENU                  	GPIO_Pin_7		//	BTN3
+ 
+#define PIN_BUTTON_MENU                  	GPIO_Pin_7		//	BTN3  menyu
 #define PORT_BUTTON_MENU             			GPIOE	
 
 #define PIN_SW_KEY        	             	GPIO_Pin_11		//	SW1
@@ -241,6 +256,9 @@ extern u16 kol_gr2_vkl;
 
 extern u8 avariya;
 extern u8 avariya_dmk;
+extern u8 avariya_both;
 extern u8 sost_flesh;
+
+extern		u8 tek,lin;
 
 
