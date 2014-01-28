@@ -206,7 +206,7 @@ extern u16 tek_kol_dmk;
 extern u16 kol_usr_dmk;
 extern u32 buf_sum_dmk;
 
-#define PIN_PRIBL                         GPIO_Pin_1
+#define PIN_PRIBL                         GPIO_Pin_5
 #define PORT_PRIBL                    		GPIOC
 
 #define PIN_RELE                         	GPIO_Pin_4

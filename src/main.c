@@ -225,12 +225,12 @@ void ADC3_CH12_DMA_Config_new(void)
 
   // Enable ADC3, DMA2 and GPIO clocks **************************************
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 	
   // DMA2 Stream0 channel0 configuration ************************************
-  DMA_InitStructure.DMA_Channel = DMA_Channel_2;  
-  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC2->DR; //ADC3_PC1;  //  ADC3->DR; //
+  DMA_InitStructure.DMA_Channel = DMA_Channel_0;  
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR; //ADC3_PC1;  //  ADC3->DR; //
   DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)& sample[0]; //   (uint32_t)&AKB;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
   DMA_InitStructure.DMA_BufferSize = 2;
@@ -263,7 +263,7 @@ void ADC3_CH12_DMA_Config_new(void)
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
   ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
   ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
-  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles; //ADC_TwoSamplingDelay_5Cycles;
   ADC_CommonInit(&ADC_CommonInitStructure);
 
  // ADC3 Init ***************************************************************
@@ -273,20 +273,20 @@ void ADC3_CH12_DMA_Config_new(void)
   ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfConversion = 2;
-  ADC_Init(ADC2, &ADC_InitStructure);
+  ADC_Init(ADC1, &ADC_InitStructure);
 
   // ADC3 regular channel12 configuration ***********************************
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_12, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
-  ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 2, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 2, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
 
  // Enable DMA request after last transfer (Single-ADC mode)
-  ADC_DMARequestAfterLastTransferCmd(ADC2, ENABLE);
+  ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
 
   // Enable ADC3 DMA 
-  ADC_DMACmd(ADC2, ENABLE);
+  ADC_DMACmd(ADC1, ENABLE);
 
   // Enable ADC3 
-  ADC_Cmd(ADC2, ENABLE);
+  ADC_Cmd(ADC1, ENABLE);
 }
 
 
@@ -2231,13 +2231,13 @@ int main(void)
 		//	RCC_APB2PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); 
 	GPIO_InitStructure.GPIO_Pin   = PIN_RELE;      						//  vivod RELE
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    				// rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//  may be PP - ???
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;  //GPIO_OType_OD;						//  may be PP - ???
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_RELE, &GPIO_InitStructure); 
 
 	GPIO_InitStructure.GPIO_Pin   = PIN_RELE_DMK;      						//  vivod RELE DMK
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;    				// rezim vivoda
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;						//  may be PP - ???
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //GPIO_OType_OD;						//  may be PP - ???
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 				//speed
 	GPIO_Init(PORT_RELE_DMK, &GPIO_InitStructure); 
 	
@@ -2477,7 +2477,7 @@ SPI 2:
 
 //ADC3_CH12_DMA_Config();
 	
-	  ADC3_CH12_DMA_Config();
+	  ADC3_CH12_DMA_Config_new();
 	
 	test_ind_all(1);
 	
@@ -2525,7 +2525,8 @@ SPI 2:
 			b_err_cl=0;
 			error_ds=0;
 
-			read_ds(14);
+	//		read_ds(14);
+			read_ds(20);
 			
 			if ((error_ds==0)&(b_err_cl==0))
 			{				
@@ -2587,7 +2588,7 @@ SPI 2:
 					// считать с часов установленные из меню с прибора пороги и время максимума
 
 			
-			if ((zbuf[17]==0x12)&(zbuf[18]==0x34))
+			if ((zbuf[18]==0x12)&(zbuf[19]==0x34))
 			{
 				conf.por_rele=zbuf[14]*10;
 				conf.time_max=zbuf[15];
@@ -2770,8 +2771,8 @@ SPI 2:
 
   // Start ADC3 Software Conversion 
   
-	ADC_SoftwareStartConv(ADC3);
-	//ADC_SoftwareStartConv(ADC2);
+//	ADC_SoftwareStartConv(ADC3);
+	ADC_SoftwareStartConv(ADC1);
 	
   /* SysTick end of count event each 10ms */
   RCC_GetClocksFreq(&RCC_Clocks);
