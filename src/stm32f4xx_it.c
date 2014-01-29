@@ -335,7 +335,8 @@ u16 fiz_vel(u16 kod, st_tab_kal* tk)
 					nul++;	
 	  if (nul==9)
 		{		tk_null=1;
-				return kod; }
+			//	return kod; }
+			return 0; }
 		
 		if (kod<tk->kod[0])
         return tk->fz[0];
@@ -903,10 +904,10 @@ void SysTick_Handler(void)
 		kol_average=0;
 		summa[0]=0;
 		summa[1]=0;
-		
+	/*	
 		average[0]=sample[0];		// AKB
 		average[1]=sample[1];		// DMK	
-		
+*/		
 		// раз в 100 мс
 		// вычисляем физическую величину
 		
@@ -964,6 +965,7 @@ void SysTick_Handler(void)
 		}
 */	
 
+				
 				test_rele(fz[0], 0);	   			// akb
 				test_rele_dmk(fz[1], 0);	    // dmk
 						
@@ -978,8 +980,13 @@ void SysTick_Handler(void)
 		if (time_max>=conf.time_max) {
 				max[0]=0;
 				time_max=0;
-				max[1]=0; 
+				
 		}
+		
+		if (time_max_dmk>=conf_dmk.time_max) {			
+				time_max_dmk=0;
+				max[1]=0; 
+		}		
 		
 		// detect max 
 		// select averaging max or not averaging
@@ -987,11 +994,17 @@ void SysTick_Handler(void)
 			max[0]=fz_average[0];
 */
 		if (fz[0]>max[0])
+		{
 			max[0]=fz[0];
+			time_max=0;
+		}
 
 
 		if (fz[1]>max[1])
+		{
 			max[1]=fz[1];
+			time_max_dmk=0;
+		}
 
 		
 	// находим среднее значение по скользящей средней
@@ -1272,32 +1285,53 @@ void SysTick_Handler(void)
 		if (number_buff)
 		{
 			if (tk_null_dmk==1)
+			{
 				Buf_adc_zap2_dmk[por]=fz_average[1]|0x8000;	
+				Buf_max_zap2_dmk[por]=max[1]|0x8000;
+			}
 			else
+			{
 				Buf_adc_zap2_dmk[por]=fz_average[1]&0x7FFF;	
+				Buf_max_zap2_dmk[por]=max[1]&0x7FFF;
+			}
 			
-			Buf_max_zap2[por]=max[0];
-			Buf_max_zap2_dmk[por]=max[1];
+			
+			
 			
 			if (tk_null_akb==1)
-				Buf_adc_zap2[por++]=fz_average[0]|0x8000;	
+			{
+				Buf_adc_zap2[por++]=fz_average[0]|0x8000;
+				Buf_max_zap2[por]=max[0]|0x8000;
+			}
 			else
-				Buf_adc_zap2[por++]=fz_average[0]&0x7FFF;			
+			{
+				Buf_adc_zap2[por++]=fz_average[0]&0x7FFF;	
+				Buf_max_zap2[por]=max[0]&0x7FFF;
+			}
 		}
 		else
 		{
 			if (tk_null_dmk==1)
-				Buf_adc_zap1_dmk[por]=fz_average[1]|0x8000;		
+			{
+				Buf_adc_zap1_dmk[por]=fz_average[1]|0x8000;
+				Buf_max_zap1_dmk[por]=max[1]|0x8000;
+			}
 			else
+			{
 				Buf_adc_zap1_dmk[por]=fz_average[1]&0x7FFF;	
-			
-			Buf_max_zap1[por]=max[0];
-			Buf_max_zap1_dmk[por]=max[1];
-						
+				Buf_max_zap1_dmk[por]=max[1]&0x7FFF;
+			}
+							
 			if (tk_null_akb==1)
-				Buf_adc_zap1[por++]=fz_average[0]|0x8000;	
+			{
+				Buf_adc_zap1[por++]=fz_average[0]|0x8000;
+				Buf_max_zap1[por]=max[0]|0x8000;
+			}
 			else
+			{
 				Buf_adc_zap1[por++]=fz_average[0]&0x7FFF;
+				Buf_max_zap1[por]=max[0]&0x7FFF;
+			}
 		}
 		
 		
@@ -1318,7 +1352,9 @@ void SysTick_Handler(void)
 	//	if (tek_max_min==60) 
 		{   // vremya nakopleniya maximuma v minutah
 			time_max++;
-			tek_max_min=0;     }
+			time_max_dmk++;
+			tek_max_min=0;    
+    }
 	
 		del=0;
 		tick++;
@@ -2002,7 +2038,8 @@ if (1)
 			
 			
 			// 5 zn from adc with calibr and averaging
-			tmp=fz_average[0]%10000;
+	//		tmp=fz_average[0]%10000;
+			tmp=average[0]%10000;
 			TxBuffer[21]=(uint8_t)(tmp/1000)+(uint8_t)0x30;
 			tmp%=1000;
 			TxBuffer[22]=(uint8_t)(tmp/100)+(uint8_t)0x30;

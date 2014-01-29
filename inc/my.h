@@ -7,7 +7,7 @@
 
 #define	kol_simb_in_stroka	8 // 7 - without point
 
-#define	kol_simb_in_stroka_new	32 // 7 - without point
+#define	kol_simb_in_stroka_new	29 // 7 - without point
 
 
 

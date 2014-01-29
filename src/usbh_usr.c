@@ -422,28 +422,37 @@ void dec_to_chr(u16 chislo, uint8_t* buf)
 	//tmp=chislo/10000;
 	if (tk_n==1)
 	{
-		*buf=(uint8_t)0x30;
-		buf++;
+//		*buf=(uint8_t)0x30;
+//		buf++;
+		int i=0;
+		for (i=1;i<7;i++)
+		{
+			*buf=(uint8_t)0x46;   // 0xF
+			buf++;
+		}
 	}
-		
-	*buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
-	chislo%=10000;
-	buf++;
-	*buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
-	chislo%=1000;
-	buf++;
-	*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
-	chislo%=100;
-	buf++;
-	*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
-	buf++;
-	if (tk_n==0)
+	else
 	{
-		*buf=0x2C;
-		chislo%=10;
+		
+		*buf=(uint8_t)(chislo/10000)+(uint8_t)0x30;
+		chislo%=10000;
 		buf++;
+		*buf=((uint8_t)(chislo/1000)+(uint8_t)0x30);
+		chislo%=1000;
+		buf++;
+		*buf=((uint8_t)(chislo/100)+(uint8_t)0x30);
+		chislo%=100;
+		buf++;
+		*buf=((uint8_t)(chislo/10)+(uint8_t)0x30);
+		buf++;
+		if (tk_n==0)
+		{
+			*buf=0x2C;
+			chislo%=10;
+			buf++;
+		}
+		*buf=((uint8_t)(chislo)+(uint8_t)0x30);
 	}
-	*buf=((uint8_t)(chislo)+(uint8_t)0x30);
 			
 
 }
@@ -578,17 +587,17 @@ if (buffering)
 			  dec_to_chr(Buf_adc_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+1]);	
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]=0x3B; //	;
-			  dec_to_chr(Buf_max_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+9]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+7]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap1[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]);	
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+16]=0x3B; //	;
-			  dec_to_chr(Buf_adc_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+17]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+14]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+15]);	
 				
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+24]=0x3B; //	;
-			  dec_to_chr(Buf_max_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+25]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+21]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap1_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+22]);	
 				
 				
 				kol_zap++;			
@@ -617,17 +626,17 @@ if (buffering)
 			  dec_to_chr(Buf_adc_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+1]);	
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]=0x3B; //	;
-			  dec_to_chr(Buf_max_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+9]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+7]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap2[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+8]);	
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+16]=0x3B; //	;
-			  dec_to_chr(Buf_adc_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+17]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+14]=0x3B; //	;
+			  dec_to_chr(Buf_adc_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+15]);	
 				
 				
 			// запись нового столбца 
-				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+24]=0x3B; //	;
-			  dec_to_chr(Buf_max_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+25]);	
+				Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+21]=0x3B; //	;
+			  dec_to_chr(Buf_max_zap2_dmk[kol_zap],(uint8_t*) &Buf_zap[sm+kol_simb_in_stroka_new*kol_zap+22]);	
 				
 				
 				kol_zap++;			

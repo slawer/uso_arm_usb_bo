@@ -37,10 +37,10 @@ I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32F4xx_StdPeriph_
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32F4xx_StdPeriph_Driver\stm32f4xx_wwdg.h)(0x4EAA4C3A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32F4xx_StdPeriph_Driver\misc.h)(0x51A4B79C)
 I (d:\Keil4\ARM\ARMCC\include\string.h)(0x51C7EF84)
-I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E60652)
+I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E7B04A)
 F (.\src\gpio.h)(0x51501C16)()
 F (.\src\rtc.h)(0x51D16244)()
-F (.\src\main.c)(0x52E75140)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\main.o --omf_browse .\media_usb_key\main.crf --depend .\media_usb_key\main.d)
+F (.\src\main.c)(0x52E75B7F)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\main.o --omf_browse .\media_usb_key\main.crf --depend .\media_usb_key\main.d)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\main.h)(0x51A5A21C)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\src\stm32f4xx.h)(0x51C02F68)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\CMSIS\core_cm4.h)(0x4EAA4C36)
@@ -105,7 +105,7 @@ I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Libra
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\STM32F4-Discovery\pdm_filter.h)(0x4EAA4C5E)
-I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E60652)
+I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E7B04A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\src\rtc.h)(0x51D16244)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my_def_ext.h)(0x52E60652)
 F (.\src\system_stm32f4xx.c)(0x52667BDA)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\system_stm32f4xx.o --omf_browse .\media_usb_key\system_stm32f4xx.crf --depend .\media_usb_key\system_stm32f4xx.d)
@@ -184,7 +184,7 @@ I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32F4xx_StdPeriph_
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_OTG_Driver\usb_regs.h)(0x4EAA4C3A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_OTG_Driver\usb_defines.h)(0x4EAA4C3A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\STM32F4-Discovery\stm32f4_discovery.h)(0x4EAA4C5E)
-F (.\src\usbh_usr.c)(0x52E24EC8)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\usbh_usr.o --omf_browse .\media_usb_key\usbh_usr.crf --depend .\media_usb_key\usbh_usr.d)
+F (.\src\usbh_usr.c)(0x52E7AB88)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\usbh_usr.o --omf_browse .\media_usb_key\usbh_usr.crf --depend .\media_usb_key\usbh_usr.d)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\usbh_usr.h)(0x51A47B0C)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\Third_Party\fat_fs\ff.h)(0x4EAA4C5E)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\Third_Party\fat_fs\integer.h)(0x4EAA4C5E)
@@ -242,9 +242,9 @@ I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Libra
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\stm32f4xx_it.h)(0x4EAA4C46)
-I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E60652)
+I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E7B04A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\src\rtc.h)(0x51D16244)
-F (.\src\stm32f4xx_it.c)(0x52E2680A)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\stm32f4xx_it.o --omf_browse .\media_usb_key\stm32f4xx_it.crf --depend .\media_usb_key\stm32f4xx_it.d)
+F (.\src\stm32f4xx_it.c)(0x52E7990C)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\stm32f4xx_it.o --omf_browse .\media_usb_key\stm32f4xx_it.crf --depend .\media_usb_key\stm32f4xx_it.d)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\main.h)(0x51A5A21C)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\src\stm32f4xx.h)(0x51C02F68)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\CMSIS\core_cm4.h)(0x4EAA4C36)
@@ -309,7 +309,7 @@ I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Libra
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_scsi.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Libraries\STM32_USB_HOST_Library\usbh_msc_bot.h)(0x4EAA4C38)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\STM32F4-Discovery\pdm_filter.h)(0x4EAA4C5E)
-I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E60652)
+I (D:\keil_project\all_project\arm\uso_arm_usb_bo\inc\my.h)(0x52E7B04A)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\src\rtc.h)(0x51D16244)
 F (.\Utilities\STM32F4-Discovery\stm32f4_discovery.c)(0x4EAA4C5E)(-c --cpu Cortex-M4 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\Libraries -I.\Utilities -I.\Libraries\CMSIS\ST\STM32F4xx\Include -I.\inc -I.\src -I.\Libraries\STM32F4xx_StdPeriph_Driver -I.\Libraries\STM32_USB_HOST_Library -I.\Libraries\STM32_USB_OTG_Driver -I.\Utilities\STM32F4-Discovery -I.\Libraries\CMSIS -I.\Utilities\Third_Party\fat_fs-I d:\Keil4\ARM\RV31\INC-I d:\Keil4\ARM\CMSIS\Include-I d:\Keil4\ARM\Inc\ST\STM32F4xx-DUSE_STDPERIPH_DRIVER -DUSE_USB_OTG_FS -DSTM32F4XX -DMEDIA_USB_KEY -D__FPU_PRESENT="0" -o .\media_usb_key\stm32f4_discovery.o --omf_browse .\media_usb_key\stm32f4_discovery.crf --depend .\media_usb_key\stm32f4_discovery.d)
 I (D:\keil_project\all_project\arm\uso_arm_usb_bo\Utilities\STM32F4-Discovery\stm32f4_discovery.h)(0x4EAA4C5E)

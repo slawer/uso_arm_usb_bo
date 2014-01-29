@@ -276,8 +276,8 @@ void ADC3_CH12_DMA_Config_new(void)
   ADC_Init(ADC1, &ADC_InitStructure);
 
   // ADC3 regular channel12 configuration ***********************************
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 2, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);   // ƒÃ 
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_480Cycles); //ADC_SampleTime_3Cycles);	  // ¿ ¡
 
  // Enable DMA request after last transfer (Single-ADC mode)
   ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
